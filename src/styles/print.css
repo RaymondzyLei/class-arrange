@@ -1,0 +1,61 @@
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  /* 隐藏非打印元素 */
+  body.printing .no-print {
+    display: none !important;
+  }
+  body.printing .app-content {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  body.printing .pool-panel {
+    display: none !important;
+  }
+  body.printing .table-panel {
+    width: 100% !important;
+  }
+
+  /* 打印标题：平时隐藏，打印时显示 */
+  .print-title {
+    display: none;
+  }
+  body.printing .print-title {
+    display: block;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  /* 课表网格黑白友好 */
+  body.printing .course-table {
+    font-size: 9pt;
+  }
+  body.printing .course-table th,
+  body.printing .course-table td {
+    border: 0.5px solid #000 !important;
+  }
+  body.printing .cell-entry {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #999 !important;
+  }
+  body.printing .cell-conflict {
+    border: 2px double #000 !important;
+    background: #eee !important;
+  }
+  body.printing .ant-modal,
+  body.printing .ant-message {
+    display: none !important;
+  }
+}

@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# Node / build
+node_modules/
+dist/
+.vite/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+
+# Test / debug artifacts
+.playwright-mcp/
+desktop.png
+mobile.png
+initial.png
+
+# Logs
+*.log
