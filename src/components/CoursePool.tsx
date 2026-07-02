@@ -95,12 +95,12 @@ export default function CoursePool({ filter, selectedIds, conflictIds, onOpenDet
   }), [filtered, selectedIds, conflictIds, toggle, onOpenDetail]);
 
   return (
-    <div className="panel-inner no-print" style={{ flex: 1, overflow: 'hidden', padding: 6, display: 'flex', flexDirection: 'column' }}>
+    <div className="panel-inner course-pool no-print">
       {filtered.length === 0 ? (
         <Empty description="无匹配课程" style={{ marginTop: 40 }} />
       ) : (
         <>
-          <div style={{ color: 'var(--text-sub)', fontSize: 12, padding: '2px 2px 6px', flexShrink: 0 }}>
+          <div className="course-pool__count">
             共 {filtered.length} 门
           </div>
           <List<RowOwnProps>

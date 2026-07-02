@@ -41,15 +41,12 @@ export default function PlanSwitcher() {
   };
 
   return (
-    <div
-      className="panel-inner no-print"
-      style={{ padding: 8, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}
-    >
-      <span style={{ color: 'var(--text-sub)', whiteSpace: 'nowrap' }}>我的方案</span>
+    <div className="panel-inner plan-switcher no-print">
+      <span className="plan-switcher__label">我的方案</span>
       <Select
+        className="plan-switcher__select"
         value={activePlan?.id}
         placeholder="请选择方案"
-        style={{ flex: 1, minWidth: 120 }}
         onChange={switchTo}
         options={state.plans.map((p) => ({ label: `${p.name}（${p.courseIds.length}门）`, value: p.id }))}
         disabled={state.plans.length === 0}
@@ -92,7 +89,7 @@ export default function PlanSwitcher() {
         />
       </Modal>
       {!activePlan && (
-        <div style={{ width: '100%', textAlign: 'center', color: 'var(--text-sub)', padding: '4px 0' }}>
+        <div className="plan-switcher__hint">
           暂无方案，点击「新建」创建一个方案开始选课。
         </div>
       )}

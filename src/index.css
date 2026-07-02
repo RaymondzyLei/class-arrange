@@ -1,22 +1,4 @@
-:root {
-  --bg: #f5f6f8;
-  --panel-bg: #fff;
-  --border: #e5e6eb;
-  --text: #1f2329;
-  --text-sub: #6b6e76;
-  --accent: #1677ff;
-  --conflict: #ff4d4f;
-  --conflict-bg: #fff1f0;
-
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
-    'Microsoft YaHei', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text);
-  color-scheme: light;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import './styles/tokens.css';
 
 * {
   box-sizing: border-box;
@@ -36,23 +18,36 @@ body,
   min-height: 100vh;
 }
 
-/* 滚动条 */
+html {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* —— 滚动条 —— */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9ccd2;
+  background: var(--border-strong);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8acb4;
+  background: var(--text-faint);
 }
 
-/* 布局 */
+/* ============================================================
+ * 布局
+ * ============================================================ */
 .app-layout {
   min-height: 100vh;
 }
+
 .app-content {
   display: flex;
   gap: 12px;
@@ -60,6 +55,7 @@ body,
   height: calc(100vh - 56px);
   overflow: hidden;
 }
+
 .pool-panel {
   width: 42%;
   min-width: 360px;
@@ -68,6 +64,7 @@ body,
   gap: 8px;
   overflow: hidden;
 }
+
 .table-panel {
   flex: 1;
   display: flex;
@@ -75,10 +72,11 @@ body,
   gap: 8px;
   overflow: hidden;
 }
+
 .panel-inner {
   background: var(--panel-bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -96,4 +94,487 @@ body,
   .table-panel {
     order: -1;
   }
+}
+
+/* ============================================================
+ * TopBar
+ * ============================================================ */
+.top-bar {
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: saturate(180%) blur(8px);
+}
+
+.top-bar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-bar__logo {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent), var(--success));
+  box-shadow: var(--shadow-sm);
+}
+
+.top-bar__title {
+  margin: 0 !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  letter-spacing: 0.2px;
+}
+
+.top-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+ * PlanSwitcher
+ * ============================================================ */
+.plan-switcher {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.plan-switcher__label {
+  color: var(--text-sub);
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.plan-switcher__select {
+  flex: 1;
+  min-width: 140px;
+}
+
+.plan-switcher__hint {
+  width: 100%;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 12px;
+  padding: 4px 0;
+}
+
+/* ============================================================
+ * FilterBar
+ * ============================================================ */
+.filter-bar {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-bar__search:focus-within {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+ * CoursePool
+ * ============================================================ */
+.course-pool {
+  flex: 1;
+  overflow: hidden;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-pool__count {
+  color: var(--text-sub);
+  font-size: 12px;
+  padding: 4px 6px 8px;
+  flex-shrink: 0;
+  border-left: 3px solid var(--accent);
+  padding-left: 8px;
+}
+
+.pool-item {
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  background: var(--panel-bg);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pool-item:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-strong);
+}
+
+.pool-item:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.pool-item--selected {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.pool-item--conflict {
+  background: var(--conflict-bg);
+  border-color: var(--conflict);
+}
+
+.pool-item__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.pool-item__name {
+  font-weight: 500;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pool-item__name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pool-item__conflict-tag {
+  font-size: 10px;
+  padding: 0 6px;
+  line-height: 16px;
+  border-radius: 3px;
+  background: var(--conflict);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.pool-item__meta {
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.pool-item__schedule {
+  color: var(--text-sub);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * CourseTable
+ * ============================================================ */
+.course-table-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-table__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.course-table__header-label {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.course-table__header-hint {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+.course-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.course-table th,
+.course-table td {
+  border: 1px solid var(--border);
+  text-align: center;
+  vertical-align: top;
+}
+
+.course-table__period-head {
+  width: 48px;
+  background: var(--panel-bg-2);
+  color: var(--text-sub);
+  font-weight: 500;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  padding: 6px 0;
+}
+
+.course-table__day-head {
+  background: var(--panel-bg-2);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 4px;
+  color: var(--text);
+}
+
+.course-table__day-head--weekend {
+  color: var(--text-sub);
+}
+
+.course-table__row {
+  /* 改用 data-band 标记时段；视觉差异通过 .course-table__row[data-band] 选择器应用 */
+}
+
+.course-table__row[data-band='morning'] .course-table__period-cell {
+  background: var(--band-morning);
+}
+
+.course-table__row[data-band='noon'] .course-table__period-cell {
+  background: var(--band-noon);
+}
+
+.course-table__row[data-band='evening'] .course-table__period-cell {
+  background: var(--band-evening);
+}
+
+/* 时段之间的细分线：通过 :first-of-type + data-band 切换 */
+.course-table__row[data-band='noon'] .course-table__period-cell,
+.course-table__row[data-band='evening'] .course-table__period-cell {
+  border-top: 1px solid var(--band-divider);
+}
+
+.course-table__period-cell {
+  background: var(--band-morning);
+  color: var(--text-sub);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  padding: 6px 0;
+  width: 48px;
+}
+
+.course-table__period-cell--boundary {
+  position: relative;
+}
+
+.course-table__cell {
+  background: var(--band-noon);
+  position: relative;
+  padding: 3px;
+  vertical-align: top;
+  min-height: 44px;
+  height: auto;
+  transition: background 0.12s ease;
+}
+
+.course-table__row[data-band='morning'] .course-table__cell {
+  background: var(--band-morning);
+}
+
+.course-table__row[data-band='evening'] .course-table__cell {
+  background: var(--band-evening);
+}
+
+.course-table__cell--empty {
+  background: transparent;
+}
+
+.course-table__cell--empty.course-table__row[data-band='morning'] .course-table__cell--empty,
+.course-table__row[data-band='morning'] .course-table__cell--empty {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+:root[data-theme='dark'] .course-table__row[data-band='morning'] .course-table__cell--empty,
+:root[data-theme='dark'] .course-table__row[data-band='noon'] .course-table__cell--empty,
+:root[data-theme='dark'] .course-table__row[data-band='evening'] .course-table__cell--empty {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.course-table__cell--has {
+  cursor: pointer;
+}
+
+.course-table__cell--has:hover {
+  background: var(--panel-bg-2);
+}
+
+.course-table__cell--conflict {
+  background: var(--conflict-bg) !important;
+  box-shadow: inset 0 0 0 1.5px var(--conflict);
+}
+
+.course-table__cell--conflict::after {
+  content: '⚠';
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 11px;
+  color: var(--conflict);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.course-table__cell--has.course-table__cell--conflict:hover {
+  background: var(--conflict-bg);
+  filter: brightness(0.97);
+}
+
+:root[data-theme='dark'] .course-table__cell--has.course-table__cell--conflict:hover {
+  filter: brightness(1.15);
+}
+
+.course-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: stretch;
+}
+
+.course-block {
+  --block-stripe: var(--accent);
+  --block-bg: var(--accent-soft);
+  --block-fg: var(--text);
+  border-left: 3px solid var(--block-stripe);
+  background: var(--block-bg);
+  color: var(--block-fg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  line-height: 1.35;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.course-block:hover {
+  transform: translateX(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.course-block--color-0 { --block-stripe: var(--course-0-stripe); --block-bg: var(--course-0-bg); --block-fg: var(--course-0-fg); }
+.course-block--color-1 { --block-stripe: var(--course-1-stripe); --block-bg: var(--course-1-bg); --block-fg: var(--course-1-fg); }
+.course-block--color-2 { --block-stripe: var(--course-2-stripe); --block-bg: var(--course-2-bg); --block-fg: var(--course-2-fg); }
+.course-block--color-3 { --block-stripe: var(--course-3-stripe); --block-bg: var(--course-3-bg); --block-fg: var(--course-3-fg); }
+.course-block--color-4 { --block-stripe: var(--course-4-stripe); --block-bg: var(--course-4-bg); --block-fg: var(--course-4-fg); }
+.course-block--color-5 { --block-stripe: var(--course-5-stripe); --block-bg: var(--course-5-bg); --block-fg: var(--course-5-fg); }
+
+.course-block__name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-block__room {
+  font-size: 10px;
+  opacity: 0.78;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-block--overflow {
+  background: transparent;
+  border-left-color: transparent;
+  color: var(--text-sub);
+  font-size: 11px;
+  padding: 2px 4px;
+  cursor: default;
+}
+
+.course-block--overflow:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+ * StatsBar
+ * ============================================================ */
+.stats-bar {
+  padding: 10px 16px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.stats-bar__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stats-bar__label {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.stats-bar__value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-bar__value--conflict {
+  color: var(--conflict);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================================
+ * 全局焦点环
+ * ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+ * 切换按钮（TopBar 暗色切换）
+ * ============================================================ */
+.theme-toggle .anticon {
+  font-size: 16px;
+}
+
+/* 段控件（周次切换） */
+.week-segmented .ant-segmented-item-label {
+  font-variant-numeric: tabular-nums;
+  padding: 0 6px;
 }

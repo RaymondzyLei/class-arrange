@@ -1,0 +1,108 @@
+/*
+ * Design Tokens
+ * 集中管理所有颜色、间距、阴影、字体。修改此处即可影响全站。
+ * 主题切换通过 :root[data-theme='dark'] 重写所有变量实现。
+ */
+
+:root,
+:root[data-theme='light'] {
+  /* —— 表面 —— */
+  --bg: #f7f7f4;            /* 页面底，米白纸感 */
+  --panel-bg: #ffffff;       /* 卡片 */
+  --panel-bg-2: #fbfaf6;     /* 次级卡片/输入框 */
+  --border: #e6e4de;         /* 默认边框 */
+  --border-strong: #d0cec6;  /* hover 边框 */
+
+  /* —— 文字 —— */
+  --text: #1f2329;
+  --text-sub: #6b6e76;
+  --text-faint: #9ca3af;
+
+  /* —— 主题强调 —— */
+  --accent: #4f6bed;         /* 靛蓝：主色，聚焦 */
+  --accent-soft: #eef1fd;    /* 主色柔背景：选中态 */
+  --accent-strong: #3a55d4;
+  --success: #5b8a6f;        /* 鼠尾草：成功/已选 */
+  --success-soft: #e8f1ec;
+
+  /* —— 冲突 —— */
+  --conflict: #e5484d;       /* 玫红 */
+  --conflict-bg: #fce8e8;
+  --conflict-strong: #c0303a;
+
+  /* —— 时段带 —— */
+  --band-morning: #fbf8f1;   /* 晨 1~4：极淡米色 */
+  --band-noon: #ffffff;       /* 午 5~8：纯白 */
+  --band-evening: #f3f1ec;    /* 晚 9~13：极淡暖灰 */
+  --band-divider: #e9e6dd;    /* 区段细分线 */
+
+  /* —— 课程色板（与 src/utils/courseColor.ts LIGHT_PALETTE 对齐）—— */
+  --course-0-stripe: #7ba88e;  --course-0-bg: #e8f1ec;  --course-0-fg: #2f5a45;
+  --course-1-stripe: #6baedb;  --course-1-bg: #e4f0f8;  --course-1-fg: #2d5a7a;
+  --course-2-stripe: #d4a574;  --course-2-bg: #f5ecdd;  --course-2-fg: #6e4a1f;
+  --course-3-stripe: #b58eaa;  --course-3-bg: #efe7ee;  --course-3-fg: #5e3d55;
+  --course-4-stripe: #7fbfaa;  --course-4-bg: #e3f1ec;  --course-4-fg: #2e6055;
+  --course-5-stripe: #9b8ec4;  --course-5-bg: #eae6f1;  --course-5-fg: #43396b;
+
+  /* —— 阴影 —— */
+  --shadow-sm: 0 1px 2px rgba(31, 35, 41, 0.04);
+  --shadow-md: 0 4px 12px rgba(31, 35, 41, 0.08);
+  --shadow-lg: 0 12px 32px rgba(31, 35, 41, 0.12);
+
+  /* —— 半径 —— */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0f1115;
+  --panel-bg: #171a21;
+  --panel-bg-2: #1c2029;
+  --border: #2a2e38;
+  --border-strong: #3a3f4b;
+
+  --text: #e8eaed;
+  --text-sub: #9aa0a6;
+  --text-faint: #6c7280;
+
+  --accent: #7b91f5;
+  --accent-soft: #1f2745;
+  --accent-strong: #a5b6f9;
+  --success: #82b999;
+  --success-soft: #1e2a24;
+
+  --conflict: #f47274;
+  --conflict-bg: #3a1e20;
+  --conflict-strong: #f48a8c;
+
+  --band-morning: #15171c;
+  --band-noon: #181b22;
+  --band-evening: #14161b;
+  --band-divider: #2a2e38;
+
+  --course-0-stripe: #82b999;  --course-0-bg: #1e2a24;  --course-0-fg: #b7d6c2;
+  --course-1-stripe: #7fbde3;  --course-1-bg: #15242f;  --course-1-fg: #b0d5eb;
+  --course-2-stripe: #d9b383;  --course-2-bg: #2b231a;  --course-2-fg: #ddc3a1;
+  --course-3-stripe: #c39dba;  --course-3-bg: #251d26;  --course-3-fg: #d2b8cd;
+  --course-4-stripe: #8fcbb6;  --course-4-bg: #152823;  --course-4-fg: #b7dbcc;
+  --course-5-stripe: #afa0d2;  --course-5-bg: #1f1c2c;  --course-5-fg: #c8bfde;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

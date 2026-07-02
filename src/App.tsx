@@ -25,8 +25,23 @@ const EMPTY_FILTER: FilterState = {
 };
 
 const EMPTY_IDS: Set<string> = new Set();
+const THEME_KEY = 'class-arrange:v1:theme';
+type Theme = 'light' | 'dark';
 
-function MainArea() {
+function readInitialTheme(): Theme {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === 'light' || stored === 'dark') return stored;
+  } catch {
+    // 隐私模式
+  }
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
+function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { activePlan } = usePlans();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [week, setWeek] = useState<number>(1);
@@ -59,7 +74,7 @@ function MainArea() {
 
   return (
     <Layout className="app-layout">
-      <TopBar />
+      <TopBar themeMode={themeMode} onToggleTheme={onToggleTheme} />
       <Layout.Content className="app-content">
         <div className="pool-panel no-print">
           <PlanSwitcher />
@@ -93,20 +108,45 @@ function MainArea() {
 }
 
 export default function App() {
+  const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
+
+  // 把主题挂到 <html> 上，CSS 变量自动切换
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+  }, [themeMode]);
+
+  const toggleTheme = () => {
+    setThemeMode((prev) => {
+      const next: Theme = prev === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch {
+        // 忽略写入失败（隐私模式）
+      }
+      return next;
+    });
+  };
+
   return (
     <ConfigProvider
       locale={zhCN}
       theme={{
-        algorithm: theme.defaultAlgorithm,
+        algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#1677ff',
+          colorPrimary: '#4f6bed',
           borderRadius: 6,
+        },
+        components: {
+          Layout: {
+            headerBg: 'var(--panel-bg)',
+            bodyBg: 'var(--bg)',
+          },
         },
       }}
     >
       <AntApp>
         <PlansProvider>
-          <MainArea />
+          <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
         </PlansProvider>
       </AntApp>
     </ConfigProvider>

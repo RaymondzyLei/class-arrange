@@ -1,4 +1,4 @@
-import { Select, Typography, Empty } from 'antd';
+import { Segmented, Empty } from 'antd';
 import type { Plan } from '@/types';
 import type { ConflictMap } from '@/utils/conflict';
 import { useWeekGrid } from '@/hooks/useWeekGrid';
@@ -14,6 +14,13 @@ interface Props {
   onOpenDetail: (id: string) => void;
 }
 
+/** 把 1~13 节划为晨/午/晚三个时段带 */
+function bandFor(period: number): 'morning' | 'noon' | 'evening' {
+  if (period <= 4) return 'morning';
+  if (period <= 8) return 'noon';
+  return 'evening';
+}
+
 export default function CourseTable({ week, setWeek, weeks, activePlan, conflicts, onOpenDetail }: Props) {
   const grid = useWeekGrid(activePlan, week);
 
@@ -21,32 +28,37 @@ export default function CourseTable({ week, setWeek, weeks, activePlan, conflict
   const hasAny = grid.some((col) => col.some((cell) => cell.entries.length > 0));
 
   return (
-    <div className="panel-inner" style={{ flex: 1, overflow: 'auto', padding: 8, display: 'flex', flexDirection: 'column' }}>
+    <div className="panel-inner course-table-wrap">
       {/* 打印标题：平时隐藏，打印时显示 */}
       <div className="print-title">
         {activePlan?.name ?? ''} · 第 {week} 周
       </div>
-      <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-        <Typography.Text>当前周次</Typography.Text>
-        <Select
+
+      <div className="course-table__header no-print">
+        <span className="course-table__header-label">当前周次</span>
+        <Segmented
+          className="week-segmented"
           value={week}
-          onChange={setWeek}
-          style={{ width: 110 }}
-          options={weeks.map((w) => ({ label: `第 ${w} 周`, value: w }))}
+          onChange={(v) => setWeek(v as number)}
+          options={weeks.map((w) => ({ label: String(w), value: w }))}
         />
-        <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-          固定 1~13 节，周一至周日
-        </Typography.Text>
+        <span className="course-table__header-hint">
+          固定 1~13 节 · 周一至周日
+        </span>
       </div>
+
       {!hasAny ? (
         <Empty description={`第 ${week} 周无已选课程`} style={{ marginTop: 60 }} />
       ) : (
-        <table className="course-table" style={{ borderCollapse: 'collapse', width: '100%', tableLayout: 'fixed' }}>
+        <table className="course-table">
           <thead>
             <tr>
-              <th style={{ width: 44, border: '1px solid var(--border)', background: '#fafafa' }}>节</th>
+              <th className="course-table__period-head">节</th>
               {DAYS.map((d) => (
-                <th key={d} style={{ border: '1px solid var(--border)', background: '#fafafa', padding: 4 }}>
+                <th
+                  key={d}
+                  className={`course-table__day-head${d >= 6 ? ' course-table__day-head--weekend' : ''}`}
+                >
                   {DAY_LABELS[d]}
                 </th>
               ))}
@@ -54,10 +66,8 @@ export default function CourseTable({ week, setWeek, weeks, activePlan, conflict
           </thead>
           <tbody>
             {PERIODS.map((p) => (
-              <tr key={p} style={{ height: 36 }}>
-                <td style={{ border: '1px solid var(--border)', background: '#fafafa', textAlign: 'center', fontSize: 12, color: 'var(--text-sub)' }}>
-                  {p}
-                </td>
+              <tr key={p} className="course-table__row" data-band={bandFor(p)}>
+                <td className="course-table__period-cell">{p}</td>
                 {DAYS.map((d) => (
                   <CourseTableCell
                     key={`${d}-${p}`}

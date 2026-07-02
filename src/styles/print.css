@@ -4,8 +4,10 @@
     margin: 10mm;
   }
 
+  html,
   body {
     background: #fff !important;
+    color: #000 !important;
   }
 
   /* 隐藏非打印元素 */
@@ -35,27 +37,56 @@
     font-size: 16pt;
     font-weight: 600;
     margin-bottom: 8px;
+    color: #000 !important;
   }
 
-  /* 课表网格黑白友好 */
+  /* 课表：黑白友好 */
   body.printing .course-table {
     font-size: 9pt;
   }
   body.printing .course-table th,
   body.printing .course-table td {
     border: 0.5px solid #000 !important;
-  }
-  body.printing .cell-entry {
     color: #000 !important;
+  }
+  body.printing .course-table__day-head,
+  body.printing .course-table__period-head,
+  body.printing .course-table__period-cell {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #000 !important;
+  }
+
+  /* 时段带在打印时统一为白底 */
+  body.printing .course-table__row[data-band] .course-table__cell {
+    background: #fff !important;
+  }
+
+  /* 课程色块：去掉彩色填充，只保留左侧细线 + 文字 */
+  body.printing .course-block {
     background: transparent !important;
-    border-color: #999 !important;
+    color: #000 !important;
+    border-left-color: #000 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    padding: 1px 4px;
   }
-  body.printing .cell-conflict {
-    border: 2px double #000 !important;
+  body.printing .course-block--overflow {
+    color: #000 !important;
+  }
+
+  /* 冲突：保留双线边框 + 灰底，⚠ 角标保留 */
+  body.printing .course-table__cell--conflict {
     background: #eee !important;
+    box-shadow: inset 0 0 0 2px double #000 !important;
   }
+  body.printing .course-table__cell--conflict::after {
+    color: #000 !important;
+  }
+
   body.printing .ant-modal,
-  body.printing .ant-message {
+  body.printing .ant-message,
+  body.printing .ant-segmented {
     display: none !important;
   }
 }

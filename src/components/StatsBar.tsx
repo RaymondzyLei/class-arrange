@@ -1,4 +1,3 @@
-import { Statistic, Col, Row } from 'antd';
 import type { PlanStats } from '@/utils/stats';
 
 interface Props {
@@ -7,26 +6,25 @@ interface Props {
 
 export default function StatsBar({ stats }: Props) {
   return (
-    <div className="panel-inner no-print" style={{ padding: '8px 16px' }}>
-      <Row gutter={24}>
-        <Col>
-          <Statistic title="已选课程" value={stats.count} suffix="门" />
-        </Col>
-        <Col>
-          <Statistic title="总学分" value={stats.totalCredits} />
-        </Col>
-        <Col>
-          <Statistic title="总学时" value={stats.totalHours} />
-        </Col>
-        <Col>
-          <Statistic
-            title="冲突课程"
-            value={stats.conflictCount}
-            suffix="门"
-            styles={stats.conflictCount > 0 ? { content: { color: '#ff4d4f' } } : undefined}
-          />
-        </Col>
-      </Row>
+    <div className="panel-inner stats-bar no-print">
+      <div className="stats-bar__item">
+        <span className="stats-bar__label">已选课程</span>
+        <span className="stats-bar__value">{stats.count} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span></span>
+      </div>
+      <div className="stats-bar__item">
+        <span className="stats-bar__label">总学分</span>
+        <span className="stats-bar__value">{stats.totalCredits}</span>
+      </div>
+      <div className="stats-bar__item">
+        <span className="stats-bar__label">总学时</span>
+        <span className="stats-bar__value">{stats.totalHours}</span>
+      </div>
+      <div className="stats-bar__item">
+        <span className="stats-bar__label">冲突课程</span>
+        <span className={`stats-bar__value${stats.conflictCount > 0 ? ' stats-bar__value--conflict' : ''}`}>
+          {stats.conflictCount > 0 ? '⚠ ' : ''}{stats.conflictCount} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span>
+        </span>
+      </div>
     </div>
   );
 }
