@@ -36,8 +36,8 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Build (with /class-arrange/ base path for Pages)
-        run: pnpm build --base=/class-arrange/
+      - name: Build (root base path for custom domain)
+        run: pnpm build --base=/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
