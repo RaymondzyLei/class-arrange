@@ -9,7 +9,7 @@ import type { CourseSection, FilterState } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
 /** 每个池项的固定高度（含 padding + border + gap） */
-const ITEM_HEIGHT = 78;
+const ITEM_HEIGHT = 96;
 
 interface Props {
   filter: FilterState;

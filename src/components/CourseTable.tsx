@@ -14,10 +14,10 @@ interface Props {
   onOpenDetail: (id: string) => void;
 }
 
-/** 把 1~13 节划为晨/午/晚三个时段带 */
+/** 把 1~13 节划为三段：1~5 / 6~10 / 11~13 */
 function bandFor(period: number): 'morning' | 'noon' | 'evening' {
-  if (period <= 4) return 'morning';
-  if (period <= 8) return 'noon';
+  if (period <= 5) return 'morning';
+  if (period <= 10) return 'noon';
   return 'evening';
 }
 
