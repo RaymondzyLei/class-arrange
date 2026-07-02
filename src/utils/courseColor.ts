@@ -18,24 +18,30 @@ export interface CourseColor {
   name: string;
 }
 
-/** 浅色模式下的色板 */
+/**
+ * 浅色模式下的色板。
+ * 设计原则：6 色在色相环上尽量拉开（绿/青/橙/玫红/琥珀/紫），
+ * 饱和度比之前高一些，避免大量课程时颜色循环后视觉发"灰"。
+ */
 const LIGHT_PALETTE: CourseColor[] = [
-  { name: 'sage',  stripe: '#7BA88E', bg: '#E8F1EC', fg: '#2F5A45' },
-  { name: 'sky',   stripe: '#6BAEDB', bg: '#E4F0F8', fg: '#2D5A7A' },
-  { name: 'sand',  stripe: '#D4A574', bg: '#F5ECDD', fg: '#6E4A1F' },
-  { name: 'mauve', stripe: '#B58EAA', bg: '#EFE7EE', fg: '#5E3D55' },
-  { name: 'mint',  stripe: '#7FBFAA', bg: '#E3F1EC', fg: '#2E6055' },
-  { name: 'lilac', stripe: '#9B8EC4', bg: '#EAE6F1', fg: '#43396B' },
+  { name: 'sage',  stripe: '#2E9D6A', bg: '#D2EEDE', fg: '#1F5A3D' }, // 绿
+  { name: 'sky',   stripe: '#1F86D6', bg: '#D2E7F8', fg: '#1A4A78' }, // 青蓝
+  { name: 'amber', stripe: '#E08A1E', bg: '#FBE3C2', fg: '#6E3F0F' }, // 琥珀橙
+  { name: 'rose',  stripe: '#D6436A', bg: '#FAD3DE', fg: '#7A2540' }, // 玫红
+  { name: 'teal',  stripe: '#159A9A', bg: '#CFE9E9', fg: '#0F4A4A' }, // 青绿
+  { name: 'violet',stripe: '#7152D6', bg: '#E0D8F4', fg: '#3D2A7A' }, // 紫
 ];
 
-/** 深色模式下的色板（饱和度略降、明度提高，保证深底可读） */
+/**
+ * 深色模式下的色板：色调与浅色一致，背景降明度，文字提亮。
+ */
 const DARK_PALETTE: CourseColor[] = [
-  { name: 'sage',  stripe: '#82B999', bg: '#1E2A24', fg: '#B7D6C2' },
-  { name: 'sky',   stripe: '#7FBDE3', bg: '#15242F', fg: '#B0D5EB' },
-  { name: 'sand',  stripe: '#D9B383', bg: '#2B231A', fg: '#DDC3A1' },
-  { name: 'mauve', stripe: '#C39DBA', bg: '#251D26', fg: '#D2B8CD' },
-  { name: 'mint',  stripe: '#8FCBB6', bg: '#152823', fg: '#B7DBCC' },
-  { name: 'lilac', stripe: '#AFA0D2', bg: '#1F1C2C', fg: '#C8BFDE' },
+  { name: 'sage',  stripe: '#5BC189', bg: '#163324', fg: '#B8E6CB' },
+  { name: 'sky',   stripe: '#5AAEEA', bg: '#0F2C42', fg: '#B6DCF2' },
+  { name: 'amber', stripe: '#E8A655', bg: '#3A2A14', fg: '#F1CBA0' },
+  { name: 'rose',  stripe: '#E97090', bg: '#3A1A24', fg: '#F2BCCB' },
+  { name: 'teal',  stripe: '#4FC2C2', bg: '#0F3333', fg: '#B6E4E4' },
+  { name: 'violet',stripe: '#9A82E5', bg: '#241B3F', fg: '#CFC4F0' },
 ];
 
 /**

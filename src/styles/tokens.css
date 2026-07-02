@@ -36,13 +36,13 @@
   --band-evening: #e9e4d6;    /* 晚上 11~13 */
   --band-divider: #d8d2c2;
 
-  /* —— 课程色板 —— */
-  --course-0-stripe: #7ba88e;  --course-0-bg: #dcebe2;  --course-0-fg: #2f5a45;
-  --course-1-stripe: #6baedb;  --course-1-bg: #d6e8f3;  --course-1-fg: #2d5a7a;
-  --course-2-stripe: #d4a574;  --course-2-bg: #f0e1c6;  --course-2-fg: #6e4a1f;
-  --course-3-stripe: #b58eaa;  --course-3-bg: #ead9e7;  --course-3-fg: #5e3d55;
-  --course-4-stripe: #7fbfaa;  --course-4-bg: #d7ebe3;  --course-4-fg: #2e6055;
-  --course-5-stripe: #9b8ec4;  --course-5-bg: #dfd9ee;  --course-5-fg: #43396b;
+  /* —— 课程色板：与 courseColor.ts 中的 LIGHT_PALETTE 一一对应 —— */
+  --course-0-stripe: #2e9d6a;  --course-0-bg: #d2eede;  --course-0-fg: #1f5a3d;  /* sage  */
+  --course-1-stripe: #1f86d6;  --course-1-bg: #d2e7f8;  --course-1-fg: #1a4a78;  /* sky   */
+  --course-2-stripe: #e08a1e;  --course-2-bg: #fbe3c2;  --course-2-fg: #6e3f0f;  /* amber */
+  --course-3-stripe: #d6436a;  --course-3-bg: #fad3de;  --course-3-fg: #7a2540;  /* rose  */
+  --course-4-stripe: #159a9a;  --course-4-bg: #cfe9e9;  --course-4-fg: #0f4a4a;  /* teal  */
+  --course-5-stripe: #7152d6;  --course-5-bg: #e0d8f4;  --course-5-fg: #3d2a7a;  /* violet*/
 
   --shadow-sm: 0 1px 2px rgba(60, 50, 30, 0.06);
   --shadow-md: 0 4px 12px rgba(60, 50, 30, 0.1);
@@ -82,12 +82,12 @@
   --band-evening: #1f2229;
   --band-divider: #3a3f4d;
 
-  --course-0-stripe: #82b999;  --course-0-bg: #2a3a32;  --course-0-fg: #b7d6c2;
-  --course-1-stripe: #7fbde3;  --course-1-bg: #243240;  --course-1-fg: #b0d5eb;
-  --course-2-stripe: #d9b383;  --course-2-bg: #3a2e1e;  --course-2-fg: #ddc3a1;
-  --course-3-stripe: #c39dba;  --course-3-bg: #34262f;  --course-3-fg: #d2b8cd;
-  --course-4-stripe: #8fcbb6;  --course-4-bg: #243530;  --course-4-fg: #b7dbcc;
-  --course-5-stripe: #afa0d2;  --course-5-bg: #2c2638;  --course-5-fg: #c8bfde;
+  --course-0-stripe: #5bc189;  --course-0-bg: #163324;  --course-0-fg: #b8e6cb;  /* sage  */
+  --course-1-stripe: #5aaeea;  --course-1-bg: #0f2c42;  --course-1-fg: #b6dcf2;  /* sky   */
+  --course-2-stripe: #e8a655;  --course-2-bg: #3a2a14;  --course-2-fg: #f1cba0;  /* amber */
+  --course-3-stripe: #e97090;  --course-3-bg: #3a1a24;  --course-3-fg: #f2bccb;  /* rose  */
+  --course-4-stripe: #4fc2c2;  --course-4-bg: #0f3333;  --course-4-fg: #b6e4e4;  /* teal  */
+  --course-5-stripe: #9a82e5;  --course-5-bg: #241b3f;  --course-5-fg: #cfc4f0;  /* violet*/
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
