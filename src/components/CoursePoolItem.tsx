@@ -15,9 +15,16 @@ interface Props {
 
 function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenDetail }: Props) {
   const rep = group.sections[0];
+  /** 卡片上的时间摘要：
+   *  多班组（同时间多班次）学校地点不唯一，折叠时不展示@room，详情列表里展示。
+   *  单班组保留 @room，给学生确切位置感。*/
+  const showRoom = group.sections.length <= 1;
   const scheduleSummary = group.schedule.length
     ? group.schedule
-        .map((s) => `${formatWeeks(s.weeks)} 周${'一二三四五六日'[s.day - 1]}${s.periods[0]}-${s.periods[s.periods.length - 1]}@${s.room || '?'}`)
+        .map((s) => {
+          const head = `${formatWeeks(s.weeks)} 周${'一二三四五六日'[s.day - 1]}${s.periods[0]}-${s.periods[s.periods.length - 1]}`;
+          return showRoom && s.room ? `${head}@${s.room}` : head;
+        })
         .join('；')
     : '时间未定';
 

@@ -6,6 +6,8 @@ export interface GridEntry {
   groupKey: string;
   /** 课程名，渲染时直接取用，避免再回查 */
   courseName: string;
+  /** 是否为多班组（同课程号 + 同时间 > 1 个班次折叠而来） */
+  isMultiSection: boolean;
   slot: ScheduleSlot;
 }
 
@@ -35,7 +37,12 @@ export function buildWeekGrid(groups: CourseGroup[], week: number): GridCell[][]
         const cell = grid[slot.day - 1][p - 1];
         // 同一选课单元在同一格只放一个 entry（去重）
         if (cell.entries.some((e) => e.groupKey === g.key)) continue;
-        cell.entries.push({ groupKey: g.key, courseName: g.courseName, slot });
+        cell.entries.push({
+          groupKey: g.key,
+          courseName: g.courseName,
+          isMultiSection: g.sections.length > 1,
+          slot,
+        });
       }
     }
   }

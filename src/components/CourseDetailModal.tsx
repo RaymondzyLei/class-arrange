@@ -34,6 +34,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     key: i,
     id: s.id,
     teacher: s.teacher || '—',
+    room: s.room || '—',
     capacity: s.capacity,
     enrolled: s.enrolled,
     classes: s.classes.length ? s.classes.join('，') : '—',
@@ -73,6 +74,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
             columns={[
               { title: '课堂号', dataIndex: 'id', width: 110 },
               { title: '教师', dataIndex: 'teacher', width: 100 },
+              { title: '教室', dataIndex: 'room', width: 90 },
               { title: '选课/限选', dataIndex: 'capacity', width: 100, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
               { title: '上课班级', dataIndex: 'classes' },
             ]}

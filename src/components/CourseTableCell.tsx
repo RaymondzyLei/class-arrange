@@ -40,6 +40,8 @@ export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }:
       <div className="course-blocks">
         {visible.map((e, i) => {
           const colorIdx = courseColorIndex(e.groupKey);
+          // 多班组同时间班次地点不唯一，课表单元格折叠时不显示教室
+          const showRoom = !e.isMultiSection && !!e.slot.room;
           const title = `${e.courseName}${e.slot.room ? ` @${e.slot.room}` : ''} · ${DAY_LABELS[cell.day]} 第${e.slot.periods.join('/')}节`;
           return (
             <div
@@ -48,7 +50,7 @@ export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }:
               title={title}
             >
               <div className="course-block__name">{e.courseName}</div>
-              {e.slot.room ? <div className="course-block__room">@{e.slot.room}</div> : null}
+              {showRoom ? <div className="course-block__room">@{e.slot.room}</div> : null}
             </div>
           );
         })}
