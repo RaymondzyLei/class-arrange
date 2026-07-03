@@ -1,5 +1,5 @@
 import { App, Empty } from 'antd';
-import { useCallback, useEffect, useMemo, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { List, useDynamicRowHeight, useListRef, type RowComponentProps } from 'react-window';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { usePlans } from '@/store/plansContext';
@@ -73,7 +73,6 @@ function PoolRow({
 const DEFAULT_ROW_HEIGHT = 90;
 /** 行之间的间距。要并入每个 row 的测量高度中，否则 react-window 会把上下卡片贴在一起 */
 const ROW_GAP = 6;
-const ROW_HEIGHT_WITH_GAP = DEFAULT_ROW_HEIGHT + ROW_GAP;
 
 export default function CoursePool({ filter, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
@@ -83,9 +82,19 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, the
 
   const dynamicRowHeight = useDynamicRowHeight({ defaultRowHeight: DEFAULT_ROW_HEIGHT });
 
-  // 筛选/方案切换：滚回顶部
+  // 筛选条件或活动方案真正变更时滚回顶部。
+  // 仅当 filter/activePlanId 引用变化才触发，避免主题切换等无关 re-render 时
+  // 把用户滚动到的位置意外重置。
+  const lastFilterRef = useRef(filter);
+  const lastPlanIdRef = useRef(activePlan?.id);
   useEffect(() => {
-    listRef.current?.scrollToRow({ index: 0 });
+    const filterChanged = lastFilterRef.current !== filter;
+    const planChanged = lastPlanIdRef.current !== activePlan?.id;
+    lastFilterRef.current = filter;
+    lastPlanIdRef.current = activePlan?.id;
+    if (filterChanged || planChanged) {
+      listRef.current?.scrollToRow({ index: 0 });
+    }
   }, [filter, activePlan?.id, listRef]);
 
   const toggle = useCallback((group: CourseGroup) => {

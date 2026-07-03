@@ -4,7 +4,7 @@ import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
 import { computeStats } from '@/utils/stats';
-import { buildCourseGroups, getAllCourseGroups } from '@/utils/courseGroup';
+import { buildCourseGroups, getAllCourseGroupsByKey } from '@/utils/courseGroup';
 import type { CourseGroup, FilterState } from '@/types';
 import TopBar from '@/components/TopBar';
 import PlanSwitcher from '@/components/PlanSwitcher';
@@ -70,12 +70,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   );
 
   // 全量选课单元索引（模块级懒加载缓存，弹窗按 groupKey 查找）
-  const allGroups = getAllCourseGroups();
+  const groupByKey = getAllCourseGroupsByKey();
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
-    return allGroups.find((g) => g.key === detailGroupKey) ?? null;
-  }, [detailGroupKey, allGroups]);
+    return groupByKey.get(detailGroupKey) ?? null;
+  }, [detailGroupKey, groupByKey]);
 
   // 切换方案时关闭详情弹窗
   useEffect(() => setDetailGroupKey(null), [activePlan?.id]);
