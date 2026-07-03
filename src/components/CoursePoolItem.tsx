@@ -61,7 +61,7 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
           <span className="pool-item__name">
             <span className="pool-item__name-text">{group.courseName}</span>
             {group.sections.length > 1 && (
-              <span className="pool-item__count-tag">{group.sections.length}班</span>
+              <span className="pool-item__count-tag">{group.sections.length}个班</span>
             )}
             {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
           </span>
