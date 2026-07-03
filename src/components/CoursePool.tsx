@@ -1,5 +1,6 @@
 import { App, Empty } from 'antd';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo, type CSSProperties } from 'react';
+import { List, useDynamicRowHeight, useListRef, type RowComponentProps } from 'react-window';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
@@ -12,13 +13,75 @@ interface Props {
   filter: FilterState;
   selectedIds: Set<string>;
   conflictGroupKeys: Set<string>;
+  themeMode: 'light' | 'dark';
   onOpenDetail: (groupKey: string) => void;
 }
 
-export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onOpenDetail }: Props) {
+/** react-window 2.x: List <RowProps> 的"单元格 props"。
+ *  用单一稳定对象把列表渲染所需的数据传给 Row，避免父组件 inline 新建回调。 */
+interface RowExtraProps {
+  groups: CourseGroup[];
+  selectedIds: Set<string>;
+  conflictGroupKeys: Set<string>;
+  themeMode: 'light' | 'dark';
+  onToggleRow: (group: CourseGroup) => void;
+  onOpenDetailRow: (groupKey: string) => void;
+  dynamicRowHeight: ReturnType<typeof useDynamicRowHeight>;
+  defaultRowHeight: number;
+}
+
+function PoolRow({
+  index,
+  style,
+  ariaAttributes,
+  groups,
+  selectedIds,
+  conflictGroupKeys,
+  themeMode,
+  onToggleRow,
+  onOpenDetailRow,
+  dynamicRowHeight,
+  defaultRowHeight,
+}: RowComponentProps<RowExtraProps>) {
+  const g = groups[index];
+  // react-window 2.x 的 useDynamicRowHeight：先以 defaultRowHeight 占位，
+  // 渲染完后框架调 observeRowElements 测量真实 DOM 高度并覆盖；
+  // 因此这里必须用 min-height（让真实高度可超出），不能让 height 设死。
+  const measured = dynamicRowHeight.getRowHeight(index);
+  const minH = measured ?? defaultRowHeight;
+  const rowStyle: CSSProperties = {
+    ...(style as CSSProperties),
+    minHeight: minH,
+    height: 'auto',
+  };
+  return (
+    <div style={rowStyle} {...ariaAttributes}>
+      <CoursePoolItem
+        group={g}
+        selected={g.sectionIds.every((id) => selectedIds.has(id))}
+        conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
+        theme={themeMode}
+        onToggle={() => onToggleRow(g)}
+        onOpenDetail={() => onOpenDetailRow(g.key)}
+      />
+    </div>
+  );
+}
+
+const DEFAULT_ROW_HEIGHT = 90;
+
+export default function CoursePool({ filter, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const filtered = useFilteredCourses(filter);
+  const listRef = useListRef(null);
+
+  const dynamicRowHeight = useDynamicRowHeight({ defaultRowHeight: DEFAULT_ROW_HEIGHT });
+
+  // 筛选/方案切换：滚回顶部
+  useEffect(() => {
+    listRef.current?.scrollToRow({ index: 0 });
+  }, [filter, activePlan?.id, listRef]);
 
   const toggle = useCallback((group: CourseGroup) => {
     if (!activePlan) {
@@ -57,6 +120,18 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onO
     dispatch({ type: 'addCourses', courseIds: group.sectionIds });
   }, [activePlan, selectedIds, dispatch, message]);
 
+  const rowProps = useMemo<RowExtraProps>(() => ({
+    groups: filtered,
+    selectedIds,
+    conflictGroupKeys,
+    themeMode,
+    onToggleRow: toggle,
+    onOpenDetailRow: onOpenDetail,
+    dynamicRowHeight,
+    defaultRowHeight: DEFAULT_ROW_HEIGHT,
+  }), [filtered, selectedIds, conflictGroupKeys, themeMode, toggle, onOpenDetail, dynamicRowHeight]);
+
+  // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (
     <div className="panel-inner course-pool no-print">
       {filtered.length === 0 ? (
@@ -67,16 +142,15 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onO
             共 {filtered.length} 门
           </div>
           <div className="course-pool__list">
-            {filtered.map((g) => (
-              <CoursePoolItem
-                key={g.key}
-                group={g}
-                selected={g.sectionIds.every((id) => selectedIds.has(id))}
-                conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
-                onToggle={() => toggle(g)}
-                onOpenDetail={() => onOpenDetail(g.key)}
-              />
-            ))}
+            <List<RowExtraProps>
+              listRef={listRef}
+              rowCount={filtered.length}
+              rowHeight={dynamicRowHeight}
+              rowComponent={PoolRow}
+              rowProps={rowProps}
+              overscanCount={6}
+              style={{ height: '100%' }}
+            />
           </div>
         </>
       )}

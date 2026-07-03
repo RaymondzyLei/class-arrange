@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
-import { getCourseById, courses } from '@/data';
+import { getCourseById } from '@/data';
 import { computeStats } from '@/utils/stats';
-import { buildCourseGroups } from '@/utils/courseGroup';
+import { buildCourseGroups, getAllCourseGroups } from '@/utils/courseGroup';
 import type { CourseGroup, FilterState } from '@/types';
 import TopBar from '@/components/TopBar';
 import PlanSwitcher from '@/components/PlanSwitcher';
@@ -69,8 +69,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     [selectedGroups, conflictGroupKeys],
   );
 
-  // 全量选课单元索引（课程静态数据，模块级计算一次即可）
-  const allGroups = useMemo(() => buildCourseGroups(courses), []);
+  // 全量选课单元索引（模块级懒加载缓存，弹窗按 groupKey 查找）
+  const allGroups = getAllCourseGroups();
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
@@ -91,6 +91,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             filter={filter}
             selectedIds={selectedIds}
             conflictGroupKeys={conflictGroupKeys}
+            themeMode={themeMode}
             onOpenDetail={setDetailGroupKey}
           />
         </div>

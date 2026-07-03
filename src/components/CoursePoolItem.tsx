@@ -1,5 +1,5 @@
 import { Button, Tooltip } from 'antd';
-import type { CSSProperties } from 'react';
+import { memo, useMemo, type CSSProperties } from 'react';
 import type { CourseGroup } from '@/types';
 import { formatWeeks } from '@/utils/weeks';
 import { courseColor } from '@/utils/courseColor';
@@ -8,11 +8,12 @@ interface Props {
   group: CourseGroup;
   selected: boolean;
   conflicting: boolean;
+  theme: 'light' | 'dark';
   onToggle: () => void;
   onOpenDetail: () => void;
 }
 
-export default function CoursePoolItem({ group, selected, conflicting, onToggle, onOpenDetail }: Props) {
+function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenDetail }: Props) {
   const rep = group.sections[0];
   const scheduleSummary = group.schedule.length
     ? group.schedule
@@ -24,11 +25,8 @@ export default function CoursePoolItem({ group, selected, conflicting, onToggle,
     ? `${group.teachers.length} 位老师`
     : group.teachers[0] || '教师未定';
 
-  // 主题读取：localStorage 简单同步读，避免为单个组件引入完整 theme context
-  const theme = (typeof window !== 'undefined' && document.documentElement.dataset.theme === 'dark')
-    ? 'dark'
-    : 'light';
-  const color = courseColor(group.key, theme);
+  // 主题由父层传入，与 React 订阅对齐（同步 DOM 读取已被 cache 彻底替代）
+  const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
 
   const cls = ['pool-item'];
   if (selected && !conflicting) cls.push('pool-item--selected');
@@ -90,3 +88,5 @@ export default function CoursePoolItem({ group, selected, conflicting, onToggle,
     </div>
   );
 }
+
+export default memo(CoursePoolItem);

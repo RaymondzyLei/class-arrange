@@ -311,12 +311,12 @@ html {
   color: var(--text-sub);
   font-size: 11px;
   line-height: 14px;
+  word-break: break-all;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 8;
+  line-clamp: 8;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-all;
 }
 
 /* ============================================================

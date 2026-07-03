@@ -58,13 +58,27 @@ function hashId(id: string): CourseColorIndex {
   return n as CourseColorIndex;
 }
 
+/** 两级缓存：theme → (id → 颜色)。避免 940 张卡片渲染时反复算 djb2 */
+const colorCache: Map<'light' | 'dark', Map<string, CourseColor>> = new Map();
+
 /**
- * 取某课程在当前主题下的颜色。同一 id 在同一主题下永远返回相同引用结构（但非单例）。
+ * 取某课程在当前主题下的颜色。同一 id 在同一主题下永远返回相同引用。
+ * 用模块级 Map 缓存（命中 O(1)），首次访问前用 hash 算索引。
  */
 export function courseColor(id: string, theme: 'light' | 'dark' = 'light'): CourseColor {
+  let themeMap = colorCache.get(theme);
+  if (!themeMap) {
+    themeMap = new Map();
+    colorCache.set(theme, themeMap);
+  }
+  const cached = themeMap.get(id);
+  if (cached) return cached;
+
   const idx = hashId(id);
   const palette = theme === 'dark' ? DARK_PALETTE : LIGHT_PALETTE;
-  return palette[idx];
+  const color = palette[idx];
+  themeMap.set(id, color);
+  return color;
 }
 
 /**
