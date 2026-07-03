@@ -44,15 +44,17 @@ function PoolRow({
   defaultRowHeight,
 }: RowComponentProps<RowExtraProps>) {
   const g = groups[index];
-  // react-window 2.x 的 useDynamicRowHeight：先以 defaultRowHeight 占位，
-  // 渲染完后框架调 observeRowElements 测量真实 DOM 高度并覆盖；
-  // 因此这里必须用 min-height（让真实高度可超出），不能让 height 设死。
+  // react-window 2.x 的 useDynamicRowHeight 通过 ResizeObserver 测量
+  // `borderBoxSize` —— padding 的尺寸已经包含在内。因此 minHeight 直接用
+  // 测量结果，paddingBottom 只是视觉效果，不会重复计入。
   const measured = dynamicRowHeight.getRowHeight(index);
   const minH = measured ?? defaultRowHeight;
   const rowStyle: CSSProperties = {
     ...(style as CSSProperties),
     minHeight: minH,
     height: 'auto',
+    paddingBottom: ROW_GAP,
+    boxSizing: 'border-box',
   };
   return (
     <div style={rowStyle} {...ariaAttributes}>
@@ -69,6 +71,9 @@ function PoolRow({
 }
 
 const DEFAULT_ROW_HEIGHT = 90;
+/** 行之间的间距。要并入每个 row 的测量高度中，否则 react-window 会把上下卡片贴在一起 */
+const ROW_GAP = 6;
+const ROW_HEIGHT_WITH_GAP = DEFAULT_ROW_HEIGHT + ROW_GAP;
 
 export default function CoursePool({ filter, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
