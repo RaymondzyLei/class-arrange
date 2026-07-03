@@ -38,6 +38,15 @@ export default function CoursePoolItem({ group, selected, conflicting, onToggle,
     borderLeftColor: conflicting ? 'var(--conflict)' : color.stripe,
   };
 
+  /** "001101.(01,02,03)" 格式的课程号+班次后缀 */
+  const courseCodeSuffix = (() => {
+    if (group.sections.length <= 1) return null;
+    const suffixes = group.sectionIds
+      .map((id) => id.slice(id.lastIndexOf('.') + 1))
+      .sort();
+    return `${group.courseCode}.(${suffixes.join(',')})`;
+  })();
+
   const tooltipTitle = group.sections.length > 1
     ? `${group.courseName}（${group.sectionIds.length} 个班次：${group.teachers.join('、')}）`
     : group.sectionIds[0];
@@ -71,6 +80,8 @@ export default function CoursePoolItem({ group, selected, conflicting, onToggle,
         </Button>
       </div>
       <div className="pool-item__meta">
+        {courseCodeSuffix && <span className="pool-item__course-code">{courseCodeSuffix}</span>}
+        {courseCodeSuffix && ' · '}
         {teacherText} · {rep?.department.name ?? ''} · {rep?.credits ?? 0}学分
       </div>
       <Tooltip title={rep?.rawSchedule || scheduleSummary}>

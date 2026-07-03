@@ -280,6 +280,15 @@ html {
   font-size: 12px;
 }
 
+.pool-item__course-code {
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-size: 11px;
+  background: var(--tag-bg, #e8edfb);
+  color: var(--tag-color, #4f6bed);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
 .pool-item__schedule {
   color: var(--text-sub);
   font-size: 11px;
