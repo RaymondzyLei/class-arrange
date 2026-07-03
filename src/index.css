@@ -286,16 +286,11 @@ html {
   flex-shrink: 0;
 }
 
-.pool-item__meta {
-  color: var(--text-sub);
-  font-size: 12px;
-  line-height: 15px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
+.pool-item__code-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .pool-item__course-code {
@@ -305,6 +300,23 @@ html {
   color: var(--tag-color, #4f6bed);
   padding: 0 4px;
   border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.pool-item__meta-aside {
+  color: var(--text-sub);
+  font-size: 11px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pool-item__teacher-row {
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 16px;
+  word-break: break-word;
 }
 
 .pool-item__schedule {

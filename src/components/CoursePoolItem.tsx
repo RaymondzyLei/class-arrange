@@ -21,10 +21,6 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
         .join('；')
     : '时间未定';
 
-  const teacherText = group.teachers.length > 1
-    ? `${group.teachers.length} 位老师`
-    : group.teachers[0] || '教师未定';
-
   // 主题由父层传入，与 React 订阅对齐（同步 DOM 读取已被 cache 彻底替代）
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
 
@@ -36,14 +32,19 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
     borderLeftColor: conflicting ? 'var(--conflict)' : color.stripe,
   };
 
-  /** "001101.(01,02,03)" 格式的课程号+班次后缀 */
-  const courseCodeSuffix = (() => {
-    if (group.sections.length <= 1) return null;
-    const suffixes = group.sectionIds
-      .map((id) => id.slice(id.lastIndexOf('.') + 1))
-      .sort();
-    return `${group.courseCode}.(${suffixes.join(',')})`;
-  })();
+  /** 课程号标签：单班组直接展示完整 section.id（如 `001101.01`），
+   *  多班组用 `courseCode.(01,02)` 这种折叠形式 */
+  const courseCodeLabel = group.sections.length > 1
+    ? `${group.courseCode}.(${group.sectionIds
+        .map((id) => id.slice(id.lastIndexOf('.') + 1))
+        .sort()
+        .join(',')})`
+    : group.sectionIds[0];
+
+  /** 老师行：多老师时全部 join 出来，单老师直接显示 */
+  const teacherLine = group.teachers.length
+    ? group.teachers.join('、')
+    : '教师未定';
 
   const tooltipTitle = group.sections.length > 1
     ? `${group.courseName}（${group.sectionIds.length} 个班次：${group.teachers.join('、')}）`
@@ -77,11 +78,13 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
           {selected ? '移出' : '加入'}
         </Button>
       </div>
-      <div className="pool-item__meta">
-        {courseCodeSuffix && <span className="pool-item__course-code">{courseCodeSuffix}</span>}
-        {courseCodeSuffix && ' · '}
-        {teacherText} · {rep?.department.name ?? ''} · {rep?.credits ?? 0}学分
+      <div className="pool-item__code-row">
+        <span className="pool-item__course-code">{courseCodeLabel}</span>
+        <span className="pool-item__meta-aside">
+          {rep?.department.name ?? ''} · {rep?.credits ?? 0}学分
+        </span>
       </div>
+      <div className="pool-item__teacher-row">{teacherLine}</div>
       <Tooltip title={rep?.rawSchedule || scheduleSummary}>
         <div className="pool-item__schedule">{scheduleSummary}</div>
       </Tooltip>
