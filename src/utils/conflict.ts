@@ -1,18 +1,20 @@
-import type { CourseSection } from '@/types';
+import type { CourseGroup } from '@/types';
 import { expandWeeks } from './weeks';
 
 /** slotKey = `${week}-${day}-${period}` */
 export type ConflictMap = Map<string, Set<string>>;
 
 /**
- * 检测一组课程之间的时间冲突。
- * 冲突定义：存在某周 w、星期 d、节次 p 被两门及以上不同课程同时占用。
- * 同一课程多 slot 占用同一格不算冲突（Set 去重）。
+ * 检测一组选课单元之间的时间冲突。
+ * 冲突定义：存在某周 w、星期 d、节次 p 被两门及以上**不同选课单元**同时占用。
+ *
+ * 按 group.key 占用 slotKey：同一选课单元内（同课程号同时间的多个班次）
+ * 占同一格不算冲突，消除"同课同时间不同老师"的误报。
  */
-export function detectConflicts(sections: CourseSection[]): ConflictMap {
+export function detectConflicts(groups: CourseGroup[]): ConflictMap {
   const occ = new Map<string, Set<string>>();
-  for (const sec of sections) {
-    for (const slot of sec.schedule) {
+  for (const g of groups) {
+    for (const slot of g.schedule) {
       for (const w of expandWeeks(slot.weeks)) {
         for (const p of slot.periods) {
           const key = `${w}-${slot.day}-${p}`;
@@ -21,7 +23,7 @@ export function detectConflicts(sections: CourseSection[]): ConflictMap {
             set = new Set<string>();
             occ.set(key, set);
           }
-          set.add(sec.id);
+          set.add(g.key);
         }
       }
     }
@@ -33,11 +35,11 @@ export function detectConflicts(sections: CourseSection[]): ConflictMap {
   return conflicts;
 }
 
-/** 返回存在冲突的所有课程 id 集合 */
-export function conflictCourseSet(conflicts: ConflictMap): Set<string> {
+/** 返回存在冲突的所有选课单元 key 集合 */
+export function conflictGroupSet(conflicts: ConflictMap): Set<string> {
   const s = new Set<string>();
   for (const set of conflicts.values()) {
-    for (const id of set) s.add(id);
+    for (const key of set) s.add(key);
   }
   return s;
 }

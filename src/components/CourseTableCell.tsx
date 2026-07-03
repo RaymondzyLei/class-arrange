@@ -1,6 +1,5 @@
 import type { GridCell } from '@/utils/grid';
 import type { ConflictMap } from '@/utils/conflict';
-import { getCourseById } from '@/data';
 import { DAY_LABELS } from '@/constants/grid';
 import { courseColorIndex } from '@/utils/courseColor';
 
@@ -13,7 +12,7 @@ interface Props {
   cell: GridCell;
   week: number;
   conflicts: ConflictMap;
-  onOpenDetail: (id: string) => void;
+  onOpenDetail: (groupKey: string) => void;
 }
 
 export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }: Props) {
@@ -35,22 +34,20 @@ export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }:
   return (
     <td
       className={classes.join(' ')}
-      onClick={() => onOpenDetail(cell.entries[0].courseId)}
+      onClick={() => onOpenDetail(cell.entries[0].groupKey)}
       title={isConflict ? '存在时间冲突' : undefined}
     >
       <div className="course-blocks">
         {visible.map((e, i) => {
-          const c = getCourseById(e.courseId);
-          if (!c) return null;
-          const colorIdx = courseColorIndex(e.courseId);
-          const title = `${c.courseName}${e.slot.room ? ` @${e.slot.room}` : ''} · ${DAY_LABELS[cell.day]} 第${e.slot.periods.join('/')}节`;
+          const colorIdx = courseColorIndex(e.groupKey);
+          const title = `${e.courseName}${e.slot.room ? ` @${e.slot.room}` : ''} · ${DAY_LABELS[cell.day]} 第${e.slot.periods.join('/')}节`;
           return (
             <div
-              key={`${e.courseId}-${i}`}
+              key={`${e.groupKey}-${i}`}
               className={`course-block course-block--color-${colorIdx}`}
               title={title}
             >
-              <div className="course-block__name">{c.courseName}</div>
+              <div className="course-block__name">{e.courseName}</div>
               {e.slot.room ? <div className="course-block__room">@{e.slot.room}</div> : null}
             </div>
           );

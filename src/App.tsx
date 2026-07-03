@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
-import { getCourseById } from '@/data';
+import { getCourseById, courses } from '@/data';
 import { computeStats } from '@/utils/stats';
-import type { CourseSection, FilterState } from '@/types';
+import { buildCourseGroups } from '@/utils/courseGroup';
+import type { CourseGroup, FilterState } from '@/types';
 import TopBar from '@/components/TopBar';
 import PlanSwitcher from '@/components/PlanSwitcher';
 import FilterBar from '@/components/FilterBar';
@@ -45,15 +46,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const { activePlan } = usePlans();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [week, setWeek] = useState<number>(1);
-  const [detailId, setDetailId] = useState<string | null>(null);
+  const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
 
-  const { conflicts, conflictIds } = useConflicts(activePlan);
+  const { conflicts, conflictGroupKeys } = useConflicts(activePlan);
 
-  const selectedSections = useMemo<CourseSection[]>(() => {
+  const selectedGroups = useMemo<CourseGroup[]>(() => {
     if (!activePlan) return [];
-    return activePlan.courseIds
+    const sections = activePlan.courseIds
       .map((id) => getCourseById(id))
-      .filter((c): c is CourseSection => Boolean(c));
+      .filter((c): c is NonNullable<typeof c> => Boolean(c));
+    return buildCourseGroups(sections);
   }, [activePlan]);
 
   // 稳定引用：避免父组件 re-render 时新建 Set，导致 CoursePool/grid 频繁重算
@@ -63,14 +65,20 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   );
 
   const stats = useMemo(
-    () => computeStats(selectedSections, conflictIds),
-    [selectedSections, conflictIds],
+    () => computeStats(selectedGroups, conflictGroupKeys),
+    [selectedGroups, conflictGroupKeys],
   );
 
-  const detailCourse = detailId ? getCourseById(detailId) ?? null : null;
+  // 全量选课单元索引（课程静态数据，模块级计算一次即可）
+  const allGroups = useMemo(() => buildCourseGroups(courses), []);
+
+  const detailGroup = useMemo<CourseGroup | null>(() => {
+    if (!detailGroupKey) return null;
+    return allGroups.find((g) => g.key === detailGroupKey) ?? null;
+  }, [detailGroupKey, allGroups]);
 
   // 切换方案时关闭详情弹窗
-  useEffect(() => setDetailId(null), [activePlan?.id]);
+  useEffect(() => setDetailGroupKey(null), [activePlan?.id]);
 
   return (
     <Layout className="app-layout">
@@ -82,8 +90,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
           <CoursePool
             filter={filter}
             selectedIds={selectedIds}
-            conflictIds={conflictIds}
-            onOpenDetail={setDetailId}
+            conflictGroupKeys={conflictGroupKeys}
+            onOpenDetail={setDetailGroupKey}
           />
         </div>
         <div className="table-panel">
@@ -93,15 +101,15 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             weeks={WEEKS}
             activePlan={activePlan}
             conflicts={conflicts}
-            onOpenDetail={setDetailId}
+            onOpenDetail={setDetailGroupKey}
           />
           <StatsBar stats={stats} />
         </div>
       </Layout.Content>
       <CourseDetailModal
-        course={detailCourse}
-        open={!!detailCourse}
-        onClose={() => setDetailId(null)}
+        group={detailGroup}
+        open={!!detailGroup}
+        onClose={() => setDetailGroupKey(null)}
       />
     </Layout>
   );

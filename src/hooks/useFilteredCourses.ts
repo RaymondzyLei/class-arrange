@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import { courses } from '@/data';
-import type { CourseSection, FilterState } from '@/types';
+import type { CourseGroup, FilterState } from '@/types';
+import { buildCourseGroups } from '@/utils/courseGroup';
 
-export function useFilteredCourses(filter: FilterState): CourseSection[] {
+/** 按筛选条件过滤课程并聚合成选课单元 */
+export function useFilteredCourses(filter: FilterState): CourseGroup[] {
   return useMemo(() => {
     const kw = filter.keyword.trim().toLowerCase();
-    return courses.filter((c) => {
+    const filtered = courses.filter((c) => {
       if (kw) {
         const hit =
           c.courseName.toLowerCase().includes(kw) ||
@@ -20,5 +22,6 @@ export function useFilteredCourses(filter: FilterState): CourseSection[] {
       if (filter.language && c.language !== filter.language) return false;
       return true;
     });
+    return buildCourseGroups(filtered);
   }, [filter]);
 }

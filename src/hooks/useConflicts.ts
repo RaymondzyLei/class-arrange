@@ -1,21 +1,23 @@
 import { useMemo } from 'react';
 import type { Plan } from '@/types';
 import { getCourseById } from '@/data';
-import { detectConflicts, conflictCourseSet, type ConflictMap } from '@/utils/conflict';
+import { buildCourseGroups } from '@/utils/courseGroup';
+import { detectConflicts, conflictGroupSet, type ConflictMap } from '@/utils/conflict';
 
-/** 返回活动方案的冲突信息：conflicts map 与冲突课程 id 集合 */
+/** 返回活动方案的冲突信息：conflicts map 与冲突选课单元 key 集合 */
 export function useConflicts(activePlan: Plan | null): {
   conflicts: ConflictMap;
-  conflictIds: Set<string>;
+  conflictGroupKeys: Set<string>;
 } {
   return useMemo(() => {
     if (!activePlan) {
-      return { conflicts: new Map(), conflictIds: new Set<string>() };
+      return { conflicts: new Map(), conflictGroupKeys: new Set<string>() };
     }
     const sections = activePlan.courseIds
       .map((id) => getCourseById(id))
       .filter((c): c is NonNullable<typeof c> => Boolean(c));
-    const conflicts = detectConflicts(sections);
-    return { conflicts, conflictIds: conflictCourseSet(conflicts) };
+    const groups = buildCourseGroups(sections);
+    const conflicts = detectConflicts(groups);
+    return { conflicts, conflictGroupKeys: conflictGroupSet(conflicts) };
   }, [activePlan]);
 }

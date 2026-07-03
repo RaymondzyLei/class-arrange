@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
 import { Descriptions, Modal, Table, Tag, Typography } from 'antd';
-import type { CourseSection } from '@/types';
+import type { CourseGroup } from '@/types';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 
 interface Props {
-  course: CourseSection | null;
+  group: CourseGroup | null;
   open: boolean;
   onClose: () => void;
 }
 
-export default function CourseDetailModal({ course, open, onClose }: Props) {
-  // 缓存最后一次非 null 的课程，保证 Modal 关闭动画期间内容不消失
-  const [cached, setCached] = useState<CourseSection | null>(null);
+export default function CourseDetailModal({ group, open, onClose }: Props) {
+  // 缓存最后一次非 null 的组，保证 Modal 关闭动画期间内容不消失
+  const [cached, setCached] = useState<CourseGroup | null>(null);
   useEffect(() => {
-    if (course) setCached(course);
-  }, [course]);
-  const display = course ?? cached;
+    if (group) setCached(group);
+  }, [group]);
+  const display = group ?? cached;
 
   if (!display) return null;
 
+  const rep = display.sections[0];
   const scheduleRows = display.schedule.map((s, i) => ({
     key: i,
     weeks: formatWeeks(s.weeks),
@@ -29,9 +30,18 @@ export default function CourseDetailModal({ course, open, onClose }: Props) {
     room: s.room || '—',
   }));
 
+  const sectionRows = display.sections.map((s, i) => ({
+    key: i,
+    id: s.id,
+    teacher: s.teacher || '—',
+    capacity: s.capacity,
+    enrolled: s.enrolled,
+    classes: s.classes.length ? s.classes.join('，') : '—',
+  }));
+
   return (
     <Modal
-      title={display.courseName}
+      title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
       open={open}
       onCancel={onClose}
       footer={null}
@@ -39,29 +49,36 @@ export default function CourseDetailModal({ course, open, onClose }: Props) {
       destroyOnHidden
     >
       <Descriptions size="small" column={2} bordered>
-        <Descriptions.Item label="课堂号">{display.id}</Descriptions.Item>
-        <Descriptions.Item label="开课单位">{display.department.name}（{display.department.code}）</Descriptions.Item>
-        <Descriptions.Item label="授课教师">{display.teacher || '—'}</Descriptions.Item>
-        <Descriptions.Item label="学分 / 学时">{display.credits} / {display.hours}</Descriptions.Item>
-        <Descriptions.Item label="学历层次">{display.level}</Descriptions.Item>
-        <Descriptions.Item label="课堂类型">{display.sectionType}</Descriptions.Item>
-        <Descriptions.Item label="课程类型">{display.courseType}</Descriptions.Item>
-        <Descriptions.Item label="课程范畴分类">{display.category || '—'}</Descriptions.Item>
-        <Descriptions.Item label="授课语言">{display.language}</Descriptions.Item>
-        <Descriptions.Item label="考核方式">{display.examType}</Descriptions.Item>
-        <Descriptions.Item label="本研同堂">
-          {display.undergradShared ? <Tag color="blue">是</Tag> : '否'}
+        <Descriptions.Item label="课程号">{display.courseCode}</Descriptions.Item>
+        <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
+        <Descriptions.Item label="授课教师" span={2}>
+          {display.teachers.length ? display.teachers.join('、') : '—'}
         </Descriptions.Item>
-        <Descriptions.Item label="选课 / 限选">{display.enrolled} / {display.capacity}</Descriptions.Item>
-        <Descriptions.Item label="上课班级" span={2}>
-          {display.classes.length ? display.classes.join('，') : '—'}
-        </Descriptions.Item>
-        <Descriptions.Item label="原始时间地点" span={2}>
-          <Typography.Text style={{ fontSize: 12, whiteSpace: 'pre-wrap' }}>
-            {display.rawSchedule || '—'}
-          </Typography.Text>
-        </Descriptions.Item>
+        <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
+        <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="课程类型">{rep?.courseType ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
+        {rep?.undergradShared ? (
+          <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
+        ) : null}
       </Descriptions>
+
+      {display.sections.length > 1 && (
+        <>
+          <Typography.Title level={5} style={{ marginTop: 16 }}>班次明细</Typography.Title>
+          <Table
+            size="small"
+            dataSource={sectionRows}
+            pagination={false}
+            columns={[
+              { title: '课堂号', dataIndex: 'id', width: 110 },
+              { title: '教师', dataIndex: 'teacher', width: 100 },
+              { title: '选课/限选', dataIndex: 'capacity', width: 100, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
+              { title: '上课班级', dataIndex: 'classes' },
+            ]}
+          />
+        </>
+      )}
 
       <Typography.Title level={5} style={{ marginTop: 16 }}>结构化时间地点</Typography.Title>
       <Table

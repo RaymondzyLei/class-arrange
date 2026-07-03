@@ -1,4 +1,4 @@
-import type { CourseSection } from '@/types';
+import type { CourseGroup } from '@/types';
 
 export interface PlanStats {
   count: number;
@@ -7,17 +7,23 @@ export interface PlanStats {
   conflictCount: number;
 }
 
-export function computeStats(sections: CourseSection[], conflictCourseIds: Set<string>): PlanStats {
+/**
+ * 按选课单元统计：count/学分/学时都按 group 计一次（取代表 section），
+ * 避免选一个含多班次的组被重复计数。
+ */
+export function computeStats(groups: CourseGroup[], conflictGroupKeys: Set<string>): PlanStats {
   let totalCredits = 0;
   let totalHours = 0;
-  for (const s of sections) {
-    totalCredits += s.credits;
-    totalHours += s.hours;
+  for (const g of groups) {
+    const rep = g.sections[0];
+    if (!rep) continue;
+    totalCredits += rep.credits;
+    totalHours += rep.hours;
   }
   return {
-    count: sections.length,
+    count: groups.length,
     totalCredits,
     totalHours,
-    conflictCount: conflictCourseIds.size,
+    conflictCount: conflictGroupKeys.size,
   };
 }

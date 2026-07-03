@@ -61,6 +61,30 @@ export interface PlansState {
   activePlanId: string | null;
 }
 
+/**
+ * 选课单元：把「同课程号 + 时间完全一致」的多个班次合并成一个对象。
+ * 学生排课时不纠结老师，同时间同课的不同班次视为同一选课对象。
+ * 同课程号但时间不同的班次 → 各自独立的 CourseGroup。
+ */
+export interface CourseGroup {
+  /** 课程号，如 "001101"（课堂号去掉 ".班次" 后缀） */
+  courseCode: string;
+  /** 课程名（同课程号下应一致，取首个） */
+  courseName: string;
+  /** 共用时间，取代表 section 的 schedule */
+  schedule: ScheduleSlot[];
+  /** 时间指纹，归一化后用于判定"时间完全相同" */
+  fingerprint: string;
+  /** 组内所有课堂号 */
+  sectionIds: string[];
+  /** 组内所有老师，去重保序 */
+  teachers: string[];
+  /** 组内全部 section，详情弹窗用 */
+  sections: CourseSection[];
+  /** 组唯一键：`${courseCode}::${fingerprint}` */
+  key: string;
+}
+
 /** 课程池筛选状态 */
 export interface FilterState {
   keyword: string;

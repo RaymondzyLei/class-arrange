@@ -9,6 +9,8 @@ export type PlansAction =
   | { type: 'switchPlan'; id: string }
   | { type: 'addCourse'; courseId: string }
   | { type: 'removeCourse'; courseId: string }
+  | { type: 'addCourses'; courseIds: string[] }
+  | { type: 'removeCourses'; courseIds: string[] }
   | { type: 'clearActive' }
   | { type: 'duplicatePlan'; id: string };
 
@@ -91,6 +93,38 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
           return touch({
             ...p,
             courseIds: p.courseIds.filter((id) => id !== action.courseId),
+          });
+        }),
+      };
+    }
+
+    case 'addCourses': {
+      if (!state.activePlanId) return state;
+      return {
+        ...state,
+        plans: state.plans.map((p) => {
+          if (p.id !== state.activePlanId) return p;
+          const next = [...p.courseIds];
+          for (const id of action.courseIds) {
+            if (!next.includes(id)) next.push(id);
+          }
+          if (next.length === p.courseIds.length) return p;
+          return touch({ ...p, courseIds: next });
+        }),
+      };
+    }
+
+    case 'removeCourses': {
+      if (!state.activePlanId) return state;
+      const removeSet = new Set(action.courseIds);
+      return {
+        ...state,
+        plans: state.plans.map((p) => {
+          if (p.id !== state.activePlanId) return p;
+          if (!p.courseIds.some((id) => removeSet.has(id))) return p;
+          return touch({
+            ...p,
+            courseIds: p.courseIds.filter((id) => !removeSet.has(id)),
           });
         }),
       };

@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'rea
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
+import { buildCourseGroups } from '@/utils/courseGroup';
 import { detectConflicts } from '@/utils/conflict';
-import type { CourseSection, FilterState } from '@/types';
+import type { CourseGroup, FilterState } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
 /** 每个池项的固定高度（含 padding + border + gap） */
@@ -14,35 +15,35 @@ const ITEM_HEIGHT = 96;
 interface Props {
   filter: FilterState;
   selectedIds: Set<string>;
-  conflictIds: Set<string>;
-  onOpenDetail: (id: string) => void;
+  conflictGroupKeys: Set<string>;
+  onOpenDetail: (groupKey: string) => void;
 }
 
 /** 传给 rowComponent 的自定义 props */
 interface RowOwnProps {
-  courses: CourseSection[];
+  groups: CourseGroup[];
   selectedIds: Set<string>;
-  conflictIds: Set<string>;
-  onToggle: (id: string) => void;
-  onOpenDetail: (id: string) => void;
+  conflictGroupKeys: Set<string>;
+  onToggle: (group: CourseGroup) => void;
+  onOpenDetail: (groupKey: string) => void;
 }
 
-function PoolRow({ index, style, courses, selectedIds, conflictIds, onToggle, onOpenDetail }: RowComponentProps<RowOwnProps>) {
-  const c = courses[index];
+function PoolRow({ index, style, groups, selectedIds, conflictGroupKeys, onToggle, onOpenDetail }: RowComponentProps<RowOwnProps>) {
+  const g = groups[index];
   return (
     <div style={{ ...(style as CSSProperties), paddingBottom: 6 }}>
       <CoursePoolItem
-        section={c}
-        selected={selectedIds.has(c.id)}
-        conflicting={conflictIds.has(c.id) && selectedIds.has(c.id)}
-        onToggle={() => onToggle(c.id)}
-        onOpenDetail={() => onOpenDetail(c.id)}
+        group={g}
+        selected={g.sectionIds.every((id) => selectedIds.has(id))}
+        conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
+        onToggle={() => onToggle(g)}
+        onOpenDetail={() => onOpenDetail(g.key)}
       />
     </div>
   );
 }
 
-export default function CoursePool({ filter, selectedIds, conflictIds, onOpenDetail }: Props) {
+export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const filtered = useFilteredCourses(filter);
@@ -53,46 +54,50 @@ export default function CoursePool({ filter, selectedIds, conflictIds, onOpenDet
     listRef.current?.scrollToRow({ index: 0 });
   }, [filter]);
 
-  const toggle = useCallback((id: string) => {
+  const toggle = useCallback((group: CourseGroup) => {
     if (!activePlan) {
       message.warning('请先新建一个方案');
       return;
     }
-    if (selectedIds.has(id)) {
-      dispatch({ type: 'removeCourse', courseId: id });
+    const allSelected = group.sectionIds.every((id) => selectedIds.has(id));
+    if (allSelected) {
+      dispatch({ type: 'removeCourses', courseIds: group.sectionIds });
       return;
     }
-    const sec = getCourseById(id);
-    if (sec) {
-      const existing = activePlan.courseIds
-        .map((cid) => getCourseById(cid))
-        .filter((c): c is NonNullable<typeof c> => Boolean(c));
-      const map = detectConflicts([...existing, sec]);
-      const conflictWithNew = new Set<string>();
-      for (const set of map.values()) {
-        if (set.has(id)) for (const x of set) conflictWithNew.add(x);
-      }
-      if (conflictWithNew.size > 0) {
-        const names = [...conflictWithNew]
-          .filter((x) => x !== id)
-          .map((x) => getCourseById(x)?.courseName ?? x)
-          .slice(0, 3)
-          .join('、');
-        message.warning(`与已选课程存在时间冲突：${names}（仍已加入）`);
-      } else {
-        message.success(`已加入「${sec.courseName}」`);
-      }
+    // 冲突预检：把已选 sections + 本组 sections 聚合成 groups 再检测
+    const existing = activePlan.courseIds
+      .map((cid) => getCourseById(cid))
+      .filter((c): c is NonNullable<typeof c> => Boolean(c));
+    const previewSections = [...existing, ...group.sections];
+    const previewGroups = buildCourseGroups(previewSections);
+    const map = detectConflicts(previewGroups);
+    const conflictWithNew = new Set<string>();
+    for (const set of map.values()) {
+      if (set.has(group.key)) for (const x of set) conflictWithNew.add(x);
     }
-    dispatch({ type: 'addCourse', courseId: id });
+    if (conflictWithNew.size > 0) {
+      const names = [...conflictWithNew]
+        .filter((x) => x !== group.key)
+        .map((x) => {
+          const g = previewGroups.find((gg) => gg.key === x);
+          return g?.courseName ?? x;
+        })
+        .slice(0, 3)
+        .join('、');
+      message.warning(`与已选课程存在时间冲突：${names}（仍已加入）`);
+    } else {
+      message.success(`已加入「${group.courseName}」`);
+    }
+    dispatch({ type: 'addCourses', courseIds: group.sectionIds });
   }, [activePlan, selectedIds, dispatch, message]);
 
   const rowProps = useMemo<RowOwnProps>(() => ({
-    courses: filtered,
+    groups: filtered,
     selectedIds,
-    conflictIds,
+    conflictGroupKeys,
     onToggle: toggle,
     onOpenDetail,
-  }), [filtered, selectedIds, conflictIds, toggle, onOpenDetail]);
+  }), [filtered, selectedIds, conflictGroupKeys, toggle, onOpenDetail]);
 
   return (
     <div className="panel-inner course-pool no-print">
