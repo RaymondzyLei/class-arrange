@@ -1,6 +1,5 @@
 import { App, Empty } from 'antd';
-import { List, type RowComponentProps, type ListImperativeAPI } from 'react-window';
-import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useCallback } from 'react';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
@@ -9,9 +8,6 @@ import { detectConflicts } from '@/utils/conflict';
 import type { CourseGroup, FilterState } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
-/** 每个池项的固定高度（含 padding + border + gap） */
-const ITEM_HEIGHT = 96;
-
 interface Props {
   filter: FilterState;
   selectedIds: Set<string>;
@@ -19,40 +15,10 @@ interface Props {
   onOpenDetail: (groupKey: string) => void;
 }
 
-/** 传给 rowComponent 的自定义 props */
-interface RowOwnProps {
-  groups: CourseGroup[];
-  selectedIds: Set<string>;
-  conflictGroupKeys: Set<string>;
-  onToggle: (group: CourseGroup) => void;
-  onOpenDetail: (groupKey: string) => void;
-}
-
-function PoolRow({ index, style, groups, selectedIds, conflictGroupKeys, onToggle, onOpenDetail }: RowComponentProps<RowOwnProps>) {
-  const g = groups[index];
-  return (
-    <div style={{ ...(style as CSSProperties), paddingBottom: 6 }}>
-      <CoursePoolItem
-        group={g}
-        selected={g.sectionIds.every((id) => selectedIds.has(id))}
-        conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
-        onToggle={() => onToggle(g)}
-        onOpenDetail={() => onOpenDetail(g.key)}
-      />
-    </div>
-  );
-}
-
 export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const filtered = useFilteredCourses(filter);
-  const listRef = useRef<ListImperativeAPI>(null);
-
-  // 筛选变化时滚动回顶部
-  useEffect(() => {
-    listRef.current?.scrollToRow({ index: 0 });
-  }, [filter]);
 
   const toggle = useCallback((group: CourseGroup) => {
     if (!activePlan) {
@@ -91,14 +57,6 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onO
     dispatch({ type: 'addCourses', courseIds: group.sectionIds });
   }, [activePlan, selectedIds, dispatch, message]);
 
-  const rowProps = useMemo<RowOwnProps>(() => ({
-    groups: filtered,
-    selectedIds,
-    conflictGroupKeys,
-    onToggle: toggle,
-    onOpenDetail,
-  }), [filtered, selectedIds, conflictGroupKeys, toggle, onOpenDetail]);
-
   return (
     <div className="panel-inner course-pool no-print">
       {filtered.length === 0 ? (
@@ -108,14 +66,18 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, onO
           <div className="course-pool__count">
             共 {filtered.length} 门
           </div>
-          <List<RowOwnProps>
-            listRef={listRef}
-            rowCount={filtered.length}
-            rowHeight={ITEM_HEIGHT}
-            rowComponent={PoolRow}
-            rowProps={rowProps}
-            overscanCount={8}
-          />
+          <div className="course-pool__list">
+            {filtered.map((g) => (
+              <CoursePoolItem
+                key={g.key}
+                group={g}
+                selected={g.sectionIds.every((id) => selectedIds.has(id))}
+                conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
+                onToggle={() => toggle(g)}
+                onOpenDetail={() => onOpenDetail(g.key)}
+              />
+            ))}
+          </div>
         </>
       )}
     </div>
