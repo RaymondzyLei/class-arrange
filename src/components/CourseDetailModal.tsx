@@ -34,7 +34,9 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     key: i,
     id: s.id,
     teacher: s.teacher || '—',
-    room: s.room || '—',
+    // section 顶层不存 room；教室只在 schedule slot 上有。
+    // 同 section 的所有 slot 通常同教室，取第一个非空即可。
+    room: s.schedule.find((sl) => sl.room)?.room || '—',
     capacity: s.capacity,
     enrolled: s.enrolled,
     classes: s.classes.length ? s.classes.join('，') : '—',
