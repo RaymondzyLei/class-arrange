@@ -94,3 +94,19 @@ export interface FilterState {
   examType: string;
   language: string;
 }
+
+/** 排课方案：用户已选 groups 的一个具体"每个 courseCode 取一个 group"的组合 */
+export interface Arrangement {
+  /** 内部稳定 id，如 "arr-{idx}"，仅用于 React key / selectedArrangementId 标记 */
+  id: string;
+  /** 该方案选定的所有 group（每个 courseCode 恰一个） */
+  groups: CourseGroup[];
+  /** 该方案与全局检测冲突后涉及的 group key 数 */
+  conflictCount: number;
+  /** 课程数（= groups.length，因为每个 courseCode 一个） */
+  courseCount: number;
+  /** 总学分（每个 group 取代表 section） */
+  totalCredits: number;
+  /** 总学时 */
+  totalHours: number;
+}
