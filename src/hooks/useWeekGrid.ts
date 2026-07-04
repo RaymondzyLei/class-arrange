@@ -1,17 +1,8 @@
 import { useMemo } from 'react';
-import type { Plan } from '@/types';
-import { getCourseById } from '@/data';
-import { buildCourseGroups } from '@/utils/courseGroup';
+import type { CourseGroup } from '@/types';
 import { buildWeekGrid, type GridCell } from '@/utils/grid';
 
-/** 根据活动方案与当前周构建 7×13 网格 */
-export function useWeekGrid(activePlan: Plan | null, week: number): GridCell[][] {
-  return useMemo(() => {
-    if (!activePlan) return buildWeekGrid([], week);
-    const sections = activePlan.courseIds
-      .map((id) => getCourseById(id))
-      .filter((c): c is NonNullable<typeof c> => Boolean(c));
-    const groups = buildCourseGroups(sections);
-    return buildWeekGrid(groups, week);
-  }, [activePlan, week]);
+/** 把已选 groups 渲染为 7×13 网格。输入顺序不影响布局（同 courseCode 同 time 自动合并）。 */
+export function useWeekGrid(groups: CourseGroup[], week: number): GridCell[][] {
+  return useMemo(() => buildWeekGrid(groups, week), [groups, week]);
 }
