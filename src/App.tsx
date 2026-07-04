@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
+import { ConfigProvider, Layout, Modal, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
@@ -30,6 +30,9 @@ const EMPTY_FILTER: FilterState = {
 const EMPTY_IDS: Set<string> = new Set();
 const THEME_KEY = 'class-arrange:v1:theme';
 type Theme = 'light' | 'dark';
+
+// 启动公告：每次页面加载都弹出，文案固定
+const ANNOUNCEMENT_TEXT = '主要功能已经做好了，可以加入QQ群1050645984讨论或提出建议';
 
 function readInitialTheme(): Theme {
   try {
@@ -153,6 +156,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
+  const [announcementOpen, setAnnouncementOpen] = useState(true);
 
   // 把主题挂到 <html> 上，CSS 变量自动切换
   useEffect(() => {
@@ -189,6 +193,17 @@ export default function App() {
       }}
     >
       <AntApp>
+        <Modal
+          open={announcementOpen}
+          title="公告"
+          okText="知道了"
+          cancelButtonProps={{ style: { display: 'none' } }}
+          onOk={() => setAnnouncementOpen(false)}
+          onCancel={() => setAnnouncementOpen(false)}
+          width={420}
+        >
+          <p style={{ margin: 0 }}>{ANNOUNCEMENT_TEXT}</p>
+        </Modal>
         <PlansProvider>
           <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
         </PlansProvider>
