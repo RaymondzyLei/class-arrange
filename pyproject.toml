@@ -6,3 +6,10 @@ requires-python = ">=3.12"
 dependencies = [
     "openpyxl>=3.1.5",
 ]
+
+[dependency-groups]
+# 给 icourse_spider/spider.py 用：sync 时 `uv sync --group spider`
+spider = [
+    "requests>=2.32",
+    "tqdm>=4.66",
+]
