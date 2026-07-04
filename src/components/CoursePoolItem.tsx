@@ -3,6 +3,7 @@ import { memo, useMemo, type CSSProperties } from 'react';
 import type { CourseGroup } from '@/types';
 import { formatWeeks } from '@/utils/weeks';
 import { courseColor } from '@/utils/courseColor';
+import { getIcourseRating } from '@/utils/icourseRating';
 
 interface Props {
   group: CourseGroup;
@@ -53,6 +54,11 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
     ? group.teachers.join('、')
     : '教师未定';
 
+  /** icourse 评分：仅单班次组展示，多班次组在详情弹窗里分别展示 */
+  const rating = group.sections.length === 1
+    ? getIcourseRating(group.sectionIds[0])
+    : undefined;
+
   const tooltipTitle = group.sections.length > 1
     ? `${group.courseName}（${group.sectionIds.length} 个班次：${group.teachers.join('、')}）`
     : group.sectionIds[0];
@@ -89,6 +95,14 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
         <span className="pool-item__course-code">{courseCodeLabel}</span>
         <span className="pool-item__meta-aside">
           {rep?.department.name ?? ''} · {rep?.credits ?? 0}学分
+          {rating && (
+            <>
+              {' · '}
+              <Tooltip title="icourse.club 评分">
+                <span className="pool-item__rating">{rating}</span>
+              </Tooltip>
+            </>
+          )}
         </span>
       </div>
       <div className="pool-item__teacher-row">{teacherLine}</div>

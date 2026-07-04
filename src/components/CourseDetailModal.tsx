@@ -3,6 +3,7 @@ import { Descriptions, Modal, Table, Tag, Typography } from 'antd';
 import type { CourseGroup } from '@/types';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
+import { getIcourseRating } from '@/utils/icourseRating';
 
 interface Props {
   group: CourseGroup | null;
@@ -40,6 +41,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     capacity: s.capacity,
     enrolled: s.enrolled,
     classes: s.classes.length ? s.classes.join('，') : '—',
+    rating: getIcourseRating(s.id),
   }));
 
   return (
@@ -78,6 +80,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
               { title: '教师', dataIndex: 'teacher', width: 100 },
               { title: '教室', dataIndex: 'room', width: 90 },
               { title: '选课/限选', dataIndex: 'capacity', width: 100, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
+              { title: '评分', dataIndex: 'rating', width: 70, render: (v: string | undefined) => v ? <span className="detail-rating">{v}</span> : '—' },
               { title: '上课班级', dataIndex: 'classes' },
             ]}
           />
