@@ -5,13 +5,15 @@ import { PlansProvider, usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
 import { computeStats } from '@/utils/stats';
 import { buildCourseGroups, getAllCourseGroupsByKey } from '@/utils/courseGroup';
-import type { CourseGroup, FilterState } from '@/types';
+import { enumerateArrangements, pickDefaultArrangement } from '@/utils/arrangement';
+import type { Arrangement, CourseGroup, FilterState } from '@/types';
 import TopBar from '@/components/TopBar';
 import PlanSwitcher from '@/components/PlanSwitcher';
 import FilterBar from '@/components/FilterBar';
 import CoursePool from '@/components/CoursePool';
 import CourseTable from '@/components/CourseTable';
 import StatsBar from '@/components/StatsBar';
+import ArrangementPanel from '@/components/ArrangementPanel';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import { useConflicts } from '@/hooks/useConflicts';
 import { WEEKS } from '@/constants/grid';
@@ -47,10 +49,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [week, setWeek] = useState<number>(1);
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
+  const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
 
-  const { conflicts, conflictGroupKeys } = useConflicts(activePlan);
-
-  const selectedGroups = useMemo<CourseGroup[]>(() => {
+  // 已选 sections → CourseGroup[]（按 groupKey 聚合）
+  const allSelectedGroups = useMemo<CourseGroup[]>(() => {
     if (!activePlan) return [];
     const sections = activePlan.courseIds
       .map((id) => getCourseById(id))
@@ -58,15 +60,35 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     return buildCourseGroups(sections);
   }, [activePlan]);
 
-  // 稳定引用：避免父组件 re-render 时新建 Set，导致 CoursePool/grid 频繁重算
+  // 已选 stable Set
   const selectedIds = useMemo<Set<string>>(
     () => (activePlan ? new Set(activePlan.courseIds) : EMPTY_IDS),
     [activePlan],
   );
 
+  // 枚举：可能 0 个、1 个（无歧义）、≤8 个（按冲突升序取前 8）
+  const arrangements = useMemo(
+    () => enumerateArrangements(allSelectedGroups),
+    [allSelectedGroups],
+  );
+
+  // 用户选择有效 → 应用之；否则用默认（最低冲突）
+  const appliedArrangement: Arrangement | null = useMemo(() => {
+    if (arrangements.length === 0) return null;
+    if (selectedArrangementId) {
+      const found = arrangements.find((a) => a.id === selectedArrangementId);
+      if (found) return found;
+    }
+    return pickDefaultArrangement(arrangements);
+  }, [arrangements, selectedArrangementId]);
+
+  const appliedGroups = appliedArrangement?.groups ?? [];
+
+  const { conflicts, conflictGroupKeys } = useConflicts(appliedGroups);
+
   const stats = useMemo(
-    () => computeStats(selectedGroups, conflictGroupKeys),
-    [selectedGroups, conflictGroupKeys],
+    () => computeStats(appliedGroups, conflictGroupKeys),
+    [appliedGroups, conflictGroupKeys],
   );
 
   // 全量选课单元索引（模块级懒加载缓存，弹窗按 groupKey 查找）
@@ -77,8 +99,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     return groupByKey.get(detailGroupKey) ?? null;
   }, [detailGroupKey, groupByKey]);
 
-  // 切换方案时关闭详情弹窗
+  // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => setDetailGroupKey(null), [activePlan?.id]);
+  // 用户加减课时，若选择的小卡片不再有效，重置选择回默认
+  useEffect(() => {
+    if (selectedArrangementId && appliedArrangement?.id !== selectedArrangementId) {
+      setSelectedArrangementId(null);
+    }
+  }, [selectedArrangementId, appliedArrangement]);
 
   return (
     <Layout className="app-layout">
@@ -100,11 +128,18 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             week={week}
             setWeek={setWeek}
             weeks={WEEKS}
-            activePlan={activePlan}
+            groups={appliedGroups}
             conflicts={conflicts}
             onOpenDetail={setDetailGroupKey}
           />
           <StatsBar stats={stats} />
+          {arrangements.length > 1 && (
+            <ArrangementPanel
+              arrangements={arrangements}
+              selectedId={appliedArrangement?.id ?? null}
+              onSelect={(id) => setSelectedArrangementId(id)}
+            />
+          )}
         </div>
       </Layout.Content>
       <CourseDetailModal

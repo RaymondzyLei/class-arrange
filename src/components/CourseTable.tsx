@@ -1,5 +1,5 @@
 import { Segmented, Empty } from 'antd';
-import type { Plan } from '@/types';
+import type { CourseGroup } from '@/types';
 import type { ConflictMap } from '@/utils/conflict';
 import { useWeekGrid } from '@/hooks/useWeekGrid';
 import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
@@ -9,7 +9,7 @@ interface Props {
   week: number;
   setWeek: (w: number) => void;
   weeks: number[];
-  activePlan: Plan | null;
+  groups: CourseGroup[];
   conflicts: ConflictMap;
   onOpenDetail: (id: string) => void;
 }
@@ -21,8 +21,8 @@ function bandFor(period: number): 'morning' | 'noon' | 'evening' {
   return 'evening';
 }
 
-export default function CourseTable({ week, setWeek, weeks, activePlan, conflicts, onOpenDetail }: Props) {
-  const grid = useWeekGrid(activePlan, week);
+export default function CourseTable({ week, setWeek, weeks, groups, conflicts, onOpenDetail }: Props) {
+  const grid = useWeekGrid(groups, week);
 
   // 该周是否有任何课
   const hasAny = grid.some((col) => col.some((cell) => cell.entries.length > 0));
@@ -31,7 +31,7 @@ export default function CourseTable({ week, setWeek, weeks, activePlan, conflict
     <div className="panel-inner course-table-wrap">
       {/* 打印标题：平时隐藏，打印时显示 */}
       <div className="print-title">
-        {activePlan?.name ?? ''} · 第 {week} 周
+        {groups.length ? `已选 ${groups.length} 门` : ''} · 第 {week} 周
       </div>
 
       <div className="course-table__header no-print">
