@@ -48,7 +48,7 @@ export default function PlanSwitcher() {
         value={activePlan?.id}
         placeholder="请选择方案"
         onChange={switchTo}
-        options={state.plans.map((p) => ({ label: `${p.name}（${p.courseIds.length}门）`, value: p.id }))}
+        options={state.plans.map((p) => ({ label: p.name, value: p.id }))}
         disabled={state.plans.length === 0}
       />
       <Space size={4}>
