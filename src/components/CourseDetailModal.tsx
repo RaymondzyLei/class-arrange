@@ -22,6 +22,9 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
   if (!display) return null;
 
   const rep = display.sections[0];
+  // 单班次组：详情里也展示 icourse 评分（多班次已在下方明细表里逐行展示）
+  const singleRating =
+    display.sections.length === 1 ? getIcourseRating(display.sections[0].id) : undefined;
   const scheduleRows = display.schedule.map((s, i) => ({
     key: i,
     weeks: formatWeeks(s.weeks),
@@ -65,6 +68,11 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
         <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
         {rep?.undergradShared ? (
           <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
+        ) : null}
+        {singleRating ? (
+          <Descriptions.Item label="icourse 评分">
+            <span className="detail-rating">{singleRating}</span>
+          </Descriptions.Item>
         ) : null}
       </Descriptions>
 
