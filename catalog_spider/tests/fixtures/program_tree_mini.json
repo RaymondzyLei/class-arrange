@@ -1,0 +1,48 @@
+{
+  "1": {
+    "id": 1,
+    "code": "001",
+    "nameZh": "数学科学学院",
+    "nameEn": "School of Mathematical Sciences",
+    "majors": {
+      "20": {
+        "id": 20,
+        "code": "00101",
+        "nameZh": "数学与应用数学",
+        "nameEn": "Mathematics",
+        "programs": [
+          {"id": 41, "nameZh": "数学与应用数学专业培养方案", "nameEn": null, "grade": "2018", "trainType": "主修"},
+          {"id": 826, "nameZh": "数学与应用数学专业培养方案", "nameEn": null, "grade": "2017", "trainType": "主修"},
+          {"id": 1346, "nameZh": "数学与应用数学专业培养方案", "nameEn": null, "grade": "2019", "trainType": "主修"}
+        ]
+      },
+      "21": {
+        "id": 21,
+        "code": "00102",
+        "nameZh": "信息与计算科学",
+        "nameEn": "Information and Computing Sciences",
+        "programs": [
+          {"id": 100, "nameZh": "信息与计算科学培养方案", "nameEn": null, "grade": "2020", "trainType": "主修"}
+        ]
+      }
+    }
+  },
+  "2": {
+    "id": 2,
+    "code": "210",
+    "nameZh": "信息科学技术学院",
+    "nameEn": "School of Information Science and Technology",
+    "majors": {
+      "93": {
+        "id": 93,
+        "code": "21001",
+        "nameZh": "计算机科学与技术",
+        "nameEn": "Computer Science",
+        "programs": [
+          {"id": 3413, "nameZh": "计算机科学与技术培养方案", "nameEn": null, "grade": "2026", "trainType": "主修"},
+          {"id": 2000, "nameZh": "计算机科学与技术培养方案", "nameEn": null, "grade": "2024", "trainType": "主修"}
+        ]
+      }
+    }
+  }
+}
