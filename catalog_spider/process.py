@@ -66,3 +66,55 @@ def build_programs_index(raw_dir: Path, out_path: Path) -> int:
         encoding="utf-8",
     )
     return len(rows)
+
+
+def _walk_with_path(node: dict, path: list[str], buckets: dict[str, list]) -> None:
+    """递归遍历 moduleTree，沿途把 module.type 累加到 modulePath，按 term 分桶。"""
+    self_ = node.get("self", {})
+    type_label = self_.get("type") or self_.get("typeEn") or ""
+    new_path = path + [type_label] if type_label else path
+    for co in self_.get("courses", []):
+        course = co.get("course") or {}
+        for term in co.get("terms") or ["未指定学期"]:
+            buckets.setdefault(term, []).append({
+                "code": course.get("code"),
+                "name": course.get("nameZh"),
+                "credits": course.get("credits"),
+                "compulsory": bool(co.get("compulsory", False)),
+                "modulePath": list(new_path),
+            })
+    for child in node.get("children", []):
+        _walk_with_path(child, new_path, buckets)
+
+
+def _term_sort_key(t: str) -> tuple:
+    """学期 key 排序：1秋 < 1春 < 2秋 < 2春 < ...，无法解析的放最后。"""
+    if t and t[0].isdigit():
+        year = int(t[0])
+        season = t[1:]
+        return (year, 0 if season == "秋" else 1)
+    return (99, t)
+
+
+def group_by_term(raw: dict) -> dict[str, list]:
+    """单个 program → {term: [courses]}，按 1秋 < 1春 < 2秋 ... 排序。"""
+    buckets: dict[str, list] = {}
+    for root in raw.get("moduleTree", []):
+        _walk_with_path(root, [], buckets)
+    return dict(sorted(buckets.items(), key=lambda kv: _term_sort_key(kv[0])))
+
+
+def build_by_program_term(raw_dir: Path, out_path: Path) -> int:
+    """遍历 raw_dir 下所有 {id}.json，生成 index/by_program_term.json，返回 program 数。"""
+    out: dict[str, dict[str, list]] = {}
+    for f in sorted(raw_dir.glob("*.json")):
+        if not f.stem.isdigit():
+            continue
+        pid = int(f.stem)
+        raw = json.loads(f.read_text(encoding="utf-8"))
+        out[str(pid)] = group_by_term(raw)
+    out_path.write_text(
+        json.dumps(out, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    return len(out)

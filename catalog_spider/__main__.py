@@ -12,7 +12,7 @@ import argparse
 from .client import auto_retry_get
 from .details import fetch_all
 from .paths import INDEX_DIR, RAW_DIR, RAW_PROGRAMS_DIR, ensure_dirs
-from .process import build_programs_index
+from .process import build_by_program_term, build_programs_index
 
 
 def cmd_fetch_tree(_args) -> int:
@@ -51,8 +51,12 @@ def cmd_build_index(_args) -> int:
 
 
 def cmd_build_by_term(_args) -> int:
-    print("not implemented: --build-by-term")
-    return 1
+    """从 raw/programs/*.json 生成 index/by_program_term.json。"""
+    ensure_dirs()
+    out = INDEX_DIR / "by_program_term.json"
+    n = build_by_program_term(RAW_PROGRAMS_DIR, out)
+    print(f"wrote {out} ({n} programs)")
+    return 0
 
 
 def cmd_all(_args) -> int:
