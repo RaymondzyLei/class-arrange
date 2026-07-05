@@ -8,12 +8,19 @@
 import requests
 
 BASE_URL = "https://catalog.ustc.edu.cn"
+# USTC 教务系统对默认 python-requests UA 返回 502；模拟浏览器 UA 才能稳定拿数据。
+DEFAULT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+}
 
 
 def auto_retry_get(path: str, **kwargs):
     """Get with up to 10 retries on exception. Returns response or None after 10 fails."""
     url = path if path.startswith("http") else BASE_URL + path
     kwargs.setdefault("timeout", 30)
+    headers = dict(kwargs.pop("headers", None) or {})
+    headers.setdefault("User-Agent", DEFAULT_HEADERS["User-Agent"])
+    kwargs["headers"] = headers
     for attempt in range(1, 11):
         try:
             return requests.get(url, **kwargs)

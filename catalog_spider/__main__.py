@@ -1,7 +1,7 @@
-"""CLI 入口：ustc 培养方案爬虫。
+"""CLI 入口：USTC 培养方案爬虫。
 
 子命令：
-  --fetch-tree     抓取 /api/teach/program_tree（秒级）
+  --fetch-tree     抓取 /api/teach/program/tree（秒级）
   --fetch-details  并发抓取所有 program 详情（断点续爬）
   --build-index    从 raw 生成 index/programs.json
   --build-by-term  从 raw 生成 index/by_program_term.json
@@ -9,12 +9,22 @@
 """
 import argparse
 
-from .paths import ensure_dirs
+from .client import auto_retry_get
+from .paths import RAW_DIR, ensure_dirs
 
 
 def cmd_fetch_tree(args) -> int:
-    print("not implemented: --fetch-tree")
-    return 1
+    """抓取 program_tree.json（秒级，每次重跑即可）。"""
+    ensure_dirs()
+    out = RAW_DIR / "program_tree.json"
+    resp = auto_retry_get("/api/teach/program/tree")
+    if resp is None or resp.status_code != 200:
+        status = resp.status_code if resp else "no response"
+        print(f"failed: {status}")
+        return 1
+    out.write_bytes(resp.content)
+    print(f"wrote {out} ({len(resp.content)} bytes)")
+    return 0
 
 
 def cmd_fetch_details(args) -> int:
@@ -41,19 +51,19 @@ def main() -> int:
     ensure_dirs()
     p = argparse.ArgumentParser(prog="catalog_spider", description="USTC 培养方案爬虫")
     cmds = p.add_subparsers(dest="cmd", required=True)
-    cmds.add_parser("--fetch-tree", help="抓取 program_tree")
-    cmds.add_parser("--fetch-details", help="并发抓取所有 program 详情（断点续爬）")
-    cmds.add_parser("--build-index", help="从 raw 生成 programs.json 索引")
-    cmds.add_parser("--build-by-term", help="从 raw 生成 by_program_term.json")
-    cmds.add_parser("--all", help="按顺序跑完上面 4 个")
+    cmds.add_parser("fetch-tree", help="抓取 program_tree")
+    cmds.add_parser("fetch-details", help="并发抓取所有 program 详情（断点续爬）")
+    cmds.add_parser("build-index", help="从 raw 生成 programs.json 索引")
+    cmds.add_parser("build-by-term", help="从 raw 生成 by_program_term.json")
+    cmds.add_parser("all", help="按顺序跑完上面 4 个")
     args = p.parse_args()
 
     dispatch = {
-        "--fetch-tree": cmd_fetch_tree,
-        "--fetch-details": cmd_fetch_details,
-        "--build-index": cmd_build_index,
-        "--build-by-term": cmd_build_by_term,
-        "--all": cmd_all,
+        "fetch-tree": cmd_fetch_tree,
+        "fetch-details": cmd_fetch_details,
+        "build-index": cmd_build_index,
+        "build-by-term": cmd_build_by_term,
+        "all": cmd_all,
     }
     return dispatch[args.cmd](args)
 
