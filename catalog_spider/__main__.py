@@ -1,11 +1,11 @@
 """CLI 入口：USTC 培养方案爬虫。
 
 子命令：
-  --fetch-tree     抓取 /api/teach/program/tree（秒级）
-  --fetch-details  并发抓取所有 program 详情（断点续爬）
-  --build-index    从 raw 生成 index/programs.json
-  --build-by-term  从 raw 生成 index/by_program_term.json
-  --all            按顺序跑完上面 4 个
+  fetch-tree     抓取 /api/teach/program/tree（秒级）
+  fetch-details  并发抓取所有 program 详情（断点续爬）
+  build-index    从 raw 生成 index/programs.json
+  build-by-term  从 raw 生成 index/by_program_term.json
+  all            按顺序跑完上面 4 个
 """
 import argparse
 
@@ -60,8 +60,12 @@ def cmd_build_by_term(_args) -> int:
 
 
 def cmd_all(_args) -> int:
-    print("not implemented: --all")
-    return 1
+    """按顺序跑完 fetch-tree → fetch-details → build-index → build-by-term。"""
+    rc = 0
+    for cmd in (cmd_fetch_tree, cmd_fetch_details, cmd_build_index, cmd_build_by_term):
+        if cmd(_args) != 0:
+            rc = 1
+    return rc
 
 
 def main() -> int:
