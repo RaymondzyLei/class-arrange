@@ -46,7 +46,8 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
     case 'deletePlan': {
       const remaining = state.plans.filter((p) => p.id !== action.id);
       if (remaining.length === 0) {
-        return { plans: [], activePlanId: null };
+        const plan = makePlan(nextDefaultPlanName(remaining));
+        return { plans: [plan], activePlanId: plan.id };
       }
       let activeId = state.activePlanId;
       if (activeId === action.id) {

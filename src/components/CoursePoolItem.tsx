@@ -1,9 +1,9 @@
-import { Button, Tooltip } from 'antd';
+import { Button } from 'antd';
 import { memo, useMemo, type CSSProperties } from 'react';
 import type { CourseGroup } from '@/types';
-import { formatWeeks } from '@/utils/weeks';
 import { courseColor } from '@/utils/courseColor';
-import { getIcourseRating } from '@/utils/icourseRating';
+import { getIcourseRatingInfo } from '@/utils/icourseRating';
+import { formatScheduleCompact } from '@/utils/scheduleFormat';
 
 interface Props {
   group: CourseGroup;
@@ -16,18 +16,7 @@ interface Props {
 
 function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenDetail }: Props) {
   const rep = group.sections[0];
-  /** 卡片上的时间摘要：
-   *  多班组（同时间多班次）学校地点不唯一，折叠时不展示@room，详情列表里展示。
-   *  单班组保留 @room，给学生确切位置感。*/
-  const showRoom = group.sections.length <= 1;
-  const scheduleSummary = group.schedule.length
-    ? group.schedule
-        .map((s) => {
-          const head = `${formatWeeks(s.weeks)} 周${'一二三四五六日'[s.day - 1]}${s.periods[0]}-${s.periods[s.periods.length - 1]}`;
-          return showRoom && s.room ? `${head}@${s.room}` : head;
-        })
-        .join('；')
-    : '时间未定';
+  const scheduleSummary = formatScheduleCompact(group.schedule);
 
   // 主题由父层传入，与 React 订阅对齐（同步 DOM 读取已被 cache 彻底替代）
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
@@ -36,9 +25,9 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
   if (selected && !conflicting) cls.push('pool-item--selected');
   if (conflicting) cls.push('pool-item--conflict');
 
-  const style: CSSProperties = {
-    borderLeftColor: conflicting ? 'var(--conflict)' : color.stripe,
-  };
+  const style = {
+    '--pool-item-stripe': conflicting ? 'var(--conflict)' : color.stripe,
+  } as CSSProperties;
 
   /** 课程号标签：单班组直接展示完整 section.id（如 `001101.01`），
    *  多班组用 `courseCode.(01,02)` 这种折叠形式 */
@@ -56,12 +45,11 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
 
   /** icourse 评分：仅单班次组展示，多班次组在详情弹窗里分别展示 */
   const rating = group.sections.length === 1
-    ? getIcourseRating(group.sectionIds[0])
+    ? getIcourseRatingInfo(group.sectionIds[0])
     : undefined;
-
-  const tooltipTitle = group.sections.length > 1
-    ? `${group.courseName}（${group.sectionIds.length} 个班次：${group.teachers.join('、')}）`
-    : group.sectionIds[0];
+  const ratingLabel = rating
+    ? `${rating.score}${typeof rating.ratingCount === 'number' ? `(${rating.ratingCount})` : ''}`
+    : '';
 
   return (
     <div
@@ -70,15 +58,13 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
       onClick={onOpenDetail}
     >
       <div className="pool-item__head">
-        <Tooltip title={tooltipTitle}>
-          <span className="pool-item__name">
-            <span className="pool-item__name-text">{group.courseName}</span>
-            {group.sections.length > 1 && (
-              <span className="pool-item__count-tag">{group.sections.length}个班</span>
-            )}
-            {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
-          </span>
-        </Tooltip>
+        <span className="pool-item__name">
+          <span className="pool-item__name-text">{group.courseName}</span>
+          {group.sections.length > 1 && (
+            <span className="pool-item__count-tag">{group.sections.length}个班</span>
+          )}
+          {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
+        </span>
         <Button
           size="small"
           type={selected ? 'primary' : 'default'}
@@ -98,17 +84,21 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
           {rating && (
             <>
               {' · '}
-              <Tooltip title="icourse.club 评分">
-                <span className="pool-item__rating">{rating}</span>
-              </Tooltip>
+              <a
+                className="pool-item__rating"
+                href={rating.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(event) => event.stopPropagation()}
+              >
+                {ratingLabel}
+              </a>
             </>
           )}
         </span>
       </div>
       <div className="pool-item__teacher-row">{teacherLine}</div>
-      <Tooltip title={rep?.rawSchedule || scheduleSummary}>
-        <div className="pool-item__schedule">{scheduleSummary}</div>
-      </Tooltip>
+      <div className="pool-item__schedule">{scheduleSummary}</div>
     </div>
   );
 }

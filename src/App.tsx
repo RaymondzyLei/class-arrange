@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ConfigProvider, Layout, Modal, theme, App as AntApp } from 'antd';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
+import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
@@ -7,7 +8,6 @@ import { computeStats } from '@/utils/stats';
 import { buildCourseGroups, getAllCourseGroupsByKey } from '@/utils/courseGroup';
 import { enumerateArrangements, pickDefaultArrangement } from '@/utils/arrangement';
 import type { Arrangement, CourseGroup, FilterState } from '@/types';
-import TopBar from '@/components/TopBar';
 import PlanSwitcher from '@/components/PlanSwitcher';
 import FilterBar from '@/components/FilterBar';
 import CoursePool from '@/components/CoursePool';
@@ -16,7 +16,10 @@ import StatsBar from '@/components/StatsBar';
 import ArrangementPanel from '@/components/ArrangementPanel';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import { useConflicts } from '@/hooks/useConflicts';
-import { WEEKS } from '@/constants/grid';
+import { useFilteredCourses } from '@/hooks/useFilteredCourses';
+import { exportTimetableImage } from '@/utils/exportPrint';
+import type { WeekSelection } from '@/config/termCalendar';
+import { getWeekLabel } from '@/config/termCalendar';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -30,9 +33,6 @@ const EMPTY_FILTER: FilterState = {
 const EMPTY_IDS: Set<string> = new Set();
 const THEME_KEY = 'class-arrange:v1:theme';
 type Theme = 'light' | 'dark';
-
-// 启动公告：每次页面加载都弹出，文案固定
-const ANNOUNCEMENT_TEXT = '主要功能已经做好了，可以加入QQ群1050645984讨论或提出建议';
 
 function readInitialTheme(): Theme {
   try {
@@ -49,10 +49,14 @@ function readInitialTheme(): Theme {
 
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { activePlan } = usePlans();
+  const { message } = AntApp.useApp();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
-  const [week, setWeek] = useState<number>(1);
+  const [weekSelection, setWeekSelection] = useState<WeekSelection>(1);
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
   const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+  const filteredGroups = useFilteredCourses(filter);
 
   // 已选 sections → CourseGroup[]（按 groupKey 聚合）
   const allSelectedGroups = useMemo<CourseGroup[]>(() => {
@@ -87,7 +91,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const appliedGroups = appliedArrangement?.groups ?? [];
 
-  const { conflicts, conflictGroupKeys } = useConflicts(appliedGroups);
+  const { conflictGroupKeys } = useConflicts(appliedGroups);
 
   const stats = useMemo(
     () => computeStats(appliedGroups, conflictGroupKeys),
@@ -111,15 +115,43 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
   }, [selectedArrangementId, appliedArrangement]);
 
+  const handleExport = async () => {
+    if (!exportRef.current) {
+      message.warning('课表尚未准备好');
+      return;
+    }
+    setExporting(true);
+    try {
+      await exportTimetableImage(exportRef.current, {
+        planName: activePlan?.name ?? '选课方案',
+        weekLabel: getWeekLabel(weekSelection),
+      });
+      message.success('课表图片已导出');
+    } catch {
+      message.error('导出图片失败，请稍后重试');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <Layout className="app-layout">
-      <TopBar themeMode={themeMode} onToggleTheme={onToggleTheme} />
       <Layout.Content className="app-content">
         <div className="pool-panel no-print">
-          <PlanSwitcher />
-          <FilterBar filter={filter} setFilter={setFilter} />
+          <div className="panel-inner plan-summary">
+            <PlanSwitcher />
+            <StatsBar stats={stats} />
+          </div>
+          {arrangements.length > 1 && (
+            <ArrangementPanel
+              arrangements={arrangements}
+              selectedId={appliedArrangement?.id ?? null}
+              onSelect={(id) => setSelectedArrangementId(id)}
+            />
+          )}
+          <FilterBar filter={filter} setFilter={setFilter} resultCount={filteredGroups.length} />
           <CoursePool
-            filter={filter}
+            groups={filteredGroups}
             selectedIds={selectedIds}
             conflictGroupKeys={conflictGroupKeys}
             themeMode={themeMode}
@@ -128,21 +160,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         </div>
         <div className="table-panel">
           <CourseTable
-            week={week}
-            setWeek={setWeek}
-            weeks={WEEKS}
+            weekSelection={weekSelection}
+            setWeekSelection={setWeekSelection}
             groups={appliedGroups}
-            conflicts={conflicts}
+            exportRef={exportRef}
             onOpenDetail={setDetailGroupKey}
+            themeMode={themeMode}
+            onToggleTheme={onToggleTheme}
+            onExport={handleExport}
+            exporting={exporting}
           />
-          <StatsBar stats={stats} />
-          {arrangements.length > 1 && (
-            <ArrangementPanel
-              arrangements={arrangements}
-              selectedId={appliedArrangement?.id ?? null}
-              onSelect={(id) => setSelectedArrangementId(id)}
-            />
-          )}
         </div>
       </Layout.Content>
       <CourseDetailModal
@@ -156,7 +183,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
-  const [announcementOpen, setAnnouncementOpen] = useState(true);
 
   // 把主题挂到 <html> 上，CSS 变量自动切换
   useEffect(() => {
@@ -164,15 +190,33 @@ export default function App() {
   }, [themeMode]);
 
   const toggleTheme = () => {
-    setThemeMode((prev) => {
-      const next: Theme = prev === 'dark' ? 'light' : 'dark';
+    const next: Theme = themeMode === 'dark' ? 'light' : 'dark';
+    const commit = () => {
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch {
         // 忽略写入失败（隐私模式）
       }
-      return next;
-    });
+      flushSync(() => {
+        document.documentElement.dataset.theme = next;
+        setThemeMode(next);
+      });
+    };
+    const markTransitioning = () => {
+      document.documentElement.classList.add('theme-transitioning');
+      window.setTimeout(() => {
+        document.documentElement.classList.remove('theme-transitioning');
+      }, 340);
+    };
+
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion && typeof document.startViewTransition === 'function') {
+      markTransitioning();
+      document.startViewTransition(commit);
+      return;
+    }
+    if (!prefersReducedMotion) markTransitioning();
+    commit();
   };
 
   return (
@@ -193,17 +237,6 @@ export default function App() {
       }}
     >
       <AntApp>
-        <Modal
-          open={announcementOpen}
-          title="公告"
-          okText="知道了"
-          cancelButtonProps={{ style: { display: 'none' } }}
-          onOk={() => setAnnouncementOpen(false)}
-          onCancel={() => setAnnouncementOpen(false)}
-          width={420}
-        >
-          <p style={{ margin: 0 }}>{ANNOUNCEMENT_TEXT}</p>
-        </Modal>
         <PlansProvider>
           <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
         </PlansProvider>

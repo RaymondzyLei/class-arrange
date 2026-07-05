@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Descriptions, Modal, Table, Tag, Typography } from 'antd';
+import { Descriptions, Table, Tag, Typography } from 'antd';
 import type { CourseGroup } from '@/types';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
-import { getIcourseRating } from '@/utils/icourseRating';
+import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
+import { formatScheduleCompact } from '@/utils/scheduleFormat';
+import BottomModal from './BottomModal';
 
 interface Props {
   group: CourseGroup | null;
@@ -11,8 +13,33 @@ interface Props {
   onClose: () => void;
 }
 
+function RatingLink({ rating }: { rating?: IcourseRatingInfo }) {
+  if (!rating) return <>—</>;
+  const label = typeof rating.ratingCount === 'number'
+    ? `${rating.score}（${rating.ratingCount}人）`
+    : rating.score;
+  return (
+    <a
+      className="detail-rating"
+      href={rating.url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {label}
+    </a>
+  );
+}
+
+function firstExpandedWeek(weeks: number[]): number {
+  return expandWeeks(weeks)[0] ?? 999;
+}
+
+function firstPeriod(periods: number[]): number {
+  return periods[0] ?? 999;
+}
+
 export default function CourseDetailModal({ group, open, onClose }: Props) {
-  // 缓存最后一次非 null 的组，保证 Modal 关闭动画期间内容不消失
+  // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
   useEffect(() => {
     if (group) setCached(group);
@@ -22,10 +49,15 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
   if (!display) return null;
 
   const rep = display.sections[0];
-  // 单班次组：详情里也展示 icourse 评分（多班次已在下方明细表里逐行展示）
   const singleRating =
-    display.sections.length === 1 ? getIcourseRating(display.sections[0].id) : undefined;
-  const scheduleRows = display.schedule.map((s, i) => ({
+    display.sections.length === 1 ? getIcourseRatingInfo(display.sections[0].id) : undefined;
+  const sortedSchedule = [...display.schedule].sort((a, b) =>
+    firstExpandedWeek(a.weeks) - firstExpandedWeek(b.weeks)
+    || a.day - b.day
+    || firstPeriod(a.periods) - firstPeriod(b.periods)
+    || (a.room || '').localeCompare(b.room || '', 'zh-Hans-CN'),
+  );
+  const scheduleRows = sortedSchedule.map((s, i) => ({
     key: i,
     weeks: formatWeeks(s.weeks),
     weeksExpanded: expandWeeks(s.weeks).join(', '),
@@ -34,7 +66,16 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     room: s.room || '—',
   }));
 
-  const sectionRows = display.sections.map((s, i) => ({
+  const sectionRows = [...display.sections]
+    .sort((a, b) => {
+      const aSlot = a.schedule[0];
+      const bSlot = b.schedule[0];
+      return (aSlot ? firstExpandedWeek(aSlot.weeks) : 999) - (bSlot ? firstExpandedWeek(bSlot.weeks) : 999)
+        || (aSlot?.day ?? 999) - (bSlot?.day ?? 999)
+        || firstPeriod(aSlot?.periods ?? []) - firstPeriod(bSlot?.periods ?? [])
+        || a.id.localeCompare(b.id);
+    })
+    .map((s, i) => ({
     key: i,
     id: s.id,
     teacher: s.teacher || '—',
@@ -43,18 +84,17 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     room: s.schedule.find((sl) => sl.room)?.room || '—',
     capacity: s.capacity,
     enrolled: s.enrolled,
+    time: formatScheduleCompact(s.schedule),
     classes: s.classes.length ? s.classes.join('，') : '—',
-    rating: getIcourseRating(s.id),
+    rating: getIcourseRatingInfo(s.id),
   }));
 
   return (
-    <Modal
+    <BottomModal
       title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
       open={open}
-      onCancel={onClose}
-      footer={null}
-      width={720}
-      destroyOnHidden
+      onClose={onClose}
+      width={1180}
     >
       <Descriptions size="small" column={2} bordered>
         <Descriptions.Item label="课程号">{display.courseCode}</Descriptions.Item>
@@ -71,7 +111,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
         ) : null}
         {singleRating ? (
           <Descriptions.Item label="icourse 评分">
-            <span className="detail-rating">{singleRating}</span>
+            <RatingLink rating={singleRating} />
           </Descriptions.Item>
         ) : null}
       </Descriptions>
@@ -80,26 +120,30 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
         <>
           <Typography.Title level={5} style={{ marginTop: 16 }}>班次明细</Typography.Title>
           <Table
+            className="detail-table detail-section-table"
             size="small"
             dataSource={sectionRows}
             pagination={false}
+            tableLayout="auto"
             columns={[
               { title: '课堂号', dataIndex: 'id', width: 110 },
-              { title: '教师', dataIndex: 'teacher', width: 100 },
-              { title: '教室', dataIndex: 'room', width: 90 },
-              { title: '选课/限选', dataIndex: 'capacity', width: 100, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
-              { title: '评分', dataIndex: 'rating', width: 70, render: (v: string | undefined) => v ? <span className="detail-rating">{v}</span> : '—' },
+              { title: '教师', dataIndex: 'teacher', width: 120 },
+              { title: '时间地点', dataIndex: 'time' },
+              { title: '选课/限选', dataIndex: 'capacity', width: 96, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
+              { title: '评分', dataIndex: 'rating', width: 110, render: (v: IcourseRatingInfo | undefined) => <RatingLink rating={v} /> },
               { title: '上课班级', dataIndex: 'classes' },
             ]}
           />
         </>
       )}
 
-      <Typography.Title level={5} style={{ marginTop: 16 }}>结构化时间地点</Typography.Title>
+      <Typography.Title level={5} style={{ marginTop: 16 }}>时间地点</Typography.Title>
       <Table
+        className="detail-table detail-schedule-table"
         size="small"
         dataSource={scheduleRows}
         pagination={false}
+        tableLayout="auto"
         columns={[
           { title: '周次', dataIndex: 'weeks', width: 120 },
           { title: '展开周', dataIndex: 'weeksExpanded', render: (v: string) => <Typography.Text type="secondary" style={{ fontSize: 12 }}>{v}</Typography.Text> },
@@ -108,6 +152,6 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           { title: '教室', dataIndex: 'room' },
         ]}
       />
-    </Modal>
+    </BottomModal>
   );
 }

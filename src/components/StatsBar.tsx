@@ -1,4 +1,5 @@
 import type { PlanStats } from '@/utils/stats';
+import { WarningIcon } from './icons';
 
 interface Props {
   stats: PlanStats;
@@ -6,7 +7,7 @@ interface Props {
 
 export default function StatsBar({ stats }: Props) {
   return (
-    <div className="panel-inner stats-bar no-print">
+    <div className="stats-bar">
       <div className="stats-bar__item">
         <span className="stats-bar__label">已选课程</span>
         <span className="stats-bar__value">{stats.count} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span></span>
@@ -22,7 +23,8 @@ export default function StatsBar({ stats }: Props) {
       <div className="stats-bar__item">
         <span className="stats-bar__label">冲突课程</span>
         <span className={`stats-bar__value${stats.conflictCount > 0 ? ' stats-bar__value--conflict' : ''}`}>
-          {stats.conflictCount > 0 ? '⚠ ' : ''}{stats.conflictCount} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span>
+          {stats.conflictCount > 0 ? <WarningIcon className="stats-bar__warning-icon" /> : null}
+          {stats.conflictCount} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span>
         </span>
       </div>
     </div>

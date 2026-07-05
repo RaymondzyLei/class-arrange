@@ -1,4 +1,4 @@
-import { Tag, Tooltip } from 'antd';
+import { Tag } from 'antd';
 import type { Arrangement } from '@/types';
 
 interface Props {
@@ -20,28 +20,27 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
         {arrangements.map((a) => {
           const applied = a.id === selectedId;
           const conflictFree = a.conflictCount === 0;
-          const tooltipText = a.groups.map((g) => g.courseName).join('、');
           return (
-            <Tooltip key={a.id} title={tooltipText}>
-              <button
-                type="button"
-                className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
-                onClick={() => onSelect(a.id)}
-              >
-                <div className="arrangement-card__row">
-                  <span className="arrangement-card__idx">{a.id.replace('arr-', '#')}</span>
-                  <span className="arrangement-card__meta">
-                    {a.courseCount} 门 · {a.totalCredits} 学分
-                  </span>
-                  <Tag
-                    color={conflictFree ? 'green' : 'orange'}
-                    className="arrangement-card__conflict"
-                  >
-                    {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
-                  </Tag>
-                </div>
-              </button>
-            </Tooltip>
+            <button
+              key={a.id}
+              type="button"
+              className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
+              onClick={() => onSelect(a.id)}
+              aria-label={`排课方案 ${a.id.replace('arr-', '')}`}
+            >
+              <div className="arrangement-card__row">
+                <span className="arrangement-card__idx">{a.id.replace('arr-', '#')}</span>
+                <span className="arrangement-card__meta">
+                  {a.courseCount} 门 · {a.totalCredits} 学分
+                </span>
+                <Tag
+                  color={conflictFree ? 'green' : 'orange'}
+                  className="arrangement-card__conflict"
+                >
+                  {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
+                </Tag>
+              </div>
+            </button>
           );
         })}
       </div>

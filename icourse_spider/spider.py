@@ -54,23 +54,24 @@ def get_lesson_data(lessonid):
     url = f'https://icourse.club/course/{lessonid}/'
     r = requests.get(url)
     if (r == None) or (r.status_code != 200):
-        return lessonid, None, None, '课程评分获取失败'
+        return lessonid, None, None, '课程评分获取失败', None
     # 寻找课程名，形如 <span class="blue h3">大学物理-研究性实验</span><span class="h3 blue mobile">
     name = re.findall(r'<span class="blue h3">(.+)</span><span class="h3 blue mobile">', r.text)
     if len(name) == 0:
-        return lessonid, None, None, '课程名获取失败'
+        return lessonid, None, None, '课程名获取失败', None
     # 检测是否暂无评分，依据是是否出现过 <span class="text-muted px12">(暂无评价)</span>
     isNoScoreNow = r.text.find(r'<span class="text-muted px12">(暂无评价)</span>') != -1
     # 获取课程评价信息，形如 <span class="rl-pd-sm h4">xxx</span>
     score = re.findall(r'<span class="rl-pd-sm h4">([0-9.]+)</span>', r.text)
     if not isNoScoreNow and len(score) == 0:
-        return lessonid, name[0], None, '课程评分获取失败'
+        return lessonid, name[0], None, '课程评分获取失败', None
+    count = re.findall(r'(\d+)\s*人评价', r.text)
     # 获取所有老师, 形如 <h3 class="blue"><a href="/teacher/29/">许小亮</a></h3>
     teachers = re.findall(r'<h3 class="blue"><a href="/teacher/\d+/">(.+)</a></h3>', r.text)
 
     if isNoScoreNow:
-        return lessonid, name[0], teachers, '暂无评分'
-    return lessonid, name[0], teachers, score[0]
+        return lessonid, name[0], teachers, '暂无评分', None
+    return lessonid, name[0], teachers, score[0], int(count[0]) if count else None
 
 
 if __name__ == '__main__':
@@ -93,16 +94,19 @@ if __name__ == '__main__':
     results = []
     with multiprocessing.Pool(processes=process_max) as pool:
         with tqdm.tqdm(total=len(allcourses), desc='[o] 正在爬取评分数据') as pbar:
-            for lessonid, name, teachers, score in pool.imap_unordered(get_lesson_data, allcourses):
+            for lessonid, name, teachers, score, ratingCount in pool.imap_unordered(get_lesson_data, allcourses):
                 if '获取失败' in score:
                     print(f'[x] 课程 {lessonid} {score}')
                     continue
-                results.append({
+                item = {
                     'icourse-id': lessonid,
                     'name': name,
                     'teachers': teachers,
                     'score': score
-                })
+                }
+                if ratingCount is not None:
+                    item['ratingCount'] = ratingCount
+                results.append(item)
                 pbar.update()
     time_cost = time.time() - start_time
     print(f'[+] 已获取所有评分数据 (耗时 {time_cost:.2f} 秒)')

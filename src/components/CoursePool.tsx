@@ -1,16 +1,15 @@
 import { App, Empty } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { List, useDynamicRowHeight, useListRef, type RowComponentProps } from 'react-window';
-import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { usePlans } from '@/store/plansContext';
 import { getCourseById } from '@/data';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import { detectConflicts } from '@/utils/conflict';
-import type { CourseGroup, FilterState } from '@/types';
+import type { CourseGroup } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
 interface Props {
-  filter: FilterState;
+  groups: CourseGroup[];
   selectedIds: Set<string>;
   conflictGroupKeys: Set<string>;
   themeMode: 'light' | 'dark';
@@ -26,8 +25,7 @@ interface RowExtraProps {
   themeMode: 'light' | 'dark';
   onToggleRow: (group: CourseGroup) => void;
   onOpenDetailRow: (groupKey: string) => void;
-  dynamicRowHeight: ReturnType<typeof useDynamicRowHeight>;
-  defaultRowHeight: number;
+  observeRowElements: (elements: Element[] | NodeListOf<Element>) => () => void;
 }
 
 function PoolRow({
@@ -40,24 +38,24 @@ function PoolRow({
   themeMode,
   onToggleRow,
   onOpenDetailRow,
-  dynamicRowHeight,
-  defaultRowHeight,
+  observeRowElements,
 }: RowComponentProps<RowExtraProps>) {
   const g = groups[index];
-  // react-window 2.x 的 useDynamicRowHeight 通过 ResizeObserver 测量
-  // `borderBoxSize` —— padding 的尺寸已经包含在内。因此 minHeight 直接用
-  // 测量结果，paddingBottom 只是视觉效果，不会重复计入。
-  const measured = dynamicRowHeight.getRowHeight(index);
-  const minH = measured ?? defaultRowHeight;
   const rowStyle: CSSProperties = {
     ...(style as CSSProperties),
-    minHeight: minH,
-    height: 'auto',
     paddingBottom: ROW_GAP,
     boxSizing: 'border-box',
+    display: 'flex',
   };
   return (
-    <div style={rowStyle} {...ariaAttributes}>
+    <div
+      style={rowStyle}
+      {...ariaAttributes}
+      ref={(node) => {
+        if (!node) return undefined;
+        return observeRowElements([node]);
+      }}
+    >
       <CoursePoolItem
         group={g}
         selected={g.sectionIds.every((id) => selectedIds.has(id))}
@@ -70,32 +68,33 @@ function PoolRow({
   );
 }
 
-const DEFAULT_ROW_HEIGHT = 90;
-/** 行之间的间距。要并入每个 row 的测量高度中，否则 react-window 会把上下卡片贴在一起 */
-const ROW_GAP = 6;
+const DEFAULT_ROW_HEIGHT = 150;
+const ROW_GAP = 4;
 
-export default function CoursePool({ filter, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
+export default function CoursePool({ groups, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
-  const filtered = useFilteredCourses(filter);
   const listRef = useListRef(null);
-
-  const dynamicRowHeight = useDynamicRowHeight({ defaultRowHeight: DEFAULT_ROW_HEIGHT });
+  const rowHeightKey = useMemo(() => groups.map((group) => group.key).join('|'), [groups]);
+  const rowHeight = useDynamicRowHeight({
+    defaultRowHeight: DEFAULT_ROW_HEIGHT,
+    key: `${themeMode}:${rowHeightKey}`,
+  });
 
   // 筛选条件或活动方案真正变更时滚回顶部。
-  // 仅当 filter/activePlanId 引用变化才触发，避免主题切换等无关 re-render 时
+  // 仅当列表/活动方案引用变化才触发，避免主题切换等无关 re-render 时
   // 把用户滚动到的位置意外重置。
-  const lastFilterRef = useRef(filter);
+  const lastGroupsRef = useRef(groups);
   const lastPlanIdRef = useRef(activePlan?.id);
   useEffect(() => {
-    const filterChanged = lastFilterRef.current !== filter;
+    const groupsChanged = lastGroupsRef.current !== groups;
     const planChanged = lastPlanIdRef.current !== activePlan?.id;
-    lastFilterRef.current = filter;
+    lastGroupsRef.current = groups;
     lastPlanIdRef.current = activePlan?.id;
-    if (filterChanged || planChanged) {
+    if (groupsChanged || planChanged) {
       listRef.current?.scrollToRow({ index: 0 });
     }
-  }, [filter, activePlan?.id, listRef]);
+  }, [groups, activePlan?.id, listRef]);
 
   const toggle = useCallback((group: CourseGroup) => {
     if (!activePlan) {
@@ -135,38 +134,32 @@ export default function CoursePool({ filter, selectedIds, conflictGroupKeys, the
   }, [activePlan, selectedIds, dispatch, message]);
 
   const rowProps = useMemo<RowExtraProps>(() => ({
-    groups: filtered,
+    groups,
     selectedIds,
     conflictGroupKeys,
     themeMode,
     onToggleRow: toggle,
     onOpenDetailRow: onOpenDetail,
-    dynamicRowHeight,
-    defaultRowHeight: DEFAULT_ROW_HEIGHT,
-  }), [filtered, selectedIds, conflictGroupKeys, themeMode, toggle, onOpenDetail, dynamicRowHeight]);
+    observeRowElements: rowHeight.observeRowElements,
+  }), [groups, selectedIds, conflictGroupKeys, themeMode, toggle, onOpenDetail, rowHeight.observeRowElements]);
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (
     <div className="panel-inner course-pool no-print">
-      {filtered.length === 0 ? (
+      {groups.length === 0 ? (
         <Empty description="无匹配课程" style={{ marginTop: 40 }} />
       ) : (
-        <>
-          <div className="course-pool__count">
-            共 {filtered.length} 门
-          </div>
-          <div className="course-pool__list">
-            <List<RowExtraProps>
-              listRef={listRef}
-              rowCount={filtered.length}
-              rowHeight={dynamicRowHeight}
-              rowComponent={PoolRow}
-              rowProps={rowProps}
-              overscanCount={6}
-              style={{ height: '100%' }}
-            />
-          </div>
-        </>
+        <div className="course-pool__list">
+          <List<RowExtraProps>
+            listRef={listRef}
+            rowCount={groups.length}
+            rowHeight={rowHeight}
+            rowComponent={PoolRow}
+            rowProps={rowProps}
+            overscanCount={6}
+            style={{ height: '100%' }}
+          />
+        </div>
       )}
     </div>
   );

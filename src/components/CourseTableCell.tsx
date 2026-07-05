@@ -1,6 +1,5 @@
 import type { GridCell } from '@/utils/grid';
 import type { ConflictMap } from '@/utils/conflict';
-import { DAY_LABELS } from '@/constants/grid';
 import { courseColorIndex } from '@/utils/courseColor';
 
 /** 同一格内课程块数超过此值时折叠为 +N */
@@ -35,19 +34,16 @@ export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }:
     <td
       className={classes.join(' ')}
       onClick={() => onOpenDetail(cell.entries[0].groupKey)}
-      title={isConflict ? '存在时间冲突' : undefined}
     >
       <div className="course-blocks">
         {visible.map((e, i) => {
           const colorIdx = courseColorIndex(e.groupKey);
           // 多班组同时间班次地点不唯一，课表单元格折叠时不显示教室
           const showRoom = !e.isMultiSection && !!e.slot.room;
-          const title = `${e.courseName}${e.slot.room ? ` @${e.slot.room}` : ''} · ${DAY_LABELS[cell.day]} 第${e.slot.periods.join('/')}节`;
           return (
             <div
               key={`${e.groupKey}-${i}`}
               className={`course-block course-block--color-${colorIdx}`}
-              title={title}
             >
               <div className="course-block__name">{e.courseName}</div>
               {showRoom ? <div className="course-block__room">@{e.slot.room}</div> : null}
@@ -55,7 +51,7 @@ export default function CourseTableCell({ cell, week, conflicts, onOpenDetail }:
           );
         })}
         {overflow > 0 ? (
-          <div className="course-block course-block--overflow" title={`还有 ${overflow} 门课程`}>
+          <div className="course-block course-block--overflow">
             +{overflow}
           </div>
         ) : null}
