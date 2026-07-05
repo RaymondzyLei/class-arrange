@@ -30,7 +30,7 @@ uv run python -m catalog_spider build-by-term     # 生成按学期分组
 uv run pytest catalog_spider/tests -v
 ```
 
-爬取范围：**仅 `grade >= 2020` 的培养方案**（避免 JSON 总量过大；调整见 `catalog_spider/details.py:MIN_GRADE`）。
+爬取范围：**仅 `grade >= 2023` 的培养方案**（避免 JSON 总量过大；调整见 `catalog_spider/details.py:MIN_GRADE`）。
 
 ---
 
@@ -41,13 +41,48 @@ catalog_spider/
 ├── data/
 │   ├── raw/
 │   │   ├── program_tree.json           # 1 个，全量目录
-│   │   └── programs/{id}.json          # 840 个，单个 program 详情
+│   │   └── programs/{id}.json          # 494 个，单个 program 详情
 │   └── index/
-│       ├── programs.json               # 1 个，840 行索引
+│       ├── programs.json               # 1 个，494 行索引
 │       └── by_program_term.json        # 1 个，按 program × term 分组
 ```
 
 **所有 JSON 入 git**（用户明确）：clone 后无需重新爬取即可使用索引；如需更新数据再跑 `all`。
+
+---
+
+## 前端消费：src/data/curricula.ts
+
+仿 `src/data/icourseRatings.ts` 风格，由 `scripts/curricula_to_ts.py` 生成。
+
+```powershell
+uv run python scripts/curricula_to_ts.py
+```
+
+输出 `src/data/curricula.ts`，前端可直接 `import { curricula } from './curricula'` 使用。
+类型定义：
+
+```typescript
+export interface CurriculumCourse {
+  code: string;          // 课程编号，如 "CS1003"
+  name: string;
+  credits: number;
+  compulsory: boolean;
+  modulePath: string[];  // e.g. ["通修课程", "计算机通修"]
+}
+export interface CurriculumRecord {
+  id: number;            // program id（与 curricula key 相同，方便按 id 查）
+  name: string;          // 培养方案名称
+  grade: string;
+  trainType: string;
+  department: string;
+  major: string;
+  beginSemester: string | null;
+  courseCount: number;
+  terms: Record<string, CurriculumCourse[]>;  // "1秋"/"1春"/"2秋"/.../"未指定学期"
+}
+export const curricula: Record<string, CurriculumRecord> = { ... };
+```
 
 ---
 
@@ -102,10 +137,11 @@ catalog_spider/
 
 ## 数据规模
 
-- 840 个 program（grade 2020–2026）
-- `data/raw/programs/*.json` ~66 MB
-- `data/index/programs.json` ~1 MB
-- `data/index/by_program_term.json` ~14 MB
+- 494 个 program（grade 2023–2026）
+- `data/raw/programs/*.json` ~44 MB
+- `data/index/programs.json` ~180 KB
+- `data/index/by_program_term.json` ~9 MB
+- `src/data/curricula.ts` ~10 MB
 
 ---
 

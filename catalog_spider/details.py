@@ -15,7 +15,7 @@ from .client import auto_retry_get
 from .tree import extract_programs, filter_by_min_grade, program_ids
 
 PROCESS_MAX = 8
-MIN_GRADE = 2020  # 仅爬取 2020 年及之后的培养方案（用户明确：避免 JSON 过大）
+MIN_GRADE = 2023  # 仅爬取 2023 年及之后的培养方案（用户明确：仓库不宜过大）
 
 
 def process_one(pid: int, raw_dir: Path) -> tuple[str, int]:
