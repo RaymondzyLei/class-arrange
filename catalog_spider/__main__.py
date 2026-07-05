@@ -10,10 +10,11 @@
 import argparse
 
 from .client import auto_retry_get
-from .paths import RAW_DIR, ensure_dirs
+from .details import fetch_all
+from .paths import RAW_DIR, RAW_PROGRAMS_DIR, ensure_dirs
 
 
-def cmd_fetch_tree(args) -> int:
+def cmd_fetch_tree(_args) -> int:
     """抓取 program_tree.json（秒级，每次重跑即可）。"""
     ensure_dirs()
     out = RAW_DIR / "program_tree.json"
@@ -27,22 +28,29 @@ def cmd_fetch_tree(args) -> int:
     return 0
 
 
-def cmd_fetch_details(args) -> int:
-    print("not implemented: --fetch-details")
-    return 1
+def cmd_fetch_details(_args) -> int:
+    """并发抓取所有 program 详情（断点续爬）。"""
+    ensure_dirs()
+    tree_path = RAW_DIR / "program_tree.json"
+    if not tree_path.exists():
+        print(f"missing {tree_path}, run `fetch-tree` first")
+        return 1
+    summary = fetch_all(tree_path, RAW_PROGRAMS_DIR)
+    print(f"summary: {summary}")
+    return 0
 
 
-def cmd_build_index(args) -> int:
+def cmd_build_index(_args) -> int:
     print("not implemented: --build-index")
     return 1
 
 
-def cmd_build_by_term(args) -> int:
+def cmd_build_by_term(_args) -> int:
     print("not implemented: --build-by-term")
     return 1
 
 
-def cmd_all(args) -> int:
+def cmd_all(_args) -> int:
     print("not implemented: --all")
     return 1
 
