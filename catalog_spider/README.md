@@ -1,94 +1,134 @@
 # catalog_spider
 
-USTC 教务系统培养方案爬虫 + 数据整理。
+USTC 教务系统培养方案爬虫 + 前端数据生成。
 
 数据源：https://catalog.ustc.edu.cn/plan
-提供两个 API：
-- `GET /api/teach/program/tree` — 全量培养方案目录（1184 个）
-- `GET /api/teach/program/info/{id}` — 单个培养方案完整数据
+- `GET /api/teach/program/tree` — 全量目录（1184 个；本项目只取 grade≥2023 的 494 个）
+- `GET /api/teach/program/info/{id}` — 单个培养方案完整数据（递归 moduleTree，含课程清单）
 
-无鉴权、无反爬；服务器对默认 `python-requests` UA 返回 502，已在 client 内置浏览器 UA。
+无鉴权；服务器对默认 `python-requests` UA 返回 502，已在 client 内置浏览器 UA。
+
+---
+
+## 工作流
+
+```
+catalog_spider fetch-tree      →  data/raw/program_tree.json
+catalog_spider fetch-details   →  data/raw/programs/{id}.json      (494 个)
+catalog_spider build-index     →  data/index/programs.json
+catalog_spider build-by-term   →  data/index/by_program_term.json
+                                                                    ↓
+scripts/curricula_to_ts.py     →  src/data/curricula.ts            (前端 import)
+```
 
 ---
 
 ## 用法
 
 ```powershell
-# 安装依赖
+# 首次 setup
 uv sync --group spider --group dev
 
-# 按顺序跑完 4 步（首次）
+# 一次性跑完所有数据生成
 uv run python -m catalog_spider all
+uv run python scripts/curricula_to_ts.py
 
-# 或分步
+# 分步
 uv run python -m catalog_spider fetch-tree        # 抓 program_tree（秒级）
-uv run python -m catalog_spider fetch-details     # 抓 ~840 个 program 详情（断点续爬，~3 分钟）
-uv run python -m catalog_spider build-index       # 生成索引
+uv run python -m catalog_spider fetch-details     # 抓 ~494 个 program 详情（断点续爬，~2 分钟）
+uv run python -m catalog_spider build-index       # 生成轻量索引
 uv run python -m catalog_spider build-by-term     # 生成按学期分组
 
 # 测试
 uv run pytest catalog_spider/tests -v
 ```
 
-爬取范围：**仅 `grade >= 2023` 的培养方案**（避免 JSON 总量过大；调整见 `catalog_spider/details.py:MIN_GRADE`）。
+**数据已入 git**（用户明确）：clone 后无需重新抓取，直接跑 `build-index` / `build-by-term` / `curricula_to_ts.py` 即可；只有数据过期需要刷新时才跑 `fetch-tree` / `fetch-details`。
+
+爬取范围：**仅 `grade >= 2023` 的培养方案**（详见 `catalog_spider/details.py:MIN_GRADE`）。
 
 ---
 
-## 输出结构
+## 项目结构
 
 ```
 catalog_spider/
-├── data/
-│   ├── raw/
-│   │   ├── program_tree.json           # 1 个，全量目录
-│   │   └── programs/{id}.json          # 494 个，单个 program 详情
-│   └── index/
-│       ├── programs.json               # 1 个，494 行索引
-│       └── by_program_term.json        # 1 个，按 program × term 分组
-```
+├── __main__.py            # CLI 入口（5 个子命令）
+├── client.py              # HTTP 客户端（10 次重试 + 浏览器 UA）
+├── tree.py                # 解析 program_tree.json + filter_by_min_grade
+├── details.py             # 8 进程并发抓取 details（断点续爬）
+├── process.py             # 从 raw 生成 index（programs.json + by_program_term.json）
+├── paths.py               # 数据目录常量 + ensure_dirs()
+├── README.md
+├── tests/                 # 19 个 pytest 单测
+│   ├── test_client.py
+│   ├── test_details.py
+│   ├── test_process.py
+│   ├── test_tree.py
+│   └── fixtures/          # 含真实 3413.json（断网也能跑测试）
+└── data/
+    ├── raw/
+    │   ├── program_tree.json
+    │   └── programs/{id}.json
+    └── index/
+        ├── programs.json
+        └── by_program_term.json
 
-**所有 JSON 入 git**（用户明确）：clone 后无需重新爬取即可使用索引；如需更新数据再跑 `all`。
-
----
-
-## 前端消费：src/data/curricula.ts
-
-仿 `src/data/icourseRatings.ts` 风格，由 `scripts/curricula_to_ts.py` 生成。
-
-```powershell
-uv run python scripts/curricula_to_ts.py
-```
-
-输出 `src/data/curricula.ts`，前端可直接 `import { curricula } from './curricula'` 使用。
-类型定义：
-
-```typescript
-export interface CurriculumCourse {
-  code: string;          // 课程编号，如 "CS1003"
-  name: string;
-  credits: number;
-  compulsory: boolean;
-  modulePath: string[];  // e.g. ["通修课程", "计算机通修"]
-}
-export interface CurriculumRecord {
-  id: number;            // program id（与 curricula key 相同，方便按 id 查）
-  name: string;          // 培养方案名称
-  grade: string;
-  trainType: string;
-  department: string;
-  major: string;
-  beginSemester: string | null;
-  courseCount: number;
-  terms: Record<string, CurriculumCourse[]>;  // "1秋"/"1春"/"2秋"/.../"未指定学期"
-}
-export const curricula: Record<string, CurriculumRecord> = { ... };
+scripts/curricula_to_ts.py    # 从 index/* 生成 src/data/curricula.ts（前端 import）
 ```
 
 ---
 
 ## 输出 Schema
 
-### `index/programs.json`
+### `src/data/curricula.ts` （前端主入口，仿 `icourseRatings.ts`）
+
+```typescript
+export interface CurriculumCourse {
+  code: string;             // 课程编号，如 "CS1003"
+  name: string;
+  credits: number;
+  compulsory: boolean;
+  modulePath: string[];     // 从 moduleTree 根到该课的 type 路径，如 ["通修课程", "计算机通修"]
+}
+export interface CurriculumRecord {
+  id: number;               // 与 curricula 的 key 相同，方便按 id 反查
+  name: string;             // 培养方案全名
+  grade: string;            // "2023"–"2026"
+  trainType: string;        // 主修 / 交叉培养 / 科技英才班 / ...
+  department: string;
+  major: string;
+  beginSemester: string | null;
+  courseCount: number;
+  terms: Record<string, CurriculumCourse[]>;  // "1秋"/"1春"/"2秋"/.../"未指定学期"
+}
+export const curricula: Record<string, CurriculumRecord> = {
+  "3413": {
+    "id": 3413,
+    "name": "少年班学院培养方案（自动化）",
+    "grade": "2026",
+    "trainType": "主修",
+    "department": "少年班学院",
+    "major": "自动化",
+    "beginSemester": "2026年秋季学期",
+    "courseCount": 99,
+    "terms": {
+      "1秋": [
+        { "code": "CS1003", "name": "计算机程序设计", "credits": 3,
+          "compulsory": true, "modulePath": ["通修课程", "计算机通修"] },
+        ...
+      ],
+      "1春": [...],
+      ...
+    }
+  },
+  ...
+};
+```
+
+学期 key 排序：`1秋 < 1春 < 2秋 < 2春 ... < 4秋`；`terms` 字段为 null 的课程归到 `"未指定学期"`。
+
+### `data/index/programs.json`（轻量索引，Python 工具用）
 
 ```json
 [
@@ -109,29 +149,45 @@ export const curricula: Record<string, CurriculumRecord> = { ... };
 ]
 ```
 
-### `index/by_program_term.json`
+### `data/index/by_program_term.json`（按学期分组，结构同 `curricula.ts.terms`，顶层多 programId 维度）
 
 ```json
 {
   "3413": {
     "1秋": [
-      {
-        "code": "CS1003",
-        "name": "计算机程序设计",
-        "credits": 3,
-        "compulsory": true,
-        "modulePath": ["通修课程", "计算机通修"]
-      }
+      { "code": "CS1003", "name": "计算机程序设计", "credits": 3,
+        "compulsory": true, "modulePath": ["通修课程", "计算机通修"] }
     ],
     "1春": [...],
-    "2秋": [...]
+    ...
   }
 }
 ```
 
-- `modulePath` = 从 moduleTree 根到含此课程的叶子节点的 `type` 字段列表（用户角色路径）
-- 学期 key 按 `1秋 < 1春 < 2秋 < 2春 ...` 排序
-- `terms` 为 null 的课程归到 `"未指定学期"`
+---
+
+## 如何更新数据
+
+```powershell
+# 1. 抓取最新 program_tree（含全部 1184 个 program）
+uv run python -m catalog_spider fetch-tree
+
+# 2. 增量抓取新 program（断点续爬，只抓缺失的 grade≥2023 program）
+uv run python -m catalog_spider fetch-details
+
+# 3. 重生成所有 index
+uv run python -m catalog_spider build-index
+uv run python -m catalog_spider build-by-term
+
+# 4. 重生成前端 TS
+uv run python scripts/curricula_to_ts.py
+
+# 5. 提交
+git add -A
+git commit -m "data: refresh USTC curricula"
+```
+
+如果只想调整爬取范围（不只是 year 限制），改 `catalog_spider/details.py:MIN_GRADE` 后重跑 `fetch-details`（已存在文件不重抓）。
 
 ---
 
@@ -145,17 +201,44 @@ export const curricula: Record<string, CurriculumRecord> = { ... };
 
 ---
 
+## 前端接入示例
+
+```typescript
+import { curricula, type CurriculumRecord, type CurriculumCourse } from '@/data/curricula';
+import { courses } from '@/data/courses';
+
+// 1. 程序选择器
+const all: CurriculumRecord[] = Object.values(curricula);  // 494 个
+// 渲染：id / name / grade / trainType / department / major
+
+// 2. 选中 program → 展示按学期课程
+const program = curricula['3413'];
+Object.entries(program.terms).forEach(([term, list]) => {
+  // term: "1秋" / "1春" / "2秋" / ...
+  // list: CurriculumCourse[]
+});
+
+// 3. 把培养方案课程映射到现有 Plan：
+//    按 course.code 在 src/data/courses.ts 找 sections
+const targetCodes = new Set<string>();
+Object.values(program.terms).flat().forEach(c => targetCodes.add(c.code));
+const candidates = courses.filter(s => targetCodes.has(s.courseCode));
+// 用户从中挑选具体 section 加入 Plan.courseIds
+```
+
+---
+
 ## 不在范围
 
-- 前端导入培养方案的逻辑（同事改前端时再做；`Plan.courseIds` 字段为 section id，需要 join 到 `src/data/courses.ts`）
-- 教师/时间/容量等开课字段（培养方案不包含这些，由现有 `src/data/courses.ts` 提供）
+- 前端 UI 选课流程（同事实现）
+- 教师 / 时间 / 容量等开课字段（培养方案不含，由 `src/data/courses.ts` 提供）
 
 ---
 
 ## 不动的部分
 
 - `icourse_spider/`（学长遗产）
-- `src/` 前端代码
+- `src/` 前端代码（除生成 `curricula.ts`）
 - `scripts/excel_to_ts.py` / `scripts/ratings_to_ts.py`
-- `pyproject.toml` 的 `[project.dependencies]` 与 `[dependency-groups].spider`（本爬虫直接复用 `requests` + `tqdm`）
-- `.gitignore`（JSON 入 git，不忽略）
+- `pyproject.toml` 的 `[project.dependencies]` 与 `[dependency-groups].spider`（本爬虫复用 `requests` + `tqdm`）
+- `.gitignore`（JSON / TS 入 git）
