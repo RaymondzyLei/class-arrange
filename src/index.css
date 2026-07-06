@@ -16,6 +16,12 @@ body,
 
 #root {
   min-height: 100vh;
+  --action-chip-height: 22px;
+  --action-chip-radius: 6px;
+  --action-chip-font-size: 12px;
+  --action-chip-line-height: 20px;
+  --action-chip-border-width: 1px;
+  --action-chip-padding-inline: 10px;
 }
 
 html {
@@ -39,6 +45,128 @@ html {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-faint);
+}
+
+/* ============================================================
+ * AntD buttons
+ * ============================================================ */
+#root .ant-btn {
+  border-radius: var(--action-chip-radius);
+  box-shadow: none !important;
+  font-weight: 400;
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.16s, 0.16s, 0.16s;
+  transition-timing-function: ease;
+}
+
+#root .ant-btn:not(.course-table__export-button):not(.theme-toggle) {
+  height: auto;
+  min-height: var(--action-chip-height);
+  padding: 0 var(--action-chip-padding-inline);
+  border-width: var(--action-chip-border-width);
+  font-size: var(--action-chip-font-size);
+  line-height: var(--action-chip-line-height);
+}
+
+#root .ant-btn-sm {
+  border-radius: var(--action-chip-radius);
+}
+
+#root .ant-btn-sm:not(.course-table__export-button):not(.theme-toggle) {
+  min-height: var(--action-chip-height);
+  padding-inline: var(--action-chip-padding-inline);
+  font-size: var(--action-chip-font-size);
+  line-height: var(--action-chip-line-height);
+}
+
+#root .ant-btn-lg {
+  border-radius: var(--action-chip-radius);
+}
+
+#root .ant-btn::before,
+#root .ant-btn::after {
+  box-shadow: none !important;
+}
+
+#root .ant-btn:not(:disabled):active {
+  transform: none;
+  box-shadow: none !important;
+}
+
+#root .ant-btn:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button),
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button) {
+  background: color-mix(in srgb, var(--text) 4%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--text) 16%, var(--border));
+  color: var(--text);
+}
+
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button):hover,
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button):focus-visible,
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):hover,
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):focus-visible {
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  color: var(--accent);
+}
+
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button),
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button) {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--accent-soft));
+  color: var(--accent);
+}
+
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button):hover,
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button):focus-visible,
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):hover,
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):focus-visible {
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  color: var(--accent-strong);
+}
+
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled),
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):hover,
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):focus-visible,
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):hover,
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):focus-visible {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
+}
+
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled),
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid),
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled),
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled) {
+  background: color-mix(in srgb, var(--conflict) 6%, var(--panel-bg));
+  border-color: var(--conflict);
+  color: var(--conflict);
+}
+
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled):hover,
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled):focus-visible,
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid):hover,
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid):focus-visible,
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled):hover,
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled):focus-visible,
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled):hover,
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--conflict) 12%, var(--panel-bg));
+  border-color: var(--conflict-strong);
+  color: var(--conflict-strong);
 }
 
 /* ============================================================
@@ -124,8 +252,13 @@ html {
 }
 
 .plan-switcher__select {
-  flex: 1;
+  flex: 1 1 140px;
   min-width: 140px;
+}
+
+.plan-switcher__curriculum-select {
+  flex: 1.4 1 190px;
+  min-width: 190px;
 }
 
 .plan-switcher__hint {
@@ -171,6 +304,18 @@ html {
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--panel-bg-2);
+}
+
+.filter-bar__controls {
+  display: grid;
+  grid-template-columns: minmax(112px, 1.25fr) repeat(2, minmax(92px, 1fr));
+  gap: 6px;
+  align-items: center;
+}
+
+.filter-bar__select {
+  width: 100%;
+  min-width: 0;
 }
 
 /* ============================================================
@@ -225,7 +370,7 @@ html {
 
 .pool-item:focus-within {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-soft);
+  box-shadow: none;
 }
 
 .pool-item--selected {
@@ -565,6 +710,33 @@ html {
   gap: 2px;
 }
 
+.stats-bar__item--button {
+  margin: 0;
+  padding: 4px 6px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.stats-bar__item--button:hover {
+  background: var(--panel-bg-2);
+}
+
+.stats-bar__item--button .stats-bar__label {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stats-bar__item--button:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
 .stats-bar__label {
   font-size: 12px;
   color: var(--text-sub);
@@ -668,10 +840,17 @@ html {
   flex: 1;
   font-size: 12px;
   color: var(--text-sub);
+  font-variant-numeric: tabular-nums;
 }
 
 .arrangement-card__conflict {
   margin: 0 !important;
+  padding-inline: var(--action-chip-padding-inline) !important;
+  border-width: var(--action-chip-border-width) !important;
+  border-radius: var(--action-chip-radius) !important;
+  font-size: var(--action-chip-font-size) !important;
+  font-weight: 400;
+  line-height: var(--action-chip-line-height) !important;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1123,9 +1302,18 @@ html {
 
 .bottom-modal__title {
   margin: 0;
+  flex: 1;
+  min-width: 0;
   font-size: 18px;
   line-height: 1.3;
   color: var(--text);
+}
+
+.bottom-modal__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .bottom-modal__close {
@@ -1149,6 +1337,10 @@ html {
 .bottom-modal__body {
   padding: 0 18px 16px;
   overflow: auto;
+}
+
+.bottom-modal .ant-select-dropdown {
+  z-index: 1;
 }
 
 .bottom-modal__footer {
@@ -1263,6 +1455,32 @@ html {
   min-width: 136px;
 }
 
+.week-select.ant-select-open .ant-select-selection-item,
+.week-select.ant-select-focused .ant-select-selection-item {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.week-select.ant-select-open .ant-select-content,
+.week-select.ant-select-open .ant-select-content-has-value,
+.week-select.ant-select-open .ant-select-content-value,
+.week-select.ant-select-focused .ant-select-content,
+.week-select.ant-select-focused .ant-select-content-has-value,
+.week-select.ant-select-focused .ant-select-content-value {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.week-select.ant-select-open .ant-select-content-has-search-value,
+.week-select.ant-select-focused .ant-select-content-has-search-value {
+  color: var(--text) !important;
+}
+
+.week-select.ant-select-open .ant-select-content-has-search-value > *:not(.ant-select-input),
+.week-select.ant-select-focused .ant-select-content-has-search-value > *:not(.ant-select-input) {
+  opacity: 1 !important;
+}
+
 .course-table__date-range {
   color: var(--text-sub);
   font-size: 12px;
@@ -1347,7 +1565,7 @@ html {
 .timetable__day-date {
   margin-top: 1px;
   color: var(--text-sub);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -1568,8 +1786,12 @@ html {
 }
 
 .course-table__header {
-  grid-template-columns: auto minmax(180px, 1fr) auto minmax(160px, auto) auto auto;
-  gap: 6px 10px;
+  grid-template-columns: auto minmax(180px, 1fr) auto max-content auto;
+  gap: 6px;
+}
+
+.course-table__actions {
+  gap: 6px;
 }
 
 .week-slider-wrap {
@@ -1645,7 +1867,7 @@ html {
 }
 
 .timetable__cell {
-  height: 51px;
+  height: 52px;
   padding: 3px 4px 3px 3px;
 }
 
@@ -1730,14 +1952,179 @@ html {
 
 .bottom-modal__body {
   padding: 0 22px 18px;
+  --detail-grid-border: color-mix(in srgb, var(--text) 8%, transparent);
+  --detail-label-bg: color-mix(in srgb, var(--text) 3%, transparent);
 }
 
 .bottom-modal__footer {
   border-top: 0;
 }
 
+.selected-courses-tabs .ant-tabs-nav {
+  margin-bottom: 10px;
+}
+
+.selected-courses-switcher {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(240px, 1.2fr);
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.selected-courses-switcher__field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.selected-courses-switcher__label {
+  color: var(--text-sub);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.selected-courses-plan-select,
+.selected-courses-arrangement-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.selected-courses-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selected-courses-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.selected-courses-toolbar--filters {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(120px, 180px);
+  align-items: center;
+}
+
+.selected-courses-deferred {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  color: var(--text-sub);
+  font-size: 13px;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.selected-courses-curriculum-select,
+.selected-courses-term-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.selected-courses-table .ant-table-cell {
+  vertical-align: middle;
+}
+
+.selected-courses-table .selected-courses-row--clickable {
+  cursor: pointer;
+}
+
+.selected-courses-table .selected-courses-row--clickable:hover > td {
+  background: color-mix(in srgb, var(--accent) 6%, transparent) !important;
+}
+
+.selected-course-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.selected-course-code {
+  width: max-content;
+  max-width: 100%;
+  padding: 0 6px;
+  overflow: hidden;
+  color: var(--accent);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
+}
+
+.bottom-modal__body .ant-descriptions-view,
+.detail-table .ant-table-container {
+  overflow: hidden;
+  border: 1px solid var(--detail-grid-border) !important;
+  border-radius: 8px;
+  background: transparent !important;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-label,
+.detail-table .ant-table-thead > tr > th {
+  background: var(--detail-label-bg) !important;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-content,
+.detail-table .ant-table-tbody > tr > td,
+.detail-table .ant-typography {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+.detail-table .detail-rating {
+  color: var(--success) !important;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-view,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-row,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-label,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: var(--detail-grid-border) !important;
+}
+
 .detail-table .ant-table {
   table-layout: auto !important;
+  background: transparent !important;
+}
+
+.detail-table .ant-table-content {
+  background: transparent !important;
+}
+
+.detail-table .ant-table-thead > tr > th,
+.detail-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--detail-grid-border) !important;
+}
+
+.detail-table .ant-table-tbody > tr:last-child > td {
+  border-bottom: 0 !important;
+}
+
+.detail-table .ant-table-thead > tr > th:not(:last-child),
+.detail-table .ant-table-tbody > tr > td:not(:last-child) {
+  border-inline-end: 1px solid var(--detail-grid-border) !important;
+}
+
+.detail-table .ant-table-thead > tr > th::before {
+  display: none !important;
+  content: none !important;
+}
+
+.detail-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.detail-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: var(--detail-label-bg) !important;
 }
 
 .detail-table .ant-table-cell {
@@ -1776,8 +2163,16 @@ html {
 html.theme-transitioning .ant-select-dropdown,
 html.theme-transitioning .ant-select-item,
 html.theme-transitioning .ant-picker-dropdown,
-html.theme-transitioning .ant-dropdown {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+html.theme-transitioning .ant-dropdown,
+html.theme-transitioning .ant-btn,
+html.theme-transitioning .ant-select-selector,
+html.theme-transitioning .ant-select-selection-item,
+html.theme-transitioning .ant-select-selection-placeholder,
+html.theme-transitioning .ant-select-arrow {
+  transition-duration: 0.12s !important;
+  transition-delay: 0s !important;
+  transition-property: background-color, color, border-color, box-shadow !important;
+  transition-timing-function: ease !important;
 }
 
 @media (max-width: 900px) {

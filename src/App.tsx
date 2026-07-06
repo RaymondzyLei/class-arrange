@@ -15,9 +15,16 @@ import CourseTable from '@/components/CourseTable';
 import StatsBar from '@/components/StatsBar';
 import ArrangementPanel from '@/components/ArrangementPanel';
 import CourseDetailModal from '@/components/CourseDetailModal';
+import SelectedCoursesModal from '@/components/SelectedCoursesModal';
 import { useConflicts } from '@/hooks/useConflicts';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { exportTimetableImage } from '@/utils/exportPrint';
+import {
+  curriculumOptions,
+  getCurriculum,
+  getDefaultCurriculumTerm,
+  isValidCurriculumTerm,
+} from '@/utils/curriculum';
 import type { WeekSelection } from '@/config/termCalendar';
 import { getWeekLabel } from '@/config/termCalendar';
 
@@ -32,7 +39,13 @@ const EMPTY_FILTER: FilterState = {
 
 const EMPTY_IDS: Set<string> = new Set();
 const THEME_KEY = 'class-arrange:v1:theme';
+const CURRICULUM_SELECTION_KEY = 'class-arrange:v1:curriculum-selection';
 type Theme = 'light' | 'dark';
+
+interface CurriculumSelection {
+  curriculumId: string | null;
+  term: string | null;
+}
 
 function readInitialTheme(): Theme {
   try {
@@ -47,6 +60,23 @@ function readInitialTheme(): Theme {
   return 'light';
 }
 
+function readInitialCurriculumSelection(): CurriculumSelection {
+  try {
+    const raw = localStorage.getItem(CURRICULUM_SELECTION_KEY);
+    if (!raw) return { curriculumId: null, term: null };
+    const parsed = JSON.parse(raw) as Partial<CurriculumSelection>;
+    const curriculumId = typeof parsed.curriculumId === 'string' ? parsed.curriculumId : null;
+    if (!getCurriculum(curriculumId)) return { curriculumId: null, term: null };
+    const storedTerm = typeof parsed.term === 'string' ? parsed.term : null;
+    const term = isValidCurriculumTerm(curriculumId, storedTerm)
+      ? storedTerm
+      : getDefaultCurriculumTerm(curriculumId);
+    return { curriculumId, term };
+  } catch {
+    return { curriculumId: null, term: null };
+  }
+}
+
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { activePlan } = usePlans();
   const { message } = AntApp.useApp();
@@ -54,6 +84,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [weekSelection, setWeekSelection] = useState<WeekSelection>(1);
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
   const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
+  const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
+  const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
   const filteredGroups = useFilteredCourses(filter);
@@ -106,8 +138,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     return groupByKey.get(detailGroupKey) ?? null;
   }, [detailGroupKey, groupByKey]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(CURRICULUM_SELECTION_KEY, JSON.stringify(curriculumSelection));
+    } catch {
+      // 忽略写入失败（隐私模式）
+    }
+  }, [curriculumSelection]);
+
   // 切换方案时关闭详情弹窗 + 清空排课选择
-  useEffect(() => setDetailGroupKey(null), [activePlan?.id]);
+  useEffect(() => {
+    setDetailGroupKey(null);
+    setSelectedArrangementId(null);
+  }, [activePlan?.id]);
   // 用户加减课时，若选择的小卡片不再有效，重置选择回默认
   useEffect(() => {
     if (selectedArrangementId && appliedArrangement?.id !== selectedArrangementId) {
@@ -134,13 +177,35 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
   };
 
+  const handleCurriculumChange = (id: string | null) => {
+    setCurriculumSelection({
+      curriculumId: id,
+      term: getDefaultCurriculumTerm(id),
+    });
+  };
+
+  const handleCurriculumTermChange = (term: string | null) => {
+    setCurriculumSelection((current) => ({
+      curriculumId: current.curriculumId,
+      term: term && isValidCurriculumTerm(current.curriculumId, term) ? term : null,
+    }));
+  };
+
+  const openCourseDetailFromManager = (groupKey: string) => {
+    setDetailGroupKey(groupKey);
+  };
+
   return (
     <Layout className="app-layout">
       <Layout.Content className="app-content">
         <div className="pool-panel no-print">
           <div className="panel-inner plan-summary">
-            <PlanSwitcher />
-            <StatsBar stats={stats} />
+            <PlanSwitcher
+              curriculumOptions={curriculumOptions}
+              selectedCurriculumId={curriculumSelection.curriculumId}
+              onCurriculumChange={handleCurriculumChange}
+            />
+            <StatsBar stats={stats} onOpenSelectedCourses={() => setSelectedCoursesOpen(true)} />
           </div>
           {arrangements.length > 1 && (
             <ArrangementPanel
@@ -172,6 +237,22 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
           />
         </div>
       </Layout.Content>
+      <SelectedCoursesModal
+        open={selectedCoursesOpen}
+        onClose={() => setSelectedCoursesOpen(false)}
+        appliedGroups={appliedGroups}
+        allSelectedGroups={allSelectedGroups}
+        selectedIds={selectedIds}
+        conflictGroupKeys={conflictGroupKeys}
+        arrangements={arrangements}
+        currentArrangementId={appliedArrangement?.id ?? null}
+        selectedCurriculumId={curriculumSelection.curriculumId}
+        selectedCurriculumTerm={curriculumSelection.term}
+        onArrangementChange={setSelectedArrangementId}
+        onCurriculumChange={handleCurriculumChange}
+        onCurriculumTermChange={handleCurriculumTermChange}
+        onOpenDetail={openCourseDetailFromManager}
+      />
       <CourseDetailModal
         group={detailGroup}
         open={!!detailGroup}
@@ -222,6 +303,7 @@ export default function App() {
   return (
     <ConfigProvider
       locale={zhCN}
+      wave={{ disabled: true }}
       theme={{
         algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
@@ -229,6 +311,11 @@ export default function App() {
           borderRadius: 6,
         },
         components: {
+          Button: {
+            defaultShadow: 'none',
+            primaryShadow: 'none',
+            dangerShadow: 'none',
+          },
           Layout: {
             headerBg: 'var(--panel-bg)',
             bodyBg: 'var(--bg)',

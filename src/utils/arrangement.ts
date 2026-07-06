@@ -63,6 +63,10 @@ function sumHours(groups: CourseGroup[]): number {
   return h;
 }
 
+function arrangementId(groups: CourseGroup[]): string {
+  return groups.map((g) => g.key).sort().join('||');
+}
+
 /** 笛卡尔积（不依赖外部库，所有 courseCode 的候选 group 全展开） */
 function cartesian<T>(lists: T[][]): T[][] {
   if (lists.length === 0) return [[]];
@@ -112,10 +116,10 @@ export function enumerateArrangements(groups: CourseGroup[]): Arrangement[] {
   // 处理 ambiguous 顺序固定（首次出现）
   const combos = cartesian(ambiguousChoices);
 
-  const arrs: Arrangement[] = combos.map((picked, i) => {
+  const arrs: Arrangement[] = combos.map((picked) => {
     const allGroups = [...locked, ...picked];
     return {
-      id: `arr-${i}`,
+      id: arrangementId(allGroups),
       groups: allGroups,
       conflictCount: countConflicts(allGroups),
       courseCount: allGroups.length,
@@ -133,8 +137,7 @@ export function enumerateArrangements(groups: CourseGroup[]): Arrangement[] {
     return b.totalCredits - a.totalCredits;
   });
 
-  // 重新编号 id（排序后） + 取前 8
-  return arrs.slice(0, 8).map((a, i) => ({ ...a, id: `arr-${i}` }));
+  return arrs.slice(0, 8);
 }
 
 /** 取列表的第一个作为默认应用方案；空数组返回 null */

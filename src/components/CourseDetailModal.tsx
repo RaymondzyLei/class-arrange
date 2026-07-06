@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Descriptions, Table, Tag, Typography } from 'antd';
+import { App, Button, Descriptions, Table, Tag, Typography } from 'antd';
 import type { CourseGroup } from '@/types';
+import { usePlans } from '@/store/plansContext';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
@@ -38,11 +39,20 @@ function firstPeriod(periods: number[]): number {
   return periods[0] ?? 999;
 }
 
+function sectionLabelForGroup(group: CourseGroup): string {
+  if (group.sections.length <= 1) return group.sectionIds[0] ?? group.courseCode;
+  return `${group.courseCode}.(${group.sectionIds
+    .map((id) => id.slice(id.lastIndexOf('.') + 1))
+    .sort()
+    .join(',')})`;
+}
 function formatClassLabels(classes: string[]): string {
   return classes.map((label) => label.replace(/\*+$/, '')).join('，');
 }
 
 export default function CourseDetailModal({ group, open, onClose }: Props) {
+  const { activePlan, dispatch } = usePlans();
+  const { message } = App.useApp();
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
   useEffect(() => {
@@ -53,6 +63,8 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
   if (!display) return null;
 
   const rep = display.sections[0];
+  const sectionLabel = sectionLabelForGroup(display);
+  const selected = display.sectionIds.every((id) => activePlan?.courseIds.includes(id));
   const singleRating =
     display.sections.length === 1 ? getIcourseRatingInfo(display.sections[0].id) : undefined;
   const sortedSchedule = [...display.schedule].sort((a, b) =>
@@ -93,15 +105,39 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     rating: getIcourseRatingInfo(s.id),
   }));
 
+  const toggleSelected = () => {
+    if (!activePlan) {
+      message.warning('请先新建一个方案');
+      return;
+    }
+    if (selected) {
+      dispatch({ type: 'removeCourses', courseIds: display.sectionIds });
+      message.success(`已移除「${display.courseName}」`);
+      return;
+    }
+    dispatch({ type: 'addCourses', courseIds: display.sectionIds });
+    message.success(`已加入「${display.courseName}」`);
+  };
+
   return (
     <BottomModal
       title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
       open={open}
       onClose={onClose}
       width={1180}
+      actions={(
+        <Button
+          size="small"
+          type={selected ? 'primary' : 'default'}
+          danger={selected}
+          onClick={toggleSelected}
+        >
+          {selected ? '移除' : '加入'}
+        </Button>
+      )}
     >
       <Descriptions size="small" column={2} bordered>
-        <Descriptions.Item label="课程号">{display.courseCode}</Descriptions.Item>
+        <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
         <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
         <Descriptions.Item label="授课教师" span={2}>
           {display.teachers.length ? display.teachers.join('、') : '—'}

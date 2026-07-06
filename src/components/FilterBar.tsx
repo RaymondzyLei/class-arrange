@@ -1,4 +1,4 @@
-import { Input, Space } from 'antd';
+import { Input } from 'antd';
 import type { FilterState } from '@/types';
 import {
   DEPARTMENT_OPTIONS,
@@ -29,48 +29,53 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
         />
         <span className="filter-bar__count">共 {resultCount} 门</span>
       </div>
-      <Space size={6} wrap>
+      <div className="filter-bar__controls">
         <SelectWithChevron
+          className="filter-bar__select filter-bar__select--department"
+          size="small"
           placeholder="开课单位"
           value={filter.department || undefined}
           onChange={(v) => update({ department: v ?? '' })}
           allowClear
-          style={{ width: 150 }}
           options={DEPARTMENT_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
           placeholder="课程类型"
           value={filter.courseType || undefined}
           onChange={(v) => update({ courseType: v ?? '' })}
           allowClear
-          style={{ width: 120 }}
           options={COURSE_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
           placeholder="课堂类型"
           value={filter.sectionType || undefined}
           onChange={(v) => update({ sectionType: v ?? '' })}
           allowClear
-          style={{ width: 140 }}
           options={SECTION_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
           placeholder="考核方式"
           value={filter.examType || undefined}
           onChange={(v) => update({ examType: v ?? '' })}
           allowClear
-          style={{ width: 150 }}
           options={EXAM_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
           placeholder="授课语言"
           value={filter.language || undefined}
           onChange={(v) => update({ language: v ?? '' })}
           allowClear
-          style={{ width: 130 }}
           options={LANGUAGE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
-      </Space>
+      </div>
     </div>
   );
 }

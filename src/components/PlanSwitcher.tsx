@@ -2,10 +2,21 @@ import { useState } from 'react';
 import { Button, Input, Space, App } from 'antd';
 import { usePlans } from '@/store/plansContext';
 import type { Plan } from '@/types';
+import { filterCurriculumOption, type CurriculumOption } from '@/utils/curriculum';
 import BottomModal from './BottomModal';
 import SelectWithChevron from './SelectWithChevron';
 
-export default function PlanSwitcher() {
+interface Props {
+  curriculumOptions: CurriculumOption[];
+  selectedCurriculumId: string | null;
+  onCurriculumChange: (id: string | null) => void;
+}
+
+export default function PlanSwitcher({
+  curriculumOptions,
+  selectedCurriculumId,
+  onCurriculumChange,
+}: Props) {
   const { state, activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const [renameOpen, setRenameOpen] = useState(false);
@@ -61,6 +72,18 @@ export default function PlanSwitcher() {
         onChange={switchTo}
         options={state.plans.map((p) => ({ label: p.name, value: p.id }))}
         disabled={state.plans.length === 0}
+      />
+      <SelectWithChevron
+        className="plan-switcher__curriculum-select"
+        showSearch
+        allowClear
+        value={selectedCurriculumId ?? undefined}
+        placeholder="选择培养方案"
+        options={curriculumOptions}
+        filterOption={filterCurriculumOption}
+        optionFilterProp="label"
+        popupMatchSelectWidth={520}
+        onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
       />
       <Space size={4}>
         <Button size="small" onClick={create} disabled={state.plans.length >= 10}>

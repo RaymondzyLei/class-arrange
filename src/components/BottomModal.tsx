@@ -9,9 +9,10 @@ interface Props {
   onClose: () => void;
   width?: number;
   footer?: ReactNode;
+  actions?: ReactNode;
 }
 
-export default function BottomModal({ open, title, children, onClose, width = 720, footer }: Props) {
+export default function BottomModal({ open, title, children, onClose, width = 720, footer, actions }: Props) {
   const [present, setPresent] = useState(open);
   const pointerStartedOnMask = useRef(false);
 
@@ -55,6 +56,7 @@ export default function BottomModal({ open, title, children, onClose, width = 72
       >
         <div className="bottom-modal__header">
           <h2 className="bottom-modal__title">{title}</h2>
+          {actions ? <div className="bottom-modal__actions">{actions}</div> : null}
           <button className="bottom-modal__close" type="button" onClick={onClose} aria-label="关闭">
             <CloseIcon />
           </button>

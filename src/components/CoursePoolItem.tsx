@@ -74,7 +74,7 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
             onToggle();
           }}
         >
-          {selected ? '移出' : '加入'}
+          {selected ? '移除' : '加入'}
         </Button>
       </div>
       <div className="pool-item__code-row">
