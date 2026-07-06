@@ -38,6 +38,10 @@ function firstPeriod(periods: number[]): number {
   return periods[0] ?? 999;
 }
 
+function formatClassLabels(classes: string[]): string {
+  return classes.map((label) => label.replace(/\*+$/, '')).join('，');
+}
+
 export default function CourseDetailModal({ group, open, onClose }: Props) {
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
@@ -85,7 +89,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     capacity: s.capacity,
     enrolled: s.enrolled,
     time: formatScheduleCompact(s.schedule),
-    classes: s.classes.length ? s.classes.join('，') : '—',
+    classes: s.classes.length ? formatClassLabels(s.classes) : '—',
     rating: getIcourseRatingInfo(s.id),
   }));
 
