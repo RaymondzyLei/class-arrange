@@ -97,7 +97,7 @@ export interface FilterState {
 
 /** 排课方案：用户已选 groups 的一个具体"每个 courseCode 取一个 group"的组合 */
 export interface Arrangement {
-  /** 内部稳定 id，如 "arr-{idx}"，仅用于 React key / selectedArrangementId 标记 */
+  /** 内容稳定 id：由该方案包含的 group.key 排序拼接而成 */
   id: string;
   /** 该方案选定的所有 group（每个 courseCode 恰一个） */
   groups: CourseGroup[];

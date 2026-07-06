@@ -20,17 +20,19 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
         {arrangements.map((a, index) => {
           const applied = a.id === selectedId;
           const conflictFree = a.conflictCount === 0;
-          const displayNumber = index + 1;
           return (
             <button
               key={a.id}
               type="button"
               className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
               onClick={() => onSelect(a.id)}
-              aria-label={`排课方案 ${displayNumber}`}
+              aria-label={`排课方案 ${index}`}
             >
-              <div className="arrangement-card__top">
-                <span className="arrangement-card__idx">#{displayNumber}</span>
+              <div className="arrangement-card__row">
+                <span className="arrangement-card__idx">#{index}</span>
+                <span className="arrangement-card__meta">
+                  {a.courseCount} 门 · {a.totalCredits} 学分
+                </span>
                 <Tag
                   color={conflictFree ? 'green' : 'orange'}
                   className="arrangement-card__conflict"
@@ -38,9 +40,6 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
                   {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
                 </Tag>
               </div>
-              <span className="arrangement-card__meta">
-                {a.courseCount} 门 · {a.totalCredits} 学分
-              </span>
             </button>
           );
         })}

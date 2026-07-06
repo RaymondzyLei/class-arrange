@@ -14,6 +14,20 @@ export function genId(): string {
 }
 
 const DEFAULT_PLAN_NAMES = ['方案一', '方案二', '方案三'];
+const CHINESE_DIGITS = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+function toChineseNumber(value: number): string {
+  if (value <= 0) return String(value);
+  if (value < 10) return CHINESE_DIGITS[value];
+  if (value === 10) return '十';
+  if (value < 20) return `十${CHINESE_DIGITS[value - 10]}`;
+  if (value < 100) {
+    const tens = Math.floor(value / 10);
+    const ones = value % 10;
+    return `${CHINESE_DIGITS[tens]}十${ones === 0 ? '' : CHINESE_DIGITS[ones]}`;
+  }
+  return String(value);
+}
 
 export function makePlan(name: string) {
   const now = Date.now();
@@ -61,5 +75,9 @@ export function nextDefaultPlanName(existing: { name: string }[]): string {
   for (const n of DEFAULT_PLAN_NAMES) {
     if (!existing.some((p) => p.name === n)) return n;
   }
-  return `方案${existing.length + 1}`;
+  for (let i = 4; i <= existing.length + 1; i += 1) {
+    const name = `方案${toChineseNumber(i)}`;
+    if (!existing.some((p) => p.name === name)) return name;
+  }
+  return `方案${toChineseNumber(existing.length + 1)}`;
 }

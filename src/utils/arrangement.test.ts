@@ -70,7 +70,7 @@ describe('enumerateArrangements', () => {
     ];
     const arrs = enumerateArrangements(groups);
     expect(arrs).toHaveLength(2);
-    expect(arrs.map((a) => a.id)).toEqual(['arr-0', 'arr-1']);
+    expect(arrs.map((a) => a.id).sort()).toEqual(['m1', 'm2']);
   });
 
   it('两门课程各 2 个 group → 4 个安排', () => {
@@ -109,5 +109,23 @@ describe('enumerateArrangements', () => {
     // 第一个安排始终是 (x1, y1)，因为排序稳定
     const keys0 = arrs[0].groups.map((g) => g.key).sort().join(',');
     expect(keys0).toBe('x1,y1');
+    expect(arrs[0].id).toBe('x1||y1');
+  });
+
+  it('安排 id 基于内容签名，而不是排序后的展示位置', () => {
+    const groups = [
+      mkGroup('X', 'x2'),
+      mkGroup('X', 'x1'),
+      mkGroup('Y', 'y1'),
+    ];
+    const reversed = [
+      mkGroup('Y', 'y1'),
+      mkGroup('X', 'x1'),
+      mkGroup('X', 'x2'),
+    ];
+    const firstIds = enumerateArrangements(groups).map((a) => a.id);
+    const secondIds = enumerateArrangements(reversed).map((a) => a.id);
+    expect(secondIds).toEqual(firstIds);
+    expect(firstIds.every((id) => !/^arr-\d+$/.test(id))).toBe(true);
   });
 });

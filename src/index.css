@@ -252,8 +252,13 @@ html {
 }
 
 .plan-switcher__select {
-  flex: 1;
+  flex: 1 1 140px;
   min-width: 140px;
+}
+
+.plan-switcher__curriculum-select {
+  flex: 1.4 1 190px;
+  min-width: 190px;
 }
 
 .plan-switcher__hint {
@@ -705,6 +710,33 @@ html {
   gap: 2px;
 }
 
+.stats-bar__item--button {
+  margin: 0;
+  padding: 4px 6px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.stats-bar__item--button:hover {
+  background: var(--panel-bg-2);
+}
+
+.stats-bar__item--button .stats-bar__label {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stats-bar__item--button:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
 .stats-bar__label {
   font-size: 12px;
   color: var(--text-sub);
@@ -765,24 +797,17 @@ html {
 }
 
 .arrangement-panel__list {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 2px 2px 6px;
-  scroll-snap-type: x proximity;
 }
 
 .arrangement-card {
-  flex: 0 0 148px;
-  min-width: 0;
-  scroll-snap-align: start;
   text-align: left;
   background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px 9px;
+  padding: 8px 10px;
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -799,12 +824,10 @@ html {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-.arrangement-card__top {
+.arrangement-card__row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
-  min-height: 22px;
 }
 
 .arrangement-card__idx {
@@ -814,11 +837,9 @@ html {
 }
 
 .arrangement-card__meta {
-  display: block;
-  margin-top: 2px;
+  flex: 1;
   font-size: 12px;
   color: var(--text-sub);
-  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1309,6 +1330,10 @@ html {
   overflow: auto;
 }
 
+.bottom-modal .ant-select-dropdown {
+  z-index: 1;
+}
+
 .bottom-modal__footer {
   display: flex;
   justify-content: flex-end;
@@ -1531,7 +1556,7 @@ html {
 .timetable__day-date {
   margin-top: 1px;
   color: var(--text-sub);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -1924,6 +1949,107 @@ html {
 
 .bottom-modal__footer {
   border-top: 0;
+}
+
+.selected-courses-tabs .ant-tabs-nav {
+  margin-bottom: 10px;
+}
+
+.selected-courses-switcher {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(240px, 1.2fr);
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.selected-courses-switcher__field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.selected-courses-switcher__label {
+  color: var(--text-sub);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.selected-courses-plan-select,
+.selected-courses-arrangement-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.selected-courses-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selected-courses-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.selected-courses-toolbar--filters {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(120px, 180px);
+  align-items: center;
+}
+
+.selected-courses-deferred {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  color: var(--text-sub);
+  font-size: 13px;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.selected-courses-curriculum-select,
+.selected-courses-term-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.selected-courses-table .ant-table-cell {
+  vertical-align: middle;
+}
+
+.selected-courses-table .selected-courses-row--clickable {
+  cursor: pointer;
+}
+
+.selected-courses-table .selected-courses-row--clickable:hover > td {
+  background: color-mix(in srgb, var(--accent) 6%, transparent) !important;
+}
+
+.selected-course-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.selected-course-code {
+  width: max-content;
+  max-width: 100%;
+  padding: 0 6px;
+  overflow: hidden;
+  color: var(--accent);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
 }
 
 .bottom-modal__body .ant-descriptions-view,

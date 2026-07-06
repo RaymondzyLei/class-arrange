@@ -3,15 +3,21 @@ import { WarningIcon } from './icons';
 
 interface Props {
   stats: PlanStats;
+  onOpenSelectedCourses?: () => void;
 }
 
-export default function StatsBar({ stats }: Props) {
+export default function StatsBar({ stats, onOpenSelectedCourses }: Props) {
   return (
     <div className="stats-bar">
-      <div className="stats-bar__item">
+      <button
+        className="stats-bar__item stats-bar__item--button"
+        type="button"
+        onClick={onOpenSelectedCourses}
+        disabled={!onOpenSelectedCourses}
+      >
         <span className="stats-bar__label">已选课程</span>
         <span className="stats-bar__value">{stats.count} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span></span>
-      </div>
+      </button>
       <div className="stats-bar__item">
         <span className="stats-bar__label">总学分</span>
         <span className="stats-bar__value">{stats.totalCredits}</span>
