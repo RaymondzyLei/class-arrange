@@ -46,6 +46,9 @@ function sectionLabelForGroup(group: CourseGroup): string {
     .sort()
     .join(',')})`;
 }
+function formatClassLabels(classes: string[]): string {
+  return classes.map((label) => label.replace(/\*+$/, '')).join('，');
+}
 
 export default function CourseDetailModal({ group, open, onClose }: Props) {
   const { activePlan, dispatch } = usePlans();
@@ -98,7 +101,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     capacity: s.capacity,
     enrolled: s.enrolled,
     time: formatScheduleCompact(s.schedule),
-    classes: s.classes.length ? s.classes.join('，') : '—',
+    classes: s.classes.length ? formatClassLabels(s.classes) : '—',
     rating: getIcourseRatingInfo(s.id),
   }));
 
