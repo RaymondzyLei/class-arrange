@@ -16,6 +16,12 @@ body,
 
 #root {
   min-height: 100vh;
+  --action-chip-height: 22px;
+  --action-chip-radius: 6px;
+  --action-chip-font-size: 12px;
+  --action-chip-line-height: 20px;
+  --action-chip-border-width: 1px;
+  --action-chip-padding-inline: 10px;
 }
 
 html {
@@ -39,6 +45,128 @@ html {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-faint);
+}
+
+/* ============================================================
+ * AntD buttons
+ * ============================================================ */
+#root .ant-btn {
+  border-radius: var(--action-chip-radius);
+  box-shadow: none !important;
+  font-weight: 400;
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.16s, 0.16s, 0.16s;
+  transition-timing-function: ease;
+}
+
+#root .ant-btn:not(.course-table__export-button):not(.theme-toggle) {
+  height: auto;
+  min-height: var(--action-chip-height);
+  padding: 0 var(--action-chip-padding-inline);
+  border-width: var(--action-chip-border-width);
+  font-size: var(--action-chip-font-size);
+  line-height: var(--action-chip-line-height);
+}
+
+#root .ant-btn-sm {
+  border-radius: var(--action-chip-radius);
+}
+
+#root .ant-btn-sm:not(.course-table__export-button):not(.theme-toggle) {
+  min-height: var(--action-chip-height);
+  padding-inline: var(--action-chip-padding-inline);
+  font-size: var(--action-chip-font-size);
+  line-height: var(--action-chip-line-height);
+}
+
+#root .ant-btn-lg {
+  border-radius: var(--action-chip-radius);
+}
+
+#root .ant-btn::before,
+#root .ant-btn::after {
+  box-shadow: none !important;
+}
+
+#root .ant-btn:not(:disabled):active {
+  transform: none;
+  box-shadow: none !important;
+}
+
+#root .ant-btn:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button),
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button) {
+  background: color-mix(in srgb, var(--text) 4%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--text) 16%, var(--border));
+  color: var(--text);
+}
+
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button):hover,
+#root .ant-btn-color-default.ant-btn-variant-outlined:not(:disabled):not(.course-table__export-button):focus-visible,
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):hover,
+#root .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):focus-visible {
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  color: var(--accent);
+}
+
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button),
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button) {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--accent-soft));
+  color: var(--accent);
+}
+
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button):hover,
+#root .ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):not(.course-table__export-button):focus-visible,
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):hover,
+#root .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):not(.course-table__export-button):focus-visible {
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel-bg));
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+  color: var(--accent-strong);
+}
+
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled),
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):hover,
+#root .course-table__export-button.ant-btn-color-primary.ant-btn-variant-solid:not(:disabled):focus-visible,
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):hover,
+#root .course-table__export-button.ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):focus-visible {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
+}
+
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled),
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid),
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled),
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled) {
+  background: color-mix(in srgb, var(--conflict) 6%, var(--panel-bg));
+  border-color: var(--conflict);
+  color: var(--conflict);
+}
+
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled):hover,
+#root .ant-btn-color-dangerous.ant-btn-variant-outlined:not(:disabled):focus-visible,
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid):hover,
+#root .ant-btn-dangerous:not(:disabled):not(.ant-btn-primary):not(.ant-btn-variant-solid):focus-visible,
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled):hover,
+#root .ant-btn-color-dangerous.ant-btn-variant-solid:not(:disabled):focus-visible,
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled):hover,
+#root .ant-btn-primary.ant-btn-dangerous:not(:disabled):focus-visible {
+  background: color-mix(in srgb, var(--conflict) 12%, var(--panel-bg));
+  border-color: var(--conflict-strong);
+  color: var(--conflict-strong);
 }
 
 /* ============================================================
@@ -173,6 +301,18 @@ html {
   background: var(--panel-bg-2);
 }
 
+.filter-bar__controls {
+  display: grid;
+  grid-template-columns: minmax(112px, 1.25fr) repeat(2, minmax(92px, 1fr));
+  gap: 6px;
+  align-items: center;
+}
+
+.filter-bar__select {
+  width: 100%;
+  min-width: 0;
+}
+
 /* ============================================================
  * CoursePool
  * ============================================================ */
@@ -225,7 +365,7 @@ html {
 
 .pool-item:focus-within {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-soft);
+  box-shadow: none;
 }
 
 .pool-item--selected {
@@ -625,17 +765,24 @@ html {
 }
 
 .arrangement-panel__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 6px;
+  scroll-snap-type: x proximity;
 }
 
 .arrangement-card {
+  flex: 0 0 148px;
+  min-width: 0;
+  scroll-snap-align: start;
   text-align: left;
   background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 8px 10px 9px;
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -652,10 +799,12 @@ html {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-.arrangement-card__row {
+.arrangement-card__top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  min-height: 22px;
 }
 
 .arrangement-card__idx {
@@ -665,13 +814,22 @@ html {
 }
 
 .arrangement-card__meta {
-  flex: 1;
+  display: block;
+  margin-top: 2px;
   font-size: 12px;
   color: var(--text-sub);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .arrangement-card__conflict {
   margin: 0 !important;
+  padding-inline: var(--action-chip-padding-inline) !important;
+  border-width: var(--action-chip-border-width) !important;
+  border-radius: var(--action-chip-radius) !important;
+  font-size: var(--action-chip-font-size) !important;
+  font-weight: 400;
+  line-height: var(--action-chip-line-height) !important;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1263,6 +1421,32 @@ html {
   min-width: 136px;
 }
 
+.week-select.ant-select-open .ant-select-selection-item,
+.week-select.ant-select-focused .ant-select-selection-item {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.week-select.ant-select-open .ant-select-content,
+.week-select.ant-select-open .ant-select-content-has-value,
+.week-select.ant-select-open .ant-select-content-value,
+.week-select.ant-select-focused .ant-select-content,
+.week-select.ant-select-focused .ant-select-content-has-value,
+.week-select.ant-select-focused .ant-select-content-value {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.week-select.ant-select-open .ant-select-content-has-search-value,
+.week-select.ant-select-focused .ant-select-content-has-search-value {
+  color: var(--text) !important;
+}
+
+.week-select.ant-select-open .ant-select-content-has-search-value > *:not(.ant-select-input),
+.week-select.ant-select-focused .ant-select-content-has-search-value > *:not(.ant-select-input) {
+  opacity: 1 !important;
+}
+
 .course-table__date-range {
   color: var(--text-sub);
   font-size: 12px;
@@ -1568,8 +1752,12 @@ html {
 }
 
 .course-table__header {
-  grid-template-columns: auto minmax(180px, 1fr) auto minmax(160px, auto) auto auto;
-  gap: 6px 10px;
+  grid-template-columns: auto minmax(180px, 1fr) auto max-content auto;
+  gap: 6px;
+}
+
+.course-table__actions {
+  gap: 6px;
 }
 
 .week-slider-wrap {
@@ -1645,7 +1833,7 @@ html {
 }
 
 .timetable__cell {
-  height: 51px;
+  height: 52px;
   padding: 3px 4px 3px 3px;
 }
 
@@ -1730,14 +1918,78 @@ html {
 
 .bottom-modal__body {
   padding: 0 22px 18px;
+  --detail-grid-border: color-mix(in srgb, var(--text) 8%, transparent);
+  --detail-label-bg: color-mix(in srgb, var(--text) 3%, transparent);
 }
 
 .bottom-modal__footer {
   border-top: 0;
 }
 
+.bottom-modal__body .ant-descriptions-view,
+.detail-table .ant-table-container {
+  overflow: hidden;
+  border: 1px solid var(--detail-grid-border) !important;
+  border-radius: 8px;
+  background: transparent !important;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-label,
+.detail-table .ant-table-thead > tr > th {
+  background: var(--detail-label-bg) !important;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-content,
+.detail-table .ant-table-tbody > tr > td,
+.detail-table .ant-typography {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+.detail-table .detail-rating {
+  color: var(--success) !important;
+}
+
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-view,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-row,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-label,
+.bottom-modal__body .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: var(--detail-grid-border) !important;
+}
+
 .detail-table .ant-table {
   table-layout: auto !important;
+  background: transparent !important;
+}
+
+.detail-table .ant-table-content {
+  background: transparent !important;
+}
+
+.detail-table .ant-table-thead > tr > th,
+.detail-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--detail-grid-border) !important;
+}
+
+.detail-table .ant-table-tbody > tr:last-child > td {
+  border-bottom: 0 !important;
+}
+
+.detail-table .ant-table-thead > tr > th:not(:last-child),
+.detail-table .ant-table-tbody > tr > td:not(:last-child) {
+  border-inline-end: 1px solid var(--detail-grid-border) !important;
+}
+
+.detail-table .ant-table-thead > tr > th::before {
+  display: none !important;
+  content: none !important;
+}
+
+.detail-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.detail-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: var(--detail-label-bg) !important;
 }
 
 .detail-table .ant-table-cell {
@@ -1776,8 +2028,16 @@ html {
 html.theme-transitioning .ant-select-dropdown,
 html.theme-transitioning .ant-select-item,
 html.theme-transitioning .ant-picker-dropdown,
-html.theme-transitioning .ant-dropdown {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+html.theme-transitioning .ant-dropdown,
+html.theme-transitioning .ant-btn,
+html.theme-transitioning .ant-select-selector,
+html.theme-transitioning .ant-select-selection-item,
+html.theme-transitioning .ant-select-selection-placeholder,
+html.theme-transitioning .ant-select-arrow {
+  transition-duration: 0.12s !important;
+  transition-delay: 0s !important;
+  transition-property: background-color, color, border-color, box-shadow !important;
+  transition-timing-function: ease !important;
 }
 
 @media (max-width: 900px) {

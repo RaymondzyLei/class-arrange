@@ -222,6 +222,7 @@ export default function App() {
   return (
     <ConfigProvider
       locale={zhCN}
+      wave={{ disabled: true }}
       theme={{
         algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
@@ -229,6 +230,11 @@ export default function App() {
           borderRadius: 6,
         },
         components: {
+          Button: {
+            defaultShadow: 'none',
+            primaryShadow: 'none',
+            dangerShadow: 'none',
+          },
           Layout: {
             headerBg: 'var(--panel-bg)',
             bodyBg: 'var(--bg)',

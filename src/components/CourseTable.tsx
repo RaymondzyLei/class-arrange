@@ -8,7 +8,6 @@ import {
   formatDateRange,
   formatShortDate,
   getCalendarDatesForSelection,
-  getWeekLabel,
   getWeekOptions,
   TERM_CALENDAR,
   type CalendarDateInfo,
@@ -465,7 +464,6 @@ export default function CourseTable({
           />
         </div>
         <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
-        <span className="course-table__header-current">{getWeekLabel(weekSelection)}</span>
         <div className="course-table__actions no-print">
           <Button
             className="theme-toggle"
@@ -479,6 +477,7 @@ export default function CourseTable({
               : <MoonIcon className="course-table__icon" />}
           </Button>
           <Button
+            className="course-table__export-button"
             type="primary"
             onClick={onExport}
             loading={exporting}
