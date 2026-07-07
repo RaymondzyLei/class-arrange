@@ -34,6 +34,10 @@ export interface CalendarDateInfo {
   instructional: boolean;
 }
 
+interface CalendarDateOptions {
+  includeSpecialDates?: boolean;
+}
+
 /** 学期相关日期配置集中在这里。
  *  后续换学期时只替换本对象：起始周一、教学周数、休假日、补课日和来源 URL。 */
 export const TERM_CALENDAR: TermCalendar = {
@@ -117,30 +121,33 @@ export function getWeekNumberForISO(iso: ISODate, calendar = TERM_CALENDAR): num
   return Math.floor(diff / (7 * MS_PER_DAY)) + 1;
 }
 
-function buildDateInfo(iso: ISODate, calendar: TermCalendar): CalendarDateInfo {
+function buildDateInfo(iso: ISODate, calendar: TermCalendar, options: CalendarDateOptions): CalendarDateInfo {
   const week = getWeekNumberForISO(iso, calendar);
   const weekday = getWeekdayForISO(iso);
-  const holiday = calendar.holidays[iso];
-  const makeup = calendar.makeupDays[iso];
-  return {
+  const includeSpecialDates = options.includeSpecialDates ?? true;
+  const holiday = includeSpecialDates ? calendar.holidays[iso] : undefined;
+  const makeup = includeSpecialDates ? calendar.makeupDays[iso] : undefined;
+  const info: CalendarDateInfo = {
     iso,
     week,
     weekday,
     effectiveWeek: makeup?.useWeek ?? week,
     effectiveWeekday: makeup?.useWeekday ?? weekday,
-    holiday,
-    makeup,
     instructional: !holiday,
   };
+  if (holiday) info.holiday = holiday;
+  if (makeup) info.makeup = makeup;
+  return info;
 }
 
 export function getCalendarDatesForSelection(
   selection: WeekSelection,
   calendar = TERM_CALENDAR,
+  options: CalendarDateOptions = {},
 ): CalendarDateInfo[] {
   const start = selection === 'all' ? calendar.weekStartDate : getWeekRange(selection, calendar)[0];
   const days = selection === 'all' ? calendar.weekCount * 7 : 7;
-  return Array.from({ length: days }, (_, index) => buildDateInfo(addDays(start, index), calendar));
+  return Array.from({ length: days }, (_, index) => buildDateInfo(addDays(start, index), calendar, options));
 }
 
 export function getWeekOptions(calendar = TERM_CALENDAR): Array<{ label: string; value: WeekSelection }> {

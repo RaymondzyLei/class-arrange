@@ -104,6 +104,7 @@ export default function CoursePool({ groups, selectedIds, conflictGroupKeys, the
     const allSelected = group.sectionIds.every((id) => selectedIds.has(id));
     if (allSelected) {
       dispatch({ type: 'removeCourses', courseIds: group.sectionIds });
+      message.success(`已移除「${group.courseName}」`);
       return;
     }
     // 冲突预检：把已选 sections + 本组 sections 聚合成 groups 再检测

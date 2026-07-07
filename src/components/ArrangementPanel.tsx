@@ -13,10 +13,16 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
       <div className="arrangement-panel__head">
         <span className="arrangement-panel__title">排课方案</span>
         <span className="arrangement-panel__sub">
-          共 {arrangements.length} 种（按冲突数从少到多）· 点选切换
+          共 {arrangements.length} 种方案
         </span>
       </div>
-      <div className="arrangement-panel__list">
+      <div
+        className={`arrangement-panel__list${
+          arrangements.length > 4 ? ' arrangement-panel__list--scroll' : ''
+        }${
+          arrangements.length > 2 ? ' arrangement-panel__list--mobile-scroll' : ''
+        }`}
+      >
         {arrangements.map((a, index) => {
           const applied = a.id === selectedId;
           const conflictFree = a.conflictCount === 0;

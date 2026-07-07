@@ -138,7 +138,9 @@ function buildEntries(
   weekSelection: WeekSelection,
   themeMode: 'light' | 'dark',
 ): TimetableEntry[] {
-  const dates = getCalendarDatesForSelection(weekSelection).filter((date) => date.instructional);
+  const dates = getCalendarDatesForSelection(weekSelection, TERM_CALENDAR, {
+    includeSpecialDates: weekSelection !== 'all',
+  }).filter((date) => date.instructional);
   const entries = new Map<string, MutableTimetableEntry>();
 
   for (const group of groups) {

@@ -1,10 +1,12 @@
-import { curricula, type CurriculumRecord } from '@/data/curricula';
+import { curricula, type CurriculumCourse, type CurriculumRecord } from '@/data/curricula';
 
 export interface CurriculumOption {
   value: string;
   label: string;
   searchText: string;
 }
+
+export const ALL_CURRICULUM_TERMS = '__all_terms__';
 
 function compareText(a: string, b: string): number {
   return a.localeCompare(b, 'zh-Hans-CN');
@@ -86,6 +88,15 @@ export function filterCurriculumOption(input: string, option?: unknown): boolean
   return terms.length > 0 && terms.every((term) => compactOptionText.includes(term));
 }
 
+const DEFERRED_CURRICULUM_CODES = new Set(['MIL1001', 'MIL1002', 'PE00001', 'THESIS', 'THESIS-M']);
+const DEFERRED_CURRICULUM_NAMES = new Set(['军事理论', '军事技能', '艺术实践', '基础体育', '毕业论文']);
+
+export function isDeferredCurriculumCourse(course: CurriculumCourse): boolean {
+  return DEFERRED_CURRICULUM_CODES.has(course.code)
+    || DEFERRED_CURRICULUM_NAMES.has(course.name)
+    || course.modulePath.some((item) => item.includes('体育通修'));
+}
+
 export function getCurriculum(id: string | null): CurriculumRecord | null {
   if (!id) return null;
   return curricula[id] ?? null;
@@ -94,7 +105,7 @@ export function getCurriculum(id: string | null): CurriculumRecord | null {
 export function getCurriculumTerms(record: CurriculumRecord | null): string[] {
   if (!record) return [];
   return Object.entries(record.terms)
-    .filter(([, courses]) => courses.length > 0)
+    .filter(([, courses]) => courses.some((course) => !isDeferredCurriculumCourse(course)))
     .map(([term]) => term)
     .sort(compareCurriculumTerms);
 }
@@ -105,5 +116,6 @@ export function getDefaultCurriculumTerm(id: string | null): string | null {
 
 export function isValidCurriculumTerm(id: string | null, term: string | null): boolean {
   if (!id || !term) return false;
+  if (term === ALL_CURRICULUM_TERMS) return Boolean(getCurriculum(id));
   return getCurriculumTerms(getCurriculum(id)).includes(term);
 }
