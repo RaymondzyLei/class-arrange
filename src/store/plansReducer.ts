@@ -1,5 +1,5 @@
 import type { Plan, PlansState } from '@/types';
-import { genId, makePlan, nextDefaultPlanName } from '@/utils/planSeed';
+import { genId, makePlan, nextDefaultPlanName, nextDuplicatePlanName } from '@/utils/planSeed';
 
 export type PlansAction =
   | { type: 'init'; payload: PlansState }
@@ -32,7 +32,7 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
     case 'duplicatePlan': {
       const src = state.plans.find((p) => p.id === action.id);
       if (!src) return state;
-      const name = `${src.name} 副本`;
+      const name = nextDuplicatePlanName(src.name, state.plans);
       const plan: Plan = {
         id: genId(),
         name,
@@ -44,6 +44,8 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
     }
 
     case 'deletePlan': {
+      const deletedIndex = state.plans.findIndex((p) => p.id === action.id);
+      if (deletedIndex < 0) return state;
       const remaining = state.plans.filter((p) => p.id !== action.id);
       if (remaining.length === 0) {
         const plan = makePlan(nextDefaultPlanName(remaining));
@@ -51,7 +53,8 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
       }
       let activeId = state.activePlanId;
       if (activeId === action.id) {
-        activeId = remaining[0].id;
+        const fallbackIndex = Math.min(deletedIndex, remaining.length - 1);
+        activeId = remaining[fallbackIndex].id;
       }
       return { plans: remaining, activePlanId: activeId };
     }

@@ -1,5 +1,6 @@
 # ----------------------------------------------------------------------------
 # 本文件来自 https://github.com/feixukeji/paike （USTC 排课 / 评课爬虫项目）
+# 原项目许可证：AGPL v3
 # 原作者贡献的 icourse 评分匹配工具：按 courseName + sorted(teachers) 生成
 # 哈希 key，对齐前端 src/utils/courseGroup.ts 的聚合逻辑。本仓库保留原始代码，
 # 不做改动。

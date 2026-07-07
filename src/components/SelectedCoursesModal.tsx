@@ -6,10 +6,12 @@ import { getAllCourseGroups } from '@/utils/courseGroup';
 import { conflictGroupSet, detectConflicts } from '@/utils/conflict';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import {
+  ALL_CURRICULUM_TERMS,
   curriculumOptions,
   filterCurriculumOption,
   getCurriculum,
   getCurriculumTerms,
+  isDeferredCurriculumCourse,
 } from '@/utils/curriculum';
 import type { CurriculumCourse } from '@/data/curricula';
 import { usePlans } from '@/store/plansContext';
@@ -68,6 +70,16 @@ function dedupe(ids: string[]): string[] {
   return [...new Set(ids)];
 }
 
+function dedupeCurriculumCourses(courses: CurriculumCourse[]): CurriculumCourse[] {
+  const seen = new Set<string>();
+  return courses.filter((course) => {
+    const key = `${course.code}::${course.name}::${course.modulePath.join('/')}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function buildGroupsByCode(): Map<string, CourseGroup[]> {
   const map = new Map<string, CourseGroup[]>();
   for (const group of getAllCourseGroups()) {
@@ -96,10 +108,6 @@ function conflictStatusForCandidate(candidate: CourseGroup, currentGroups: Cours
       .filter((group) => conflictKeys.has(group.key))
       .map((group) => group.courseName),
   };
-}
-
-function shouldDeferCurriculumCourse(course: CurriculumCourse): boolean {
-  return course.name === '艺术实践';
 }
 
 function isInteractiveClick(target: EventTarget | null): boolean {
@@ -167,25 +175,59 @@ export default function SelectedCoursesModal({
   );
 
   const selectedCurriculum = getCurriculum(selectedCurriculumId);
-  const termOptions = useMemo(
-    () => getCurriculumTerms(selectedCurriculum).map((term) => ({
-      value: term,
-      label: `${term}（${selectedCurriculum?.terms[term]?.length ?? 0} 门）`,
-    })),
-    [selectedCurriculum],
+  const curriculumTerms = useMemo(() => getCurriculumTerms(selectedCurriculum), [selectedCurriculum]);
+  const allTermCurriculumCourses = useMemo(
+    () => {
+      if (!selectedCurriculum) return [];
+      return dedupeCurriculumCourses(
+        curriculumTerms.flatMap((term) => selectedCurriculum.terms[term] ?? []),
+      );
+    },
+    [selectedCurriculum, curriculumTerms],
   );
-  const curriculumCourses =
-    selectedCurriculum && selectedCurriculumTerm
-      ? selectedCurriculum.terms[selectedCurriculumTerm] ?? []
-      : [];
+  const termOptions = useMemo(() => {
+    if (!selectedCurriculum) return [];
+    const allVisibleCount = allTermCurriculumCourses
+      .filter((course) => !isDeferredCurriculumCourse(course)).length;
+    return [
+      {
+        value: ALL_CURRICULUM_TERMS,
+        label: `显示全部学期（${allVisibleCount} 门）`,
+      },
+      ...curriculumTerms.map((term) => ({
+        value: term,
+        label: `${term}（${
+          selectedCurriculum.terms[term]?.filter((course) => !isDeferredCurriculumCourse(course)).length ?? 0
+        } 门）`,
+      })),
+    ];
+  }, [allTermCurriculumCourses, curriculumTerms, selectedCurriculum]);
+  const curriculumCourses = selectedCurriculum && selectedCurriculumTerm
+    ? selectedCurriculumTerm === ALL_CURRICULUM_TERMS
+      ? allTermCurriculumCourses
+      : selectedCurriculum.terms[selectedCurriculumTerm] ?? []
+    : [];
   const visibleCurriculumCourses = useMemo(
-    () => curriculumCourses.filter((course) => !shouldDeferCurriculumCourse(course)),
+    () => curriculumCourses.filter((course) => !isDeferredCurriculumCourse(course)),
     [curriculumCourses],
   );
   const deferredCurriculumCourses = useMemo(
-    () => curriculumCourses.filter(shouldDeferCurriculumCourse),
-    [curriculumCourses],
+    () => {
+      if (!selectedCurriculum) return [];
+      const courses = Object.values(selectedCurriculum.terms).flat().filter(isDeferredCurriculumCourse);
+      const seen = new Set<string>();
+      return courses.filter((course) => {
+        const key = `${course.code}::${course.name}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    },
+    [selectedCurriculum],
   );
+  const deferredCourseSummary = deferredCurriculumCourses
+    .map((course) => `${course.name}（${course.code}）`)
+    .join('、');
 
   const makeRows = (groups: CourseGroup[]): GroupRow[] => groups.map((group) => ({
     key: group.key,
@@ -262,7 +304,10 @@ export default function SelectedCoursesModal({
   };
 
   const switchPlan = (id: string) => {
+    if (id === activePlan?.id) return;
+    const plan = state.plans.find((item) => item.id === id);
     dispatch({ type: 'switchPlan', id });
+    if (plan) message.success(`已切换到「${plan.name}」`);
   };
 
   const addGroup = (group: CourseGroup) => {
@@ -473,6 +518,130 @@ export default function SelectedCoursesModal({
     />
   );
 
+  const renderGroupCards = (rows: GroupRow[]) => (
+    <div className="selected-courses-mobile-list">
+      {rows.map((row) => (
+        <article
+          className="selected-courses-card"
+          key={row.key}
+          role="button"
+          tabIndex={0}
+          onClick={() => openDetail(row.group)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') openDetail(row.group);
+          }}
+        >
+          <div className="selected-courses-card__head">
+            <span className="selected-courses-card__title">{row.courseName}</span>
+            {row.applied ? (
+              row.conflict ? <Tag color="orange">冲突</Tag> : <Tag color="green">无冲突</Tag>
+            ) : (
+              <Tag>未应用</Tag>
+            )}
+          </div>
+          <div className="selected-courses-card__meta">
+            <span>{row.sectionLabel}</span>
+            <span>{row.credits} 学分</span>
+          </div>
+          <div className="selected-courses-card__line">{row.teachers}</div>
+          <div className="selected-courses-card__schedule">{row.schedule || '时间地点待定'}</div>
+          <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
+            <Button size="small" danger onClick={() => removeGroup(row.group)}>移除此时间组</Button>
+            <Button size="small" danger onClick={() => removeCourse(row.group.courseCode, row.group.courseName)}>
+              移除此课程
+            </Button>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+
+  const renderCurriculumCards = (rows: CurriculumRow[]) => (
+    <div className="selected-courses-mobile-list">
+      {rows.map((row) => (
+        <article
+          className={`selected-courses-card${row.matches.length > 0 ? ' selected-courses-card--clickable' : ''}`}
+          key={row.key}
+          role={row.matches.length > 0 ? 'button' : undefined}
+          tabIndex={row.matches.length > 0 ? 0 : undefined}
+          onClick={() => openCurriculumRow(row)}
+          onKeyDown={(event) => {
+            if ((event.key === 'Enter' || event.key === ' ') && row.matches.length > 0) openCurriculumRow(row);
+          }}
+        >
+          <div className="selected-courses-card__head">
+            <span className="selected-courses-card__title">{row.course.name}</span>
+            <span className="selected-course-code">{row.course.code}</span>
+          </div>
+          <div className="selected-courses-card__meta">
+            <span>{row.course.credits} 学分</span>
+            <span>{row.course.compulsory ? '必修' : '选修'}</span>
+            <span>{row.selected ? '已选' : '未选'}</span>
+          </div>
+          <div className="selected-courses-card__line">{row.course.modulePath.join(' / ')}</div>
+          <div className="selected-courses-card__schedule">
+            {row.matches.length === 0
+              ? '本学期未开'
+              : row.matches.length === 1
+                ? formatScheduleCompact(row.matches[0].schedule)
+                : `${row.matches.length} 个时间组`}
+          </div>
+          <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
+            {row.matches.length === 0 ? (
+              <Button size="small" disabled>加入</Button>
+            ) : row.matches.length === 1 ? (
+              groupIsSelected(row.matches[0], selectedIds) ? (
+                <Button size="small" danger onClick={() => removeGroup(row.matches[0])}>移除</Button>
+              ) : (
+                <Button size="small" type="primary" onClick={() => addGroup(row.matches[0])}>加入</Button>
+              )
+            ) : (
+              <Button size="small" type="primary" onClick={() => setCandidateCourse(row.course)}>选择时间组</Button>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+
+  const renderCandidateCards = (groups: CourseGroup[]) => (
+    <div className="selected-courses-mobile-list">
+      {groups.map((group) => {
+        const status = conflictStatusForCandidate(group, appliedGroups);
+        const selected = groupIsSelected(group, selectedIds);
+        return (
+          <article
+            className="selected-courses-card selected-courses-card--clickable"
+            key={group.key}
+            role="button"
+            tabIndex={0}
+            onClick={() => openDetail(group)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') openDetail(group);
+            }}
+          >
+            <div className="selected-courses-card__head">
+              <span className="selected-courses-card__title">{sectionLabelForGroup(group)}</span>
+              {status.conflict ? <Tag color="orange">冲突</Tag> : <Tag color="green">无冲突</Tag>}
+            </div>
+            <div className="selected-courses-card__meta">
+              <span>{creditsForGroup(group)} 学分</span>
+              <span>{group.teachers.join('、') || '教师未定'}</span>
+            </div>
+            <div className="selected-courses-card__schedule">{formatScheduleCompact(group.schedule)}</div>
+            <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
+              {selected ? (
+                <Button size="small" danger onClick={() => removeGroup(group)}>移除</Button>
+              ) : (
+                <Button size="small" type="primary" onClick={() => addGroup(group)}>加入</Button>
+              )}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+
   return (
     <>
       <BottomModal open={open} title="已选课程管理" onClose={onClose} width={1180}>
@@ -507,7 +676,12 @@ export default function SelectedCoursesModal({
             {
               key: 'current',
               label: '当前排课',
-              children: currentRows.length ? renderGroupTable(currentRows, false) : <Empty description="当前排课为空" />,
+              children: currentRows.length ? (
+                <>
+                  {renderGroupTable(currentRows, false)}
+                  {renderGroupCards(currentRows)}
+                </>
+              ) : <Empty description="当前排课为空" />,
             },
             {
               key: 'all',
@@ -534,7 +708,12 @@ export default function SelectedCoursesModal({
                       </Button>
                     </Space>
                   </div>
-                  {allRows.length ? renderGroupTable(allRows, true) : <Empty description="当前方案暂无已选课程" />}
+                  {allRows.length ? (
+                    <>
+                      {renderGroupTable(allRows, true)}
+                      {renderGroupCards(allRows)}
+                    </>
+                  ) : <Empty description="当前方案暂无已选课程" />}
                 </div>
               ),
             },
@@ -548,11 +727,12 @@ export default function SelectedCoursesModal({
                       className="selected-courses-curriculum-select"
                       showSearch
                       allowClear
-                      placeholder="选择培养方案"
+                      placeholder="选择或搜索培养方案"
                       value={selectedCurriculumId ?? undefined}
                       options={curriculumOptions}
                       filterOption={filterCurriculumOption}
                       optionFilterProp="label"
+                      popupClassName="curriculum-select-dropdown"
                       popupMatchSelectWidth={520}
                       onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
                     />
@@ -569,29 +749,31 @@ export default function SelectedCoursesModal({
                     <div className="selected-courses-deferred">
                       <Tag>暂不展示</Tag>
                       <span>
-                        艺术实践已单独列出，暂不进入培养方案课程表（
-                        {deferredCurriculumCourses.length}
-                        门）。
+                        {deferredCourseSummary}
+                        暂不进入培养方案课程表（{deferredCurriculumCourses.length} 门）。体育课程未在此处展示。
                       </span>
                     </div>
                   ) : null}
                   {selectedCurriculum && selectedCurriculumTerm ? (
-                    <Table<CurriculumRow>
-                      className="detail-table selected-courses-table"
-                      size="small"
-                      rowKey="key"
-                      dataSource={curriculumRows}
-                      columns={curriculumColumns}
-                      pagination={false}
-                      tableLayout="auto"
-                      onRow={(row) => ({
-                        className: row.matches.length > 0 ? 'selected-courses-row--clickable' : '',
-                        onClick: (event) => {
-                          if (isInteractiveClick(event.target)) return;
-                          openCurriculumRow(row);
-                        },
-                      })}
-                    />
+                    <>
+                      <Table<CurriculumRow>
+                        className="detail-table selected-courses-table"
+                        size="small"
+                        rowKey="key"
+                        dataSource={curriculumRows}
+                        columns={curriculumColumns}
+                        pagination={false}
+                        tableLayout="auto"
+                        onRow={(row) => ({
+                          className: row.matches.length > 0 ? 'selected-courses-row--clickable' : '',
+                          onClick: (event) => {
+                            if (isInteractiveClick(event.target)) return;
+                            openCurriculumRow(row);
+                          },
+                        })}
+                      />
+                      {renderCurriculumCards(curriculumRows)}
+                    </>
                   ) : (
                     <Empty description="请选择培养方案和学期" />
                   )}
@@ -649,6 +831,7 @@ export default function SelectedCoursesModal({
             },
           })}
         />
+        {renderCandidateCards(candidateGroups)}
       </BottomModal>
     </>
   );

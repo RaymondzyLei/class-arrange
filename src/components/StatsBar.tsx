@@ -1,5 +1,5 @@
 import type { PlanStats } from '@/utils/stats';
-import { WarningIcon } from './icons';
+import { ChevronIcon, WarningIcon } from './icons';
 
 interface Props {
   stats: PlanStats;
@@ -15,8 +15,16 @@ export default function StatsBar({ stats, onOpenSelectedCourses }: Props) {
         onClick={onOpenSelectedCourses}
         disabled={!onOpenSelectedCourses}
       >
-        <span className="stats-bar__label">已选课程</span>
-        <span className="stats-bar__value">{stats.count} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span></span>
+        <span className="stats-bar__button-head">
+          <span className="stats-bar__label">已选课程</span>
+          <span className="stats-bar__action">
+            管理
+            <ChevronIcon className="stats-bar__action-icon" />
+          </span>
+        </span>
+        <span className="stats-bar__value">
+          {stats.count} <span className="stats-bar__unit">门</span>
+        </span>
       </button>
       <div className="stats-bar__item">
         <span className="stats-bar__label">总学分</span>
@@ -30,7 +38,7 @@ export default function StatsBar({ stats, onOpenSelectedCourses }: Props) {
         <span className="stats-bar__label">冲突课程</span>
         <span className={`stats-bar__value${stats.conflictCount > 0 ? ' stats-bar__value--conflict' : ''}`}>
           {stats.conflictCount > 0 ? <WarningIcon className="stats-bar__warning-icon" /> : null}
-          {stats.conflictCount} <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--text-sub)' }}>门</span>
+          {stats.conflictCount} <span className="stats-bar__unit">门</span>
         </span>
       </div>
     </div>

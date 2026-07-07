@@ -81,3 +81,13 @@ export function nextDefaultPlanName(existing: { name: string }[]): string {
   }
   return `方案${toChineseNumber(existing.length + 1)}`;
 }
+
+export function nextDuplicatePlanName(sourceName: string, existing: { name: string }[]): string {
+  const baseName = sourceName.replace(/ 副本(?: \d+)?$/, '');
+  const firstCopyName = `${baseName} 副本`;
+  const names = new Set(existing.map((p) => p.name));
+  if (!names.has(firstCopyName)) return firstCopyName;
+  let index = 2;
+  while (names.has(`${firstCopyName} ${index}`)) index += 1;
+  return `${firstCopyName} ${index}`;
+}

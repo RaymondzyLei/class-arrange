@@ -191,6 +191,13 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }));
   };
 
+  const handleArrangementChange = (id: string) => {
+    if (id === appliedArrangement?.id) return;
+    const index = arrangements.findIndex((arrangement) => arrangement.id === id);
+    setSelectedArrangementId(id);
+    if (index >= 0) message.success(`已切换到排课方案 #${index}`);
+  };
+
   const openCourseDetailFromManager = (groupKey: string) => {
     setDetailGroupKey(groupKey);
   };
@@ -211,7 +218,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             <ArrangementPanel
               arrangements={arrangements}
               selectedId={appliedArrangement?.id ?? null}
-              onSelect={(id) => setSelectedArrangementId(id)}
+              onSelect={handleArrangementChange}
             />
           )}
           <FilterBar filter={filter} setFilter={setFilter} resultCount={filteredGroups.length} />
@@ -248,7 +255,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         currentArrangementId={appliedArrangement?.id ?? null}
         selectedCurriculumId={curriculumSelection.curriculumId}
         selectedCurriculumTerm={curriculumSelection.term}
-        onArrangementChange={setSelectedArrangementId}
+        onArrangementChange={handleArrangementChange}
         onCurriculumChange={handleCurriculumChange}
         onCurriculumTermChange={handleCurriculumTermChange}
         onOpenDetail={openCourseDetailFromManager}
@@ -283,20 +290,29 @@ export default function App() {
         setThemeMode(next);
       });
     };
-    const markTransitioning = () => {
+    const beginThemeTransition = () => {
       document.documentElement.classList.add('theme-transitioning');
-      window.setTimeout(() => {
+      let cleared = false;
+      return () => {
+        if (cleared) return;
+        cleared = true;
         document.documentElement.classList.remove('theme-transitioning');
-      }, 340);
+      };
     };
 
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (!prefersReducedMotion && typeof document.startViewTransition === 'function') {
-      markTransitioning();
-      document.startViewTransition(commit);
+      const endThemeTransition = beginThemeTransition();
+      const transition = document.startViewTransition(commit);
+      transition.finished.finally(endThemeTransition);
       return;
     }
-    if (!prefersReducedMotion) markTransitioning();
+    if (!prefersReducedMotion) {
+      const endThemeTransition = beginThemeTransition();
+      commit();
+      window.setTimeout(endThemeTransition, 340);
+      return;
+    }
     commit();
   };
 

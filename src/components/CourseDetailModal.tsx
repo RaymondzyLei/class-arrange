@@ -14,6 +14,27 @@ interface Props {
   onClose: () => void;
 }
 
+interface ScheduleRow {
+  key: number;
+  weeks: string;
+  weeksExpanded: string;
+  day: string | number;
+  periods: string;
+  room: string;
+}
+
+interface SectionRow {
+  key: number;
+  id: string;
+  teacher: string;
+  room: string;
+  capacity: number;
+  enrolled: number;
+  time: string;
+  classes: string;
+  rating?: IcourseRatingInfo;
+}
+
 function RatingLink({ rating }: { rating?: IcourseRatingInfo }) {
   if (!rating) return <>—</>;
   const label = typeof rating.ratingCount === 'number'
@@ -80,7 +101,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     day: DAY_LABELS[s.day] ?? s.day,
     periods: s.periods.join(', '),
     room: s.room || '—',
-  }));
+  } satisfies ScheduleRow));
 
   const sectionRows = [...display.sections]
     .sort((a, b) => {
@@ -103,7 +124,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     time: formatScheduleCompact(s.schedule),
     classes: s.classes.length ? formatClassLabels(s.classes) : '—',
     rating: getIcourseRatingInfo(s.id),
-  }));
+  } satisfies SectionRow));
 
   const toggleSelected = () => {
     if (!activePlan) {
@@ -136,25 +157,76 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
         </Button>
       )}
     >
-      <Descriptions size="small" column={2} bordered>
-        <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
-        <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
-        <Descriptions.Item label="授课教师" span={2}>
-          {display.teachers.length ? display.teachers.join('、') : '—'}
-        </Descriptions.Item>
-        <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
-        <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
-        <Descriptions.Item label="课程类型">{rep?.courseType ?? '—'}</Descriptions.Item>
-        <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
-        {rep?.undergradShared ? (
-          <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
-        ) : null}
-        {singleRating ? (
-          <Descriptions.Item label="icourse 评分">
-            <RatingLink rating={singleRating} />
+      <div className="course-detail-desktop">
+        <Descriptions size="small" column={2} bordered>
+          <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
+          <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
+          <Descriptions.Item label="授课教师" span={2}>
+            {display.teachers.length ? display.teachers.join('、') : '—'}
           </Descriptions.Item>
-        ) : null}
-      </Descriptions>
+          <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
+          <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="课程类型">{rep?.courseType ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
+          {rep?.undergradShared ? (
+            <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
+          ) : null}
+          {singleRating ? (
+            <Descriptions.Item label="icourse 评分">
+              <RatingLink rating={singleRating} />
+            </Descriptions.Item>
+          ) : null}
+        </Descriptions>
+      </div>
+
+      <div className="course-detail-mobile">
+        <section className="mobile-card course-detail-summary-card">
+          <div className="mobile-field">
+            <span className="mobile-field__label">课堂号 / 班次</span>
+            <span className="mobile-field__value mobile-field__value--mono">{sectionLabel}</span>
+          </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">授课教师</span>
+            <span className="mobile-field__value">{display.teachers.length ? display.teachers.join('、') : '—'}</span>
+          </div>
+          <div className="mobile-field mobile-field--pair">
+            <span>
+              <span className="mobile-field__label">学分 / 学时</span>
+              <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+            </span>
+            <span>
+              <span className="mobile-field__label">考核方式</span>
+              <span className="mobile-field__value">{rep?.examType ?? '—'}</span>
+            </span>
+          </div>
+          <div className="mobile-field mobile-field--pair">
+            <span>
+              <span className="mobile-field__label">课程类型</span>
+              <span className="mobile-field__value">{rep?.courseType ?? '—'}</span>
+            </span>
+            <span>
+              <span className="mobile-field__label">授课语言</span>
+              <span className="mobile-field__value">{rep?.language ?? '—'}</span>
+            </span>
+          </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">开课单位</span>
+            <span className="mobile-field__value">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</span>
+          </div>
+          {rep?.undergradShared ? (
+            <div className="mobile-field">
+              <span className="mobile-field__label">本研同堂</span>
+              <span className="mobile-field__value"><Tag color="blue">是</Tag></span>
+            </div>
+          ) : null}
+          {singleRating ? (
+            <div className="mobile-field">
+              <span className="mobile-field__label">icourse 评分</span>
+              <span className="mobile-field__value"><RatingLink rating={singleRating} /></span>
+            </div>
+          ) : null}
+        </section>
+      </div>
 
       {display.sections.length > 1 && (
         <>
@@ -174,6 +246,23 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
               { title: '上课班级', dataIndex: 'classes' },
             ]}
           />
+          <div className="mobile-card-list course-detail-mobile">
+            {sectionRows.map((row) => (
+              <article className="mobile-card course-detail-section-card" key={row.key}>
+                <div className="mobile-card__head">
+                  <span className="mobile-card__title">{row.id}</span>
+                  <span className="mobile-card__meta">{row.enrolled} / {row.capacity}</span>
+                </div>
+                <div className="mobile-card__line">{row.teacher}</div>
+                <div className="mobile-card__line">{row.time}</div>
+                <div className="mobile-card__line">上课班级：{row.classes}</div>
+                <div className="mobile-card__foot">
+                  <span>{row.room}</span>
+                  <RatingLink rating={row.rating} />
+                </div>
+              </article>
+            ))}
+          </div>
         </>
       )}
 
@@ -192,6 +281,18 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           { title: '教室', dataIndex: 'room' },
         ]}
       />
+      <div className="mobile-card-list course-detail-mobile">
+        {scheduleRows.map((row) => (
+          <article className="mobile-card course-detail-schedule-card" key={row.key}>
+            <div className="mobile-card__head">
+              <span className="mobile-card__title">{row.weeks}</span>
+              <span className="mobile-card__meta">{row.day} · {row.periods} 节</span>
+            </div>
+            <div className="mobile-card__line">{row.room}</div>
+            <div className="mobile-card__subline">展开周：{row.weeksExpanded || '—'}</div>
+          </article>
+        ))}
+      </div>
     </BottomModal>
   );
 }
