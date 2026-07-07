@@ -950,6 +950,10 @@ html {
 }
 
 .arrangement-panel {
+  --arrangement-card-height: 64px;
+  --arrangement-list-gap: 8px;
+  --arrangement-ring-space: 2px;
+  --arrangement-scroll-space: 8px;
   margin-top: 8px;
   padding: 10px 14px;
 }
@@ -975,16 +979,26 @@ html {
 .arrangement-panel__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 8px;
+  gap: var(--arrangement-list-gap);
   overflow-y: auto;
-  padding-right: 4px;
+  margin: calc(var(--arrangement-ring-space) * -1)
+    calc((var(--arrangement-scroll-space) + var(--arrangement-ring-space)) * -1)
+    calc(var(--arrangement-ring-space) * -1)
+    calc(var(--arrangement-ring-space) * -1);
+  padding: var(--arrangement-ring-space)
+    calc(var(--arrangement-scroll-space) + var(--arrangement-ring-space))
+    var(--arrangement-ring-space)
+    var(--arrangement-ring-space);
   scrollbar-gutter: stable;
 }
 
 .arrangement-panel__list--scroll {
-  --arrangement-card-height: 64px;
-  max-height: calc(var(--arrangement-card-height) * 2.5 + 8px * 2);
-  padding-bottom: 4px;
+  max-height: calc(
+    var(--arrangement-card-height) * 2.5
+    + var(--arrangement-list-gap) * 2
+    + var(--arrangement-ring-space) * 2
+  );
+  padding-bottom: var(--arrangement-ring-space);
 }
 
 .arrangement-card {
@@ -1007,7 +1021,7 @@ html {
 .arrangement-card--applied {
   border-color: var(--accent);
   background: var(--accent-soft);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+  box-shadow: 0 0 0 var(--arrangement-ring-space) color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .arrangement-card__row {
@@ -2532,11 +2546,12 @@ html.theme-transitioning *::after {
   }
 
   .bottom-modal {
-    padding: 8px;
+    --bottom-modal-mobile-inset: clamp(18px, 6vw, 28px);
+    padding: var(--bottom-modal-mobile-inset);
   }
 
   .bottom-modal__panel {
-    max-height: calc(100dvh - 16px);
+    max-height: calc(100dvh - (var(--bottom-modal-mobile-inset) * 2));
     border-radius: 14px;
   }
 
@@ -2726,14 +2741,29 @@ html.theme-transitioning *::after {
     gap: 8px;
   }
 
+  .arrangement-panel {
+    --arrangement-card-height: 48px;
+  }
+
   .arrangement-panel__list,
   .arrangement-panel__list--scroll {
     max-height: none;
-    overflow-y: visible;
-    padding-right: 0;
-    scrollbar-gutter: auto;
+    overflow-y: auto;
     -webkit-mask-image: none;
     mask-image: none;
+  }
+
+  .arrangement-card {
+    padding: 4px 10px;
+  }
+
+  .arrangement-panel__list--mobile-scroll {
+    max-height: calc(
+      var(--arrangement-card-height) * 2.5
+      + var(--arrangement-list-gap) * 2
+      + var(--arrangement-ring-space) * 2
+    );
+    overflow-y: auto;
   }
 
   .theme-toggle,

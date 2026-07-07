@@ -19,6 +19,8 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
       <div
         className={`arrangement-panel__list${
           arrangements.length > 4 ? ' arrangement-panel__list--scroll' : ''
+        }${
+          arrangements.length > 2 ? ' arrangement-panel__list--mobile-scroll' : ''
         }`}
       >
         {arrangements.map((a, index) => {
