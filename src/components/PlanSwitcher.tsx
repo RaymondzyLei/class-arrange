@@ -122,7 +122,7 @@ export default function PlanSwitcher({
 
   return (
     <div className="plan-switcher">
-      <div className="plan-switcher__main-row">
+      <div className="plan-switcher__main-row" data-tour="scheme-list">
         <span className="plan-switcher__label">我的方案</span>
         <SelectWithChevron
           className="plan-switcher__select"
@@ -131,7 +131,7 @@ export default function PlanSwitcher({
           onChange={switchTo}
           options={planOptions}
           optionLabelProp="title"
-          popupClassName="plan-select-dropdown"
+          classNames={{ popup: { root: 'plan-select-dropdown' } }}
           disabled={state.plans.length === 0}
         />
         <div className="plan-switcher__actions">
@@ -158,12 +158,13 @@ export default function PlanSwitcher({
               aria-label="更多方案操作"
               title="更多方案操作"
               disabled={!activePlan}
+              data-tour="more-actions"
               icon={<MoreIcon />}
             />
           </Dropdown>
         </div>
       </div>
-      <div className="plan-switcher__curriculum-row">
+      <div className="plan-switcher__curriculum-row" data-tour="program-selector">
         <SelectWithChevron
           className="plan-switcher__curriculum-select"
           showSearch
@@ -173,11 +174,15 @@ export default function PlanSwitcher({
           options={curriculumOptions}
           filterOption={filterCurriculumOption}
           optionFilterProp="label"
-          popupClassName="curriculum-select-dropdown"
+          classNames={{ popup: { root: 'curriculum-select-dropdown' } }}
           popupMatchSelectWidth={520}
           onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
         />
-        <Button className="plan-switcher__manage-button" onClick={onManageCurriculum}>
+        <Button
+          className="plan-switcher__manage-button"
+          data-tour="curriculum-manage"
+          onClick={onManageCurriculum}
+        >
           管理
         </Button>
       </div>

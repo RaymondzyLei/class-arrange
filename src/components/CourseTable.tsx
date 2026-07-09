@@ -481,7 +481,7 @@ export default function CourseTable({
   const sliderWeek = typeof weekSelection === 'number' ? weekSelection : 1;
 
   return (
-    <div className="panel-inner course-table-wrap">
+    <div className="panel-inner course-table-wrap" data-tour="timetable-area">
       <div className="course-table__header no-print">
         <span className="course-table__header-label">当前周次</span>
         <div className="week-slider-wrap">
@@ -523,6 +523,7 @@ export default function CourseTable({
             className="course-table__customize-button"
             onClick={onOpenCustomization}
             aria-label="自定义"
+            data-tour="customization"
             icon={<GearIcon className="course-table__button-icon" />}
           >
             <span className="course-table__customize-label">自定义</span>
@@ -533,6 +534,7 @@ export default function CourseTable({
             onClick={onExport}
             loading={exporting}
             aria-label="导出图片"
+            data-tour="export"
             icon={<DownloadIcon className="course-table__button-icon" />}
           >
             <span className="course-table__export-label">导出图片</span>
@@ -540,7 +542,7 @@ export default function CourseTable({
         </div>
       </div>
 
-      <div className="course-table__scroll">
+      <div className="course-table__scroll" data-tour="timetable">
         <TimetableView
           weekSelection={weekSelection}
           groups={groups}

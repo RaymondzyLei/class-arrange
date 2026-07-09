@@ -796,7 +796,10 @@ export default function SelectedCoursesModal({
               label: '培养方案内课程',
               children: (
                 <div className="selected-courses-section">
-                  <div className="selected-courses-toolbar selected-courses-toolbar--filters">
+                  <div
+                    className="selected-courses-toolbar selected-courses-toolbar--filters"
+                    data-tour="selected-courses-curriculum-tools"
+                  >
                     <SelectWithChevron
                       className="selected-courses-curriculum-select"
                       showSearch
@@ -806,7 +809,7 @@ export default function SelectedCoursesModal({
                       options={curriculumOptions}
                       filterOption={filterCurriculumOption}
                       optionFilterProp="label"
-                      popupClassName="curriculum-select-dropdown"
+                      classNames={{ popup: { root: 'curriculum-select-dropdown' } }}
                       popupMatchSelectWidth={520}
                       onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
                     />
