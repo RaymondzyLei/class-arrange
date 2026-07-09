@@ -8,10 +8,11 @@ interface Props {
 
 export default function StatsBar({ stats, onOpenSelectedCourses }: Props) {
   return (
-    <div className="stats-bar">
+    <div className="stats-bar" data-tour="plan-stats">
       <button
         className="stats-bar__item stats-bar__item--button"
         type="button"
+        data-tour="selected-courses-manage"
         onClick={onOpenSelectedCourses}
         disabled={!onOpenSelectedCourses}
       >

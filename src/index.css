@@ -193,6 +193,14 @@ html {
   overflow: hidden;
 }
 
+.course-search-tour-target {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .table-panel {
   flex: 1;
   display: flex;
@@ -507,6 +515,14 @@ html {
   border-color: var(--border-strong);
 }
 
+.pool-item--selected:hover {
+  border-color: var(--accent);
+}
+
+.pool-item--conflict:hover {
+  border-color: var(--conflict);
+}
+
 .pool-item:focus-within {
   outline: none;
   box-shadow: none;
@@ -514,12 +530,12 @@ html {
 
 .pool-item--selected {
   background: var(--accent-soft);
-  border-color: var(--accent);
+  border-color: var(--border);
 }
 
 .pool-item--conflict {
   background: var(--conflict-bg);
-  border-color: var(--conflict);
+  border-color: var(--border);
 }
 
 .pool-item__head {
@@ -2994,6 +3010,10 @@ html.theme-transitioning *::after {
   gap: 14px;
 }
 
+.customization-modal .bottom-modal__header {
+  padding-bottom: 6px;
+}
+
 .customization__section {
   padding: 14px;
   display: flex;
@@ -3003,6 +3023,12 @@ html.theme-transitioning *::after {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+.customization__section.customization__section--preferences {
+  padding-top: 10px;
+  padding-bottom: 0;
+  gap: 4px;
 }
 
 .customization__section--compact,
@@ -3035,7 +3061,7 @@ html.theme-transitioning *::after {
 }
 
 .customization__preference-row {
-  min-height: 52px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3109,7 +3135,7 @@ html.theme-transitioning *::after {
 .availability-grid {
   width: 100%;
   min-width: 560px;
-  border: 1px solid var(--border-strong);
+  border: 2px solid var(--border-strong);
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
@@ -3225,7 +3251,7 @@ html.theme-transitioning *::after {
   }
 
   .customization__preference-row {
-    min-height: 56px;
+    min-height: 60px;
   }
 
   .customization-modal {
@@ -3241,7 +3267,7 @@ html.theme-transitioning *::after {
 
   .customization-modal .bottom-modal__header {
     align-items: center;
-    padding: 14px 14px 8px;
+    padding: 14px 14px 6px;
   }
 
   .customization-modal .bottom-modal__title {
@@ -3272,7 +3298,7 @@ html.theme-transitioning *::after {
   }
 
   .customization__preference-row {
-    min-height: 52px;
+    min-height: 60px;
     gap: 12px;
   }
 

@@ -146,7 +146,7 @@ export default function CoursePool({ groups, selectedIds, conflictGroupKeys, the
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (
-    <div className="panel-inner course-pool no-print">
+    <div className="panel-inner course-pool no-print" data-tour="search-results">
       {groups.length === 0 ? (
         <Empty description="无匹配课程" style={{ marginTop: 40 }} />
       ) : (

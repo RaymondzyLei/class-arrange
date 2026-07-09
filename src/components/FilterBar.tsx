@@ -19,8 +19,8 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
 
   return (
-    <div className="panel-inner filter-bar no-print">
-      <div className="filter-bar__search">
+    <div className="panel-inner filter-bar no-print" data-tour="filters">
+      <div className="filter-bar__search" data-tour="course-search">
         <Input
           placeholder="搜索课程名 / 课堂号 / 教师"
           value={filter.keyword}

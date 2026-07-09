@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -17,8 +17,16 @@ import ArrangementPanel from '@/components/ArrangementPanel';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
 import CustomizationModal from '@/components/CustomizationModal';
+import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
+import SpotlightTour from '@/components/onboarding/SpotlightTour';
 import { useConflicts } from '@/hooks/useConflicts';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
+import {
+  readOnboardingState,
+  useOnboarding,
+  type OnboardingPreferences,
+} from '@/onboarding/useOnboarding';
+import type { TourStep } from '@/onboarding/tourSteps';
 import { exportTimetableImage } from '@/utils/exportPrint';
 import {
   curriculumOptions,
@@ -54,6 +62,7 @@ interface CurriculumSelection {
 }
 
 function readInitialTheme(): Theme {
+  if (!readOnboardingState().wizardCompleted) return 'light';
   try {
     const stored = localStorage.getItem(THEME_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
@@ -96,6 +105,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [customSettings, setCustomSettings] = useState<CustomScheduleSettings>(
     readCustomScheduleSettings,
   );
+  const onboarding = useOnboarding();
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -218,9 +228,61 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(groupKey);
   };
 
-  const openSelectedCourses = (tab: 'current' | 'curriculum') => {
+  const openSelectedCourses = useCallback((tab: 'current' | 'curriculum') => {
     setSelectedCoursesTab(tab);
     setSelectedCoursesOpen(true);
+  }, []);
+
+  const handleWizardComplete = (preferences: OnboardingPreferences, startTour: boolean) => {
+    setCustomSettings((current) => ({
+      ...current,
+      preferHalfDay: preferences.preferHalfDay,
+      preferFewerEarlyMornings: preferences.preferFewerEarlyMornings,
+    }));
+    message.success('排课倾向已同步到自定义设置');
+    onboarding.finishWizard(preferences, startTour);
+  };
+
+  const handleRestartOnboarding = () => {
+    setDetailGroupKey(null);
+    setCustomizationOpen(false);
+    window.setTimeout(() => onboarding.startTour(), 220);
+  };
+
+  const handleTourStepAction = useCallback((action: NonNullable<TourStep['action']>) => {
+    setDetailGroupKey(null);
+    if (action === 'openSelectedCoursesCurriculum') {
+      setCustomizationOpen(false);
+      openSelectedCourses('curriculum');
+      return;
+    }
+    if (action === 'closeSelectedCourses') {
+      setSelectedCoursesOpen(false);
+      setCustomizationOpen(false);
+      return;
+    }
+    if (action === 'openCustomization') {
+      setSelectedCoursesOpen(false);
+      setCustomizationOpen(true);
+      return;
+    }
+    if (action === 'closeCustomization') {
+      setCustomizationOpen(false);
+    }
+  }, [openSelectedCourses]);
+
+  const handleTourFinish = () => {
+    setDetailGroupKey(null);
+    setSelectedCoursesOpen(false);
+    setCustomizationOpen(false);
+    onboarding.finishTour();
+  };
+
+  const handleTourSkip = () => {
+    setDetailGroupKey(null);
+    setSelectedCoursesOpen(false);
+    setCustomizationOpen(false);
+    onboarding.skipTour();
   };
 
   return (
@@ -243,14 +305,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               onSelect={handleArrangementChange}
             />
           )}
-          <FilterBar filter={filter} setFilter={setFilter} resultCount={filteredGroups.length} />
-          <CoursePool
-            groups={filteredGroups}
-            selectedIds={selectedIds}
-            conflictGroupKeys={conflictGroupKeys}
-            themeMode={themeMode}
-            onOpenDetail={setDetailGroupKey}
-          />
+          <div className="course-search-tour-target" data-tour="course-search-area">
+            <FilterBar filter={filter} setFilter={setFilter} resultCount={filteredGroups.length} />
+            <CoursePool
+              groups={filteredGroups}
+              selectedIds={selectedIds}
+              conflictGroupKeys={conflictGroupKeys}
+              themeMode={themeMode}
+              onOpenDetail={setDetailGroupKey}
+            />
+          </div>
         </div>
         <div className="table-panel">
           <CourseTable
@@ -290,11 +354,25 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         settings={customSettings}
         onChange={setCustomSettings}
         onClose={() => setCustomizationOpen(false)}
+        onRestartOnboarding={handleRestartOnboarding}
       />
       <CourseDetailModal
         group={detailGroup}
         open={!!detailGroup}
         onClose={() => setDetailGroupKey(null)}
+      />
+      <OnboardingWizard
+        open={onboarding.stage === 'wizard'}
+        preferences={onboarding.state.preferences}
+        onComplete={handleWizardComplete}
+        onSkip={onboarding.skipWizard}
+      />
+      <SpotlightTour
+        open={onboarding.stage === 'tour'}
+        entryMode={onboarding.tourEntryMode}
+        onFinish={handleTourFinish}
+        onSkip={handleTourSkip}
+        onStepAction={handleTourStepAction}
       />
     </Layout>
   );

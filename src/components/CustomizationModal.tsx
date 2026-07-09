@@ -12,6 +12,7 @@ interface Props {
   settings: CustomScheduleSettings;
   onChange: (settings: CustomScheduleSettings) => void;
   onClose: () => void;
+  onRestartOnboarding: () => void;
 }
 
 interface AppleToggleProps {
@@ -78,7 +79,13 @@ function AppleToggle({ checked, label, onChange }: AppleToggleProps) {
   );
 }
 
-export default function CustomizationModal({ open, settings, onChange, onClose }: Props) {
+export default function CustomizationModal({
+  open,
+  settings,
+  onChange,
+  onClose,
+  onRestartOnboarding,
+}: Props) {
   const { message } = App.useApp();
   const [draftBlockedSlots, setDraftBlockedSlots] = useState(settings.blockedSlots);
   const blockedSlotSet = useMemo(() => new Set(draftBlockedSlots), [draftBlockedSlots]);
@@ -148,11 +155,10 @@ export default function CustomizationModal({ open, settings, onChange, onClose }
       width={820}
     >
       <div className="customization">
-        <section className="customization__section">
+        <section className="customization__section customization__section--preferences" data-tour="customization-preferences">
           <div className="customization__section-head">
             <div>
               <h3>排课倾向</h3>
-              <p>先保证冲突课程尽可能少，再按所选倾向排列方案。</p>
             </div>
           </div>
           <div className="customization__preference-list">
@@ -175,7 +181,7 @@ export default function CustomizationModal({ open, settings, onChange, onClose }
           </div>
         </section>
 
-        <section className="customization__section">
+        <section className="customization__section" data-tour="customization-blocked-slots">
           <div className="customization__section-head customization__section-head--inline">
             <div>
               <h3>占位</h3>
@@ -256,7 +262,7 @@ export default function CustomizationModal({ open, settings, onChange, onClose }
             <h3>设置</h3>
             <p>更多说明与设置入口将在这里提供。</p>
           </div>
-          <Button disabled>查看网站功能介绍</Button>
+          <Button onClick={onRestartOnboarding}>重新查看新手引导</Button>
         </section>
       </div>
     </BottomModal>
