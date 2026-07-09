@@ -1,6 +1,7 @@
 import type { CourseGroup, ScheduleSlot } from '@/types';
 import { isWeekInArray } from './weeks';
 import { formatWeeks } from './weeks';
+import { formatTeacherList } from './teachers';
 
 export interface GridEntry {
   /** 选课单元 key（同组多班次合并后只剩一个 entry） */
@@ -61,7 +62,7 @@ export function buildWeekGrid(groups: CourseGroup[], week: number): GridCell[][]
           groupKey: g.key,
           sectionLabel: sectionLabelForGroup(g),
           courseName: g.courseName,
-          teachers: g.teachers.join('、') || '教师未定',
+          teachers: formatTeacherList(g.teachers),
           credits: g.sections[0]?.credits ?? 0,
           weeksText: formatWeeks(slot.weeks),
           periodsText: slot.periods.join(','),

@@ -7,19 +7,25 @@ import { conflictGroupSet, detectConflicts } from '@/utils/conflict';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import {
   ALL_CURRICULUM_TERMS,
+  UNSPECIFIED_CURRICULUM_TERM,
   curriculumOptions,
   filterCurriculumOption,
+  formatCurriculumTerm,
   getCurriculum,
+  getCurriculumSourceUrl,
   getCurriculumTerms,
   isDeferredCurriculumCourse,
 } from '@/utils/curriculum';
+import { formatTeacherList } from '@/utils/teachers';
 import type { CurriculumCourse } from '@/data/curricula';
 import { usePlans } from '@/store/plansContext';
 import BottomModal from './BottomModal';
 import SelectWithChevron from './SelectWithChevron';
+import { ExternalLinkIcon, TrashIcon, WarningIcon } from './icons';
 
 interface Props {
   open: boolean;
+  initialTab: 'current' | 'curriculum';
   onClose: () => void;
   appliedGroups: CourseGroup[];
   allSelectedGroups: CourseGroup[];
@@ -128,6 +134,7 @@ function isInteractiveClick(target: EventTarget | null): boolean {
 
 export default function SelectedCoursesModal({
   open,
+  initialTab,
   onClose,
   appliedGroups,
   allSelectedGroups,
@@ -147,6 +154,8 @@ export default function SelectedCoursesModal({
   const [selectedGroupKeys, setSelectedGroupKeys] = useState<string[]>([]);
   const [candidateCourse, setCandidateCourse] = useState<CurriculumCourse | null>(null);
   const [confirmAction, setConfirmAction] = useState<'batchRemove' | 'clearPlan' | null>(null);
+  const [activeTab, setActiveTab] = useState<'current' | 'all' | 'curriculum'>(initialTab);
+  const [autoAddedIdsByPlan, setAutoAddedIdsByPlan] = useState<Record<string, string[]>>({});
 
   const appliedKeys = useMemo(
     () => new Set(appliedGroups.map((group) => group.key)),
@@ -175,6 +184,7 @@ export default function SelectedCoursesModal({
   );
 
   const selectedCurriculum = getCurriculum(selectedCurriculumId);
+  const selectedCurriculumSourceUrl = getCurriculumSourceUrl(selectedCurriculum);
   const curriculumTerms = useMemo(() => getCurriculumTerms(selectedCurriculum), [selectedCurriculum]);
   const allTermCurriculumCourses = useMemo(
     () => {
@@ -189,14 +199,18 @@ export default function SelectedCoursesModal({
     if (!selectedCurriculum) return [];
     const allVisibleCount = allTermCurriculumCourses
       .filter((course) => !isDeferredCurriculumCourse(course)).length;
+    const orderedTerms = [
+      ...curriculumTerms.filter((term) => term === UNSPECIFIED_CURRICULUM_TERM),
+      ...curriculumTerms.filter((term) => term !== UNSPECIFIED_CURRICULUM_TERM),
+    ];
     return [
       {
         value: ALL_CURRICULUM_TERMS,
         label: `显示全部学期（${allVisibleCount} 门）`,
       },
-      ...curriculumTerms.map((term) => ({
+      ...orderedTerms.map((term) => ({
         value: term,
-        label: `${term}（${
+        label: `${formatCurriculumTerm(term)}（${
           selectedCurriculum.terms[term]?.filter((course) => !isDeferredCurriculumCourse(course)).length ?? 0
         } 门）`,
       })),
@@ -225,16 +239,12 @@ export default function SelectedCoursesModal({
     },
     [selectedCurriculum],
   );
-  const deferredCourseSummary = deferredCurriculumCourses
-    .map((course) => `${course.name}（${course.code}）`)
-    .join('、');
-
   const makeRows = (groups: CourseGroup[]): GroupRow[] => groups.map((group) => ({
     key: group.key,
     group,
     courseName: group.courseName,
     sectionLabel: sectionLabelForGroup(group),
-    teachers: group.teachers.join('、') || '教师未定',
+    teachers: formatTeacherList(group.teachers),
     credits: creditsForGroup(group),
     schedule: formatScheduleCompact(group.schedule),
     applied: appliedKeys.has(group.key),
@@ -252,11 +262,47 @@ export default function SelectedCoursesModal({
     })),
     [visibleCurriculumCourses, groupsByCode, selectedCourseCodes],
   );
+  const requiredCurriculumCourses = useMemo(
+    () => visibleCurriculumCourses.filter((course) => course.compulsory),
+    [visibleCurriculumCourses],
+  );
+  const requiredCourseIds = useMemo(
+    () => dedupe(
+      requiredCurriculumCourses.flatMap((course) =>
+        (groupsByCode.get(course.code) ?? []).flatMap((group) => group.sectionIds),
+      ),
+    ),
+    [groupsByCode, requiredCurriculumCourses],
+  );
+  const unselectedRequiredIds = useMemo(
+    () => requiredCourseIds.filter((id) => !selectedIds.has(id)),
+    [requiredCourseIds, selectedIds],
+  );
+  const currentAutoAddedIds = activePlan ? autoAddedIdsByPlan[activePlan.id] ?? [] : [];
+  const removableAutoAddedIds = currentAutoAddedIds.filter((id) => selectedIds.has(id));
+  const requiredButtonDisabledReason = !activePlan
+    ? '请先新建或选择方案'
+    : !selectedCurriculum
+      ? '请先选择培养方案'
+      : !selectedCurriculumTerm || selectedCurriculumTerm === ALL_CURRICULUM_TERMS
+        ? '请先选择具体学期'
+        : requiredCourseIds.length === 0
+          ? '当前学期必修课程暂无可选课堂'
+          : unselectedRequiredIds.length === 0
+            ? '当前学期可用的必修课程时间组均已选择'
+            : null;
+  const clearRequiredDisabledReason = removableAutoAddedIds.length === 0
+    ? '暂无由一键选择新增且仍在方案中的课堂'
+    : null;
 
   useEffect(() => {
     const validKeys = new Set(allRows.map((row) => row.key));
     setSelectedGroupKeys((keys) => keys.filter((key) => validKeys.has(key)));
   }, [allRows]);
+
+  useEffect(() => {
+    if (open) setActiveTab(initialTab);
+  }, [initialTab, open]);
 
   useEffect(() => {
     if (!open) {
@@ -321,6 +367,30 @@ export default function SelectedCoursesModal({
     }
     dispatch({ type: 'addCourses', courseIds: group.sectionIds });
     message.success(`已加入「${group.courseName}」`);
+  };
+
+  const addCurrentTermRequiredCourses = () => {
+    if (!activePlan || requiredButtonDisabledReason) return;
+    dispatch({ type: 'addCourses', courseIds: unselectedRequiredIds });
+    setAutoAddedIdsByPlan((current) => ({
+      ...current,
+      [activePlan.id]: dedupe([
+        ...(current[activePlan.id] ?? []),
+        ...unselectedRequiredIds,
+      ]),
+    }));
+    message.success(`已加入 ${unselectedRequiredIds.length} 个必修课程课堂`);
+  };
+
+  const clearAutoAddedRequiredCourses = () => {
+    if (!activePlan || clearRequiredDisabledReason) return;
+    dispatch({ type: 'removeCourses', courseIds: removableAutoAddedIds });
+    setAutoAddedIdsByPlan((current) => {
+      const next = { ...current };
+      delete next[activePlan.id];
+      return next;
+    });
+    message.success(`已清除一键选择新增的 ${removableAutoAddedIds.length} 个课堂`);
   };
 
   const openDetail = (group: CourseGroup) => {
@@ -406,8 +476,8 @@ export default function SelectedCoursesModal({
       },
     },
     {
-      title: '已选',
-      width: 80,
+      title: '选择状态',
+      width: 96,
       render: (_, row) => (row.selected ? <Tag color="green">已选</Tag> : <Tag>未选</Tag>),
     },
     {
@@ -448,7 +518,7 @@ export default function SelectedCoursesModal({
               setCandidateCourse(row.course);
             }}
           >
-            选择时间组
+            {row.selected ? '修改时间组' : '选择时间组'}
           </Button>
         );
       },
@@ -458,7 +528,7 @@ export default function SelectedCoursesModal({
   const candidateGroups = candidateCourse ? groupsByCode.get(candidateCourse.code) ?? [] : [];
   const candidateColumns: TableProps<CourseGroup>['columns'] = [
     { title: '课堂号/班次', width: 130, render: (_, group) => sectionLabelForGroup(group) },
-    { title: '教师', width: 160, render: (_, group) => group.teachers.join('、') || '教师未定' },
+    { title: '教师', width: 160, render: (_, group) => formatTeacherList(group.teachers) },
     { title: '学分', width: 70, render: (_, group) => creditsForGroup(group) },
     { title: '时间地点', render: (_, group) => formatScheduleCompact(group.schedule) },
     {
@@ -596,7 +666,9 @@ export default function SelectedCoursesModal({
                 <Button size="small" type="primary" onClick={() => addGroup(row.matches[0])}>加入</Button>
               )
             ) : (
-              <Button size="small" type="primary" onClick={() => setCandidateCourse(row.course)}>选择时间组</Button>
+              <Button size="small" type="primary" onClick={() => setCandidateCourse(row.course)}>
+                {row.selected ? '修改时间组' : '选择时间组'}
+              </Button>
             )}
           </div>
         </article>
@@ -626,7 +698,7 @@ export default function SelectedCoursesModal({
             </div>
             <div className="selected-courses-card__meta">
               <span>{creditsForGroup(group)} 学分</span>
-              <span>{group.teachers.join('、') || '教师未定'}</span>
+              <span>{formatTeacherList(group.teachers)}</span>
             </div>
             <div className="selected-courses-card__schedule">{formatScheduleCompact(group.schedule)}</div>
             <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
@@ -672,6 +744,8 @@ export default function SelectedCoursesModal({
         </div>
         <Tabs
           className="selected-courses-tabs"
+          activeKey={activeTab}
+          onChange={(key) => setActiveTab(key as 'current' | 'all' | 'curriculum')}
           items={[
             {
               key: 'current',
@@ -744,14 +818,52 @@ export default function SelectedCoursesModal({
                       disabled={!selectedCurriculum}
                       onChange={(value) => onCurriculumTermChange(typeof value === 'string' ? value : null)}
                     />
+                    <div className="selected-courses-required-actions">
+                      <span
+                        className="selected-courses-button-hint"
+                        title={requiredButtonDisabledReason ?? undefined}
+                      >
+                        <Button
+                          className="selected-courses-required-button"
+                          type="primary"
+                          disabled={requiredButtonDisabledReason !== null}
+                          onClick={addCurrentTermRequiredCourses}
+                        >
+                          一键选择当前学期必修课程
+                        </Button>
+                      </span>
+                      <span
+                        className="selected-courses-button-hint selected-courses-button-hint--icon"
+                        title={clearRequiredDisabledReason ?? '清除一键选择新增的课程'}
+                      >
+                        <Button
+                          className="selected-courses-required-clear-button"
+                          aria-label="清除一键选择新增的课程"
+                          danger
+                          disabled={clearRequiredDisabledReason !== null}
+                          icon={<TrashIcon />}
+                          onClick={clearAutoAddedRequiredCourses}
+                        />
+                      </span>
+                    </div>
+                    <Button
+                      className="selected-courses-source-button"
+                      href={selectedCurriculumSourceUrl ?? undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                      disabled={!selectedCurriculumSourceUrl}
+                      icon={<ExternalLinkIcon />}
+                    >
+                      前往教务系统
+                    </Button>
                   </div>
                   {deferredCurriculumCourses.length > 0 ? (
                     <div className="selected-courses-deferred">
-                      <Tag>暂不展示</Tag>
-                      <span>
-                        {deferredCourseSummary}
-                        暂不进入培养方案课程表（{deferredCurriculumCourses.length} 门）。体育课程未在此处展示。
-                      </span>
+                      <WarningIcon className="selected-courses-deferred__warning-icon" />
+                      <div className="selected-courses-deferred__text">
+                        <span>毕业论文（THESIS）、军事理论（MIL1001）、军事技能（MIL1002）、艺术实践（HS1003）、基础体育（PE00001）未在此处展示</span>
+                        <span>此处培养方案课程信息仅供参考，请务必参照教务系统上的信息进行核查。</span>
+                      </div>
                     </div>
                   ) : null}
                   {selectedCurriculum && selectedCurriculumTerm ? (
@@ -811,7 +923,9 @@ export default function SelectedCoursesModal({
 
       <BottomModal
         open={!!candidateCourse}
-        title={candidateCourse ? `选择时间组：${candidateCourse.name}` : '选择时间组'}
+        title={candidateCourse
+          ? `${selectedCourseCodes.has(candidateCourse.code) ? '修改' : '选择'}时间组：${candidateCourse.name}`
+          : '选择时间组'}
         onClose={() => setCandidateCourse(null)}
         width={900}
       >

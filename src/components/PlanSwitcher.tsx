@@ -12,12 +12,14 @@ interface Props {
   curriculumOptions: CurriculumOption[];
   selectedCurriculumId: string | null;
   onCurriculumChange: (id: string | null) => void;
+  onManageCurriculum: () => void;
 }
 
 export default function PlanSwitcher({
   curriculumOptions,
   selectedCurriculumId,
   onCurriculumChange,
+  onManageCurriculum,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
@@ -161,19 +163,24 @@ export default function PlanSwitcher({
           </Dropdown>
         </div>
       </div>
-      <SelectWithChevron
-        className="plan-switcher__curriculum-select"
-        showSearch
-        allowClear
-        value={selectedCurriculumId ?? undefined}
-        placeholder="选择或搜索培养方案"
-        options={curriculumOptions}
-        filterOption={filterCurriculumOption}
-        optionFilterProp="label"
-        popupClassName="curriculum-select-dropdown"
-        popupMatchSelectWidth={520}
-        onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
-      />
+      <div className="plan-switcher__curriculum-row">
+        <SelectWithChevron
+          className="plan-switcher__curriculum-select"
+          showSearch
+          allowClear
+          value={selectedCurriculumId ?? undefined}
+          placeholder="选择或搜索培养方案"
+          options={curriculumOptions}
+          filterOption={filterCurriculumOption}
+          optionFilterProp="label"
+          popupClassName="curriculum-select-dropdown"
+          popupMatchSelectWidth={520}
+          onChange={(value) => onCurriculumChange(typeof value === 'string' ? value : null)}
+        />
+        <Button className="plan-switcher__manage-button" onClick={onManageCurriculum}>
+          管理
+        </Button>
+      </div>
       <BottomModal
         title="重命名方案"
         open={renameOpen}

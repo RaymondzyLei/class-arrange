@@ -4,6 +4,7 @@ import type { CourseGroup } from '@/types';
 import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
+import { formatTeacherList } from '@/utils/teachers';
 import {
   formatDateRange,
   formatShortDate,
@@ -14,7 +15,9 @@ import {
   type WeekSelection,
 } from '@/config/termCalendar';
 import { DownloadIcon, MoonIcon, SunIcon, WarningIcon } from './icons';
+import { GearIcon } from './icons';
 import SelectWithChevron from './SelectWithChevron';
+import { blockedSlotKey } from '@/utils/customization';
 
 interface Props {
   weekSelection: WeekSelection;
@@ -26,6 +29,8 @@ interface Props {
   onToggleTheme: () => void;
   onExport: () => void | Promise<void>;
   exporting?: boolean;
+  blockedSlots: string[];
+  onOpenCustomization: () => void;
 }
 
 interface TimetableViewProps {
@@ -34,6 +39,7 @@ interface TimetableViewProps {
   exportMode?: boolean;
   themeMode: 'light' | 'dark';
   onOpenDetail?: (id: string) => void;
+  blockedSlots: string[];
 }
 
 interface TimetableEntry {
@@ -116,7 +122,7 @@ function dateOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
   return b.activeDates.some((date) => dates.has(date));
 }
 
-function markConflicts(entries: TimetableEntry[]): TimetableEntry[] {
+function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): TimetableEntry[] {
   const conflictIds = new Set<string>();
   for (let i = 0; i < entries.length; i += 1) {
     for (let j = i + 1; j < entries.length; j += 1) {
@@ -130,13 +136,20 @@ function markConflicts(entries: TimetableEntry[]): TimetableEntry[] {
       conflictIds.add(b.id);
     }
   }
-  return entries.map((entry) => ({ ...entry, conflict: conflictIds.has(entry.id) }));
+  return entries.map((entry) => ({
+    ...entry,
+    conflict: conflictIds.has(entry.id)
+      || entry.periods.some((period) =>
+        blockedSlots.has(blockedSlotKey(entry.displayDay, period)),
+      ),
+  }));
 }
 
 function buildEntries(
   groups: CourseGroup[],
   weekSelection: WeekSelection,
   themeMode: 'light' | 'dark',
+  blockedSlots: Set<string>,
 ): TimetableEntry[] {
   const dates = getCalendarDatesForSelection(weekSelection, TERM_CALENDAR, {
     includeSpecialDates: weekSelection !== 'all',
@@ -172,7 +185,7 @@ function buildEntries(
               groupKey: group.key,
               sectionLabel: sectionLabelForGroup(group),
               courseName: group.courseName,
-              teachers: group.teachers.join('、') || '教师未定',
+              teachers: formatTeacherList(group.teachers),
               credits: group.sections[0]?.credits ?? 0,
               weeksText: formatWeeks(slot.weeks),
               periodsText: periods.join(','),
@@ -203,7 +216,7 @@ function buildEntries(
     activeDates: [...entry.activeDateSet].sort(),
     specialLabels: [...entry.specialLabelSet],
   }));
-  return markConflicts(normalized);
+  return markConflicts(normalized, blockedSlots);
 }
 
 function buildEntryMaps(entries: TimetableEntry[]) {
@@ -265,11 +278,13 @@ function entryStyle(entry: TimetableEntry): CSSProperties {
 function TimetableCell({
   day,
   entries,
+  blocked,
   rowSpan,
   onOpenDetail,
 }: {
   day: number;
   entries: TimetableEntry[];
+  blocked: boolean;
   rowSpan?: number;
   onOpenDetail?: (id: string) => void;
 }) {
@@ -279,6 +294,7 @@ function TimetableCell({
     'timetable__cell',
     day === 1 ? 'timetable__cell--first-day' : '',
     hasEntries ? 'timetable__cell--has' : 'timetable__cell--empty',
+    blocked ? 'timetable__cell--blocked' : '',
     isConflict ? 'timetable__cell--conflict' : '',
     hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
@@ -288,6 +304,14 @@ function TimetableCell({
     <td className={className} rowSpan={rowSpan}>
       {isConflict ? <WarningIcon className="timetable__warning-icon" /> : null}
       <div className="timetable__courses">
+        {blocked ? (
+          <div
+            className="timetable-course timetable-placeholder"
+            aria-label="自定义占位时间"
+          >
+            <span>有事</span>
+          </div>
+        ) : null}
         {entries.map((entry) => (
           <button
             key={entry.id}
@@ -339,11 +363,19 @@ function DayHead({ day, info }: { day: number; info?: CalendarDateInfo }) {
   );
 }
 
-function TimetableView({ weekSelection, groups, exportMode = false, themeMode, onOpenDetail }: TimetableViewProps) {
+function TimetableView({
+  weekSelection,
+  groups,
+  exportMode = false,
+  themeMode,
+  onOpenDetail,
+  blockedSlots,
+}: TimetableViewProps) {
   const colorTheme = exportMode ? 'light' : themeMode;
+  const blockedSlotSet = useMemo(() => new Set(blockedSlots), [blockedSlots]);
   const entries = useMemo(
-    () => buildEntries(groups, weekSelection, colorTheme),
-    [groups, weekSelection, colorTheme],
+    () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet),
+    [blockedSlotSet, groups, weekSelection, colorTheme],
   );
   const { starts, covers } = useMemo(() => buildEntryMaps(entries), [entries]);
   const selectedWeekDates = useMemo(
@@ -372,7 +404,11 @@ function TimetableView({ weekSelection, groups, exportMode = false, themeMode, o
             >
               {BAND_STARTS[period] ? (
                 <th scope="row" rowSpan={BAND_STARTS[period].rowSpan} className="timetable__band-cell">
-                  {BAND_STARTS[period].label}
+                  <span className="timetable__band-label">
+                    {[...BAND_STARTS[period].label].map((character) => (
+                      <span key={character}>{character}</span>
+                    ))}
+                  </span>
                 </th>
               ) : null}
               <th scope="row" className="timetable__period-cell">
@@ -390,6 +426,7 @@ function TimetableView({ weekSelection, groups, exportMode = false, themeMode, o
                 const covering = covers.get(cellKey) ?? [];
                 const starting = starts.get(cellKey) ?? [];
                 const rowSpanBlock = getRowSpanEntries(period, covering, starting, covers);
+                const blocked = blockedSlotSet.has(cellKey);
 
                 if (rowSpanBlock) {
                   const [first] = rowSpanBlock.entries;
@@ -401,6 +438,7 @@ function TimetableView({ weekSelection, groups, exportMode = false, themeMode, o
                       key={day}
                       day={day}
                       entries={rowSpanBlock.entries}
+                      blocked={false}
                       rowSpan={rowSpanBlock.span}
                       onOpenDetail={onOpenDetail}
                     />
@@ -412,6 +450,7 @@ function TimetableView({ weekSelection, groups, exportMode = false, themeMode, o
                     key={day}
                     day={day}
                     entries={starting}
+                    blocked={blocked}
                     onOpenDetail={onOpenDetail}
                   />
                 );
@@ -434,6 +473,8 @@ export default function CourseTable({
   onToggleTheme,
   onExport,
   exporting = false,
+  blockedSlots,
+  onOpenCustomization,
 }: Props) {
   const toggleLabel = themeMode === 'dark' ? '切换到亮色模式' : '切换到暗色模式';
   const weekOptions = useMemo(() => getWeekOptions(), []);
@@ -479,10 +520,19 @@ export default function CourseTable({
               : <MoonIcon className="course-table__icon" />}
           </Button>
           <Button
+            className="course-table__customize-button"
+            onClick={onOpenCustomization}
+            aria-label="自定义"
+            icon={<GearIcon className="course-table__button-icon" />}
+          >
+            <span className="course-table__customize-label">自定义</span>
+          </Button>
+          <Button
             className="course-table__export-button"
             type="primary"
             onClick={onExport}
             loading={exporting}
+            aria-label="导出图片"
             icon={<DownloadIcon className="course-table__button-icon" />}
           >
             <span className="course-table__export-label">导出图片</span>
@@ -495,6 +545,7 @@ export default function CourseTable({
           weekSelection={weekSelection}
           groups={groups}
           themeMode={themeMode}
+          blockedSlots={blockedSlots}
           onOpenDetail={onOpenDetail}
         />
       </div>
@@ -505,6 +556,7 @@ export default function CourseTable({
           groups={groups}
           exportMode
           themeMode="light"
+          blockedSlots={blockedSlots}
         />
       </div>
     </div>

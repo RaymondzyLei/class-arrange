@@ -2208,26 +2208,57 @@ html {
 
 .selected-courses-toolbar--filters {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(120px, 180px);
+  grid-template-columns: minmax(260px, 1fr) minmax(120px, 180px) max-content;
   align-items: center;
 }
 
 .selected-courses-deferred {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 15px minmax(0, 1fr);
+  align-items: start;
   gap: 6px;
   padding: 8px 10px;
   color: var(--text-sub);
   font-size: 13px;
-  background: color-mix(in srgb, var(--text) 3%, transparent);
-  border: 1px solid var(--border);
+  background: #fff;
+  border: 1px solid #f2b400;
   border-radius: var(--radius-md);
+}
+
+.selected-courses-deferred__text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.selected-courses-deferred__warning-icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+  color: #f2b400;
+  flex-shrink: 0;
 }
 
 .selected-courses-curriculum-select,
 .selected-courses-term-select {
   width: 100%;
   min-width: 0;
+}
+
+#root .selected-courses-source-button.ant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 128px;
+  height: var(--control-height);
+  border-radius: var(--radius-md);
+}
+
+.selected-courses-source-button svg {
+  width: 15px;
+  height: 15px;
 }
 
 .selected-courses-table .ant-table-cell {
@@ -2627,6 +2658,10 @@ html.theme-transitioning *::after {
     grid-template-columns: 1fr;
   }
 
+  #root .selected-courses-source-button.ant-btn {
+    width: 100%;
+  }
+
   .selected-courses-card__actions .ant-btn {
     flex: 1 1 120px;
   }
@@ -2767,7 +2802,529 @@ html.theme-transitioning *::after {
   }
 
   .theme-toggle,
+  .course-table__customize-button,
   .course-table__export-button {
     flex: 0 0 auto;
+  }
+}
+
+/* ============================================================
+ * Curriculum management and customization
+ * ============================================================ */
+.plan-switcher__curriculum-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+#root .plan-switcher__curriculum-select.ant-select {
+  height: 32px !important;
+  min-height: 32px !important;
+}
+
+#root .plan-switcher__manage-button.ant-btn {
+  height: 32px !important;
+  min-height: 32px !important;
+  font-size: 14px !important;
+  line-height: 30px !important;
+  white-space: nowrap;
+}
+
+.selected-courses-toolbar--filters {
+  grid-template-columns:
+    minmax(250px, 1fr)
+    minmax(120px, 168px)
+    max-content
+    max-content;
+}
+
+.selected-courses-deferred {
+  align-items: center;
+  background: var(--panel-bg);
+}
+
+.selected-courses-deferred__warning-icon {
+  margin-top: 0;
+}
+
+#root .selected-courses-required-button.ant-btn,
+#root .selected-courses-source-button.ant-btn {
+  min-height: var(--control-height);
+  white-space: nowrap;
+}
+
+.selected-courses-required-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.selected-courses-button-hint {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.selected-courses-button-hint:first-child {
+  flex: 1 1 auto;
+}
+
+.selected-courses-button-hint > .ant-btn:disabled {
+  pointer-events: none;
+}
+
+.selected-courses-required-button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.selected-courses-button-hint--icon,
+.selected-courses-required-clear-button {
+  width: 32px;
+  min-width: 32px;
+  flex: 0 0 32px;
+}
+
+.selected-courses-required-clear-button.ant-btn {
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selected-courses-required-clear-button svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+
+.selected-courses-source-button svg {
+  display: block;
+  width: 21px;
+  height: 21px;
+}
+
+.selected-courses-source-button.ant-btn .ant-btn-icon,
+#root .course-table__customize-button.ant-btn .ant-btn-icon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  height: 21px;
+  line-height: 0 !important;
+}
+
+.selected-courses-source-button.ant-btn .ant-btn-icon svg,
+#root .course-table__customize-button.ant-btn .ant-btn-icon svg {
+  display: block !important;
+  margin: 0;
+  vertical-align: middle !important;
+}
+
+.timetable__band-cell {
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+}
+
+.timetable__band-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  writing-mode: horizontal-tb;
+  line-height: 1.05;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.timetable__cell--blocked {
+  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 96%, #fff));
+}
+
+.timetable__cell--blocked.timetable__cell--conflict {
+  background: var(--conflict-bg);
+}
+
+.timetable-placeholder {
+  --block-stripe: color-mix(in srgb, var(--text-sub) 76%, var(--panel-bg));
+  --block-bg: color-mix(in srgb, var(--text-sub) 22%, var(--panel-bg));
+  --block-fg: var(--text-sub);
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-left: 4px solid var(--block-stripe);
+  border-radius: 0 4px 4px 0;
+  background: var(--block-bg);
+  color: var(--block-fg);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: default;
+}
+
+.timetable__cell--blocked .timetable__courses {
+  position: relative;
+  z-index: 0;
+}
+
+.course-table__customize-button .course-table__button-icon {
+  width: 16px;
+  height: 16px;
+}
+
+#root .course-table__customize-button.ant-btn {
+  font-size: 14px !important;
+}
+
+#root .course-table__actions > .ant-btn {
+  height: 32px !important;
+  min-height: 32px !important;
+}
+
+.customization {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.customization__section {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+.customization__section--compact,
+.customization__section-head--inline {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.customization__section h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.customization__section p {
+  margin: 4px 0 0;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.customization__preference-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.customization__preference-row {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.customization__preference-row:last-child {
+  border-bottom: 0;
+}
+
+.customization__preference-label {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.apple-toggle {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  min-width: 51px;
+  padding: 0;
+  flex: 0 0 51px;
+  border: 1px solid #e9e9ea;
+  border-radius: 999px;
+  background: #e9e9ea;
+  box-shadow: none;
+  cursor: pointer;
+  touch-action: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.apple-toggle--checked {
+  border-color: #34c759;
+  background: #34c759;
+}
+
+.apple-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+.apple-toggle--checked .apple-toggle__thumb {
+  background: #fff;
+  transform: translateX(20px);
+}
+
+.apple-toggle:focus-visible {
+  outline: 3px solid color-mix(in srgb, #34c759 35%, transparent);
+  outline-offset: 2px;
+}
+
+.apple-toggle:active .apple-toggle__thumb {
+  width: 27px;
+}
+
+.availability-grid-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.availability-grid {
+  width: 100%;
+  min-width: 560px;
+  border: 1px solid var(--border-strong);
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.availability-grid th {
+  height: 28px;
+  color: var(--text-sub);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.availability-grid th:first-child {
+  width: 38px;
+}
+
+.availability-grid thead th {
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.availability-grid thead th + th,
+.availability-grid tbody th + td,
+.availability-grid tbody td + td {
+  border-left: 1px dashed var(--border);
+}
+
+.availability-grid tbody tr > * {
+  border-top: 1px dashed var(--border);
+}
+
+.availability-grid tbody tr:first-child > * {
+  border-top: 0;
+}
+
+.availability-grid tbody tr:nth-child(6) > *,
+.availability-grid tbody tr:nth-child(11) > * {
+  border-top: 2px solid var(--border-strong);
+}
+
+.availability-grid td {
+  height: 28px;
+  padding: 3px;
+}
+
+.availability-grid__cell {
+  width: 100%;
+  height: 22px;
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  cursor: crosshair;
+}
+
+.availability-grid__cell:hover,
+.availability-grid__cell:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-bg));
+}
+
+.availability-grid__cell--selected {
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+.availability-grid__cell--selected:hover {
+  outline: 0;
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+@media (max-width: 900px) {
+  .selected-courses-toolbar--filters {
+    grid-template-columns: minmax(220px, 1fr) minmax(120px, 168px);
+  }
+
+  #root .selected-courses-required-button.ant-btn,
+  #root .selected-courses-source-button.ant-btn {
+    width: 100%;
+  }
+
+  .selected-courses-required-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .selected-courses-toolbar--filters {
+    grid-template-columns: 1fr;
+  }
+
+  .customization__section {
+    padding: 12px;
+  }
+
+  .customization__section--compact {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .customization-modal .customization__section--compact .ant-btn {
+    width: 100%;
+  }
+
+  .customization__section-head--inline {
+    align-items: flex-start;
+    flex-direction: row;
+  }
+
+  .customization__preference-row {
+    min-height: 56px;
+  }
+
+  .customization-modal {
+    --bottom-modal-mobile-inset: 12px;
+    padding: var(--bottom-modal-mobile-inset);
+  }
+
+  .customization-modal .bottom-modal__panel {
+    width: 100% !important;
+    max-height: calc(100dvh - (var(--bottom-modal-mobile-inset) * 2));
+    border-radius: 16px;
+  }
+
+  .customization-modal .bottom-modal__header {
+    align-items: center;
+    padding: 14px 14px 8px;
+  }
+
+  .customization-modal .bottom-modal__title {
+    font-size: 20px;
+  }
+
+  .customization-modal .bottom-modal__body {
+    padding: 0 12px 12px;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .customization {
+    gap: 10px;
+  }
+
+  .customization__section {
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .customization__section h3 {
+    font-size: 16px;
+  }
+
+  .customization__section p {
+    line-height: 1.45;
+  }
+
+  .customization__preference-row {
+    min-height: 52px;
+    gap: 12px;
+  }
+
+  .customization__section-head--inline {
+    gap: 8px;
+  }
+
+  .customization__section-head--inline > div {
+    min-width: 0;
+  }
+
+  .customization__section-head--inline .ant-btn {
+    padding-inline: 8px;
+    flex: 0 0 auto;
+  }
+
+  .availability-grid-wrap {
+    overflow-x: hidden;
+  }
+
+  .availability-grid {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .availability-grid th {
+    height: 27px;
+    font-size: 10px;
+  }
+
+  .availability-grid th:first-child {
+    width: 28px;
+  }
+
+  .availability-grid td {
+    height: 27px;
+    padding: 2px;
+  }
+
+  .availability-grid__cell {
+    height: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .course-table__customize-label {
+    display: none;
+  }
+
+  #root .course-table__customize-button.ant-btn {
+    width: 32px;
+    min-width: 32px;
+    padding-inline: 0;
   }
 }

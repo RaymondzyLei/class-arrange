@@ -132,3 +132,38 @@ export function MoreIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function ExternalLinkIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M14.25 6.25h3.5v3.5M17.75 6.25l-7.5 7.5"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.25 7H7.5C6.67 7 6 7.67 6 8.5v8c0 .83.67 1.5 1.5 1.5h8c.83 0 1.5-.67 1.5-1.5v-4.75"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function GearIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M9.75 3.75h4.5l.45 2.12c.54.22 1.05.52 1.5.87l2.06-.67 2.25 3.86-1.62 1.46a7.4 7.4 0 0 1 0 1.74l1.62 1.46-2.25 3.86-2.06-.67c-.45.35-.96.65-1.5.87l-.45 2.12h-4.5l-.45-2.12a7.5 7.5 0 0 1-1.5-.87l-2.06.67-2.25-3.86 1.62-1.46a7.4 7.4 0 0 1 0-1.74L3.49 9.93l2.25-3.86 2.06.67c.45-.35.96-.65 1.5-.87l.45-2.12Z"
+        stroke="currentColor"
+        strokeWidth="1.65"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12.25" r="2.75" stroke="currentColor" strokeWidth="1.65" />
+    </svg>
+  );
+}

@@ -1,5 +1,10 @@
 import type { Arrangement, CourseGroup } from '@/types';
 import { expandWeeks } from './weeks';
+import {
+  blockedSlotKey,
+  DEFAULT_CUSTOM_SETTINGS,
+  type CustomScheduleSettings,
+} from './customization';
 
 /**
  * 返回出现 ≥2 次的 courseCode 列表（首次出现顺序）
@@ -21,7 +26,7 @@ export function findAmbiguousCodes(groups: CourseGroup[]): string[] {
 }
 
 /** 用 slotKey 计数冲突，2 个以上不同 group 撞同一 slotKey 算 1 个冲突 group */
-function countConflicts(groups: CourseGroup[]): number {
+function countConflicts(groups: CourseGroup[], blockedSlots: Set<string>): number {
   const occ = new Map<string, Set<string>>();
   for (const g of groups) {
     for (const slot of g.schedule) {
@@ -42,7 +47,60 @@ function countConflicts(groups: CourseGroup[]): number {
   for (const s of occ.values()) {
     if (s.size >= 2) for (const k of s) seen.add(k);
   }
+  if (blockedSlots.size > 0) {
+    for (const group of groups) {
+      if (group.schedule.some((slot) =>
+        slot.periods.some((period) => blockedSlots.has(blockedSlotKey(slot.day, period))),
+      )) {
+        seen.add(group.key);
+      }
+    }
+  }
   return seen.size;
+}
+
+function occupiedPeriodsByDay(groups: CourseGroup[], blockedSlots: Set<string>): Map<number, Set<number>> {
+  const occupied = new Map<number, Set<number>>();
+  for (let day = 1; day <= 7; day += 1) occupied.set(day, new Set());
+  for (const group of groups) {
+    for (const slot of group.schedule) {
+      const periods = occupied.get(slot.day);
+      if (!periods) continue;
+      for (const period of slot.periods) periods.add(period);
+    }
+  }
+  for (const key of blockedSlots) {
+    const [day, period] = key.split('-').map(Number);
+    occupied.get(day)?.add(period);
+  }
+  return occupied;
+}
+
+function halfDayScore(groups: CourseGroup[], blockedSlots: Set<string>): number {
+  const occupied = occupiedPeriodsByDay(groups, blockedSlots);
+  let best = 0;
+  for (let day = 1; day <= 5; day += 1) {
+    const periods = occupied.get(day) ?? new Set<number>();
+    const afternoonAndEveningEmpty = Array.from({ length: 8 }, (_, index) => index + 6)
+      .every((period) => !periods.has(period));
+    if (afternoonAndEveningEmpty) best = Math.max(best, 2);
+    else {
+      const afternoonEmpty = Array.from({ length: 5 }, (_, index) => index + 6)
+        .every((period) => !periods.has(period));
+      if (afternoonEmpty) best = Math.max(best, 1);
+    }
+  }
+  return best;
+}
+
+function earlyMorningDayCount(groups: CourseGroup[]): number {
+  const days = new Set<number>();
+  for (const group of groups) {
+    for (const slot of group.schedule) {
+      if (slot.periods.some((period) => period === 1 || period === 2)) days.add(slot.day);
+    }
+  }
+  return days.size;
 }
 
 function sumCredits(groups: CourseGroup[]): number {
@@ -88,8 +146,12 @@ function cartesian<T>(lists: T[][]): T[][] {
  * - 无歧义时返回 1 个 Arrangement（唯一视图）
  * - 输入空数组返回 []
  */
-export function enumerateArrangements(groups: CourseGroup[]): Arrangement[] {
+export function enumerateArrangements(
+  groups: CourseGroup[],
+  settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
+): Arrangement[] {
   if (groups.length === 0) return [];
+  const blockedSlots = new Set(settings.blockedSlots);
 
   // 按 courseCode 桶
   const byCode = new Map<string, CourseGroup[]>();
@@ -121,7 +183,7 @@ export function enumerateArrangements(groups: CourseGroup[]): Arrangement[] {
     return {
       id: arrangementId(allGroups),
       groups: allGroups,
-      conflictCount: countConflicts(allGroups),
+      conflictCount: countConflicts(allGroups, blockedSlots),
       courseCount: allGroups.length,
       totalCredits: sumCredits(allGroups),
       totalHours: sumHours(allGroups),
@@ -131,6 +193,14 @@ export function enumerateArrangements(groups: CourseGroup[]): Arrangement[] {
   // 排序：(冲突数 asc, groupKeys 字典序 asc, 总学分 desc) 稳定
   arrs.sort((a, b) => {
     if (a.conflictCount !== b.conflictCount) return a.conflictCount - b.conflictCount;
+    if (settings.preferHalfDay) {
+      const scoreDelta = halfDayScore(b.groups, blockedSlots) - halfDayScore(a.groups, blockedSlots);
+      if (scoreDelta !== 0) return scoreDelta;
+    }
+    if (settings.preferFewerEarlyMornings) {
+      const earlyDelta = earlyMorningDayCount(a.groups) - earlyMorningDayCount(b.groups);
+      if (earlyDelta !== 0) return earlyDelta;
+    }
     const aKeys = a.groups.map((g) => g.key).sort().join('|');
     const bKeys = b.groups.map((g) => g.key).sort().join('|');
     if (aKeys !== bKeys) return aKeys < bKeys ? -1 : 1;

@@ -16,6 +16,7 @@ import StatsBar from '@/components/StatsBar';
 import ArrangementPanel from '@/components/ArrangementPanel';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
+import CustomizationModal from '@/components/CustomizationModal';
 import { useConflicts } from '@/hooks/useConflicts';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { exportTimetableImage } from '@/utils/exportPrint';
@@ -27,6 +28,11 @@ import {
 } from '@/utils/curriculum';
 import type { WeekSelection } from '@/config/termCalendar';
 import { getWeekLabel } from '@/config/termCalendar';
+import {
+  readCustomScheduleSettings,
+  saveCustomScheduleSettings,
+  type CustomScheduleSettings,
+} from '@/utils/customization';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -85,6 +91,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
   const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
+  const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
+  const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [customSettings, setCustomSettings] = useState<CustomScheduleSettings>(
+    readCustomScheduleSettings,
+  );
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -107,8 +118,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   // 枚举：可能 0 个、1 个（无歧义）、≤8 个（按冲突升序取前 8）
   const arrangements = useMemo(
-    () => enumerateArrangements(allSelectedGroups),
-    [allSelectedGroups],
+    () => enumerateArrangements(allSelectedGroups, customSettings),
+    [allSelectedGroups, customSettings],
   );
 
   // 用户选择有效 → 应用之；否则用默认（最低冲突）
@@ -123,7 +134,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const appliedGroups = appliedArrangement?.groups ?? [];
 
-  const { conflictGroupKeys } = useConflicts(appliedGroups);
+  const { conflictGroupKeys } = useConflicts(appliedGroups, customSettings.blockedSlots);
 
   const stats = useMemo(
     () => computeStats(appliedGroups, conflictGroupKeys),
@@ -145,6 +156,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       // 忽略写入失败（隐私模式）
     }
   }, [curriculumSelection]);
+
+  useEffect(() => {
+    saveCustomScheduleSettings(customSettings);
+    setSelectedArrangementId(null);
+  }, [customSettings]);
 
   // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => {
@@ -202,6 +218,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(groupKey);
   };
 
+  const openSelectedCourses = (tab: 'current' | 'curriculum') => {
+    setSelectedCoursesTab(tab);
+    setSelectedCoursesOpen(true);
+  };
+
   return (
     <Layout className="app-layout">
       <Layout.Content className="app-content">
@@ -211,8 +232,9 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               curriculumOptions={curriculumOptions}
               selectedCurriculumId={curriculumSelection.curriculumId}
               onCurriculumChange={handleCurriculumChange}
+              onManageCurriculum={() => openSelectedCourses('curriculum')}
             />
-            <StatsBar stats={stats} onOpenSelectedCourses={() => setSelectedCoursesOpen(true)} />
+            <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
           {arrangements.length > 1 && (
             <ArrangementPanel
@@ -241,11 +263,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             onToggleTheme={onToggleTheme}
             onExport={handleExport}
             exporting={exporting}
+            blockedSlots={customSettings.blockedSlots}
+            onOpenCustomization={() => setCustomizationOpen(true)}
           />
         </div>
       </Layout.Content>
       <SelectedCoursesModal
         open={selectedCoursesOpen}
+        initialTab={selectedCoursesTab}
         onClose={() => setSelectedCoursesOpen(false)}
         appliedGroups={appliedGroups}
         allSelectedGroups={allSelectedGroups}
@@ -259,6 +284,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onCurriculumChange={handleCurriculumChange}
         onCurriculumTermChange={handleCurriculumTermChange}
         onOpenDetail={openCourseDetailFromManager}
+      />
+      <CustomizationModal
+        open={customizationOpen}
+        settings={customSettings}
+        onChange={setCustomSettings}
+        onClose={() => setCustomizationOpen(false)}
       />
       <CourseDetailModal
         group={detailGroup}
