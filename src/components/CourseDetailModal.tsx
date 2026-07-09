@@ -6,6 +6,7 @@ import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
+import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
 import BottomModal from './BottomModal';
 
 interface Props {
@@ -115,7 +116,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     .map((s, i) => ({
     key: i,
     id: s.id,
-    teacher: s.teacher || '—',
+    teacher: formatSectionTeacher(s.teacher, '—'),
     // section 顶层不存 room；教室只在 schedule slot 上有。
     // 同 section 的所有 slot 通常同教室，取第一个非空即可。
     room: s.schedule.find((sl) => sl.room)?.room || '—',
@@ -162,7 +163,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
           <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
           <Descriptions.Item label="授课教师" span={2}>
-            {display.teachers.length ? display.teachers.join('、') : '—'}
+            {formatTeacherList(display.teachers, '—')}
           </Descriptions.Item>
           <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
           <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
@@ -187,7 +188,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           </div>
           <div className="mobile-field">
             <span className="mobile-field__label">授课教师</span>
-            <span className="mobile-field__value">{display.teachers.length ? display.teachers.join('、') : '—'}</span>
+            <span className="mobile-field__value">{formatTeacherList(display.teachers, '—')}</span>
           </div>
           <div className="mobile-field mobile-field--pair">
             <span>

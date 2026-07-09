@@ -4,6 +4,7 @@ import type { CourseGroup } from '@/types';
 import { courseColor } from '@/utils/courseColor';
 import { getIcourseRatingInfo } from '@/utils/icourseRating';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
+import { formatTeacherList } from '@/utils/teachers';
 
 interface Props {
   group: CourseGroup;
@@ -39,9 +40,7 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
     : group.sectionIds[0];
 
   /** 老师行：多老师时全部 join 出来，单老师直接显示 */
-  const teacherLine = group.teachers.length
-    ? group.teachers.join('、')
-    : '教师未定';
+  const teacherLine = formatTeacherList(group.teachers);
 
   /** icourse 评分：仅单班次组展示，多班次组在详情弹窗里分别展示 */
   const rating = group.sections.length === 1

@@ -7,12 +7,22 @@ interface Props {
   title: ReactNode;
   children: ReactNode;
   onClose: () => void;
+  className?: string;
   width?: number;
   footer?: ReactNode;
   actions?: ReactNode;
 }
 
-export default function BottomModal({ open, title, children, onClose, width = 720, footer, actions }: Props) {
+export default function BottomModal({
+  open,
+  title,
+  children,
+  onClose,
+  className,
+  width = 720,
+  footer,
+  actions,
+}: Props) {
   const [present, setPresent] = useState(open);
   const pointerStartedOnMask = useRef(false);
 
@@ -33,7 +43,7 @@ export default function BottomModal({ open, title, children, onClose, width = 72
 
   return createPortal(
     <div
-      className="bottom-modal"
+      className={`bottom-modal${className ? ` ${className}` : ''}`}
       data-state={open ? 'open' : 'closed'}
       onPointerDown={(event) => {
         pointerStartedOnMask.current = event.target === event.currentTarget;

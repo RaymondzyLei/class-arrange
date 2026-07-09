@@ -7,6 +7,21 @@ export interface CurriculumOption {
 }
 
 export const ALL_CURRICULUM_TERMS = '__all_terms__';
+export const UNSPECIFIED_CURRICULUM_TERM = '未指定学期';
+const CURRICULUM_SOURCE_URL = 'https://catalog.ustc.edu.cn/plan';
+
+const CURRICULUM_TERM_LABELS: Record<string, string> = {
+  [UNSPECIFIED_CURRICULUM_TERM]: '学期未定',
+};
+
+export function formatCurriculumTerm(term: string): string {
+  return CURRICULUM_TERM_LABELS[term] ?? term;
+}
+
+export function getCurriculumSourceUrl(record: CurriculumRecord | null): string | null {
+  if (!record) return null;
+  return record.sourceUrl ?? CURRICULUM_SOURCE_URL;
+}
 
 function compareText(a: string, b: string): number {
   return a.localeCompare(b, 'zh-Hans-CN');
@@ -88,7 +103,7 @@ export function filterCurriculumOption(input: string, option?: unknown): boolean
   return terms.length > 0 && terms.every((term) => compactOptionText.includes(term));
 }
 
-const DEFERRED_CURRICULUM_CODES = new Set(['MIL1001', 'MIL1002', 'PE00001', 'THESIS', 'THESIS-M']);
+const DEFERRED_CURRICULUM_CODES = new Set(['HS1003', 'MIL1001', 'MIL1002', 'PE00001', 'THESIS', 'THESIS-M']);
 const DEFERRED_CURRICULUM_NAMES = new Set(['军事理论', '军事技能', '艺术实践', '基础体育', '毕业论文']);
 
 export function isDeferredCurriculumCourse(course: CurriculumCourse): boolean {
@@ -104,10 +119,19 @@ export function getCurriculum(id: string | null): CurriculumRecord | null {
 
 export function getCurriculumTerms(record: CurriculumRecord | null): string[] {
   if (!record) return [];
-  return Object.entries(record.terms)
-    .filter(([, courses]) => courses.some((course) => !isDeferredCurriculumCourse(course)))
+  const terms = Object.entries(record.terms)
+    .filter(([term, courses]) =>
+      term === UNSPECIFIED_CURRICULUM_TERM
+        ? courses.length > 0
+        : courses.some((course) => !isDeferredCurriculumCourse(course)),
+    )
     .map(([term]) => term)
     .sort(compareCurriculumTerms);
+  const regularTerms = terms.filter((term) => term !== UNSPECIFIED_CURRICULUM_TERM);
+  if (!terms.includes(UNSPECIFIED_CURRICULUM_TERM)) return regularTerms;
+  return regularTerms.length
+    ? [regularTerms[0], UNSPECIFIED_CURRICULUM_TERM, ...regularTerms.slice(1)]
+    : [UNSPECIFIED_CURRICULUM_TERM];
 }
 
 export function getDefaultCurriculumTerm(id: string | null): string | null {

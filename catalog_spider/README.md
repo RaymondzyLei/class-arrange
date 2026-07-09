@@ -93,6 +93,7 @@ export interface CurriculumCourse {
 }
 export interface CurriculumRecord {
   id: number;               // 与 curricula 的 key 相同，方便按 id 反查
+  sourceUrl?: string;       // 教务系统执行计划查询页（官方页面不支持单方案 URL）
   name: string;             // 培养方案全名
   grade: string;            // "2023"–"2026"
   trainType: string;        // 主修 / 交叉培养 / 科技英才班 / ...

@@ -1,5 +1,6 @@
 import type { CourseGroup } from '@/types';
 import { expandWeeks } from './weeks';
+import { blockedSlotKey } from './customization';
 
 /** slotKey = `${week}-${day}-${period}` */
 export type ConflictMap = Map<string, Set<string>>;
@@ -42,6 +43,24 @@ export function conflictGroupSet(conflicts: ConflictMap): Set<string> {
     for (const key of set) s.add(key);
   }
   return s;
+}
+
+/** 返回与用户占位时间相撞的课程组；同一课程撞多个占位仍只计一次。 */
+export function blockedConflictGroupSet(
+  groups: CourseGroup[],
+  blockedSlots: Iterable<string>,
+): Set<string> {
+  const blocked = blockedSlots instanceof Set ? blockedSlots : new Set(blockedSlots);
+  const conflictGroups = new Set<string>();
+  if (blocked.size === 0) return conflictGroups;
+  for (const group of groups) {
+    if (group.schedule.some((slot) =>
+      slot.periods.some((period) => blocked.has(blockedSlotKey(slot.day, period))),
+    )) {
+      conflictGroups.add(group.key);
+    }
+  }
+  return conflictGroups;
 }
 
 /** slotKey 是否处于冲突 */

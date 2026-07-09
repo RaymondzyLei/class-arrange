@@ -23,6 +23,7 @@ TREE_JSON = os.path.join(ROOT, "catalog_spider", "data", "raw", "program_tree.js
 PROGRAMS_JSON = os.path.join(ROOT, "catalog_spider", "data", "index", "programs.json")
 BY_TERM_JSON = os.path.join(ROOT, "catalog_spider", "data", "index", "by_program_term.json")
 OUT_TS = os.path.join(ROOT, "src", "data", "curricula.ts")
+OFFICIAL_PLAN_URL = "https://catalog.ustc.edu.cn/plan"
 
 
 def _load_json(path: str) -> Any:
@@ -56,6 +57,7 @@ def main() -> int:
         pid = str(p["id"])
         records[pid] = {
             "id": p["id"],
+            "sourceUrl": OFFICIAL_PLAN_URL,
             "name": name_by_id.get(pid, ""),
             "grade": p.get("grade"),
             "trainType": p.get("trainType"),
@@ -80,6 +82,7 @@ export interface CurriculumCourse {
 }
 export interface CurriculumRecord {
   id: number;
+  sourceUrl?: string;
   name: string;
   grade: string;
   trainType: string;
