@@ -2120,7 +2120,8 @@ html {
   min-height: 0;
 }
 
-.timetable__cell--single .timetable__courses {
+.timetable__cell--single .timetable__courses,
+.timetable__cell--parallel .timetable__courses {
   position: absolute;
   inset: 4px 6px 4px 4px;
   width: auto;
@@ -3544,6 +3545,11 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   flex: 1 1 0;
   width: 0;
   min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.timetable__cell--single .timetable-course {
   height: 100%;
   box-sizing: border-box;
 }
