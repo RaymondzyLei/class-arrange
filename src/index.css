@@ -3535,17 +3535,19 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   padding-right: 27px;
 }
 
-/* 亮/深色模式共用布局：同一时间范围的冲突课程并列显示，避免被误读成相邻节次。 */
+/* 亮/深色模式共用布局：桌面端用时间网格展示冲突课程的真实节次跨度。 */
 .timetable__cell--parallel .timetable__courses {
-  flex-direction: row;
+  display: grid;
   align-items: stretch;
+  column-gap: 6px;
+  row-gap: 0;
 }
 
 .timetable__cell--parallel .timetable-course {
   flex: 1 1 0;
-  width: 0;
+  width: auto;
   min-width: 0;
-  height: 100%;
+  height: auto;
   box-sizing: border-box;
 }
 
@@ -3564,6 +3566,56 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
 .timetable__cell--parallel .timetable-course:last-child .timetable-course__number {
   padding-right: 20px;
+}
+
+@media (max-width: 900px) {
+  /* 手机端优化：冲突课程纵向排列并由完整文字自然撑高。 */
+  .timetable__cell--parallel .timetable__courses {
+    display: flex;
+    flex-direction: column;
+    position: static;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    gap: 6px;
+  }
+
+  .timetable__cell--parallel .timetable-course {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+  }
+
+  .timetable__cell--conflict.timetable__cell--parallel .timetable-course:first-child {
+    padding-right: 27px;
+  }
+
+  .timetable__cell--parallel .timetable-course:last-child .timetable-course__number {
+    padding-right: 0;
+  }
+
+  .timetable__cell--parallel .timetable-course__number,
+  .timetable__cell--parallel .timetable-course__title,
+  .timetable__cell--parallel .timetable-course__teacher,
+  .timetable__cell--parallel .timetable-course__time,
+  .timetable__cell--parallel .timetable-course__room,
+  .timetable__cell--parallel .timetable-course__special {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .timetable__cell--parallel .timetable-course__title {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+  }
+
+  .timetable__cell--parallel .timetable-course__time {
+    flex-wrap: wrap;
+  }
 }
 
 .timetable__cell--conflict .timetable__warning-icon {

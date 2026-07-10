@@ -236,16 +236,6 @@ function buildEntryMaps(entries: TimetableEntry[]) {
   return { starts, covers };
 }
 
-function sameEntries(a: TimetableEntry[], b: TimetableEntry[]): boolean {
-  if (a.length !== b.length) return false;
-  const ids = new Set(a.map((entry) => entry.id));
-  return b.every((entry) => ids.has(entry.id));
-}
-
-function sameNumberArray(a: number[], b: number[]): boolean {
-  return a.length === b.length && a.every((value, index) => value === b[index]);
-}
-
 function getRowSpanEntries(
   period: number,
   covering: TimetableEntry[],
@@ -254,23 +244,27 @@ function getRowSpanEntries(
   blockedSlots: Set<string>,
 ): { entries: TimetableEntry[]; span: number } | null {
   if (covering.length === 0 || starting.length === 0) return null;
-  if (!sameEntries(covering, starting)) return null;
-  if (starting.some((entry) => entry.start !== period)) return null;
-  const [first] = starting;
-  if (starting.some((entry) => entry.end !== first.end || !sameNumberArray(entry.periods, first.periods))) {
-    return null;
-  }
-  // Aligned course conflicts should still span their full period range. A custom
-  // blocked slot must remain split so its placeholder stays visible in that row.
-  if (first.periods.some((p) => blockedSlots.has(blockedSlotKey(first.displayDay, p)))) {
-    return null;
-  }
-  for (const p of first.periods) {
-    if (!sameEntries(covers.get(keyFor(first.displayDay, p)) ?? [], starting)) {
-      return null;
+  if (covering.some((entry) => entry.start < period)) return null;
+
+  const day = starting[0].displayDay;
+  const cluster = new Map(starting.map((entry) => [entry.id, entry]));
+  let clusterEnd = Math.max(...starting.map((entry) => entry.end));
+
+  // Build the complete overlapping cluster, including courses that start later
+  // inside another course's span. Each entry keeps its own vertical time range.
+  for (let p = period; p <= clusterEnd; p += 1) {
+    if (blockedSlots.has(blockedSlotKey(day, p))) return null;
+    for (const entry of covers.get(keyFor(day, p)) ?? []) {
+      if (entry.start < period) return null;
+      cluster.set(entry.id, entry);
+      clusterEnd = Math.max(clusterEnd, entry.end);
     }
   }
-  return { entries: starting, span: first.span };
+
+  const entries = [...cluster.values()].sort(
+    (a, b) => a.start - b.start || a.end - b.end || a.id.localeCompare(b.id),
+  );
+  return { entries, span: clusterEnd - period + 1 };
 }
 
 function entryStyle(entry: TimetableEntry): CSSProperties {
@@ -286,16 +280,19 @@ function TimetableCell({
   entries,
   blocked,
   rowSpan,
+  startPeriod,
   onOpenDetail,
 }: {
   day: number;
   entries: TimetableEntry[];
   blocked: boolean;
   rowSpan?: number;
+  startPeriod?: number;
   onOpenDetail?: (id: string) => void;
 }) {
   const hasEntries = entries.length > 0;
   const isConflict = entries.some((entry) => entry.conflict);
+  const isParallel = Boolean(rowSpan && startPeriod && entries.length > 1);
   const className = [
     'timetable__cell',
     day === 1 ? 'timetable__cell--first-day' : '',
@@ -304,13 +301,19 @@ function TimetableCell({
     isConflict ? 'timetable__cell--conflict' : '',
     hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
-    rowSpan && entries.length > 1 ? 'timetable__cell--parallel' : '',
+    isParallel ? 'timetable__cell--parallel' : '',
   ].filter(Boolean).join(' ');
 
   return (
     <td className={className} rowSpan={rowSpan}>
       {isConflict ? <WarningIcon className="timetable__warning-icon" /> : null}
-      <div className="timetable__courses">
+      <div
+        className="timetable__courses"
+        style={isParallel ? {
+          gridTemplateColumns: `repeat(${entries.length}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${rowSpan}, minmax(0, 1fr))`,
+        } : undefined}
+      >
         {blocked ? (
           <div
             className="timetable-course timetable-placeholder"
@@ -319,12 +322,18 @@ function TimetableCell({
             <span>有事</span>
           </div>
         ) : null}
-        {entries.map((entry) => (
+        {entries.map((entry, index) => (
           <button
             key={entry.id}
             type="button"
             className={`timetable-course${entry.conflict ? ' timetable-course--conflict' : ''}`}
-            style={entryStyle(entry)}
+            style={{
+              ...entryStyle(entry),
+              ...(isParallel && startPeriod ? {
+                gridColumn: index + 1,
+                gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
+              } : {}),
+            }}
             onClick={(event) => {
               event.stopPropagation();
               onOpenDetail?.(entry.groupKey);
@@ -442,8 +451,7 @@ function TimetableView({
                 const blocked = blockedSlotSet.has(cellKey);
 
                 if (rowSpanBlock) {
-                  const [first] = rowSpanBlock.entries;
-                  for (let p = first.start + 1; p <= first.end; p += 1) {
+                  for (let p = period + 1; p < period + rowSpanBlock.span; p += 1) {
                     skipped.add(keyFor(day, p));
                   }
                   return (
@@ -453,6 +461,7 @@ function TimetableView({
                       entries={rowSpanBlock.entries}
                       blocked={false}
                       rowSpan={rowSpanBlock.span}
+                      startPeriod={period}
                       onOpenDetail={onOpenDetail}
                     />
                   );
