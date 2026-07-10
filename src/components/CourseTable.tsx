@@ -251,12 +251,18 @@ function getRowSpanEntries(
   covering: TimetableEntry[],
   starting: TimetableEntry[],
   covers: Map<string, TimetableEntry[]>,
+  blockedSlots: Set<string>,
 ): { entries: TimetableEntry[]; span: number } | null {
   if (covering.length === 0 || starting.length === 0) return null;
   if (!sameEntries(covering, starting)) return null;
-  if (starting.some((entry) => entry.start !== period || entry.conflict)) return null;
+  if (starting.some((entry) => entry.start !== period)) return null;
   const [first] = starting;
   if (starting.some((entry) => entry.end !== first.end || !sameNumberArray(entry.periods, first.periods))) {
+    return null;
+  }
+  // Aligned course conflicts should still span their full period range. A custom
+  // blocked slot must remain split so its placeholder stays visible in that row.
+  if (first.periods.some((p) => blockedSlots.has(blockedSlotKey(first.displayDay, p)))) {
     return null;
   }
   for (const p of first.periods) {
@@ -298,6 +304,7 @@ function TimetableCell({
     isConflict ? 'timetable__cell--conflict' : '',
     hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
+    rowSpan && entries.length > 1 ? 'timetable__cell--parallel' : '',
   ].filter(Boolean).join(' ');
 
   return (
@@ -425,7 +432,13 @@ function TimetableView({
 
                 const covering = covers.get(cellKey) ?? [];
                 const starting = starts.get(cellKey) ?? [];
-                const rowSpanBlock = getRowSpanEntries(period, covering, starting, covers);
+                const rowSpanBlock = getRowSpanEntries(
+                  period,
+                  covering,
+                  starting,
+                  covers,
+                  blockedSlotSet,
+                );
                 const blocked = blockedSlotSet.has(cellKey);
 
                 if (rowSpanBlock) {

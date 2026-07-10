@@ -3534,6 +3534,32 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   padding-right: 27px;
 }
 
+/* 亮/深色模式共用布局：同一时间范围的冲突课程并列显示，避免被误读成相邻节次。 */
+.timetable__cell--parallel .timetable__courses {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.timetable__cell--parallel .timetable-course {
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.timetable__cell--conflict.timetable__cell--parallel .timetable-course:first-child {
+  padding-right: 7px;
+}
+
+.timetable__cell--conflict.timetable__cell--parallel .timetable-course:last-child {
+  padding-right: 7px;
+}
+
+.timetable__cell--parallel .timetable-course:last-child .timetable-course__number {
+  padding-right: 20px;
+}
+
 .timetable__cell--conflict .timetable__warning-icon {
   top: 5px;
   right: 5px;
