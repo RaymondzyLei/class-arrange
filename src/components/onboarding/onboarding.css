@@ -566,3 +566,50 @@
     transition: none;
   }
 }
+
+/* ============================================================
+ * 深色模式优化：新手引导与遮罩使用中性黑，避免灰蓝色覆盖整个页面。
+ * ============================================================ */
+:root[data-theme='dark'] .onboarding-wizard {
+  background: rgba(3, 5, 8, 0.76);
+}
+
+:root[data-theme='dark'] .onboarding-wizard__panel,
+:root[data-theme='dark'] .onboarding-confirm__panel,
+:root[data-theme='dark'] .tour-card {
+  background: var(--panel-bg);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+:root[data-theme='dark'] .onboarding-preference {
+  background: var(--dark-surface-raised);
+  border-color: var(--border);
+}
+
+:root[data-theme='dark'] .onboarding-preference:hover,
+:root[data-theme='dark'] .onboarding-preference:focus-visible {
+  background: var(--dark-surface-hover);
+  border-color: color-mix(in srgb, var(--accent) 56%, var(--border));
+}
+
+:root[data-theme='dark'] .onboarding-wizard__choice {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 44%, var(--border));
+}
+
+:root[data-theme='dark'] .onboarding-confirm,
+:root[data-theme='dark'] .spotlight-tour__shade {
+  background: rgba(3, 5, 8, 0.7);
+}
+
+:root[data-theme='dark'] .spotlight-tour__shade-svg {
+  fill: rgba(3, 5, 8, 0.7);
+}
+
+:root[data-theme='dark'] .spotlight-tour__highlight {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--accent) 62%, transparent),
+    0 0 0 9999px transparent,
+    var(--shadow-lg);
+}

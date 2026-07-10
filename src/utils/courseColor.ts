@@ -33,15 +33,16 @@ const LIGHT_PALETTE: CourseColor[] = [
 ];
 
 /**
- * 深色模式下的色板：色调与浅色一致，背景降明度，文字提亮。
+ * 深色模式优化色板：色调与浅色一致，背景降饱和，色条与文字提亮。
+ * 与 tokens.css 中的深色课程变量保持一致。
  */
 const DARK_PALETTE: CourseColor[] = [
-  { name: 'sage',  stripe: '#5BC189', bg: '#163324', fg: '#B8E6CB' },
-  { name: 'sky',   stripe: '#5AAEEA', bg: '#0F2C42', fg: '#B6DCF2' },
-  { name: 'amber', stripe: '#E8A655', bg: '#3A2A14', fg: '#F1CBA0' },
-  { name: 'rose',  stripe: '#E97090', bg: '#3A1A24', fg: '#F2BCCB' },
-  { name: 'teal',  stripe: '#4FC2C2', bg: '#0F3333', fg: '#B6E4E4' },
-  { name: 'violet',stripe: '#9A82E5', bg: '#241B3F', fg: '#CFC4F0' },
+  { name: 'sage',  stripe: '#63C88F', bg: '#1F3428', fg: '#D7EDE0' },
+  { name: 'sky',   stripe: '#6AB1E8', bg: '#1E303D', fg: '#D8EAFA' },
+  { name: 'amber', stripe: '#DEA45B', bg: '#382F22', fg: '#F2DFC4' },
+  { name: 'rose',  stripe: '#DC7993', bg: '#382830', fg: '#F1D8DE' },
+  { name: 'teal',  stripe: '#64BFC0', bg: '#1E3435', fg: '#D5EEEE' },
+  { name: 'violet',stripe: '#9B8BDB', bg: '#2E2A40', fg: '#E4DEF5' },
 ];
 
 /**

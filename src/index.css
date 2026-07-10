@@ -1100,16 +1100,38 @@ html {
   height: 15px;
 }
 
+/* 主题过渡：旧快照保持静止，新快照在 0.3s 内覆盖淡入。
+ * 禁用浏览器默认 plus-lighter 混合，避免课表细线在中间帧发亮。 */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: theme-root-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes theme-root-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.01ms;
+    animation: none;
   }
 }
 
@@ -2409,13 +2431,17 @@ html {
   }
 }
 
+html.theme-transitioning,
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
-  transition-property: none !important;
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
-  transition-timing-function: step-end !important;
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* 方案操作按钮的常态 transition 自带 !important，主题快照期间显式覆盖。 */
+html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
+  transition: none !important;
 }
 
 @media (max-width: 900px) {
@@ -3353,4 +3379,262 @@ html.theme-transitioning *::after {
     min-width: 32px;
     padding-inline: 0;
   }
+}
+
+/* ============================================================
+ * 深色模式优化
+ * 仅调整暗色表面层级、状态色和课表网格，不影响亮色模式与导出图片。
+ * ============================================================ */
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+  background-clip: padding-box;
+}
+
+/* 深色模式优化：用边框与极轻的高光分隔一级面板。 */
+:root[data-theme='dark'] .panel-inner {
+  border-color: var(--border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    var(--shadow-sm);
+}
+
+:root[data-theme='dark'] .arrangement-card,
+:root[data-theme='dark'] .pool-item,
+:root[data-theme='dark'] .mobile-card,
+:root[data-theme='dark'] .selected-courses-card,
+:root[data-theme='dark'] .customization__section {
+  background: var(--dark-surface-raised);
+  border-color: var(--border);
+}
+
+:root[data-theme='dark'] .arrangement-card:hover,
+:root[data-theme='dark'] .pool-item:hover,
+:root[data-theme='dark'] .selected-courses-card:hover {
+  background: var(--dark-surface-hover);
+  border-color: var(--border-strong);
+}
+
+:root[data-theme='dark'] .arrangement-card--applied,
+:root[data-theme='dark'] .arrangement-card--applied:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 var(--arrangement-ring-space)
+    color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+:root[data-theme='dark'] .arrangement-card__conflict.ant-tag-orange {
+  background: color-mix(in srgb, var(--dark-warning) 9%, var(--dark-surface-recessed));
+  border-color: color-mix(in srgb, var(--dark-warning) 28%, var(--border));
+  color: var(--dark-warning);
+}
+
+:root[data-theme='dark'] .arrangement-card__conflict.ant-tag-green {
+  background: color-mix(in srgb, var(--success) 9%, var(--dark-surface-recessed));
+  border-color: color-mix(in srgb, var(--success) 26%, var(--border));
+  color: var(--success);
+}
+
+:root[data-theme='dark'] .pool-item--selected,
+:root[data-theme='dark'] .pool-item--selected:hover {
+  background: color-mix(in srgb, var(--accent) 8%, var(--dark-surface-raised));
+  border-color: color-mix(in srgb, var(--accent) 46%, var(--border));
+}
+
+:root[data-theme='dark'] .pool-item--conflict,
+:root[data-theme='dark'] .pool-item--conflict:hover {
+  background: color-mix(in srgb, var(--conflict) 7%, var(--dark-surface-raised));
+  border-color: color-mix(in srgb, var(--conflict) 34%, var(--border));
+}
+
+:root[data-theme='dark'] .pool-item__course-code {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+:root[data-theme='dark'] .pool-item__conflict-tag {
+  color: #1a0d10;
+  font-weight: 700;
+}
+
+:root[data-theme='dark'] .filter-bar__count {
+  background: var(--dark-surface-recessed);
+  border-color: var(--border);
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .stats-bar__item--button:hover,
+:root[data-theme='dark'] .bottom-modal__close:hover {
+  background: var(--dark-surface-hover);
+}
+
+:root[data-theme='dark'] :focus-visible,
+:root[data-theme='dark'] #root .ant-btn:focus-visible {
+  outline-color: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+
+/* 深色模式优化：课表使用中亮外框、低亮网格和独立表头层。 */
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) {
+  --timetable-border: #3e4855;
+  --timetable-grid: #2c3540;
+  --timetable-head-bg: #252c36;
+  --timetable-cell-bg: #1b2129;
+  background: var(--timetable-cell-bg);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable {
+  background: var(--timetable-cell-bg);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-head--weekend,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-date,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__period-time {
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--conflict,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--conflict:hover,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--has.timetable__cell--conflict:hover {
+  background: color-mix(in srgb, var(--conflict) 6%, var(--timetable-cell-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--conflict) 18%, transparent);
+}
+
+/* 亮/深色模式共用布局：主题切换时课程卡片的位置和尺寸保持一致。 */
+.timetable__courses {
+  gap: 6px;
+}
+
+.timetable-course {
+  padding: 5px 7px 5px 9px;
+  border-radius: 0 6px 6px 0;
+}
+
+.timetable-course__number {
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.timetable-course__title {
+  margin: 2px 0 3px;
+  line-height: 1.3;
+}
+
+.timetable-course__teacher,
+.timetable-course__time,
+.timetable-course__room {
+  line-height: 1.32;
+}
+
+.timetable__cell--conflict .timetable-course:first-child {
+  padding-right: 27px;
+}
+
+.timetable__cell--conflict .timetable__warning-icon {
+  top: 5px;
+  right: 5px;
+  padding: 2px;
+  box-sizing: content-box;
+  border-radius: 999px;
+  background: var(--timetable-cell-bg, var(--panel-bg));
+}
+
+/* 深色模式优化：同一时段叠放课程时弱化大面积色块。 */
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course {
+  background: color-mix(in srgb, var(--block-bg) 78%, var(--timetable-cell-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-stripe) 14%, transparent);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__number {
+  color: color-mix(in srgb, var(--block-fg) 84%, var(--text-sub));
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__teacher,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__time,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__room {
+  color: color-mix(in srgb, var(--block-fg) 72%, var(--text-sub));
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-placeholder {
+  --block-stripe: #7b8796;
+  --block-bg: #303946;
+  --block-fg: #d8dee6;
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__warning-icon,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__special,
+:root[data-theme='dark'] .stats-bar__warning-icon,
+:root[data-theme='dark'] .selected-courses-deferred__warning-icon {
+  color: var(--dark-warning);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-badge {
+  background: var(--dark-warning-soft);
+  color: var(--dark-warning);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dark-warning) 32%, transparent);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-badge--makeup {
+  background: var(--success-soft);
+  color: var(--success);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+/* 深色模式优化：弹窗、警告和自定义控件避免沿用亮色填充。 */
+:root[data-theme='dark'] .bottom-modal {
+  background: rgba(3, 5, 8, 0.72);
+}
+
+:root[data-theme='dark'] .bottom-modal__panel {
+  background: var(--panel-bg);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+:root[data-theme='dark'] .bottom-modal__body {
+  --detail-grid-border: color-mix(in srgb, var(--text) 12%, transparent);
+  --detail-label-bg: rgba(255, 255, 255, 0.045);
+}
+
+:root[data-theme='dark'] .selected-courses-deferred {
+  background: var(--dark-warning-soft);
+  border-color: color-mix(in srgb, var(--dark-warning) 54%, var(--border));
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .customization__section {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme='dark'] .apple-toggle {
+  background: #3b4552;
+  border-color: #505d6c;
+}
+
+:root[data-theme='dark'] .apple-toggle--checked {
+  background: #42c779;
+  border-color: #42c779;
+}
+
+:root[data-theme='dark'] .apple-toggle__thumb,
+:root[data-theme='dark'] .apple-toggle--checked .apple-toggle__thumb {
+  background: #f7f9fb;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--selected,
+:root[data-theme='dark'] .availability-grid__cell--selected:hover {
+  background: #36414f;
+  box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:hover,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:focus-visible,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:active {
+  color: var(--bg) !important;
+  font-weight: 600;
 }
