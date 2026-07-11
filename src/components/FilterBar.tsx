@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Checkbox, Input } from 'antd';
 import type { FilterState } from '@/types';
 import {
   DEPARTMENT_OPTIONS,
@@ -22,7 +22,7 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
     <div className="panel-inner filter-bar no-print" data-tour="filters">
       <div className="filter-bar__search" data-tour="course-search">
         <Input
-          placeholder="搜索课程名 / 课堂号 / 教师"
+          placeholder={filter.includeTeacher ? '搜索课程名 / 课堂号 / 教师' : '搜索课程名 / 课堂号'}
           value={filter.keyword}
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
@@ -75,6 +75,13 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           allowClear
           options={LANGUAGE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
+        <Checkbox
+          className="filter-bar__teacher-toggle"
+          checked={filter.includeTeacher}
+          onChange={(event) => update({ includeTeacher: event.target.checked })}
+        >
+          查询任课老师
+        </Checkbox>
       </div>
     </div>
   );

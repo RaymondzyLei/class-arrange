@@ -6,6 +6,14 @@ import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
 import {
+  assignTimetableLanes,
+  getMobileContainmentGroups,
+  getMobileContainmentMetrics,
+  getMobileContainmentLayers,
+  getParallelLaneSizing,
+  type TimetableRangeEntry,
+} from '@/utils/timetableLayout';
+import {
   formatDateRange,
   formatShortDate,
   getCalendarDatesForSelection,
@@ -145,6 +153,17 @@ function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): Ti
   }));
 }
 
+interface BlockedTimetableEntry extends TimetableRangeEntry {
+  color: CourseColor;
+}
+
+const BLOCKED_COLOR: CourseColor = {
+  name: 'blocked',
+  stripe: 'var(--timetable-placeholder-stripe)',
+  bg: 'var(--timetable-placeholder-bg)',
+  fg: 'var(--timetable-placeholder-fg)',
+};
+
 function buildEntries(
   groups: CourseGroup[],
   weekSelection: WeekSelection,
@@ -236,42 +255,43 @@ function buildEntryMaps(entries: TimetableEntry[]) {
   return { starts, covers };
 }
 
-function sameEntries(a: TimetableEntry[], b: TimetableEntry[]): boolean {
-  if (a.length !== b.length) return false;
-  const ids = new Set(a.map((entry) => entry.id));
-  return b.every((entry) => ids.has(entry.id));
-}
-
-function sameNumberArray(a: number[], b: number[]): boolean {
-  return a.length === b.length && a.every((value, index) => value === b[index]);
-}
-
 function getRowSpanEntries(
   period: number,
   covering: TimetableEntry[],
   starting: TimetableEntry[],
   covers: Map<string, TimetableEntry[]>,
-): { entries: TimetableEntry[]; span: number } | null {
+  blockedSlots: Set<string>,
+): { entries: TimetableEntry[]; span: number; blockedPeriods: number[] } | null {
   if (covering.length === 0 || starting.length === 0) return null;
-  if (!sameEntries(covering, starting)) return null;
-  if (starting.some((entry) => entry.start !== period || entry.conflict)) return null;
-  const [first] = starting;
-  if (starting.some((entry) => entry.end !== first.end || !sameNumberArray(entry.periods, first.periods))) {
-    return null;
-  }
-  for (const p of first.periods) {
-    if (!sameEntries(covers.get(keyFor(first.displayDay, p)) ?? [], starting)) {
-      return null;
+  if (covering.some((entry) => entry.start < period)) return null;
+
+  const day = starting[0].displayDay;
+  const cluster = new Map(starting.map((entry) => [entry.id, entry]));
+  const blockedPeriods: number[] = [];
+  let clusterEnd = Math.max(...starting.map((entry) => entry.end));
+
+  // Build the complete overlapping cluster, including courses that start later
+  // inside another course's span. Each entry keeps its own vertical time range.
+  for (let p = period; p <= clusterEnd; p += 1) {
+    if (blockedSlots.has(blockedSlotKey(day, p))) blockedPeriods.push(p);
+    for (const entry of covers.get(keyFor(day, p)) ?? []) {
+      if (entry.start < period) return null;
+      cluster.set(entry.id, entry);
+      clusterEnd = Math.max(clusterEnd, entry.end);
     }
   }
-  return { entries: starting, span: first.span };
+
+  const entries = [...cluster.values()].sort(
+    (a, b) => a.start - b.start || b.end - a.end || a.id.localeCompare(b.id),
+  );
+  return { entries, span: clusterEnd - period + 1, blockedPeriods };
 }
 
-function entryStyle(entry: TimetableEntry): CSSProperties {
+function colorStyle(color: CourseColor): CSSProperties {
   return {
-    '--block-stripe': entry.color.stripe,
-    '--block-bg': entry.color.bg,
-    '--block-fg': entry.color.fg,
+    '--block-stripe': color.stripe,
+    '--block-bg': color.bg,
+    '--block-fg': color.fg,
   } as CSSProperties;
 }
 
@@ -279,32 +299,154 @@ function TimetableCell({
   day,
   entries,
   blocked,
+  blockedPeriods = [],
   rowSpan,
+  startPeriod,
   onOpenDetail,
 }: {
   day: number;
   entries: TimetableEntry[];
   blocked: boolean;
+  blockedPeriods?: number[];
   rowSpan?: number;
+  startPeriod?: number;
   onOpenDetail?: (id: string) => void;
 }) {
   const hasEntries = entries.length > 0;
   const isConflict = entries.some((entry) => entry.conflict);
+  const blockedEntries: BlockedTimetableEntry[] = rowSpan && startPeriod
+    ? blockedPeriods.map((period) => ({
+      id: `blocked-${day}-${period}`,
+      start: period,
+      end: period,
+      span: 1,
+      color: BLOCKED_COLOR,
+    }))
+    : [];
+  const layoutEntries: Array<TimetableEntry | BlockedTimetableEntry> = [
+    ...entries,
+    ...blockedEntries,
+  ];
+  const visualItemCount = layoutEntries.length + (blocked && blockedEntries.length === 0 ? 1 : 0);
+  const isParallel = Boolean(rowSpan && startPeriod && layoutEntries.length > 1);
+  const laneLayout = isParallel ? assignTimetableLanes(layoutEntries) : null;
+  const parallelSizing = laneLayout ? getParallelLaneSizing(laneLayout.laneCount) : null;
+  const courseMobileLayers = laneLayout && rowSpan && startPeriod
+    ? getMobileContainmentLayers(entries, startPeriod, rowSpan)
+    : [];
+  // “有事”参与桌面端真实时间网格；只有课程本身存在包含关系时，才启用
+  // 手机端的包围布局，避免单个占位把普通两节课无谓地拉得很高。
+  const hasMobileContainment = courseMobileLayers.some(
+    (layer) => layer.depth > 0 || layer.lane > 0,
+  );
+  const mobileGroups = hasMobileContainment && rowSpan && startPeriod
+    ? getMobileContainmentGroups(layoutEntries, startPeriod, rowSpan)
+    : [];
+  const mobileContainmentMetrics = rowSpan
+    ? getMobileContainmentMetrics(mobileGroups, rowSpan)
+    : { minHeight: 0, metrics: [] };
   const className = [
     'timetable__cell',
     day === 1 ? 'timetable__cell--first-day' : '',
     hasEntries ? 'timetable__cell--has' : 'timetable__cell--empty',
     blocked ? 'timetable__cell--blocked' : '',
     isConflict ? 'timetable__cell--conflict' : '',
-    hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
+    visualItemCount === 1 && !isConflict ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
+    isParallel ? 'timetable__cell--parallel' : '',
+    hasMobileContainment ? 'timetable__cell--containment' : '',
   ].filter(Boolean).join(' ');
+
+  const renderCourseButton = (
+    entry: TimetableEntry,
+    mobileGroup?: (typeof mobileGroups)[number],
+  ) => {
+    const lane = laneLayout?.laneById.get(entry.id);
+    const reservesWarningSpace = mobileGroup
+      ? mobileGroup.depth === Math.max(...mobileGroups.map((group) => group.depth))
+        && mobileGroup.start === startPeriod
+        && mobileGroup.entryIds[0] === entry.id
+      : Boolean(
+        isConflict
+        && laneLayout
+        && lane === laneLayout.laneCount - 1
+        && entry.start === startPeriod,
+      );
+    return (
+      <button
+        key={entry.id}
+        type="button"
+        className={[
+          'timetable-course',
+          entry.conflict ? 'timetable-course--conflict' : '',
+          reservesWarningSpace ? 'timetable-course--warning-space' : '',
+        ].filter(Boolean).join(' ')}
+        style={{
+          ...colorStyle(entry.color),
+          ...(!mobileGroup && lane !== undefined && startPeriod ? {
+            gridColumn: lane + 1,
+            gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
+          } : {}),
+        }}
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenDetail?.(entry.groupKey);
+        }}
+      >
+        <span className="timetable-course__number">
+          {entry.sectionLabel} [{entry.credits}]
+        </span>
+        <span className="timetable-course__title">{entry.courseName}</span>
+        <span className="timetable-course__teacher">{entry.teachers}</span>
+        <span className="timetable-course__time">
+          <span>{entry.weeksText}</span>
+          <span>{entry.periodsText}</span>
+        </span>
+        {entry.specialLabels.length ? (
+          <span className="timetable-course__special">{entry.specialLabels.join('、')}</span>
+        ) : null}
+        {entry.room ? <span className="timetable-course__room">{entry.room}</span> : null}
+      </button>
+    );
+  };
+
+  const renderBlockedButton = (
+    entry: BlockedTimetableEntry,
+    mobileGroup?: (typeof mobileGroups)[number],
+  ) => {
+    const lane = laneLayout?.laneById.get(entry.id);
+    return (
+      <div
+        key={entry.id}
+        className="timetable-course timetable-placeholder"
+        aria-label="自定义占位时间"
+        style={{
+          ...colorStyle(entry.color),
+          ...(!mobileGroup && lane !== undefined && startPeriod ? {
+            gridColumn: lane + 1,
+            gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
+          } : {}),
+        }}
+      >
+        <span>有事</span>
+      </div>
+    );
+  };
 
   return (
     <td className={className} rowSpan={rowSpan}>
       {isConflict ? <WarningIcon className="timetable__warning-icon" /> : null}
-      <div className="timetable__courses">
-        {blocked ? (
+      <div
+        className="timetable__courses timetable__courses--desktop"
+        style={laneLayout ? {
+          '--parallel-columns': laneLayout.laneCount,
+          '--parallel-rows': rowSpan,
+          '--parallel-column-gap': `${parallelSizing?.columnGap ?? 6}px`,
+          '--parallel-card-padding-start': `${parallelSizing?.paddingInlineStart ?? 9}px`,
+          '--parallel-card-padding-end': `${parallelSizing?.paddingInlineEnd ?? 7}px`,
+        } as CSSProperties : undefined}
+      >
+        {blocked && blockedEntries.length === 0 ? (
           <div
             className="timetable-course timetable-placeholder"
             aria-label="自定义占位时间"
@@ -312,33 +454,53 @@ function TimetableCell({
             <span>有事</span>
           </div>
         ) : null}
-        {entries.map((entry) => (
-          <button
-            key={entry.id}
-            type="button"
-            className={`timetable-course${entry.conflict ? ' timetable-course--conflict' : ''}`}
-            style={entryStyle(entry)}
-            onClick={(event) => {
-              event.stopPropagation();
-              onOpenDetail?.(entry.groupKey);
-            }}
-          >
-            <span className="timetable-course__number">
-              {entry.sectionLabel} [{entry.credits}]
-            </span>
-            <span className="timetable-course__title">{entry.courseName}</span>
-            <span className="timetable-course__teacher">{entry.teachers}</span>
-            <span className="timetable-course__time">
-              <span>{entry.weeksText}</span>
-              <span>{entry.periodsText}</span>
-            </span>
-            {entry.specialLabels.length ? (
-              <span className="timetable-course__special">{entry.specialLabels.join('、')}</span>
-            ) : null}
-            {entry.room ? <span className="timetable-course__room">{entry.room}</span> : null}
-          </button>
-        ))}
+        {entries.map((entry) => renderCourseButton(entry))}
+        {blockedEntries.map((entry) => renderBlockedButton(entry))}
       </div>
+      {hasMobileContainment ? (
+        <>
+          <span
+            className="timetable__mobile-containment-sizer"
+            aria-hidden="true"
+            style={{ '--mobile-containment-min-height': `${mobileContainmentMetrics.minHeight}px` } as CSSProperties}
+          />
+          <div className="timetable__mobile-containment">
+            {mobileGroups.map((group) => {
+              const groupEntries = group.entryIds
+                .map((id) => layoutEntries.find((entry) => entry.id === id))
+                .filter((entry): entry is TimetableEntry | BlockedTimetableEntry => Boolean(entry));
+              const color = groupEntries[0]?.color;
+              const metric = mobileContainmentMetrics.metrics.find((candidate) => candidate.key === group.key);
+              return (
+                <div
+                  key={group.key}
+                  className={`timetable__mobile-range${group.rangeCount > 1 ? ' timetable__mobile-range--siblings' : ''}`}
+                  style={{
+                    '--mobile-range-top': `${group.topPercent}%`,
+                    '--mobile-range-height': `${group.heightPercent}%`,
+                    '--mobile-range-left': `${group.leftInset}px`,
+                    '--mobile-range-right': `${group.rightInset}px`,
+                    '--mobile-range-content-top': `${metric?.contentOffset ?? 0}px`,
+                    '--mobile-range-content-height': `${metric?.contentHeight ?? 112}px`,
+                    '--mobile-range-stripe': color?.stripe,
+                    '--mobile-range-bg': color?.bg,
+                    '--mobile-range-depth': group.depth + 1,
+                  } as CSSProperties}
+                >
+                  <span className="timetable__mobile-range-background" aria-hidden="true" />
+                  <div className="timetable__mobile-range-content">
+                    {groupEntries.map((entry) => (
+                      'groupKey' in entry
+                        ? renderCourseButton(entry, group)
+                        : renderBlockedButton(entry, group)
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : null}
     </td>
   );
 }
@@ -425,12 +587,17 @@ function TimetableView({
 
                 const covering = covers.get(cellKey) ?? [];
                 const starting = starts.get(cellKey) ?? [];
-                const rowSpanBlock = getRowSpanEntries(period, covering, starting, covers);
+                const rowSpanBlock = getRowSpanEntries(
+                  period,
+                  covering,
+                  starting,
+                  covers,
+                  blockedSlotSet,
+                );
                 const blocked = blockedSlotSet.has(cellKey);
 
                 if (rowSpanBlock) {
-                  const [first] = rowSpanBlock.entries;
-                  for (let p = first.start + 1; p <= first.end; p += 1) {
+                  for (let p = period + 1; p < period + rowSpanBlock.span; p += 1) {
                     skipped.add(keyFor(day, p));
                   }
                   return (
@@ -439,7 +606,9 @@ function TimetableView({
                       day={day}
                       entries={rowSpanBlock.entries}
                       blocked={false}
+                      blockedPeriods={rowSpanBlock.blockedPeriods}
                       rowSpan={rowSpanBlock.span}
+                      startPeriod={period}
                       onOpenDetail={onOpenDetail}
                     />
                   );
@@ -506,7 +675,10 @@ export default function CourseTable({
             popupMatchSelectWidth={220}
           />
         </div>
-        <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+        <div className="course-table__term-date">
+          <span className="course-table__term-name">{TERM_CALENDAR.termName}</span>
+          <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+        </div>
         <div className="course-table__actions no-print">
           <Button
             className="theme-toggle"

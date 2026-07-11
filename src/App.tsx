@@ -44,6 +44,7 @@ import {
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
+  includeTeacher: false,
   department: '',
   courseType: '',
   sectionType: '',
@@ -60,6 +61,37 @@ interface CurriculumSelection {
   curriculumId: string | null;
   term: string | null;
 }
+
+// 深色模式优化：让 Ant Design 控件、下拉层和表格与页面的炭黑层级保持一致。
+const DARK_ANTD_THEME_TOKENS = {
+  colorPrimary: '#8b9fe8',
+  colorInfo: '#8b9fe8',
+  colorSuccess: '#80c69d',
+  colorWarning: '#e9b85b',
+  colorError: '#ef7e86',
+  colorBgBase: '#15191f',
+  colorBgLayout: '#15191f',
+  colorBgContainer: '#191e25',
+  colorBgElevated: '#232a34',
+  colorFill: 'rgba(255, 255, 255, 0.10)',
+  colorFillSecondary: 'rgba(255, 255, 255, 0.07)',
+  colorFillTertiary: 'rgba(255, 255, 255, 0.05)',
+  colorFillQuaternary: 'rgba(255, 255, 255, 0.03)',
+  colorText: '#edf1f5',
+  colorTextSecondary: '#b7c0cc',
+  colorTextTertiary: '#828e9d',
+  colorTextQuaternary: '#687585',
+  colorTextPlaceholder: '#7b8796',
+  colorBorder: '#394451',
+  colorBorderSecondary: '#313a46',
+  colorSplit: '#313a46',
+  controlItemBgHover: 'rgba(255, 255, 255, 0.06)',
+  controlItemBgActive: '#2b354d',
+  controlItemBgActiveHover: '#34415c',
+  controlOutline: 'rgba(139, 159, 232, 0.34)',
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.34)',
+  boxShadowSecondary: '0 14px 38px rgba(0, 0, 0, 0.42)',
+} as const;
 
 function readInitialTheme(): Theme {
   if (!readOnboardingState().wizardCompleted) return 'light';
@@ -380,6 +412,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
 export default function App() {
   const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
+  const activeThemeTransitionRef = useRef<ReturnType<Document['startViewTransition']> | null>(null);
 
   // 把主题挂到 <html> 上，CSS 变量自动切换
   useEffect(() => {
@@ -388,7 +421,10 @@ export default function App() {
 
   const toggleTheme = () => {
     const next: Theme = themeMode === 'dark' ? 'light' : 'dark';
+    let committed = false;
     const commit = () => {
+      if (committed) return;
+      committed = true;
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch {
@@ -399,30 +435,44 @@ export default function App() {
         setThemeMode(next);
       });
     };
-    const beginThemeTransition = () => {
-      document.documentElement.classList.add('theme-transitioning');
-      let cleared = false;
-      return () => {
-        if (cleared) return;
-        cleared = true;
-        document.documentElement.classList.remove('theme-transitioning');
-      };
+    const root = document.documentElement;
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const commitWithoutViewTransition = () => {
+      root.classList.add('theme-transitioning');
+      commit();
+      // 先在禁用补间的状态下强制提交新样式，再同步解除冻结。
+      void root.offsetWidth;
+      root.classList.remove('theme-transitioning');
     };
 
-    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReducedMotion && typeof document.startViewTransition === 'function') {
-      const endThemeTransition = beginThemeTransition();
-      const transition = document.startViewTransition(commit);
-      transition.finished.finally(endThemeTransition);
+    // 主题过渡仅交给 View Transition API；不支持或减少动效时直接切换。
+    if (prefersReducedMotion || typeof document.startViewTransition !== 'function') {
+      activeThemeTransitionRef.current?.skipTransition();
+      activeThemeTransitionRef.current = null;
+      commitWithoutViewTransition();
       return;
     }
-    if (!prefersReducedMotion) {
-      const endThemeTransition = beginThemeTransition();
-      commit();
-      window.setTimeout(endThemeTransition, 340);
+
+    // 快速连续切换时结束旧快照，避免多组 root 过渡叠加。
+    activeThemeTransitionRef.current?.skipTransition();
+    activeThemeTransitionRef.current = null;
+    root.classList.add('theme-transitioning');
+
+    let transition: ReturnType<Document['startViewTransition']>;
+    try {
+      transition = document.startViewTransition(commit);
+    } catch {
+      commitWithoutViewTransition();
       return;
     }
-    commit();
+
+    activeThemeTransitionRef.current = transition;
+    const finish = () => {
+      if (activeThemeTransitionRef.current !== transition) return;
+      activeThemeTransitionRef.current = null;
+      root.classList.remove('theme-transitioning');
+    };
+    void transition.finished.then(finish, finish);
   };
 
   return (
@@ -432,7 +482,9 @@ export default function App() {
       theme={{
         algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#4f6bed',
+          ...(themeMode === 'dark'
+            ? DARK_ANTD_THEME_TOKENS
+            : { colorPrimary: '#4f6bed' }),
           borderRadius: 6,
         },
         components: {

@@ -88,6 +88,7 @@ export interface CourseGroup {
 /** 课程池筛选状态 */
 export interface FilterState {
   keyword: string;
+  includeTeacher: boolean;
   department: string; // 开课单位 name，空字符串表示不限
   courseType: string;
   sectionType: string;

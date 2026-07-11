@@ -465,6 +465,18 @@ html {
   min-width: 0;
 }
 
+.filter-bar__teacher-toggle {
+  justify-self: end;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.filter-bar__teacher-toggle .ant-checkbox + span {
+  padding-inline-end: 0;
+}
+
 /* ============================================================
  * CoursePool
  * ============================================================ */
@@ -1100,16 +1112,38 @@ html {
   height: 15px;
 }
 
+/* 主题过渡：旧快照保持静止，新快照在 0.3s 内覆盖淡入。
+ * 禁用浏览器默认 plus-lighter 混合，避免课表细线在中间帧发亮。 */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: theme-root-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes theme-root-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.01ms;
+    animation: none;
   }
 }
 
@@ -1157,6 +1191,9 @@ html {
   min-width: 760px;
   background: var(--panel-bg);
   color: var(--text);
+  --timetable-placeholder-stripe: color-mix(in srgb, var(--text-sub) 76%, var(--panel-bg));
+  --timetable-placeholder-bg: color-mix(in srgb, var(--text-sub) 22%, var(--panel-bg));
+  --timetable-placeholder-fg: var(--text-sub);
   --timetable-border: #232323;
   --timetable-grid: #b9b9b9;
 }
@@ -1511,6 +1548,7 @@ html {
 }
 
 .bottom-modal__header {
+  --bottom-modal-header-control-size: 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1522,6 +1560,9 @@ html {
   margin: 0;
   flex: 1;
   min-width: 0;
+  min-height: var(--bottom-modal-header-control-size);
+  display: flex;
+  align-items: center;
   font-size: 18px;
   line-height: 1.3;
   color: var(--text);
@@ -1530,13 +1571,14 @@ html {
 .bottom-modal__actions {
   display: flex;
   align-items: center;
+  min-height: var(--bottom-modal-header-control-size);
   gap: 8px;
   flex-shrink: 0;
 }
 
 .bottom-modal__close {
-  width: 36px;
-  height: 36px;
+  width: var(--bottom-modal-header-control-size);
+  height: var(--bottom-modal-header-control-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1548,6 +1590,7 @@ html {
 }
 
 .bottom-modal__close svg {
+  display: block;
   width: 20px;
   height: 20px;
 }
@@ -1704,6 +1747,23 @@ html {
   font-size: 12px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.course-table__term-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: max-content;
+  line-height: 1.2;
+}
+
+.course-table__term-name {
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
 }
 
 .course-table__specials {
@@ -1926,7 +1986,7 @@ html {
     grid-template-columns: auto minmax(130px, 1fr);
   }
 
-  .course-table__date-range,
+  .course-table__term-date,
   .course-table__header-current {
     grid-column: 1 / -1;
   }
@@ -2090,6 +2150,8 @@ html {
 }
 
 .timetable__courses {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -2098,7 +2160,8 @@ html {
   min-height: 0;
 }
 
-.timetable__cell--single .timetable__courses {
+.timetable__cell--single .timetable__courses,
+.timetable__cell--parallel .timetable__courses {
   position: absolute;
   inset: 4px 6px 4px 4px;
   width: auto;
@@ -2409,13 +2472,17 @@ html {
   }
 }
 
+html.theme-transitioning,
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
-  transition-property: none !important;
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
-  transition-timing-function: step-end !important;
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* 方案操作按钮的常态 transition 自带 !important，主题快照期间显式覆盖。 */
+html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
+  transition: none !important;
 }
 
 @media (max-width: 900px) {
@@ -2425,7 +2492,7 @@ html.theme-transitioning *::after {
 
   .week-slider-wrap,
   .week-select-wrap,
-  .course-table__date-range,
+  .course-table__term-date,
   .course-table__header-current,
   .course-table__actions {
     grid-column: 1 / -1;
@@ -2603,7 +2670,8 @@ html.theme-transitioning *::after {
   }
 
   .bottom-modal__header {
-    align-items: flex-start;
+    --bottom-modal-header-control-size: 34px;
+    align-items: center;
     gap: 8px;
     padding: 16px 14px 10px;
   }
@@ -2615,7 +2683,7 @@ html.theme-transitioning *::after {
   }
 
   .bottom-modal__actions {
-    padding-top: 1px;
+    padding-top: 0;
   }
 
   .bottom-modal__body {
@@ -2623,8 +2691,8 @@ html.theme-transitioning *::after {
   }
 
   .bottom-modal__close {
-    width: 34px;
-    height: 34px;
+    width: var(--bottom-modal-header-control-size);
+    height: var(--bottom-modal-header-control-size);
   }
 
   .course-detail-desktop,
@@ -2778,9 +2846,13 @@ html.theme-transitioning *::after {
     min-width: 0;
   }
 
-  .course-table__date-range {
+  .course-table__term-date {
     grid-area: date;
     justify-self: end;
+    align-items: flex-end;
+  }
+
+  .course-table__date-range {
     color: var(--text-sub);
     font-size: 12px;
     white-space: nowrap;
@@ -2963,13 +3035,13 @@ html.theme-transitioning *::after {
 }
 
 .timetable__cell--blocked.timetable__cell--conflict {
-  background: var(--conflict-bg);
+  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 96%, #fff));
 }
 
 .timetable-placeholder {
-  --block-stripe: color-mix(in srgb, var(--text-sub) 76%, var(--panel-bg));
-  --block-bg: color-mix(in srgb, var(--text-sub) 22%, var(--panel-bg));
-  --block-fg: var(--text-sub);
+  --block-stripe: var(--timetable-placeholder-stripe);
+  --block-bg: var(--timetable-placeholder-bg);
+  --block-fg: var(--timetable-placeholder-fg);
   min-height: 0;
   margin: 0;
   display: flex;
@@ -2985,9 +3057,16 @@ html.theme-transitioning *::after {
   cursor: default;
 }
 
+/* 亮/深色、桌面/移动端共用：用右侧留白抵消 4px 色条，让“有事”按整张卡片居中。 */
+.timetable-course.timetable-placeholder {
+  padding: 0 4px 0 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .timetable__cell--blocked .timetable__courses {
-  position: relative;
-  z-index: 0;
+  z-index: 1;
 }
 
 .course-table__customize-button .course-table__button-icon {
@@ -3349,6 +3428,608 @@ html.theme-transitioning *::after {
   }
 
   #root .course-table__customize-button.ant-btn {
+    width: 32px;
+    min-width: 32px;
+    padding-inline: 0;
+  }
+}
+
+/* ============================================================
+ * 深色模式优化
+ * 仅调整暗色表面层级、状态色和课表网格，不影响亮色模式与导出图片。
+ * ============================================================ */
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+  background-clip: padding-box;
+}
+
+/* 深色模式优化：用边框与极轻的高光分隔一级面板。 */
+:root[data-theme='dark'] .panel-inner {
+  border-color: var(--border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.025),
+    var(--shadow-sm);
+}
+
+:root[data-theme='dark'] .arrangement-card,
+:root[data-theme='dark'] .pool-item,
+:root[data-theme='dark'] .mobile-card,
+:root[data-theme='dark'] .selected-courses-card,
+:root[data-theme='dark'] .customization__section {
+  background: var(--dark-surface-raised);
+  border-color: var(--border);
+}
+
+:root[data-theme='dark'] .arrangement-card:hover,
+:root[data-theme='dark'] .pool-item:hover,
+:root[data-theme='dark'] .selected-courses-card:hover {
+  background: var(--dark-surface-hover);
+  border-color: var(--border-strong);
+}
+
+:root[data-theme='dark'] .arrangement-card--applied,
+:root[data-theme='dark'] .arrangement-card--applied:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 var(--arrangement-ring-space)
+    color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+:root[data-theme='dark'] .arrangement-card__conflict.ant-tag-orange {
+  background: color-mix(in srgb, var(--dark-warning) 9%, var(--dark-surface-recessed));
+  border-color: color-mix(in srgb, var(--dark-warning) 28%, var(--border));
+  color: var(--dark-warning);
+}
+
+:root[data-theme='dark'] .arrangement-card__conflict.ant-tag-green {
+  background: color-mix(in srgb, var(--success) 9%, var(--dark-surface-recessed));
+  border-color: color-mix(in srgb, var(--success) 26%, var(--border));
+  color: var(--success);
+}
+
+:root[data-theme='dark'] .pool-item--selected,
+:root[data-theme='dark'] .pool-item--selected:hover {
+  background: color-mix(in srgb, var(--accent) 8%, var(--dark-surface-raised));
+  border-color: color-mix(in srgb, var(--accent) 46%, var(--border));
+}
+
+:root[data-theme='dark'] .pool-item--conflict,
+:root[data-theme='dark'] .pool-item--conflict:hover {
+  background: color-mix(in srgb, var(--conflict) 7%, var(--dark-surface-raised));
+  border-color: color-mix(in srgb, var(--conflict) 34%, var(--border));
+}
+
+:root[data-theme='dark'] .pool-item__course-code {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+:root[data-theme='dark'] .pool-item__conflict-tag {
+  color: #1a0d10;
+  font-weight: 700;
+}
+
+:root[data-theme='dark'] .filter-bar__count {
+  background: var(--dark-surface-recessed);
+  border-color: var(--border);
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .stats-bar__item--button:hover,
+:root[data-theme='dark'] .bottom-modal__close:hover {
+  background: var(--dark-surface-hover);
+}
+
+:root[data-theme='dark'] :focus-visible,
+:root[data-theme='dark'] #root .ant-btn:focus-visible {
+  outline-color: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+
+/* 深色模式优化：课表使用中亮外框、低亮网格和独立表头层。 */
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) {
+  --timetable-border: #3e4855;
+  --timetable-grid: #2c3540;
+  --timetable-head-bg: #252c36;
+  --timetable-cell-bg: #1b2129;
+  --timetable-placeholder-stripe: #7b8796;
+  --timetable-placeholder-bg: #303946;
+  --timetable-placeholder-fg: #d8dee6;
+  background: var(--timetable-cell-bg);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable {
+  background: var(--timetable-cell-bg);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-head--weekend,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-date,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__period-time {
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--conflict,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--conflict:hover,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__cell--has.timetable__cell--conflict:hover {
+  background: color-mix(in srgb, var(--conflict) 6%, var(--timetable-cell-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--conflict) 18%, transparent);
+}
+
+/* 亮/深色模式共用：清除旧的冲突 hover 混色，改由下方独立底层统一绘制。 */
+.timetable-shell .timetable__cell--conflict,
+.timetable-shell .timetable__cell--conflict:hover,
+.timetable-shell .timetable__cell--has.timetable__cell--conflict:hover {
+  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 96%, #fff));
+  box-shadow: none;
+  filter: none;
+}
+
+/* 亮/深色模式共用：冲突色仅铺在单元格最底层，不参与课程卡片与色条的混色。 */
+.timetable-shell .timetable__cell--conflict {
+  isolation: isolate;
+}
+
+.timetable-shell .timetable__cell--conflict::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--conflict-bg);
+  pointer-events: none;
+}
+
+/* 亮/深色模式共用布局：主题切换时课程卡片的位置和尺寸保持一致。 */
+.timetable__courses {
+  gap: 6px;
+}
+
+.timetable-course {
+  padding: 5px 7px 5px 9px;
+  border-radius: 0 6px 6px 0;
+}
+
+.timetable-course__number {
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.timetable-course__title {
+  margin: 2px 0 3px;
+  line-height: 1.3;
+}
+
+.timetable-course__teacher,
+.timetable-course__time,
+.timetable-course__room {
+  line-height: 1.32;
+}
+
+.timetable__cell--conflict .timetable-course:first-child {
+  padding-right: 27px;
+}
+
+/* 亮/深色模式共用布局：桌面端用时间网格展示冲突课程的真实节次跨度。 */
+.timetable__cell--parallel .timetable__courses {
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: repeat(var(--parallel-columns), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--parallel-rows), minmax(0, 1fr));
+  column-gap: var(--parallel-column-gap, 6px);
+  /* 亮/深色模式共用：间隔参与网格计算，短课程保持与普通卡片相同的真实高度。 */
+  row-gap: 9.5px;
+}
+
+.timetable__cell--parallel .timetable-course {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  box-sizing: border-box;
+}
+
+/* 桌面端高密度冲突：保留统一 4px 色条，按列数压缩间距与内边距，并以裁切作越界安全网。 */
+@media (min-width: 901px) {
+  .timetable__cell--parallel > .timetable__courses--desktop {
+    overflow: clip;
+  }
+
+  .timetable__cell--parallel > .timetable__courses--desktop > .timetable-course:not(.timetable-placeholder) {
+    max-width: 100%;
+    padding-inline-start: var(--parallel-card-padding-start, 9px);
+    padding-inline-end: var(--parallel-card-padding-end, 7px);
+  }
+}
+
+/* 亮/深色及桌面/移动端共用：单课程卡片在单元格内保持四边等距。 */
+.timetable__cell--single .timetable__courses {
+  inset: 0;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.timetable__cell--single .timetable-course {
+  position: static;
+  inset: auto;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.timetable__cell--conflict.timetable__cell--parallel .timetable-course:first-child {
+  padding-right: var(--parallel-card-padding-end, 7px);
+}
+
+.timetable__cell--conflict.timetable__cell--parallel .timetable-course:last-child {
+  padding-right: var(--parallel-card-padding-end, 7px);
+}
+
+.timetable__cell--parallel .timetable-course--warning-space .timetable-course__number {
+  padding-right: 20px;
+}
+
+.timetable__mobile-containment,
+.timetable__mobile-containment-sizer {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* 手机端优化：无包含关系时维持原版纵向卡片排列。 */
+  .timetable__cell {
+    padding: 3px;
+  }
+
+  .timetable__cell--parallel .timetable__courses {
+    display: flex;
+    flex-direction: column;
+    position: static;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    box-sizing: border-box;
+    gap: 6px;
+  }
+
+  .timetable__cell--parallel .timetable-course {
+    position: relative;
+    z-index: 20;
+    flex: 0 0 auto;
+    grid-row: auto !important;
+    grid-column: auto !important;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border-left: 4px solid var(--block-stripe);
+  }
+
+  /* 手机端包含关系：时间层容器同时控制背景、色条和卡片，避免两套坐标错位。 */
+  .timetable__cell--containment > .timetable__courses--desktop {
+    display: none;
+  }
+
+  .timetable__mobile-containment {
+    display: block;
+    position: absolute;
+    inset: 3px 4px 3px 3px;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .timetable__mobile-containment-sizer {
+    display: block;
+    width: 0;
+    height: var(--mobile-containment-min-height);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .timetable__mobile-range {
+    position: absolute;
+    top: var(--mobile-range-top);
+    right: var(--mobile-range-right);
+    left: var(--mobile-range-left);
+    height: max(4px, var(--mobile-range-height));
+    box-sizing: border-box;
+    overflow: visible;
+    pointer-events: auto;
+  }
+
+  .timetable__mobile-range-background {
+    position: absolute;
+    inset: 0;
+    z-index: var(--mobile-range-depth);
+    box-sizing: border-box;
+    overflow: hidden;
+    border-left: 4px solid var(--mobile-range-stripe);
+    border-radius: 0 6px 6px 0;
+    background: var(--mobile-range-bg);
+    pointer-events: none;
+  }
+
+  .timetable__mobile-range-content {
+    position: absolute;
+    top: var(--mobile-range-content-top);
+    right: 0;
+    left: 0;
+    z-index: calc(20 + var(--mobile-range-depth));
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: var(--mobile-range-content-height);
+    gap: 6px;
+    padding-block: 0 6px;
+    box-sizing: border-box;
+  }
+
+  .timetable__mobile-range .timetable-course {
+    position: relative;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 112px;
+    height: auto;
+    margin: 0;
+    border-left: 4px solid var(--block-stripe);
+    border-radius: 0 6px 6px 0;
+    background: var(--block-bg);
+    box-sizing: border-box;
+  }
+
+  /* 手机端包围层较窄时，周次与节次分行完整显示，避免卡片内部横向滚动。 */
+  .timetable__mobile-range .timetable-course__time {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .timetable__mobile-range .timetable-course__time > span {
+    display: block;
+    max-width: 100%;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  /* 同一时间段的课程保持同级，各自显示原本的卡片颜色和 4px 色条。 */
+  .timetable__mobile-range--siblings {
+    overflow: visible;
+  }
+
+  .timetable__mobile-range--siblings .timetable__mobile-range-background {
+    display: none;
+  }
+
+  .timetable__cell--conflict.timetable__cell--parallel .timetable-course:first-child {
+    padding-right: 27px;
+  }
+
+  .timetable__cell--containment.timetable__cell--conflict .timetable-course:first-child {
+    padding-right: 7px;
+  }
+
+  .timetable__cell--containment .timetable-course--warning-space {
+    padding-right: 27px;
+  }
+
+  .timetable__cell--parallel .timetable-course--warning-space .timetable-course__number {
+    padding-right: 0;
+  }
+
+  .timetable__cell--parallel .timetable__warning-icon {
+    z-index: 40;
+  }
+
+}
+
+.timetable__cell--conflict .timetable__warning-icon {
+  top: 5px;
+  right: 5px;
+  padding: 2px;
+  box-sizing: content-box;
+  border-radius: 999px;
+  background: var(--timetable-cell-bg, var(--panel-bg));
+  z-index: 50;
+  display: block;
+  pointer-events: none;
+}
+
+/* 最终层叠保护：冲突卡片的首尾留白不能再次推偏“有事”文字。 */
+.timetable-shell .timetable__cell .timetable-course.timetable-placeholder {
+  padding: 0 4px 0 0;
+}
+
+/* 普通占位使用与单课程完全相同的四边 4px 安全区，避免断点规则造成偏移。 */
+.timetable__cell--blocked.timetable__cell--single > .timetable__courses {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.timetable__cell--blocked.timetable__cell--single .timetable-placeholder {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 深色模式优化：同一时段叠放课程时弱化大面积色块。 */
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course {
+  background: color-mix(in srgb, var(--block-bg) 78%, var(--timetable-cell-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--block-stripe) 14%, transparent);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__number {
+  color: color-mix(in srgb, var(--block-fg) 84%, var(--text-sub));
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__teacher,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__time,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__room {
+  color: color-mix(in srgb, var(--block-fg) 72%, var(--text-sub));
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-placeholder {
+  --block-stripe: var(--timetable-placeholder-stripe);
+  --block-bg: var(--timetable-placeholder-bg);
+  --block-fg: var(--timetable-placeholder-fg);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__warning-icon,
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable-course__special,
+:root[data-theme='dark'] .stats-bar__warning-icon,
+:root[data-theme='dark'] .selected-courses-deferred__warning-icon {
+  color: var(--dark-warning);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-badge {
+  background: var(--dark-warning-soft);
+  color: var(--dark-warning);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dark-warning) 32%, transparent);
+}
+
+:root[data-theme='dark'] .timetable-shell:not(.timetable-shell--export) .timetable__day-badge--makeup {
+  background: var(--success-soft);
+  color: var(--success);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+/* 深色模式优化：弹窗、警告和自定义控件避免沿用亮色填充。 */
+:root[data-theme='dark'] .bottom-modal {
+  background: rgba(3, 5, 8, 0.72);
+}
+
+:root[data-theme='dark'] .bottom-modal__panel {
+  background: var(--panel-bg);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+:root[data-theme='dark'] .bottom-modal__body {
+  --detail-grid-border: color-mix(in srgb, var(--text) 12%, transparent);
+  --detail-label-bg: rgba(255, 255, 255, 0.045);
+}
+
+:root[data-theme='dark'] .selected-courses-deferred {
+  background: var(--dark-warning-soft);
+  border-color: color-mix(in srgb, var(--dark-warning) 54%, var(--border));
+  color: var(--text-sub);
+}
+
+:root[data-theme='dark'] .customization__section {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme='dark'] .apple-toggle {
+  background: #3b4552;
+  border-color: #505d6c;
+}
+
+:root[data-theme='dark'] .apple-toggle--checked {
+  background: #42c779;
+  border-color: #42c779;
+}
+
+:root[data-theme='dark'] .apple-toggle__thumb,
+:root[data-theme='dark'] .apple-toggle--checked .apple-toggle__thumb {
+  background: #f7f9fb;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--selected,
+:root[data-theme='dark'] .availability-grid__cell--selected:hover {
+  background: #36414f;
+  box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:hover,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:focus-visible,
+:root[data-theme='dark'] #root .course-table__export-button.ant-btn:active {
+  color: var(--bg) !important;
+  font-weight: 600;
+}
+
+/* 亮/深色模式共用：顶部控件按课表容器宽度重排，避免侧栏挤压时互相遮挡。 */
+.course-table-wrap {
+  container-name: timetable-panel;
+  container-type: inline-size;
+}
+
+.course-table__header {
+  grid-template-columns: auto minmax(120px, 1fr) minmax(136px, 190px) max-content max-content;
+  grid-template-areas: 'label slider select date actions';
+  align-items: center;
+}
+
+.course-table__header-label {
+  grid-area: label;
+}
+
+.week-slider-wrap {
+  grid-area: slider;
+}
+
+.week-select-wrap {
+  grid-area: select;
+  width: 100%;
+}
+
+.week-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.course-table__term-date {
+  grid-area: date;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.course-table__actions {
+  grid-area: actions;
+}
+
+@container timetable-panel (max-width: 880px) {
+  .course-table__header {
+    grid-template-columns: minmax(136px, 190px) minmax(0, 1fr) max-content;
+    grid-template-areas:
+      'label slider slider'
+      'select date actions';
+  }
+
+  .course-table__term-date {
+    justify-self: end;
+    align-items: flex-end;
+  }
+}
+
+@container timetable-panel (max-width: 650px) {
+  .course-table__header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'label date'
+      'slider slider'
+      'select actions';
+  }
+}
+
+@container timetable-panel (max-width: 480px) {
+  .course-table__customize-label,
+  .course-table__export-label {
+    display: none;
+  }
+
+  #root .course-table__actions > .ant-btn {
     width: 32px;
     min-width: 32px;
     padding-inline: 0;
