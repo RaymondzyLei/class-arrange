@@ -3539,6 +3539,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 .timetable__cell--parallel .timetable__courses {
   display: grid;
   align-items: stretch;
+  grid-template-columns: repeat(var(--parallel-columns), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--parallel-rows), minmax(0, 1fr));
   column-gap: 6px;
   row-gap: 0;
 }
@@ -3564,12 +3566,29 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   padding-right: 7px;
 }
 
-.timetable__cell--parallel .timetable-course:last-child .timetable-course__number {
+.timetable__cell--parallel .timetable-course--warning-space .timetable-course__number {
   padding-right: 20px;
 }
 
+.timetable__mobile-containment,
+.timetable__mobile-containment-sizer {
+  display: none;
+}
+
 @media (max-width: 900px) {
-  /* 手机端优化：冲突课程纵向排列并由完整文字自然撑高。 */
+  /* 手机端优化：无包含关系时维持原版纵向卡片排列。 */
+  .timetable__cell {
+    padding: 3px;
+  }
+
+  .timetable__cell--single .timetable__courses {
+    inset: 3px;
+  }
+
+  .timetable__cell--single .timetable-course {
+    inset: 0;
+  }
+
   .timetable__cell--parallel .timetable__courses {
     display: flex;
     flex-direction: column;
@@ -3578,44 +3597,121 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
     width: 100%;
     height: auto;
     min-height: 0;
+    box-sizing: border-box;
     gap: 6px;
   }
 
   .timetable__cell--parallel .timetable-course {
+    position: relative;
+    z-index: 20;
     flex: 0 0 auto;
+    grid-row: auto !important;
+    grid-column: auto !important;
     width: 100%;
     height: auto;
+    margin: 0;
+    border-left: 4px solid var(--block-stripe);
+  }
+
+  /* 手机端包含关系：时间层容器同时控制背景、色条和卡片，避免两套坐标错位。 */
+  .timetable__cell--containment > .timetable__courses--desktop {
+    display: none;
+  }
+
+  .timetable__mobile-containment {
+    display: block;
+    position: absolute;
+    inset: 3px 4px 3px 3px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .timetable__mobile-containment-sizer {
+    display: block;
+    width: 0;
+    height: var(--mobile-containment-min-height);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .timetable__mobile-range {
+    position: absolute;
+    top: var(--mobile-range-top);
+    right: var(--mobile-range-right);
+    left: var(--mobile-range-left);
+    height: max(4px, var(--mobile-range-height));
+    box-sizing: border-box;
+    overflow: visible;
+    pointer-events: auto;
+  }
+
+  .timetable__mobile-range-background {
+    position: absolute;
+    inset: 0;
+    z-index: var(--mobile-range-depth);
+    box-sizing: border-box;
+    overflow: hidden;
+    border-left: 4px solid var(--mobile-range-stripe);
+    border-radius: 0 6px 6px 0;
+    background: var(--mobile-range-bg);
+    pointer-events: none;
+  }
+
+  .timetable__mobile-range-content {
+    position: absolute;
+    top: var(--mobile-range-content-top);
+    right: 0;
+    left: 0;
+    z-index: calc(20 + var(--mobile-range-depth));
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: var(--mobile-range-content-height);
+    gap: 6px;
+  }
+
+  .timetable__mobile-range .timetable-course {
+    position: relative;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 96px;
+    height: auto;
+    margin: 0;
+    border-left: 4px solid var(--block-stripe);
+    border-radius: 0 6px 6px 0;
+    background: var(--block-bg);
+    box-sizing: border-box;
+  }
+
+  /* 同一时间段的课程保持同级，各自显示原本的卡片颜色和 4px 色条。 */
+  .timetable__mobile-range--siblings {
+    overflow: visible;
+  }
+
+  .timetable__mobile-range--siblings .timetable__mobile-range-background {
+    display: none;
   }
 
   .timetable__cell--conflict.timetable__cell--parallel .timetable-course:first-child {
     padding-right: 27px;
   }
 
-  .timetable__cell--parallel .timetable-course:last-child .timetable-course__number {
+  .timetable__cell--containment.timetable__cell--conflict .timetable-course:first-child {
+    padding-right: 7px;
+  }
+
+  .timetable__cell--containment .timetable-course--warning-space {
+    padding-right: 27px;
+  }
+
+  .timetable__cell--parallel .timetable-course--warning-space .timetable-course__number {
     padding-right: 0;
   }
 
-  .timetable__cell--parallel .timetable-course__number,
-  .timetable__cell--parallel .timetable-course__title,
-  .timetable__cell--parallel .timetable-course__teacher,
-  .timetable__cell--parallel .timetable-course__time,
-  .timetable__cell--parallel .timetable-course__room,
-  .timetable__cell--parallel .timetable-course__special {
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    overflow-wrap: anywhere;
+  .timetable__cell--parallel .timetable__warning-icon {
+    z-index: 40;
   }
 
-  .timetable__cell--parallel .timetable-course__title {
-    display: block;
-    -webkit-line-clamp: unset;
-    line-clamp: unset;
-  }
-
-  .timetable__cell--parallel .timetable-course__time {
-    flex-wrap: wrap;
-  }
 }
 
 .timetable__cell--conflict .timetable__warning-icon {

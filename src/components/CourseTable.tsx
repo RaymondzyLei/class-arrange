@@ -6,6 +6,12 @@ import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
 import {
+  assignTimetableLanes,
+  getMobileContainmentGroups,
+  getMobileContainmentMetrics,
+  getMobileContainmentLayers,
+} from '@/utils/timetableLayout';
+import {
   formatDateRange,
   formatShortDate,
   getCalendarDatesForSelection,
@@ -262,7 +268,7 @@ function getRowSpanEntries(
   }
 
   const entries = [...cluster.values()].sort(
-    (a, b) => a.start - b.start || a.end - b.end || a.id.localeCompare(b.id),
+    (a, b) => a.start - b.start || b.end - a.end || a.id.localeCompare(b.id),
   );
   return { entries, span: clusterEnd - period + 1 };
 }
@@ -293,6 +299,17 @@ function TimetableCell({
   const hasEntries = entries.length > 0;
   const isConflict = entries.some((entry) => entry.conflict);
   const isParallel = Boolean(rowSpan && startPeriod && entries.length > 1);
+  const laneLayout = isParallel ? assignTimetableLanes(entries) : null;
+  const mobileLayers = laneLayout && rowSpan && startPeriod
+    ? getMobileContainmentLayers(entries, startPeriod, rowSpan)
+    : [];
+  const hasMobileContainment = mobileLayers.some((layer) => layer.depth > 0 || layer.lane > 0);
+  const mobileGroups = hasMobileContainment && rowSpan && startPeriod
+    ? getMobileContainmentGroups(entries, startPeriod, rowSpan)
+    : [];
+  const mobileContainmentMetrics = rowSpan
+    ? getMobileContainmentMetrics(mobileGroups, rowSpan)
+    : { minHeight: 0, metrics: [] };
   const className = [
     'timetable__cell',
     day === 1 ? 'timetable__cell--first-day' : '',
@@ -302,17 +319,71 @@ function TimetableCell({
     hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
     isParallel ? 'timetable__cell--parallel' : '',
+    hasMobileContainment ? 'timetable__cell--containment' : '',
   ].filter(Boolean).join(' ');
+
+  const renderCourseButton = (
+    entry: TimetableEntry,
+    mobileGroup?: (typeof mobileGroups)[number],
+  ) => {
+    const lane = laneLayout?.laneById.get(entry.id);
+    const reservesWarningSpace = mobileGroup
+      ? mobileGroup.depth === Math.max(...mobileGroups.map((group) => group.depth))
+        && mobileGroup.start === startPeriod
+        && mobileGroup.entryIds[0] === entry.id
+      : Boolean(
+        isConflict
+        && laneLayout
+        && lane === laneLayout.laneCount - 1
+        && entry.start === startPeriod,
+      );
+    return (
+      <button
+        key={entry.id}
+        type="button"
+        className={[
+          'timetable-course',
+          entry.conflict ? 'timetable-course--conflict' : '',
+          reservesWarningSpace ? 'timetable-course--warning-space' : '',
+        ].filter(Boolean).join(' ')}
+        style={{
+          ...entryStyle(entry),
+          ...(!mobileGroup && lane !== undefined && startPeriod ? {
+            gridColumn: lane + 1,
+            gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
+          } : {}),
+        }}
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenDetail?.(entry.groupKey);
+        }}
+      >
+        <span className="timetable-course__number">
+          {entry.sectionLabel} [{entry.credits}]
+        </span>
+        <span className="timetable-course__title">{entry.courseName}</span>
+        <span className="timetable-course__teacher">{entry.teachers}</span>
+        <span className="timetable-course__time">
+          <span>{entry.weeksText}</span>
+          <span>{entry.periodsText}</span>
+        </span>
+        {entry.specialLabels.length ? (
+          <span className="timetable-course__special">{entry.specialLabels.join('、')}</span>
+        ) : null}
+        {entry.room ? <span className="timetable-course__room">{entry.room}</span> : null}
+      </button>
+    );
+  };
 
   return (
     <td className={className} rowSpan={rowSpan}>
       {isConflict ? <WarningIcon className="timetable__warning-icon" /> : null}
       <div
-        className="timetable__courses"
-        style={isParallel ? {
-          gridTemplateColumns: `repeat(${entries.length}, minmax(0, 1fr))`,
-          gridTemplateRows: `repeat(${rowSpan}, minmax(0, 1fr))`,
-        } : undefined}
+        className="timetable__courses timetable__courses--desktop"
+        style={laneLayout ? {
+          '--parallel-columns': laneLayout.laneCount,
+          '--parallel-rows': rowSpan,
+        } as CSSProperties : undefined}
       >
         {blocked ? (
           <div
@@ -322,39 +393,48 @@ function TimetableCell({
             <span>有事</span>
           </div>
         ) : null}
-        {entries.map((entry, index) => (
-          <button
-            key={entry.id}
-            type="button"
-            className={`timetable-course${entry.conflict ? ' timetable-course--conflict' : ''}`}
-            style={{
-              ...entryStyle(entry),
-              ...(isParallel && startPeriod ? {
-                gridColumn: index + 1,
-                gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
-              } : {}),
-            }}
-            onClick={(event) => {
-              event.stopPropagation();
-              onOpenDetail?.(entry.groupKey);
-            }}
-          >
-            <span className="timetable-course__number">
-              {entry.sectionLabel} [{entry.credits}]
-            </span>
-            <span className="timetable-course__title">{entry.courseName}</span>
-            <span className="timetable-course__teacher">{entry.teachers}</span>
-            <span className="timetable-course__time">
-              <span>{entry.weeksText}</span>
-              <span>{entry.periodsText}</span>
-            </span>
-            {entry.specialLabels.length ? (
-              <span className="timetable-course__special">{entry.specialLabels.join('、')}</span>
-            ) : null}
-            {entry.room ? <span className="timetable-course__room">{entry.room}</span> : null}
-          </button>
-        ))}
+        {entries.map((entry) => renderCourseButton(entry))}
       </div>
+      {hasMobileContainment ? (
+        <>
+          <span
+            className="timetable__mobile-containment-sizer"
+            aria-hidden="true"
+            style={{ '--mobile-containment-min-height': `${mobileContainmentMetrics.minHeight}px` } as CSSProperties}
+          />
+          <div className="timetable__mobile-containment">
+            {mobileGroups.map((group) => {
+              const groupEntries = group.entryIds
+                .map((id) => entries.find((entry) => entry.id === id))
+                .filter((entry): entry is TimetableEntry => Boolean(entry));
+              const color = groupEntries[0]?.color;
+              const metric = mobileContainmentMetrics.metrics.find((candidate) => candidate.key === group.key);
+              return (
+                <div
+                  key={group.key}
+                  className={`timetable__mobile-range${group.rangeCount > 1 ? ' timetable__mobile-range--siblings' : ''}`}
+                  style={{
+                    '--mobile-range-top': `${group.topPercent}%`,
+                    '--mobile-range-height': `${group.heightPercent}%`,
+                    '--mobile-range-left': `${group.leftInset}px`,
+                    '--mobile-range-right': `${group.rightInset}px`,
+                    '--mobile-range-content-top': `${metric?.contentOffset ?? 0}px`,
+                    '--mobile-range-content-height': `${metric?.contentHeight ?? 96}px`,
+                    '--mobile-range-stripe': color?.stripe,
+                    '--mobile-range-bg': color?.bg,
+                    '--mobile-range-depth': group.depth + 1,
+                  } as CSSProperties}
+                >
+                  <span className="timetable__mobile-range-background" aria-hidden="true" />
+                  <div className="timetable__mobile-range-content">
+                    {groupEntries.map((entry) => renderCourseButton(entry, group))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : null}
     </td>
   );
 }
