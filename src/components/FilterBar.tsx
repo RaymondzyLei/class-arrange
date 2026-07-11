@@ -27,13 +27,6 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
         />
-        <Checkbox
-          className="filter-bar__teacher-toggle"
-          checked={filter.includeTeacher}
-          onChange={(event) => update({ includeTeacher: event.target.checked })}
-        >
-          查询任课老师
-        </Checkbox>
         <span className="filter-bar__count">共 {resultCount} 门</span>
       </div>
       <div className="filter-bar__controls">
@@ -82,6 +75,13 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           allowClear
           options={LANGUAGE_OPTIONS.map((v) => ({ label: v, value: v }))}
         />
+        <Checkbox
+          className="filter-bar__teacher-toggle"
+          checked={filter.includeTeacher}
+          onChange={(event) => update({ includeTeacher: event.target.checked })}
+        >
+          查询任课老师
+        </Checkbox>
       </div>
     </div>
   );

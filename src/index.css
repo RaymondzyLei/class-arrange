@@ -429,12 +429,8 @@ html {
 .filter-bar__search {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "input count"
-    "teacher count";
-  align-items: start;
-  column-gap: 8px;
-  row-gap: 4px;
+  align-items: center;
+  gap: 8px;
 }
 
 .filter-bar__search:focus-within {
@@ -443,24 +439,10 @@ html {
 }
 
 .filter-bar__search .ant-input-affix-wrapper {
-  grid-area: input;
   min-width: 0;
 }
 
-.filter-bar__teacher-toggle {
-  grid-area: teacher;
-  justify-self: end;
-  color: var(--text-sub);
-  font-size: 12px;
-  line-height: 18px;
-}
-
-.filter-bar__teacher-toggle .ant-checkbox + span {
-  padding-inline-end: 0;
-}
-
 .filter-bar__count {
-  grid-area: count;
   color: var(--text-sub);
   font-size: 12px;
   line-height: 22px;
@@ -481,6 +463,18 @@ html {
 .filter-bar__select {
   width: 100%;
   min-width: 0;
+}
+
+.filter-bar__teacher-toggle {
+  justify-self: end;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.filter-bar__teacher-toggle .ant-checkbox + span {
+  padding-inline-end: 0;
 }
 
 /* ============================================================
@@ -3600,11 +3594,17 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .timetable__cell--single .timetable__courses {
-    inset: 3px;
+    inset: 0;
+    padding: 4px;
+    box-sizing: border-box;
   }
 
   .timetable__cell--single .timetable-course {
-    inset: 0;
+    position: static;
+    inset: auto;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
   }
 
   .timetable__cell--parallel .timetable__courses {
