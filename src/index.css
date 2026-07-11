@@ -429,8 +429,12 @@ html {
 .filter-bar__search {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
+  grid-template-areas:
+    "input count"
+    "teacher count";
+  align-items: start;
+  column-gap: 8px;
+  row-gap: 4px;
 }
 
 .filter-bar__search:focus-within {
@@ -439,10 +443,24 @@ html {
 }
 
 .filter-bar__search .ant-input-affix-wrapper {
+  grid-area: input;
   min-width: 0;
 }
 
+.filter-bar__teacher-toggle {
+  grid-area: teacher;
+  justify-self: end;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.filter-bar__teacher-toggle .ant-checkbox + span {
+  padding-inline-end: 0;
+}
+
 .filter-bar__count {
+  grid-area: count;
   color: var(--text-sub);
   font-size: 12px;
   line-height: 22px;

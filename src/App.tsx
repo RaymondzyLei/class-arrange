@@ -44,6 +44,7 @@ import {
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
+  includeTeacher: false,
   department: '',
   courseType: '',
   sectionType: '',

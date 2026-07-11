@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { courses } from '@/data';
 import type { CourseGroup, CourseSection, FilterState } from '@/types';
 import { buildCourseGroups, getAllCourseGroups } from '@/utils/courseGroup';
+import { courseMatchesKeyword } from '@/utils/courseSearch';
 
 function isEmptyFilter(f: FilterState): boolean {
   return (
@@ -22,10 +23,7 @@ export function useFilteredCourses(filter: FilterState): CourseGroup[] {
     const filtered: CourseSection[] = [];
     for (const c of courses) {
       if (kw) {
-        const cn = c.courseName.toLowerCase();
-        const cid = c.id.toLowerCase();
-        const ct = c.teacher.toLowerCase();
-        if (!cn.includes(kw) && !cid.includes(kw) && !ct.includes(kw)) continue;
+        if (!courseMatchesKeyword(c, kw, filter.includeTeacher)) continue;
       }
       if (filter.department && c.department.name !== filter.department) continue;
       if (filter.courseType && c.courseType !== filter.courseType) continue;

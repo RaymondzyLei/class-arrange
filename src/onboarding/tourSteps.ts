@@ -43,7 +43,7 @@ export const tourSteps: TourStep[] = [
     id: 'course-search-area',
     target: '[data-tour="course-search-area"]',
     title: '搜索与筛选课程',
-    description: '这里可以搜索课程名、课堂号或教师，也可以用下方筛选框缩小范围。匹配课程会在下方列表中展示。',
+    description: '这里默认搜索课程名和课堂号；需要按教师姓名搜索时，请勾选“查询任课老师”。也可以用下方筛选框缩小范围。',
     tip: '点击搜索结果中的课程卡片可以查看课程详情。',
     placement: 'bottom',
   },
