@@ -19,7 +19,7 @@ describe('mobile timetable conflict containment', () => {
     const entries = [entry('long', 6, 9), entry('short', 6, 7)];
     expect(getMobileContainmentLayers(entries, 6, 4)).toEqual([
       { id: 'long', depth: 0, lane: 0, rangeCount: 1, topPercent: 0, heightPercent: 100, leftInset: 0, rightInset: 0 },
-      { id: 'short', depth: 1, lane: 1, rangeCount: 1, topPercent: 0, heightPercent: 50, leftInset: 8, rightInset: 4 },
+      { id: 'short', depth: 1, lane: 1, rangeCount: 1, topPercent: 0, heightPercent: 50, leftInset: 8, rightInset: 8 },
     ]);
   });
 
@@ -34,7 +34,7 @@ describe('mobile timetable conflict containment', () => {
     const entries = [entry('long-a', 6, 9), entry('long-b', 6, 9), entry('short', 6, 7)];
     const layers = getMobileContainmentLayers(entries, 6, 4);
     expect(layers.map(({ heightPercent }) => heightPercent)).toEqual([100, 100, 50]);
-    expect(layers.map(({ rightInset }) => rightInset)).toEqual([0, 0, 4]);
+    expect(layers.map(({ rightInset }) => rightInset)).toEqual([0, 0, 8]);
   });
 
   it('keeps identical time ranges in one visual level', () => {

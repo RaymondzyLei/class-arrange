@@ -69,7 +69,7 @@ export function getMobileContainmentLayers(
       topPercent: ((entry.start - clusterStart) / clusterSpan) * 100,
       heightPercent: (entry.span / clusterSpan) * 100,
       leftInset: lane * 8,
-      rightInset: lane * 4,
+      rightInset: lane * 8,
     };
   });
 }
