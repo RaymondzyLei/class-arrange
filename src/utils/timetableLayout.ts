@@ -5,6 +5,28 @@ export interface TimetableRangeEntry {
   span: number;
 }
 
+export interface ParallelLaneSizing {
+  columnGap: number;
+  paddingInlineStart: number;
+  paddingInlineEnd: number;
+}
+
+export function getParallelLaneSizing(laneCount: number): ParallelLaneSizing {
+  if (laneCount >= 8) {
+    return { columnGap: 1, paddingInlineStart: 1, paddingInlineEnd: 0 };
+  }
+  if (laneCount >= 6) {
+    return { columnGap: 2, paddingInlineStart: 3, paddingInlineEnd: 1 };
+  }
+  if (laneCount === 5) {
+    return { columnGap: 3, paddingInlineStart: 5, paddingInlineEnd: 3 };
+  }
+  if (laneCount === 4) {
+    return { columnGap: 4, paddingInlineStart: 7, paddingInlineEnd: 5 };
+  }
+  return { columnGap: 6, paddingInlineStart: 9, paddingInlineEnd: 7 };
+}
+
 export function assignTimetableLanes(entries: TimetableRangeEntry[]) {
   const sorted = [...entries].sort(
     (a, b) => a.start - b.start || b.end - a.end || a.id.localeCompare(b.id),
@@ -68,8 +90,8 @@ export function getMobileContainmentLayers(
       rangeCount: rangeCounts.get(rangeKey) ?? 1,
       topPercent: ((entry.start - clusterStart) / clusterSpan) * 100,
       heightPercent: (entry.span / clusterSpan) * 100,
-      leftInset: lane * 8,
-      rightInset: lane * 8,
+      leftInset: lane * 6,
+      rightInset: lane * 6,
     };
   });
 }
@@ -127,13 +149,15 @@ export function getMobileContainmentGroups(
 export function getMobileContainmentMetrics(
   groups: ReturnType<typeof getMobileContainmentGroups>,
   clusterSpan: number,
-  cardMinHeight = 96,
+  cardMinHeight = 112,
   cardGap = 6,
+  groupBlockGap = 6,
 ) {
   const groupHeights = new Map(groups.map((group) => [
     group.key,
     group.rangeCount * cardMinHeight
-      + Math.max(0, group.rangeCount - 1) * cardGap,
+      + Math.max(0, group.rangeCount - 1) * cardGap
+      + groupBlockGap,
   ]));
   const metrics = groups.map((group) => {
     const contentOffset = groups.reduce((offset, candidate) => (

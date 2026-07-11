@@ -10,6 +10,8 @@ import {
   getMobileContainmentGroups,
   getMobileContainmentMetrics,
   getMobileContainmentLayers,
+  getParallelLaneSizing,
+  type TimetableRangeEntry,
 } from '@/utils/timetableLayout';
 import {
   formatDateRange,
@@ -151,6 +153,17 @@ function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): Ti
   }));
 }
 
+interface BlockedTimetableEntry extends TimetableRangeEntry {
+  color: CourseColor;
+}
+
+const BLOCKED_COLOR: CourseColor = {
+  name: 'blocked',
+  stripe: 'var(--timetable-placeholder-stripe)',
+  bg: 'var(--timetable-placeholder-bg)',
+  fg: 'var(--timetable-placeholder-fg)',
+};
+
 function buildEntries(
   groups: CourseGroup[],
   weekSelection: WeekSelection,
@@ -248,18 +261,19 @@ function getRowSpanEntries(
   starting: TimetableEntry[],
   covers: Map<string, TimetableEntry[]>,
   blockedSlots: Set<string>,
-): { entries: TimetableEntry[]; span: number } | null {
+): { entries: TimetableEntry[]; span: number; blockedPeriods: number[] } | null {
   if (covering.length === 0 || starting.length === 0) return null;
   if (covering.some((entry) => entry.start < period)) return null;
 
   const day = starting[0].displayDay;
   const cluster = new Map(starting.map((entry) => [entry.id, entry]));
+  const blockedPeriods: number[] = [];
   let clusterEnd = Math.max(...starting.map((entry) => entry.end));
 
   // Build the complete overlapping cluster, including courses that start later
   // inside another course's span. Each entry keeps its own vertical time range.
   for (let p = period; p <= clusterEnd; p += 1) {
-    if (blockedSlots.has(blockedSlotKey(day, p))) return null;
+    if (blockedSlots.has(blockedSlotKey(day, p))) blockedPeriods.push(p);
     for (const entry of covers.get(keyFor(day, p)) ?? []) {
       if (entry.start < period) return null;
       cluster.set(entry.id, entry);
@@ -270,14 +284,14 @@ function getRowSpanEntries(
   const entries = [...cluster.values()].sort(
     (a, b) => a.start - b.start || b.end - a.end || a.id.localeCompare(b.id),
   );
-  return { entries, span: clusterEnd - period + 1 };
+  return { entries, span: clusterEnd - period + 1, blockedPeriods };
 }
 
-function entryStyle(entry: TimetableEntry): CSSProperties {
+function colorStyle(color: CourseColor): CSSProperties {
   return {
-    '--block-stripe': entry.color.stripe,
-    '--block-bg': entry.color.bg,
-    '--block-fg': entry.color.fg,
+    '--block-stripe': color.stripe,
+    '--block-bg': color.bg,
+    '--block-fg': color.fg,
   } as CSSProperties;
 }
 
@@ -285,6 +299,7 @@ function TimetableCell({
   day,
   entries,
   blocked,
+  blockedPeriods = [],
   rowSpan,
   startPeriod,
   onOpenDetail,
@@ -292,20 +307,40 @@ function TimetableCell({
   day: number;
   entries: TimetableEntry[];
   blocked: boolean;
+  blockedPeriods?: number[];
   rowSpan?: number;
   startPeriod?: number;
   onOpenDetail?: (id: string) => void;
 }) {
   const hasEntries = entries.length > 0;
   const isConflict = entries.some((entry) => entry.conflict);
-  const isParallel = Boolean(rowSpan && startPeriod && entries.length > 1);
-  const laneLayout = isParallel ? assignTimetableLanes(entries) : null;
-  const mobileLayers = laneLayout && rowSpan && startPeriod
+  const blockedEntries: BlockedTimetableEntry[] = rowSpan && startPeriod
+    ? blockedPeriods.map((period) => ({
+      id: `blocked-${day}-${period}`,
+      start: period,
+      end: period,
+      span: 1,
+      color: BLOCKED_COLOR,
+    }))
+    : [];
+  const layoutEntries: Array<TimetableEntry | BlockedTimetableEntry> = [
+    ...entries,
+    ...blockedEntries,
+  ];
+  const visualItemCount = layoutEntries.length + (blocked && blockedEntries.length === 0 ? 1 : 0);
+  const isParallel = Boolean(rowSpan && startPeriod && layoutEntries.length > 1);
+  const laneLayout = isParallel ? assignTimetableLanes(layoutEntries) : null;
+  const parallelSizing = laneLayout ? getParallelLaneSizing(laneLayout.laneCount) : null;
+  const courseMobileLayers = laneLayout && rowSpan && startPeriod
     ? getMobileContainmentLayers(entries, startPeriod, rowSpan)
     : [];
-  const hasMobileContainment = mobileLayers.some((layer) => layer.depth > 0 || layer.lane > 0);
+  // “有事”参与桌面端真实时间网格；只有课程本身存在包含关系时，才启用
+  // 手机端的包围布局，避免单个占位把普通两节课无谓地拉得很高。
+  const hasMobileContainment = courseMobileLayers.some(
+    (layer) => layer.depth > 0 || layer.lane > 0,
+  );
   const mobileGroups = hasMobileContainment && rowSpan && startPeriod
-    ? getMobileContainmentGroups(entries, startPeriod, rowSpan)
+    ? getMobileContainmentGroups(layoutEntries, startPeriod, rowSpan)
     : [];
   const mobileContainmentMetrics = rowSpan
     ? getMobileContainmentMetrics(mobileGroups, rowSpan)
@@ -316,7 +351,7 @@ function TimetableCell({
     hasEntries ? 'timetable__cell--has' : 'timetable__cell--empty',
     blocked ? 'timetable__cell--blocked' : '',
     isConflict ? 'timetable__cell--conflict' : '',
-    hasEntries && !isConflict && entries.length === 1 ? 'timetable__cell--single' : '',
+    visualItemCount === 1 && !isConflict ? 'timetable__cell--single' : '',
     rowSpan ? 'timetable__cell--span' : '',
     isParallel ? 'timetable__cell--parallel' : '',
     hasMobileContainment ? 'timetable__cell--containment' : '',
@@ -347,7 +382,7 @@ function TimetableCell({
           reservesWarningSpace ? 'timetable-course--warning-space' : '',
         ].filter(Boolean).join(' ')}
         style={{
-          ...entryStyle(entry),
+          ...colorStyle(entry.color),
           ...(!mobileGroup && lane !== undefined && startPeriod ? {
             gridColumn: lane + 1,
             gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
@@ -375,6 +410,29 @@ function TimetableCell({
     );
   };
 
+  const renderBlockedButton = (
+    entry: BlockedTimetableEntry,
+    mobileGroup?: (typeof mobileGroups)[number],
+  ) => {
+    const lane = laneLayout?.laneById.get(entry.id);
+    return (
+      <div
+        key={entry.id}
+        className="timetable-course timetable-placeholder"
+        aria-label="自定义占位时间"
+        style={{
+          ...colorStyle(entry.color),
+          ...(!mobileGroup && lane !== undefined && startPeriod ? {
+            gridColumn: lane + 1,
+            gridRow: `${entry.start - startPeriod + 1} / span ${entry.span}`,
+          } : {}),
+        }}
+      >
+        <span>有事</span>
+      </div>
+    );
+  };
+
   return (
     <td className={className} rowSpan={rowSpan}>
       {isConflict ? <WarningIcon className="timetable__warning-icon" /> : null}
@@ -383,9 +441,12 @@ function TimetableCell({
         style={laneLayout ? {
           '--parallel-columns': laneLayout.laneCount,
           '--parallel-rows': rowSpan,
+          '--parallel-column-gap': `${parallelSizing?.columnGap ?? 6}px`,
+          '--parallel-card-padding-start': `${parallelSizing?.paddingInlineStart ?? 9}px`,
+          '--parallel-card-padding-end': `${parallelSizing?.paddingInlineEnd ?? 7}px`,
         } as CSSProperties : undefined}
       >
-        {blocked ? (
+        {blocked && blockedEntries.length === 0 ? (
           <div
             className="timetable-course timetable-placeholder"
             aria-label="自定义占位时间"
@@ -394,6 +455,7 @@ function TimetableCell({
           </div>
         ) : null}
         {entries.map((entry) => renderCourseButton(entry))}
+        {blockedEntries.map((entry) => renderBlockedButton(entry))}
       </div>
       {hasMobileContainment ? (
         <>
@@ -405,8 +467,8 @@ function TimetableCell({
           <div className="timetable__mobile-containment">
             {mobileGroups.map((group) => {
               const groupEntries = group.entryIds
-                .map((id) => entries.find((entry) => entry.id === id))
-                .filter((entry): entry is TimetableEntry => Boolean(entry));
+                .map((id) => layoutEntries.find((entry) => entry.id === id))
+                .filter((entry): entry is TimetableEntry | BlockedTimetableEntry => Boolean(entry));
               const color = groupEntries[0]?.color;
               const metric = mobileContainmentMetrics.metrics.find((candidate) => candidate.key === group.key);
               return (
@@ -419,7 +481,7 @@ function TimetableCell({
                     '--mobile-range-left': `${group.leftInset}px`,
                     '--mobile-range-right': `${group.rightInset}px`,
                     '--mobile-range-content-top': `${metric?.contentOffset ?? 0}px`,
-                    '--mobile-range-content-height': `${metric?.contentHeight ?? 96}px`,
+                    '--mobile-range-content-height': `${metric?.contentHeight ?? 112}px`,
                     '--mobile-range-stripe': color?.stripe,
                     '--mobile-range-bg': color?.bg,
                     '--mobile-range-depth': group.depth + 1,
@@ -427,7 +489,11 @@ function TimetableCell({
                 >
                   <span className="timetable__mobile-range-background" aria-hidden="true" />
                   <div className="timetable__mobile-range-content">
-                    {groupEntries.map((entry) => renderCourseButton(entry, group))}
+                    {groupEntries.map((entry) => (
+                      'groupKey' in entry
+                        ? renderCourseButton(entry, group)
+                        : renderBlockedButton(entry, group)
+                    ))}
                   </div>
                 </div>
               );
@@ -540,6 +606,7 @@ function TimetableView({
                       day={day}
                       entries={rowSpanBlock.entries}
                       blocked={false}
+                      blockedPeriods={rowSpanBlock.blockedPeriods}
                       rowSpan={rowSpanBlock.span}
                       startPeriod={period}
                       onOpenDetail={onOpenDetail}
@@ -608,7 +675,10 @@ export default function CourseTable({
             popupMatchSelectWidth={220}
           />
         </div>
-        <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+        <div className="course-table__term-date">
+          <span className="course-table__term-name">{TERM_CALENDAR.termName}</span>
+          <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+        </div>
         <div className="course-table__actions no-print">
           <Button
             className="theme-toggle"

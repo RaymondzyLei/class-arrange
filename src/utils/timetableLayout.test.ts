@@ -4,6 +4,7 @@ import {
   getMobileContainmentGroups,
   getMobileContainmentMetrics,
   getMobileContainmentLayers,
+  getParallelLaneSizing,
   type TimetableRangeEntry,
 } from './timetableLayout';
 
@@ -14,12 +15,32 @@ const entry = (id: string, start: number, end: number): TimetableRangeEntry => (
   span: end - start + 1,
 });
 
+describe('desktop timetable conflict lanes', () => {
+  it('compresses gaps and padding before dense lanes can overflow a day cell', () => {
+    expect(getParallelLaneSizing(3)).toEqual({
+      columnGap: 6,
+      paddingInlineStart: 9,
+      paddingInlineEnd: 7,
+    });
+    expect(getParallelLaneSizing(6)).toEqual({
+      columnGap: 2,
+      paddingInlineStart: 3,
+      paddingInlineEnd: 1,
+    });
+    expect(getParallelLaneSizing(9)).toEqual({
+      columnGap: 1,
+      paddingInlineStart: 1,
+      paddingInlineEnd: 0,
+    });
+  });
+});
+
 describe('mobile timetable conflict containment', () => {
   it('places a shorter background inside a longer background', () => {
     const entries = [entry('long', 6, 9), entry('short', 6, 7)];
     expect(getMobileContainmentLayers(entries, 6, 4)).toEqual([
       { id: 'long', depth: 0, lane: 0, rangeCount: 1, topPercent: 0, heightPercent: 100, leftInset: 0, rightInset: 0 },
-      { id: 'short', depth: 1, lane: 1, rangeCount: 1, topPercent: 0, heightPercent: 50, leftInset: 8, rightInset: 8 },
+      { id: 'short', depth: 1, lane: 1, rangeCount: 1, topPercent: 0, heightPercent: 50, leftInset: 6, rightInset: 6 },
     ]);
   });
 
@@ -27,14 +48,14 @@ describe('mobile timetable conflict containment', () => {
     const entries = [entry('long', 6, 9), entry('short-a', 6, 7), entry('short-b', 6, 7)];
     const layers = getMobileContainmentLayers(entries, 6, 4);
     expect(layers.map(({ heightPercent }) => heightPercent)).toEqual([100, 50, 50]);
-    expect(layers.map(({ leftInset }) => leftInset)).toEqual([0, 8, 8]);
+    expect(layers.map(({ leftInset }) => leftInset)).toEqual([0, 6, 6]);
   });
 
   it('keeps two longer backgrounds visible around one shorter background', () => {
     const entries = [entry('long-a', 6, 9), entry('long-b', 6, 9), entry('short', 6, 7)];
     const layers = getMobileContainmentLayers(entries, 6, 4);
     expect(layers.map(({ heightPercent }) => heightPercent)).toEqual([100, 100, 50]);
-    expect(layers.map(({ rightInset }) => rightInset)).toEqual([0, 0, 8]);
+    expect(layers.map(({ rightInset }) => rightInset)).toEqual([0, 0, 6]);
   });
 
   it('keeps identical time ranges in one visual level', () => {
@@ -101,7 +122,7 @@ describe('mobile timetable conflict containment', () => {
       heightPercent,
     }))).toEqual([
       { id: 'blue', depth: 0, lane: 0, leftInset: 0, topPercent: 0, heightPercent: 80 },
-      { id: 'orange', depth: 0, lane: 1, leftInset: 8, topPercent: 40, heightPercent: 60 },
+      { id: 'orange', depth: 0, lane: 1, leftInset: 6, topPercent: 40, heightPercent: 60 },
     ]);
   });
 
@@ -115,11 +136,23 @@ describe('mobile timetable conflict containment', () => {
     const groups = getMobileContainmentGroups(entries, 6, 4);
 
     expect(getMobileContainmentMetrics(groups, 4)).toEqual({
-      minHeight: 792,
+      minHeight: 944,
       metrics: [
-        { key: '6-9', contentOffset: 0, contentHeight: 198 },
-        { key: '6-7', contentOffset: 198, contentHeight: 198 },
+        { key: '6-9', contentOffset: 0, contentHeight: 236 },
+        { key: '6-7', contentOffset: 236, contentHeight: 236 },
       ],
     });
+  });
+
+  it('reserves real top and bottom spacing around each mobile time group', () => {
+    const groups = getMobileContainmentGroups([
+      entry('early', 6, 7),
+      entry('late', 8, 10),
+    ], 6, 5);
+
+    expect(getMobileContainmentMetrics(groups, 5).metrics).toEqual([
+      { key: '6-7', contentOffset: 0, contentHeight: 118 },
+      { key: '8-10', contentOffset: 0, contentHeight: 118 },
+    ]);
   });
 });
