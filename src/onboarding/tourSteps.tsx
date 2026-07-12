@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type TourPlacement = 'right' | 'bottom' | 'left' | 'top' | 'center';
 
 export interface TourStep {
@@ -5,7 +7,8 @@ export interface TourStep {
   target?: string;
   targets?: string[];
   title: string;
-  description: string;
+  /** 支持字符串或 ReactNode；用 ReactNode 时可在描述里嵌入链接、自定义元素 */
+  description: ReactNode;
   tip?: string;
   placement: TourPlacement;
   action?: 'openSelectedCoursesCurriculum' | 'closeSelectedCourses' | 'openCustomization' | 'closeCustomization';
@@ -110,7 +113,96 @@ export const tourSteps: TourStep[] = [
   {
     id: 'complete',
     title: '准备就绪！',
-    description: '如果需要，可以随时从“自定义”里的“重新查看新手引导”再次打开本教程。',
+    description: (
+      <>
+        现在你已经学会了这个工具的基础使用方法，祝您排课愉快！如果遇到问题或想提建议，欢迎前往{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/RaymondzyLei/class-arrange"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub 仓库
+        </a>
+        {' '}提 issue 或 pr，欢迎点 star。
+        <br />
+        欢迎访问制作者的个人主页{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://raymondzylei.me/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          RaymondzyLei
+        </a>
+        {' '}了解更多，欢迎访问第二制作者的主页{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/syhalex/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          syhalex
+        </a>
+        {' '}。
+        <br />
+        <br />
+        贡献列表：
+        <br />
+        1.{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/RaymondzyLei"
+          target="_blank"
+          rel="noreferrer"
+        >
+          RaymondzyLei
+        </a>
+        <br />
+        2.{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/claude"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Claude
+        </a>
+        <br />
+        3.{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/syhalex"
+          target="_blank"
+          rel="noreferrer"
+        >
+          syhalex
+        </a>
+        <br />
+        4.{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/openai/codex"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Codex
+        </a>
+        <br />
+        5.{' '}
+        <a
+          className="tour-card__inline-link"
+          href="https://github.com/quantai1314"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Quantai
+        </a>
+        <br />
+        <br />
+        再次查看引导可以从“自定义”里的“重新查看新手引导”进入。
+      </>
+    ),
     action: 'closeCustomization',
     placement: 'center',
   },

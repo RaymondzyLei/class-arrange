@@ -3958,7 +3958,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 75,
+    "capacity": 60,
     "classes": [
       "24环境科学与工程",
       "24物理化学",
@@ -5314,7 +5314,7 @@ export const courses: CourseSection[] = [
       "code": "005",
       "name": "近代力学系"
     },
-    "teacher": "宣守虎",
+    "teacher": "宣守虎,朱纪欣",
     "credits": 2.0,
     "hours": 40,
     "level": "本科",
@@ -6308,7 +6308,7 @@ export const courses: CourseSection[] = [
       "code": "208",
       "name": "地球和空间科学学院"
     },
-    "teacher": "查显杰",
+    "teacher": "查显杰,贾晓峰",
     "credits": 3.0,
     "hours": 60,
     "level": "本科",
@@ -11025,12 +11025,25 @@ export const courses: CourseSection[] = [
       "25大数据管理与应用",
       "25商业人工智能"
     ],
-    "rawSchedule": "1~18周 2405: 3(3,4,5)",
+    "rawSchedule": "10~18周 2405: 3(3,4,5)_x000d_\n1~9周 2405: 3(3,4,5)",
     "schedule": [
       {
         "weeks": [
-          1,
+          10,
           18
+        ],
+        "room": "2405",
+        "day": 3,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          9
         ],
         "room": "2405",
         "day": 3,
@@ -11103,11 +11116,154 @@ export const courses: CourseSection[] = [
     "classes": [
       "24工商管理"
     ],
-    "rawSchedule": "1~18周 2301: 5(3,4,5)",
+    "rawSchedule": "1~2,4~5,7~8,10~11,13~14,16~17周 2301: 5(3,4,5)_x000d_\n3,6,9,12,15,18周 2301: 5(3,4,5)",
     "schedule": [
       {
         "weeks": [
           1,
+          2
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          5
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          8
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          11
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          14
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          17
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          6
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "2301",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          18,
           18
         ],
         "room": "2301",
@@ -11143,11 +11299,24 @@ export const courses: CourseSection[] = [
       "24管理科学",
       "24大数据管理与应用"
     ],
-    "rawSchedule": "1~14周 5206: 2(8,9,10)",
+    "rawSchedule": "1~6周 5206: 2(8,9,10)_x000d_\n7~14周 5206: 2(8,9,10)",
     "schedule": [
       {
         "weeks": [
           1,
+          6
+        ],
+        "room": "5206",
+        "day": 2,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          7,
           14
         ],
         "room": "5206",
@@ -11426,7 +11595,7 @@ export const courses: CourseSection[] = [
       "code": "017",
       "name": "统计与金融系"
     },
-    "teacher": "赵朕领",
+    "teacher": "赵朕领,潘然",
     "credits": 2.0,
     "hours": 40,
     "level": "本科",
@@ -11442,12 +11611,50 @@ export const courses: CourseSection[] = [
       "25工商管理",
       "25金融学"
     ],
-    "rawSchedule": "1~18周 2303: 5(6,7)",
+    "rawSchedule": "1~4周 2303: 4(8,9,10) 5(6,7)_x000d_\n5~9周 2303: 4(8,9,10) 5(6,7)",
     "schedule": [
       {
         "weeks": [
           1,
-          18
+          4
+        ],
+        "room": "2303",
+        "day": 4,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          4
+        ],
+        "room": "2303",
+        "day": 5,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          9
+        ],
+        "room": "2303",
+        "day": 4,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          9
         ],
         "room": "2303",
         "day": 5,
@@ -13079,7 +13286,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "方思敏,李婉,黄微,高明丽,李光水",
+    "teacher": "黄微,李婉,李爱龙,高明丽,周建斌,杨晴",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -13090,7 +13297,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 45,
+    "capacity": 40,
     "classes": [
       "26级206院003系01班",
       "26级206院003系02班"
@@ -13121,7 +13328,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "李光水,黄微,方思敏,高明丽,李婉",
+    "teacher": "黄微,李婉,李爱龙,高明丽,周建斌,杨晴",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -13132,7 +13339,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 45,
+    "capacity": 60,
     "classes": [
       "26环境科学与工程",
       "26环境科学与工程+人工智能"
@@ -13163,7 +13370,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "方思敏,李婉,黄微,高明丽,李光水",
+    "teacher": "黄微,李婉,李爱龙,高明丽,周建斌,杨晴",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -13174,7 +13381,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 45,
+    "capacity": 60,
     "classes": [
       "26地空学院化学类（大类）",
       "26级206院材料01班"
@@ -13205,7 +13412,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "方思敏,李婉,黄微,高明丽,李光水",
+    "teacher": "黄微,李婉,李爱龙,高明丽,周建斌,杨晴",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -13216,7 +13423,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 45,
+    "capacity": 60,
     "classes": [
       "26级206院012系01班",
       "26级206院019系01班"
@@ -13260,11 +13467,11 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 16,
     "classes": [],
-    "rawSchedule": "1~18周 东区环资楼301: 1(6,7,8,9,10)",
+    "rawSchedule": "3~18周 东区环资楼301: 1(6,7,8,9,10)",
     "schedule": [
       {
         "weeks": [
-          1,
+          3,
           18
         ],
         "room": "东区环资楼301",
@@ -13539,7 +13746,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "查正根,徐航勋,蒋俊,兰泉,李玲玲,郑媛",
+    "teacher": "徐航勋,郑媛,蒋俊,兰泉,李玲玲,查正根",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -13550,7 +13757,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 54,
+    "capacity": 18,
     "classes": [
       "25生命科学学院（大类）*"
     ],
@@ -13592,7 +13799,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 48,
+    "capacity": 54,
     "classes": [
       "25生命科学学院（大类）*",
       "25临床医学"
@@ -13637,7 +13844,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 14,
     "classes": [],
-    "rawSchedule": "3~18周 东区环资楼703: 2(6,7,8,9,10,11)",
+    "rawSchedule": "3~18周 东区环资楼703: 4(6,7,8,9,10,11)",
     "schedule": [
       {
         "weeks": [
@@ -13645,7 +13852,7 @@ export const courses: CourseSection[] = [
           18
         ],
         "room": "东区环资楼703",
-        "day": 2,
+        "day": 4,
         "periods": [
           6,
           7,
@@ -13675,7 +13882,7 @@ export const courses: CourseSection[] = [
     "examType": "大作业（论文、报告、项目或作品等）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 10,
+    "capacity": 36,
     "classes": [
       "24高分子材料",
       "24高分子化学与物理"
@@ -14821,7 +15028,7 @@ export const courses: CourseSection[] = [
       "code": "019",
       "name": "化学系"
     },
-    "teacher": "邓兆祥,崔华,李涛,黄光明",
+    "teacher": "邓兆祥,崔华,黄光明",
     "credits": 3.0,
     "hours": 60,
     "level": "本科",
@@ -14840,7 +15047,7 @@ export const courses: CourseSection[] = [
       "24高分子材料",
       "24高分子化学与物理"
     ],
-    "rawSchedule": "13~16,18周 1201: 5(3,4,5)_x000d_\n14周 1201: 5(3,4,5)_x000d_\n1~7周 1201: 5(3,4,5)_x000d_\n8~12周 1201: 5(3,4,5)",
+    "rawSchedule": "13~16,18周 1201: 5(3,4,5)_x000d_\n1~7周 1201: 5(3,4,5)_x000d_\n8~12周 1201: 5(3,4,5)",
     "schedule": [
       {
         "weeks": [
@@ -14859,19 +15066,6 @@ export const courses: CourseSection[] = [
         "weeks": [
           18,
           18
-        ],
-        "room": "1201",
-        "day": 5,
-        "periods": [
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "weeks": [
-          14,
-          14
         ],
         "room": "1201",
         "day": 5,
@@ -15170,7 +15364,7 @@ export const courses: CourseSection[] = [
       "code": "020",
       "name": "高分子科学与工程系"
     },
-    "teacher": "肖石燕,周强",
+    "teacher": "肖石燕",
     "credits": 2.0,
     "hours": 80,
     "level": "本科",
@@ -15183,27 +15377,12 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 30,
     "classes": [],
-    "rawSchedule": "10~16周 环资楼: 2(6,7,8,9,10)_x000d_\n3~9周 环资楼: 2(6,7,8,9,10)",
+    "rawSchedule": "3~16周 环资楼: 2(6,7,8,9,10)",
     "schedule": [
       {
         "weeks": [
-          10,
-          16
-        ],
-        "room": "环资楼",
-        "day": 2,
-        "periods": [
-          6,
-          7,
-          8,
-          9,
-          10
-        ]
-      },
-      {
-        "weeks": [
           3,
-          9
+          16
         ],
         "room": "环资楼",
         "day": 2,
@@ -16325,7 +16504,7 @@ export const courses: CourseSection[] = [
       "24量子信息科学*",
       "24粒子物理与原子核物理"
     ],
-    "rawSchedule": "1~18周 5406: 2(8,9,10) 5(8,9,10)",
+    "rawSchedule": "1~18周 5406: 2(6,7,8) 5(6,7,8)",
     "schedule": [
       {
         "weeks": [
@@ -16335,9 +16514,9 @@ export const courses: CourseSection[] = [
         "room": "5406",
         "day": 2,
         "periods": [
-          8,
-          9,
-          10
+          6,
+          7,
+          8
         ]
       },
       {
@@ -16348,9 +16527,9 @@ export const courses: CourseSection[] = [
         "room": "5406",
         "day": 5,
         "periods": [
-          8,
-          9,
-          10
+          6,
+          7,
+          8
         ]
       }
     ]
@@ -17438,18 +17617,18 @@ export const courses: CourseSection[] = [
       "25级210院01班*",
       "25电子信息工程"
     ],
-    "rawSchedule": "1~15周 3A213: 2(3,4) 4(1,2)",
+    "rawSchedule": "1~15周 3A313: 1(1,2) 4(1,2)",
     "schedule": [
       {
         "weeks": [
           1,
           15
         ],
-        "room": "3A213",
-        "day": 2,
+        "room": "3A313",
+        "day": 1,
         "periods": [
-          3,
-          4
+          1,
+          2
         ]
       },
       {
@@ -17457,7 +17636,7 @@ export const courses: CourseSection[] = [
           1,
           15
         ],
-        "room": "3A213",
+        "room": "3A313",
         "day": 4,
         "periods": [
           1,
@@ -19386,7 +19565,7 @@ export const courses: CourseSection[] = [
       "25量子信息科学*",
       "25商业人工智能"
     ],
-    "rawSchedule": "1~15周 3A211: 3(6,7) 5(6,7)_x000d_\n6~15周 西区电一楼机房2厅: 3(11,12,13)",
+    "rawSchedule": "1~15周 3A211: 3(6,7) 5(6,7)_x000d_\n6~15周 西区电一楼机房2厅: 5(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -19418,7 +19597,7 @@ export const courses: CourseSection[] = [
           15
         ],
         "room": "西区电一楼机房2厅",
-        "day": 3,
+        "day": 5,
         "periods": [
           11,
           12,
@@ -19540,7 +19719,7 @@ export const courses: CourseSection[] = [
       "code": "210",
       "name": "信息科学技术学院"
     },
-    "teacher": "黄自龙,季芳芳,胡新伟,陈金雯,肖鸿,周燚,吴善珍",
+    "teacher": "黄自龙,季芳芳,胡新伟,吴善珍,肖鸿,周燚,陈金雯",
     "credits": 0.5,
     "hours": 30,
     "level": "本科",
@@ -19553,8 +19732,6 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 72,
     "classes": [
-      "25级210院02班",
-      "25级210院01班*",
       "25电子信息工程"
     ],
     "rawSchedule": "9~16周 西区电四楼电子技术基础实验室: 1(6,7,8,9)",
@@ -19582,7 +19759,7 @@ export const courses: CourseSection[] = [
       "code": "210",
       "name": "信息科学技术学院"
     },
-    "teacher": "季芳芳,胡新伟,黄自龙,陈金雯,肖鸿,周燚,吴善珍",
+    "teacher": "黄自龙,季芳芳,胡新伟,吴善珍,肖鸿,周燚,陈金雯",
     "credits": 0.5,
     "hours": 30,
     "level": "本科",
@@ -19595,10 +19772,9 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 72,
     "classes": [
-      "25级210院03班",
       "25电子信息工程"
     ],
-    "rawSchedule": "9~16周 西区电四楼电子技术基础实验室: 2(11,12,13)",
+    "rawSchedule": "9~16周 西区电四楼电子技术基础实验室: 1(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -19606,7 +19782,7 @@ export const courses: CourseSection[] = [
           16
         ],
         "room": "西区电四楼电子技术基础实验室",
-        "day": 2,
+        "day": 1,
         "periods": [
           11,
           12,
@@ -19637,7 +19813,7 @@ export const courses: CourseSection[] = [
     "classes": [
       "25自动化"
     ],
-    "rawSchedule": "9~16周 西区电四楼电子技术基础实验室: 1(11,12,13)",
+    "rawSchedule": "9~16周 西区电四楼电子技术基础实验室: 2(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -19645,7 +19821,7 @@ export const courses: CourseSection[] = [
           16
         ],
         "room": "西区电四楼电子技术基础实验室",
-        "day": 1,
+        "day": 2,
         "periods": [
           11,
           12,
@@ -22464,6 +22640,362 @@ export const courses: CourseSection[] = [
     ]
   },
   {
+    "id": "ASTR5005P.01",
+    "courseName": "行星科学前沿与导论",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "季江徽,赵海斌,马月华",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "本研贯通",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "3~17周 2509: 1(7,8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          3,
+          17
+        ],
+        "room": "2509",
+        "day": 1,
+        "periods": [
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR5006P.01",
+    "courseName": "等离子天体物理学基础",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "吴德金,陈玲",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "本研贯通",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "19周 2605: 3(2,3) 3(4,5)_x000d_\n2~19周 2605: 2(6,7) 2(8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "2605",
+        "day": 3,
+        "periods": [
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "2605",
+        "day": 3,
+        "periods": [
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          19
+        ],
+        "room": "2605",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          19
+        ],
+        "room": "2605",
+        "day": 2,
+        "periods": [
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR6006P.01",
+    "courseName": "现代太阳物理I",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "季海生,宿英娜,封莉,李友平,李瑛",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~17周 2404: 5(6,7,8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "2404",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR6018P.01",
+    "courseName": "天体物理基础",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "严飞,王恩赐,吴雪峰",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~17周 2604: 4(6,7)_x000d_\n3~18周 2604: 1(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "2604",
+        "day": 4,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          18
+        ],
+        "room": "2604",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR6407P.01",
+    "courseName": "Journal Club 文献研读和学术报告研讨课",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "张水乃,杜福君,舒轶平",
+    "credits": 2.0,
+    "hours": 44,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~19周 紫台仙林园区3-402: 1(16:00~17:30) 5(12:15~14:00)",
+    "schedule": []
+  },
+  {
+    "id": "ASTR6408P.01",
+    "courseName": "深空探测进展及数据处理与应用",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "吴昀昭,董铁矿",
+    "credits": 3.0,
+    "hours": 54,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "1~20周 2606: 1(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          1,
+          20
+        ],
+        "room": "2606",
+        "day": 1,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR6410P.01",
+    "courseName": "高能宇宙探索",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "纪丽,张水乃",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~9,11~16周 2602: 4(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          9
+        ],
+        "room": "2602",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          16
+        ],
+        "room": "2602",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ASTR7006P.01",
+    "courseName": "现代天文学前沿讲座",
+    "department": {
+      "code": "170",
+      "name": "紫金山天文台"
+    },
+    "teacher": "孙荣煜,岳川,赵金松,耿金军,张擎旻,李翔,陈果,孙燕",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "3~17周 紫台仙林园区: 1(2,3) 1(4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          3,
+          17
+        ],
+        "room": "紫台仙林园区",
+        "day": 1,
+        "periods": [
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          17
+        ],
+        "room": "紫台仙林园区",
+        "day": 1,
+        "periods": [
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
     "id": "ATMS4004.01",
     "courseName": "全球变化I",
     "department": {
@@ -22485,14 +23017,14 @@ export const courses: CourseSection[] = [
     "classes": [
       "24大气科学"
     ],
-    "rawSchedule": "1~14周 2305: 2(3,4,5)",
+    "rawSchedule": "1~14周 1109: 2(3,4,5)",
     "schedule": [
       {
         "weeks": [
           1,
           14
         ],
-        "room": "2305",
+        "room": "1109",
         "day": 2,
         "periods": [
           3,
@@ -22727,12 +23259,12 @@ export const courses: CourseSection[] = [
     "classes": [
       "25商业人工智能"
     ],
-    "rawSchedule": "1~7周 2307: 4(6,7)_x000d_\n8~14周 2307: 4(6,7)",
+    "rawSchedule": "10~18周 2307: 4(6,7)_x000d_\n1~9周 2307: 4(6,7)",
     "schedule": [
       {
         "weeks": [
-          1,
-          7
+          10,
+          18
         ],
         "room": "2307",
         "day": 4,
@@ -22743,8 +23275,8 @@ export const courses: CourseSection[] = [
       },
       {
         "weeks": [
-          8,
-          14
+          1,
+          9
         ],
         "room": "2307",
         "day": 4,
@@ -22778,19 +23310,18 @@ export const courses: CourseSection[] = [
       "25工商管理",
       "25商业人工智能"
     ],
-    "rawSchedule": "1~14周 2305: 5(3,4,5)",
+    "rawSchedule": "1~18周 2403: 1(8,9)",
     "schedule": [
       {
         "weeks": [
           1,
-          14
+          18
         ],
-        "room": "2305",
-        "day": 5,
+        "room": "2403",
+        "day": 1,
         "periods": [
-          3,
-          4,
-          5
+          8,
+          9
         ]
       }
     ]
@@ -24466,7 +24997,7 @@ export const courses: CourseSection[] = [
       "code": "910",
       "name": "生命科学与医学部"
     },
-    "teacher": "周丛照,陈泉,李卫芳",
+    "teacher": "陈泉,李卫芳,李琼",
     "credits": 2.0,
     "hours": 40,
     "level": "本科",
@@ -24858,11 +25389,11 @@ export const courses: CourseSection[] = [
     "classes": [
       "24贝时璋生命科技英才班T"
     ],
-    "rawSchedule": "2~18周 3A104: 3(3,4) 3(3,4,5)",
+    "rawSchedule": "1~18周 3A104: 3(3,4)",
     "schedule": [
       {
         "weeks": [
-          2,
+          1,
           18
         ],
         "room": "3A104",
@@ -24870,19 +25401,6 @@ export const courses: CourseSection[] = [
         "periods": [
           3,
           4
-        ]
-      },
-      {
-        "weeks": [
-          2,
-          18
-        ],
-        "room": "3A104",
-        "day": 3,
-        "periods": [
-          3,
-          4,
-          5
         ]
       }
     ]
@@ -25381,6 +25899,95 @@ export const courses: CourseSection[] = [
     ]
   },
   {
+    "id": "CHEM6500P.01",
+    "courseName": "高分子外教短期课",
+    "department": {
+      "code": "175",
+      "name": "长春应化所"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "",
+    "schedule": []
+  },
+  {
+    "id": "CHEN6102P.01",
+    "courseName": "化工系统工程",
+    "department": {
+      "code": "175",
+      "name": "长春应化所"
+    },
+    "teacher": "边新超,周庆海",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 110,
+    "classes": [],
+    "rawSchedule": "2~6周 TH-A501: 4(6,7,8,9) 5(6,7,8,9)_x000d_\n2~6周 TH-A501: 5(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          6
+        ],
+        "room": "TH-A501",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          6
+        ],
+        "room": "TH-A501",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          6
+        ],
+        "room": "TH-A501",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
     "id": "COMM1503.01",
     "courseName": "人际沟通与公共表达",
     "department": {
@@ -25558,7 +26165,7 @@ export const courses: CourseSection[] = [
       "26级000院02班",
       "26级000院07班"
     ],
-    "rawSchedule": "2~14周 3C102: 2(8,9,10)_x000d_\n4~14周 西区电一楼机房1厅: 3(11,12,13)",
+    "rawSchedule": "2~14周 3C102: 2(8,9,10)_x000d_\n4~14周 西区电一楼机房1厅: 4(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -25579,7 +26186,7 @@ export const courses: CourseSection[] = [
           14
         ],
         "room": "西区电一楼机房1厅",
-        "day": 3,
+        "day": 4,
         "periods": [
           11,
           12,
@@ -25665,7 +26272,7 @@ export const courses: CourseSection[] = [
       "26级000院05班",
       "26级000院06班"
     ],
-    "rawSchedule": "2~14周 3A111: 2(8,9,10)_x000d_\n4~14周 西区电一楼机房1厅: 4(11,12,13)",
+    "rawSchedule": "2~14周 3A111: 2(8,9,10)_x000d_\n4~14周 西区电一楼机房1厅: 3(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -25686,7 +26293,7 @@ export const courses: CourseSection[] = [
           14
         ],
         "room": "西区电一楼机房1厅",
-        "day": 4,
+        "day": 3,
         "periods": [
           11,
           12,
@@ -26308,7 +26915,7 @@ export const courses: CourseSection[] = [
       "26级209院05班",
       "26级209院04班"
     ],
-    "rawSchedule": "2~14(双)周 3A113: 3(1,2)_x000d_\n2~14周 3A113: 1(6,7)_x000d_\n4~14周 西活二楼机房: 1(11,12,13)",
+    "rawSchedule": "2~14(双)周 3A113: 3(1,2)_x000d_\n2~14周 3A113: 1(6,7)_x000d_\n4~14周 西活二楼机房: 3(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -26345,7 +26952,7 @@ export const courses: CourseSection[] = [
           14
         ],
         "room": "西活二楼机房",
-        "day": 1,
+        "day": 3,
         "periods": [
           11,
           12,
@@ -26838,7 +27445,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 70,
     "classes": [],
-    "rawSchedule": "2~14周 西区电一楼机房2厅: 2(18:30~19:30) 2(11,12,13); 3C101: 4(8,9,10)",
+    "rawSchedule": "2~14周 西区电一楼机房2厅: 2(19:00~19:30) 2(11,12,13); 3C101: 4(8,9,10)",
     "schedule": [
       {
         "weeks": [
@@ -26888,7 +27495,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 70,
     "classes": [],
-    "rawSchedule": "2~14周 2104: 5(8,9,10); 西区电一楼机房2厅: 2(18:30~19:30) 2(11,12,13)",
+    "rawSchedule": "2~14周 2104: 5(8,9,10); 西区电一楼机房2厅: 2(19:00~19:30) 2(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -26938,7 +27545,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 70,
     "classes": [],
-    "rawSchedule": "2~14(双)周 3A110: 5(6,7)_x000d_\n2~14周 3A110: 2(6,7); 西区电一楼机房2厅: 4(18:30~19:30) 4(11,12,13)",
+    "rawSchedule": "2~14(双)周 3A110: 5(6,7)_x000d_\n2~14周 3A110: 2(6,7); 西区电一楼机房2厅: 4(19:00~19:30) 4(11,12,13)",
     "schedule": [
       {
         "weeks": [
@@ -29588,7 +30195,7 @@ export const courses: CourseSection[] = [
       "26级210院04班",
       "26级210院05班"
     ],
-    "rawSchedule": "3~16周 3B103: 1(8,9,10)",
+    "rawSchedule": "3~16周 3B103: 2(8,9,10)",
     "schedule": [
       {
         "weeks": [
@@ -29596,7 +30203,7 @@ export const courses: CourseSection[] = [
           16
         ],
         "room": "3B103",
-        "day": 1,
+        "day": 2,
         "periods": [
           8,
           9,
@@ -29733,7 +30340,7 @@ export const courses: CourseSection[] = [
   },
   {
     "id": "EE4007.01",
-    "courseName": "系统与控制实验（3）",
+    "courseName": "系统与控制实验(3)",
     "department": {
       "code": "210",
       "name": "信息科学技术学院"
@@ -30129,6 +30736,2073 @@ export const courses: CourseSection[] = [
           11,
           12,
           13
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6001U.01",
+    "courseName": "专业英语",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "刘峰",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "口试",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~4,7~13周 G2-B302: 4(2,3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G2-B302",
+        "day": 4,
+        "periods": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          13
+        ],
+        "room": "G2-B302",
+        "day": 4,
+        "periods": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6001U.02",
+    "courseName": "专业英语",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "刘峰",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "口试",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~4,7~13周 GT-A401: 3(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "GT-A401",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          13
+        ],
+        "room": "GT-A401",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6001U.03",
+    "courseName": "专业英语",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "邢鸿飞",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "口试",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~5,7~12周 GT-A405: 2(18:40~21:55)",
+    "schedule": []
+  },
+  {
+    "id": "EIEN6001U.04",
+    "courseName": "专业英语",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "邢鸿飞",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "口试",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~5,7~12周 GT-A405: 3(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "GT-A405",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "GT-A405",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6002P.01",
+    "courseName": "组合数学",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "郑惠南",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~4,6~13周 G3-110: 4(11,12,13)_x000d_\n2~5,7~11周 G3-113: 2(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G3-110",
+        "day": 4,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          13
+        ],
+        "room": "G3-110",
+        "day": 4,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-113",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          11
+        ],
+        "room": "G3-113",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6006P.02",
+    "courseName": "高级软件工程",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "周英华",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~5,7~12周 G3-110: 1(6,7,8); G3-113: 2(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-110",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-110",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-113",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-113",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6007P.01",
+    "courseName": "系统建模与分析",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "陈博",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~5,7~10周 GT-C102: 2(6,7,8); G3-113: 3(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "GT-C102",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "GT-C102",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-113",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "G3-113",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6008P.02",
+    "courseName": "软件体系结构",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "丁箐",
+    "credits": 3.0,
+    "hours": 90,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~4,6~17周 G3-113: 4(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G3-113",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          17
+        ],
+        "room": "G3-113",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6011P.01",
+    "courseName": "高级数据库技术",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "金培权",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~4,6~18周 G3-109: 4(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          18
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6013P.01",
+    "courseName": "信息安全",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "郭燕",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,6~11周 GT-A405: 4(6,7,8); GT-A401: 5(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-A405",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "GT-A405",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-A401",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "GT-A401",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6015P.01",
+    "courseName": "高级网络技术",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "赵振刚",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（半开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "12~17,19周 G3-108: 4(6,7,8); G3-113: 5(2,3,4)_x000d_\n18周 GT-B111: 2(11,12,13) 3(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          12,
+          17
+        ],
+        "room": "G3-108",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-108",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          17
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          18,
+          18
+        ],
+        "room": "GT-B111",
+        "day": 2,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          18,
+          18
+        ],
+        "room": "GT-B111",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6020P.01",
+    "courseName": "嵌入式系统设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "李春杰",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,6~11周 G2-B502: 4(6,7,8); G2-B403: 5(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G2-B502",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "G2-B502",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G2-B403",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "G2-B403",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6021P.01",
+    "courseName": "实时系统设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "吴桂兴",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "12~17,19周 G3-109: 4(6,7,8); G2-B503: 5(2,3,4)_x000d_\n18周 GT-B211: 2(11,12,13); GT-B210: 3(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          12,
+          17
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          17
+        ],
+        "room": "G2-B503",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G2-B503",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          18,
+          18
+        ],
+        "room": "GT-B211",
+        "day": 2,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          18,
+          18
+        ],
+        "room": "GT-B210",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6023P.01",
+    "courseName": "数字系统设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "王腾",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "10~17周 GT-A401: 5(11,12,13)_x000d_\n11~18周 G2-B503: 1(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          10,
+          17
+        ],
+        "room": "GT-A401",
+        "day": 5,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          18
+        ],
+        "room": "G2-B503",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6028P.01",
+    "courseName": "分布式与云计算",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "丁箐",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（半开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~4,6~18周 G3-110: 4(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G3-110",
+        "day": 4,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          18
+        ],
+        "room": "G3-110",
+        "day": 4,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6030P.01",
+    "courseName": "人工智能",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "周正阳",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "12~19周 G3-109: 2(6,7,8); G3-113: 3(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          12,
+          19
+        ],
+        "room": "G3-109",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          19
+        ],
+        "room": "G3-113",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6030P.02",
+    "courseName": "人工智能",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "张玉东",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "12~19周 G3-108: 2(6,7,8); G2-B303: 3(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          12,
+          19
+        ],
+        "room": "G3-108",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          19
+        ],
+        "room": "G2-B303",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6030P.03",
+    "courseName": "人工智能",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 30,
+    "classes": [],
+    "rawSchedule": "2609: 1(11,12,13)_x000d_\n2609: 2(6,7,8)",
+    "schedule": []
+  },
+  {
+    "id": "EIEN6402P.01",
+    "courseName": "高级图像处理与分析",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "白天",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~12周 G3-108: 5(6,7,8); GT-B110: 6(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-108",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-108",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-B110",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "GT-B110",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6410P.01",
+    "courseName": "自然语言处理",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "刘贵全",
+    "credits": 2.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~10周 GT-B212: 6(2,3,4)_x000d_\n2~3,7~11周 G2-B403: 5(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-B212",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "GT-B212",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G2-B403",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          11
+        ],
+        "room": "G2-B403",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6421P.01",
+    "courseName": "嵌入式linux",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "李春杰",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "11~17,19周 G3-110: 5(6,7,8); GT-B211: 6(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          11,
+          17
+        ],
+        "room": "G3-110",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-110",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          17
+        ],
+        "room": "GT-B211",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "GT-B211",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6454P.01",
+    "courseName": "实用算法设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "娄文启",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~12周 G3-113: 5(6,7,8); G3-109: 6(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6715P.01",
+    "courseName": "设备驱动程序设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "陈博",
+    "credits": 1.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "13~18周 G2-B502: 1(6,7,8); G2-B403: 2(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G2-B502",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G2-B403",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6716P.01",
+    "courseName": "网络程序设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "徐伟",
+    "credits": 1.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "18~19周 G3-110: 4(11,12,13)_x000d_\n2~4,6~17周 G3-109: 4(9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          18,
+          19
+        ],
+        "room": "G3-110",
+        "day": 4,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          4
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          17
+        ],
+        "room": "G3-109",
+        "day": 4,
+        "periods": [
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6718P.01",
+    "courseName": "EDA技术",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "翟建芳",
+    "credits": 1.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "13~18周 G2-B503: 1(6,7,8) 2(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G2-B503",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G2-B503",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6719P.02",
+    "courseName": "深度学习实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "白天",
+    "credits": 1.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "13~18周 G3-115: 1(6,7,8); G2-B303: 2(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G3-115",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          18
+        ],
+        "room": "G2-B303",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6720P.02",
+    "courseName": "实践综合",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "丁箐",
+    "credits": 2.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 480,
+    "classes": [],
+    "rawSchedule": "1周 GT-C103: 3(1,2,3,4,5) 3(6,7,8,9,10) 4(1,2,3,4,5) 4(6,7,8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "GT-C103",
+        "day": 3,
+        "periods": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "GT-C103",
+        "day": 3,
+        "periods": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "GT-C103",
+        "day": 4,
+        "periods": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "GT-C103",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6721P.01",
+    "courseName": "鸿蒙应用软件设计",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "吴桂兴",
+    "credits": 1.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "英语",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~10周 G3-110: 1(2,3,4); GT-B110: 7(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-110",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "G3-110",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-B110",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "GT-B110",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN6722P.01",
+    "courseName": "机器学习基础与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "翟建芳",
+    "credits": 1.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~10周 G2-B502: 1(2,3,4); GT-B210: 7(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G2-B502",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "G2-B502",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-B210",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          10
+        ],
+        "room": "GT-B210",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN7002P.01",
+    "courseName": "形式化方法",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "华保健",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~5,7~12周 G3-109: 1(6,7,8); G3-110: 2(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-109",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-109",
+        "day": 1,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-110",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-110",
+        "day": 2,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN7008P.02",
+    "courseName": "数据仓库与数据挖掘",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "王鹏焜",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,6~11周 G2-B402: 4(6,7,8); G3-113: 5(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G2-B402",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "G2-B402",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          11
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  {
+    "id": "EIEN7010P.01",
+    "courseName": "泛在操作系统",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "朱宗卫",
+    "credits": 3.0,
+    "hours": 70,
+    "level": "研究生",
+    "sectionType": "专业",
+    "category": "",
+    "courseType": "理论实验课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "2~3,7~12周 GT-A403: 5(6,7,8); G3-115: 6(2,3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "GT-A403",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "GT-A403",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-115",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          12
+        ],
+        "room": "G3-115",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
         ]
       }
     ]
@@ -31817,7 +34491,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 30,
     "classes": [],
-    "rawSchedule": "2~18周 2407: 1(1,2)",
+    "rawSchedule": "2~18周 2407: 3(1,2)",
     "schedule": [
       {
         "weeks": [
@@ -31825,7 +34499,7 @@ export const courses: CourseSection[] = [
           18
         ],
         "room": "2407",
-        "day": 1,
+        "day": 3,
         "periods": [
           1,
           2
@@ -35216,6 +37890,56 @@ export const courses: CourseSection[] = [
         "periods": [
           6,
           7
+        ]
+      }
+    ]
+  },
+  {
+    "id": "FORL6101U.19",
+    "courseName": "研究生综合英语",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "邢鸿飞",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "英语",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 80,
+    "classes": [],
+    "rawSchedule": "4~5,7~17周 GT-A403: 1(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          4,
+          5
+        ],
+        "room": "GT-A403",
+        "day": 1,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          17
+        ],
+        "room": "GT-A403",
+        "day": 1,
+        "periods": [
+          11,
+          12,
+          13
         ]
       }
     ]
@@ -41011,18 +43735,127 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 30,
     "classes": [],
-    "rawSchedule": "4~13周 5406: 2(6,7)",
+    "rawSchedule": "4~13周 5407: 2(6,7)",
     "schedule": [
       {
         "weeks": [
           4,
           13
         ],
-        "room": "5406",
+        "room": "5407",
         "day": 2,
         "periods": [
           6,
           7
+        ]
+      }
+    ]
+  },
+  {
+    "id": "INTE6402Q.01",
+    "courseName": "电子信息检索",
+    "department": {
+      "code": "302",
+      "name": "图书馆"
+    },
+    "teacher": "张雪娟,张素芳,丁丽华,李琛,王叶竹,樊亚芳,毛杰利,汤雨微,何燕",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 150,
+    "classes": [],
+    "rawSchedule": "2~18周 2321: 2(6,7)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          18
+        ],
+        "room": "2321",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  {
+    "id": "INTE6402Q.02",
+    "courseName": "电子信息检索",
+    "department": {
+      "code": "302",
+      "name": "图书馆"
+    },
+    "teacher": "张雪娟,张素芳,丁丽华,李琛,王叶竹,樊亚芳,毛杰利,汤雨微,何燕",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 150,
+    "classes": [],
+    "rawSchedule": "2~18周 GT-C102: 4(6,7)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          18
+        ],
+        "room": "GT-C102",
+        "day": 4,
+        "periods": [
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  {
+    "id": "INTE6403Q.01",
+    "courseName": "文献管理与信息分析",
+    "department": {
+      "code": "302",
+      "name": "图书馆"
+    },
+    "teacher": "樊亚芳,罗昭锋",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 150,
+    "classes": [],
+    "rawSchedule": "2~18周 2106: 1(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          18
+        ],
+        "room": "2106",
+        "day": 1,
+        "periods": [
+          11,
+          12,
+          13
         ]
       }
     ]
@@ -41745,8 +44578,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 85,
     "classes": [
-      "25计算机科学与技术*",
-      "25人工智能*"
+      "25计算机科学与技术*"
     ],
     "rawSchedule": "1~16周 3A313: 2(8,9,10)",
     "schedule": [
@@ -41865,8 +44697,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 85,
     "classes": [
-      "25级209院04班",
-      "25级209院02班*"
+      "25人工智能*"
     ],
     "rawSchedule": "1~16周 3A111: 1(8,9,10)",
     "schedule": [
@@ -41947,7 +44778,7 @@ export const courses: CourseSection[] = [
     "capacity": 85,
     "classes": [
       "25生命科学学院（大类）*",
-      "25级210院02班"
+      "25级209院04班"
     ],
     "rawSchedule": "1~16周 3A212: 1(8,9,10)",
     "schedule": [
@@ -42029,7 +44860,6 @@ export const courses: CourseSection[] = [
     "capacity": 85,
     "classes": [
       "25数据科学与大数据技术",
-      "25级210院01班*",
       "25电子信息工程"
     ],
     "rawSchedule": "1~16周 3A212: 5(8,9,10)",
@@ -42069,8 +44899,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 85,
     "classes": [
-      "25级210院03班",
-      "25级210院04班",
+      "25级209院02班*",
       "25电子信息工程"
     ],
     "rawSchedule": "1~16周 3A312: 4(8,9,10)",
@@ -42110,7 +44939,6 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 85,
     "classes": [
-      "25级210院05班",
       "25自动化"
     ],
     "rawSchedule": "1~16周 3A311: 4(8,9,10)",
@@ -42313,6 +45141,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 90,
     "classes": [
+      "26地空学院化学类（大类）",
       "26级000院07班",
       "26级000院08班"
     ],
@@ -42353,8 +45182,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 90,
     "classes": [
-      "26数学学院（大类）",
-      "26地空学院化学类（大类）"
+      "26数学学院（大类）"
     ],
     "rawSchedule": "2~18周 5103: 2(8,9,10)",
     "schedule": [
@@ -43162,6 +45990,121 @@ export const courses: CourseSection[] = [
     "capacity": 600,
     "classes": [],
     "rawSchedule": "",
+    "schedule": []
+  },
+  {
+    "id": "MARX6102U.09",
+    "courseName": "新时代中国特色社会主义理论与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "GT-B212: 7(2,3,4,5)",
+    "schedule": []
+  },
+  {
+    "id": "MARX6102U.10",
+    "courseName": "新时代中国特色社会主义理论与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "G3-110: 7(2,3,4,5)",
+    "schedule": []
+  },
+  {
+    "id": "MARX6102U.11",
+    "courseName": "新时代中国特色社会主义理论与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "GT-B211: 7(2,3,4,5)",
+    "schedule": []
+  },
+  {
+    "id": "MARX6102U.12",
+    "courseName": "新时代中国特色社会主义理论与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "G3-109: 7(2,3,4,5)",
+    "schedule": []
+  },
+  {
+    "id": "MARX6102U.13",
+    "courseName": "新时代中国特色社会主义理论与实践",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "G3-108: 7(2,3,4,5)",
     "schedule": []
   },
   {
@@ -44804,7 +47747,7 @@ export const courses: CourseSection[] = [
       "code": "001",
       "name": "数学科学学院"
     },
-    "teacher": "许小卫",
+    "teacher": "李新",
     "credits": 4.0,
     "hours": 80,
     "level": "本科",
@@ -44958,7 +47901,7 @@ export const courses: CourseSection[] = [
       "code": "001",
       "name": "数学科学学院"
     },
-    "teacher": "李新",
+    "teacher": "许小卫",
     "credits": 4.0,
     "hours": 80,
     "level": "本科",
@@ -45503,8 +48446,7 @@ export const courses: CourseSection[] = [
     "capacity": 120,
     "classes": [
       "23人工智能*",
-      "24凝聚态物理",
-      "24粒子物理与原子核物理"
+      "24凝聚态物理"
     ],
     "rawSchedule": "1~15周 5201: 3(6,7) 5(6,7)",
     "schedule": [
@@ -45557,6 +48499,7 @@ export const courses: CourseSection[] = [
       "24光电信息科学与工程",
       "24量子信息科学*",
       "24量子信息科技英才班T",
+      "24粒子物理与原子核物理",
       "24自旋物理学",
       "24理论物理"
     ],
@@ -46879,7 +49822,7 @@ export const courses: CourseSection[] = [
     "examType": "笔试（闭卷）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 25,
+    "capacity": 30,
     "classes": [
       "26级209院02班"
     ],
@@ -46930,7 +49873,7 @@ export const courses: CourseSection[] = [
     "examType": "笔试（闭卷）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 25,
+    "capacity": 30,
     "classes": [
       "26级209院03班"
     ],
@@ -47033,7 +49976,7 @@ export const courses: CourseSection[] = [
     "examType": "笔试（闭卷）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 35,
+    "capacity": 30,
     "classes": [
       "26级209院04班"
     ],
@@ -47084,7 +50027,7 @@ export const courses: CourseSection[] = [
     "examType": "笔试（闭卷）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 35,
+    "capacity": 30,
     "classes": [
       "26级209院05班"
     ],
@@ -47187,7 +50130,7 @@ export const courses: CourseSection[] = [
     "examType": "笔试（闭卷）",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 40,
+    "capacity": 30,
     "classes": [
       "26级209院06班"
     ],
@@ -47242,7 +50185,7 @@ export const courses: CourseSection[] = [
     "classes": [
       "25级209院01班"
     ],
-    "rawSchedule": "1~15周 3A311: 2(6,7) 4(3,4)",
+    "rawSchedule": "1~15周 3A311: 2(1,2) 4(3,4)",
     "schedule": [
       {
         "weeks": [
@@ -47252,8 +50195,8 @@ export const courses: CourseSection[] = [
         "room": "3A311",
         "day": 2,
         "periods": [
-          6,
-          7
+          1,
+          2
         ]
       },
       {
@@ -47427,7 +50370,7 @@ export const courses: CourseSection[] = [
       "code": "005",
       "name": "近代力学系"
     },
-    "teacher": "贠国霖",
+    "teacher": "贠国霖,马宏昊",
     "credits": 3.0,
     "hours": 60,
     "level": "本科",
@@ -49989,7 +52932,7 @@ export const courses: CourseSection[] = [
       "code": "910",
       "name": "生命科学与医学部"
     },
-    "teacher": "张一鸣",
+    "teacher": "陈竹,单曙光,方芳,高超,胡代菊,胡娜娜,胡晓文,姜妍芳,刘应玲,骆斯慧,马艳,潘田中,沈伟,盛圆,孙琦,汤梦蝶,皖湘,王东升,王慧群,王俐,王雪,徐家琴,叶超,张杰,张开光,张磊,张敏,张旭晗,章俊强,赵俐丽,郑雪瑛",
     "credits": 8.5,
     "hours": 170,
     "level": "本科",
@@ -50004,8 +52947,842 @@ export const courses: CourseSection[] = [
     "classes": [
       "23临床医学"
     ],
-    "rawSchedule": "",
-    "schedule": []
+    "rawSchedule": "10周 【见习】附一院南区2号楼9楼消化内科病房: 3(2,3,4); 【见习】附一院中区（总院）主体大楼9楼消化内科病房: 5(6,7,8)_x000d_\n10周 附一院南区3号楼7楼707教室: 1(1,2)_x000d_\n10周 附一院南区3号楼7楼707教室: 2(11,12)_x000d_\n10周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n11周 【见习】附一院南区2号楼11楼北内分泌科病区: 2(6,7,8)_x000d_\n11周 附一院南区3号楼7楼707教室: 1(1,2); 【见习】附一院中区（总院）保健楼九楼内分泌科病区: 4(6,7,8)_x000d_\n11周 附一院南区3号楼7楼707教室: 2(1,2)_x000d_\n11周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n12周 【见习】附一院南区2号楼11楼北内分泌科病区: 4(6,7,8)_x000d_\n12周 附一院南区3号楼7楼707教室: 1(1,2) 2(1,2)_x000d_\n12周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n13周 【见习】附一院南区1号楼13层风湿科病区: 4(6,7,8)_x000d_\n13周 【见习】附一院南区2号楼11楼北内分泌科病区: 2(6,7,8)_x000d_\n13周 附一院南区3号楼7楼707教室: 1(1,2)_x000d_\n13周 附一院南区3号楼7楼707教室: 2(1,2)_x000d_\n13周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n14~15周 附一院南区3号楼7楼707教室: 1(1,2)_x000d_\n14周 【见习】附一院南区1号楼13层风湿科病区: 2(6,7,8) 4(6,7,8,9)_x000d_\n14周 附一院南区3号楼7楼707教室: 2(1,2) 3(6,7)_x000d_\n15周 【见习】附一院中区（总院）主体大楼11楼血液科病区: 2(6,7,8)_x000d_\n15周 附一院南区3号楼7楼707教室: 2(1,2) 3(6,7)_x000d_\n16周 【见习】附一院中区（总院）主体大楼11楼血液科病区: 4(6,7,8)_x000d_\n16周 第16周上课地点：【见习】附一院中区（总院）主体大楼11楼血液科病区。: 2(6,7,8)_x000d_\n16周 附一院南区3号楼7楼707教室: 1(1,2) 2(1,2)_x000d_\n1周 【见习】附一院南区1号楼14楼呼吸与危重症医学科: 5(6,7,8)_x000d_\n1周 附一院南区3号楼7楼707教室: 1(1,2) 2(1,2) 3(6,7)_x000d_\n1周 附一院南区3号楼7楼707教室: 4(11,12,13)_x000d_\n2周 附一院南区3号楼7楼707教室: 1(3,4,5) 2(1,2); 【见习】附一院感染病院区三号楼一楼结核病区: 4(6,7,8,9)_x000d_\n2周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n3周 【见习】附一院南区1号楼14楼呼吸与危重症医学科: 4(6,7,8,9)_x000d_\n3周 附一院南区3号楼7楼707教室: 1(1,2)_x000d_\n3周 附一院南区3号楼7楼707教室: 2(1,2) 3(6,7)_x000d_\n3周 附一院南区3号楼7楼707教室: 7(1,2)_x000d_\n4周 南区3号楼7楼707教室: 2(1,2); 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n4周 附一院南区3号楼7楼707教室: 1(1,2); 【见习】附一院北区综合楼4-5楼呼吸与危重症医学科: 2(6,7,8,9)_x000d_\n5,8周 附一院南区3号楼7楼707教室: 1(1,2); 南区3号楼7楼707教室: 2(1,2)_x000d_\n5~7(单)周 附一院南区3号楼7楼707教室: 3(6,7)_x000d_\n5周 【见习】附一院南区1号楼1楼CCU病区: 2(6,7,8)_x000d_\n6周 【见习】附一院南区1号楼9楼心内科心律失常病区: 6(2,3,4)_x000d_\n7周 附一院南区3号楼7楼707教室: 1(1,2) 2(1,2); 【见习】附一院南区1号楼8楼心内科一病区: 4(6,7,8)_x000d_\n8周 【见习】附一院南区1号楼9楼心内科四病区: 2(6,7,8)_x000d_\n8周 附一院南区3号楼7楼707教室: 3(6,7); 【见习】附一院南区1号楼9楼心内科心律失常病区: 4(6,7,8)_x000d_\n8周 附一院南区3号楼7楼707教室: 4(11,12)_x000d_\n9周 【见习】附一院中区（总院）主体大楼9楼消化内科病房: 2(6,7,8) 4(6,7,8)_x000d_\n9周 附一院南区3号楼7楼707教室: 2(1,2)_x000d_\n9周 附一院南区3号楼7楼707教室: 3(6,7)",
+    "schedule": [
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "【见习】附一院南区2号楼9楼消化内科病房",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼9楼消化内科病房",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          11,
+          12
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "【见习】附一院南区2号楼11楼北内分泌科病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "【见习】附一院中区（总院）保健楼九楼内分泌科病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "【见习】附一院南区2号楼11楼北内分泌科病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "【见习】附一院南区1号楼13层风湿科病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "【见习】附一院南区2号楼11楼北内分泌科病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          15
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "【见习】附一院南区1号楼13层风湿科病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "【见习】附一院南区1号楼13层风湿科病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼11楼血液科病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼11楼血液科病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "第16周上课地点：【见习】附一院中区（总院）主体大楼11楼血液科病区。",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "【见习】附一院南区1号楼14楼呼吸与危重症医学科",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 4,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "【见习】附一院感染病院区三号楼一楼结核病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "【见习】附一院南区1号楼14楼呼吸与危重症医学科",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 7,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "【见习】附一院北区综合楼4-5楼呼吸与危重症医学科",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          5
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          5
+        ],
+        "room": "南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          7
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          5
+        ],
+        "room": "【见习】附一院南区1号楼1楼CCU病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          6
+        ],
+        "room": "【见习】附一院南区1号楼9楼心内科心律失常病区",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "【见习】附一院南区1号楼8楼心内科一病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "【见习】附一院南区1号楼9楼心内科四病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "【见习】附一院南区1号楼9楼心内科心律失常病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 4,
+        "periods": [
+          11,
+          12
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼9楼消化内科病房",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼9楼消化内科病房",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      }
+    ]
   },
   {
     "id": "MED3027.01",
@@ -50014,7 +53791,7 @@ export const courses: CourseSection[] = [
       "code": "910",
       "name": "生命科学与医学部"
     },
-    "teacher": "张一鸣",
+    "teacher": "陈浩,段丽群,高健,葛建军,葛新宝,洪磊,胡宇,黄威,蒋辉,孔雷,孔令明,孔祥,李华宝,李蒙,李钟奇,刘连新,刘流,刘少军,刘振,鹿亮,梅新宇,潘婷婷,宋瑞鹏,孙春磊,孙小杰,田丰,田界勇,王继洲,吴杲,吴显宁,谢放,徐玮,杨家赵,姚寒晖,尹大龙,尤涛,余建伟,张博,张努,张琼,张锐,张贤祚,张营,赵其纯,赵智伟,周正春,朱晨,朱亮,朱志强",
     "credits": 6.0,
     "hours": 120,
     "level": "本科",
@@ -50029,8 +53806,723 @@ export const courses: CourseSection[] = [
     "classes": [
       "23临床医学"
     ],
-    "rawSchedule": "",
-    "schedule": []
+    "rawSchedule": "10周 【见习】附一院中区（总院）主体大楼10楼 普外科血管外科: 2(6,7,8)_x000d_\n10周 【见习】附一院南区1号楼11楼胸外科: 4(6,7,8,9)_x000d_\n10周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n11周 【见习】附一院南区1号楼11楼胸外科: 3(1,2,3,4)_x000d_\n11周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n11周 附一院南区3号楼7楼707教室: 2(3,4)_x000d_\n12~13周 【第12周、第13周见习地点】附一院南区1号楼10楼心外科二病区: 5(1,2,3)_x000d_\n12周 【见习】附一院南区1号楼10楼心外科二病区: 5(1,2,3)_x000d_\n12周 【见习】附一院南区1号楼11楼胸外科: 2(6,7)_x000d_\n12周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n12周 附一院南区3号楼7楼707教室: 2(3,4)_x000d_\n13,16周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n13周 【见习】附一院南区1号楼10楼心外科二病区: 3(1,2,3,4)_x000d_\n13周 【见习】附一院南区1号楼10楼心外科二病区: 5(1,2,3)_x000d_\n13周 附一院南区3号楼7楼707教室: 2(3,4)_x000d_\n14周 【见习】附一院中区（总院）急救中心一楼 石膏间: 3(2,3,4)_x000d_\n14周 附一院南区3号楼7楼707教室: 1(3,4,5)_x000d_\n15周 【见习】附一院南区2号楼16楼脊柱外科一病区: 5(1,2,3)_x000d_\n15周 【见习】附一院南区2号楼16楼脊柱外科二病区: 5(1,2,3)_x000d_\n15周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n15周 附一院南区3号楼7楼707教室: 3(1,2)_x000d_\n16周 附一院南区3号楼7楼707教室: 5(1,2)_x000d_\n17周 【见习】附一院中区（总院）主体大楼15楼骨二科病区: 3(2,3,4)_x000d_\n17周 【见习】附一院中区（总院）主体大楼16楼骨一科病区: 3(2,3,4)_x000d_\n17周 附一院南区3号楼7楼707教室: 1(1,2)_x000d_\n1周 【见习】附一院南区1号楼15楼西 普外科乳腺外科一病区: 4(6,7,8)_x000d_\n1周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n1周 附一院南区3号楼7楼707教室: 2(3,4); 【见习】附一院南区1号楼15楼西 普外科乳腺外科一病区: 4(6,7,8)_x000d_\n2周 附一院南区3号楼7楼707教室: 1(1,2); 【见习】附一院中区（总院）主体大楼10楼 普外科疝及肥胖外科病区: 2(6,7,8)_x000d_\n2周 附一院南区3号楼7楼707教室: 2(3,4)_x000d_\n3周 【见习】附一院中区（总院）主体大楼23楼 普外科胃外科一病区: 2(6,7,8)_x000d_\n3周 【见习】附一院南区2号楼13北急诊外科: 7(6,7,8)_x000d_\n3周 【见习】附一院西区2号楼15楼东 普外科胃肠外科二病区: 2(6,7,8)_x000d_\n3周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n3周 附一院南区3号楼7楼707教室: 2(3,4); 【见习】附一院南区2号楼13北急诊外科: 7(6,7,8)_x000d_\n3周 附一院南区3号楼7楼707教室: 7(3,4)_x000d_\n4~6(双)周 【第4周、第6周见习地点】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区。: 4(6,7,8)_x000d_\n4周 【见习】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区: 4(6,7,8)_x000d_\n4周 附一院南区3号楼7楼707教室: 2(3,4) 3(11,12)_x000d_\n5周 附一院南区3号楼7楼707教室: 1(6,7) 2(3,4)_x000d_\n6周 【见习地点】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区: 4(6,7,8)_x000d_\n7周 【见习】附一院中区（总院）主体大楼22楼 普外科结直肠外科一病区: 2(6,7,8)_x000d_\n7周 【见习】附一院西区2号楼15楼西 普外科结直肠外科二病区: 2(6,7,8)_x000d_\n7周 附一院南区3号楼7楼707教室: 1(3,4) 2(3,4)_x000d_\n8周 【见习】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区: 3(2,3,4)_x000d_\n8周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n8周 附一院南区3号楼7楼707教室: 2(3,4)_x000d_\n9周 【见习】附一院中区（总院）主体大楼10楼 普外科胆胰外科一病区: 3(2,3,4)_x000d_\n9周 附一院南区3号楼7楼707教室: 1(3,4)_x000d_\n9周 附一院南区3号楼7楼707教室: 2(3,4)",
+    "schedule": [
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼10楼 普外科血管外科",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "【见习】附一院南区1号楼11楼胸外科",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          10,
+          10
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "【见习】附一院南区1号楼11楼胸外科",
+        "day": 3,
+        "periods": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          11,
+          11
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          13
+        ],
+        "room": "【第12周、第13周见习地点】附一院南区1号楼10楼心外科二病区",
+        "day": 5,
+        "periods": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "【见习】附一院南区1号楼10楼心外科二病区",
+        "day": 5,
+        "periods": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "【见习】附一院南区1号楼11楼胸外科",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          12,
+          12
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "【见习】附一院南区1号楼10楼心外科二病区",
+        "day": 3,
+        "periods": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "【见习】附一院南区1号楼10楼心外科二病区",
+        "day": 5,
+        "periods": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          13,
+          13
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "【见习】附一院中区（总院）急救中心一楼 石膏间",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          14,
+          14
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "【见习】附一院南区2号楼16楼脊柱外科一病区",
+        "day": 5,
+        "periods": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "【见习】附一院南区2号楼16楼脊柱外科二病区",
+        "day": 5,
+        "periods": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          15,
+          15
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          16
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 5,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          17,
+          17
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼15楼骨二科病区",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          17,
+          17
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼16楼骨一科病区",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          17,
+          17
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "【见习】附一院南区1号楼15楼西 普外科乳腺外科一病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          1,
+          1
+        ],
+        "room": "【见习】附一院南区1号楼15楼西 普外科乳腺外科一病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          1,
+          2
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼10楼 普外科疝及肥胖外科病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          2
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼23楼 普外科胃外科一病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "【见习】附一院南区2号楼13北急诊外科",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "【见习】附一院西区2号楼15楼东 普外科胃肠外科二病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "【见习】附一院南区2号楼13北急诊外科",
+        "day": 7,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          3,
+          3
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 7,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          6
+        ],
+        "room": "【第4周、第6周见习地点】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区。",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          4
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 3,
+        "periods": [
+          11,
+          12
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          5
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          5,
+          5
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          6
+        ],
+        "room": "【见习地点】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼22楼 普外科结直肠外科一病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "【见习】附一院西区2号楼15楼西 普外科结直肠外科二病区",
+        "day": 2,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          7
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼9楼 普外科肝胆外科一病区",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          8
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "【见习】附一院中区（总院）主体大楼10楼 普外科胆胰外科一病区",
+        "day": 3,
+        "periods": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 1,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          9,
+          9
+        ],
+        "room": "附一院南区3号楼7楼707教室",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      }
+    ]
   },
   {
     "id": "MED3028.01",
@@ -50374,7 +54866,7 @@ export const courses: CourseSection[] = [
       "code": "016",
       "name": "管理科学系"
     },
-    "teacher": "李慧芳,王熹徽,黄茜,王潇",
+    "teacher": "王熹徽,王潇,黄茜,李慧芳",
     "credits": 2.0,
     "hours": 40,
     "level": "本科",
@@ -50390,12 +54882,64 @@ export const courses: CourseSection[] = [
       "25管理科学",
       "25大数据管理与应用"
     ],
-    "rawSchedule": "1~14周 2305: 4(3,4,5)",
+    "rawSchedule": "10~13周 2305: 4(3,4,5)_x000d_\n1~3,6~7周 2305: 4(3,4,5)_x000d_\n4~5周 2305: 4(3,4,5)_x000d_\n8~9周 2305: 4(3,4,5)",
     "schedule": [
       {
         "weeks": [
+          10,
+          13
+        ],
+        "room": "2305",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
           1,
-          14
+          3
+        ],
+        "room": "2305",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          6,
+          7
+        ],
+        "room": "2305",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          4,
+          5
+        ],
+        "room": "2305",
+        "day": 4,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          8,
+          9
         ],
         "room": "2305",
         "day": 4,
@@ -50505,12 +55049,12 @@ export const courses: CourseSection[] = [
     "classes": [
       "24大数据管理与应用"
     ],
-    "rawSchedule": "1~7周 5205: 4(8,9,10)_x000d_\n8~14周 5205: 4(8,9,10)",
+    "rawSchedule": "1~4周 5205: 4(8,9,10)_x000d_\n5~14周 5205: 4(8,9,10)",
     "schedule": [
       {
         "weeks": [
           1,
-          7
+          4
         ],
         "room": "5205",
         "day": 4,
@@ -50522,7 +55066,7 @@ export const courses: CourseSection[] = [
       },
       {
         "weeks": [
-          8,
+          5,
           14
         ],
         "room": "5205",
@@ -50598,11 +55142,23 @@ export const courses: CourseSection[] = [
       "23管理科学*",
       "24大数据管理与应用"
     ],
-    "rawSchedule": "1~14周 5305: 2(3,4)",
+    "rawSchedule": "1~7周 5305: 2(3,4)_x000d_\n8~14周 5305: 2(3,4)",
     "schedule": [
       {
         "weeks": [
           1,
+          7
+        ],
+        "room": "5305",
+        "day": 2,
+        "periods": [
+          3,
+          4
+        ]
+      },
+      {
+        "weeks": [
+          8,
           14
         ],
         "room": "5305",
@@ -50640,12 +55196,12 @@ export const courses: CourseSection[] = [
       "24管理科学",
       "24大数据管理与应用"
     ],
-    "rawSchedule": "1~7周 5106: 1(3,4,5)_x000d_\n8~14周 5106: 1(3,4,5)",
+    "rawSchedule": "1~2周 5106: 1(3,4,5)_x000d_\n3~7周 5106: 1(3,4,5)",
     "schedule": [
       {
         "weeks": [
           1,
-          7
+          2
         ],
         "room": "5106",
         "day": 1,
@@ -50657,8 +55213,8 @@ export const courses: CourseSection[] = [
       },
       {
         "weeks": [
-          8,
-          14
+          3,
+          7
         ],
         "room": "5106",
         "day": 1,
@@ -51101,7 +55657,7 @@ export const courses: CourseSection[] = [
       "code": "214",
       "name": "核科学技术学院"
     },
-    "teacher": "孙喆,唐靖宇,兰涛,胡国军",
+    "teacher": "唐靖宇,兰涛,孙喆,胡国军",
     "credits": 3.0,
     "hours": 60,
     "level": "本科",
@@ -51117,11 +55673,11 @@ export const courses: CourseSection[] = [
       "24工程物理",
       "24核工程与核技术(强基)"
     ],
-    "rawSchedule": "11~12周 3A307: 2(1,2) 4(3,4,5)_x000d_\n1~3,7~9周 3A307: 2(1,2) 4(3,4,5)_x000d_\n3~6周 3A307: 2(1,2) 4(3,4,5)_x000d_\n9~10周 3A307: 2(1,2) 4(3,4,5)",
+    "rawSchedule": "1~12周 3A307: 2(1,2) 4(3,4,5)",
     "schedule": [
       {
         "weeks": [
-          11,
+          1,
           12
         ],
         "room": "3A307",
@@ -51133,108 +55689,8 @@ export const courses: CourseSection[] = [
       },
       {
         "weeks": [
-          11,
+          1,
           12
-        ],
-        "room": "3A307",
-        "day": 4,
-        "periods": [
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "weeks": [
-          1,
-          3
-        ],
-        "room": "3A307",
-        "day": 2,
-        "periods": [
-          1,
-          2
-        ]
-      },
-      {
-        "weeks": [
-          7,
-          9
-        ],
-        "room": "3A307",
-        "day": 2,
-        "periods": [
-          1,
-          2
-        ]
-      },
-      {
-        "weeks": [
-          1,
-          3
-        ],
-        "room": "3A307",
-        "day": 4,
-        "periods": [
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "weeks": [
-          7,
-          9
-        ],
-        "room": "3A307",
-        "day": 4,
-        "periods": [
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "weeks": [
-          3,
-          6
-        ],
-        "room": "3A307",
-        "day": 2,
-        "periods": [
-          1,
-          2
-        ]
-      },
-      {
-        "weeks": [
-          3,
-          6
-        ],
-        "room": "3A307",
-        "day": 4,
-        "periods": [
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "weeks": [
-          9,
-          10
-        ],
-        "room": "3A307",
-        "day": 2,
-        "periods": [
-          1,
-          2
-        ]
-      },
-      {
-        "weeks": [
-          9,
-          10
         ],
         "room": "3A307",
         "day": 4,
@@ -52035,6 +56491,277 @@ export const courses: CourseSection[] = [
           3,
           4,
           5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE5003P.01",
+    "courseName": "核聚变工程导论",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "陈红丽,毛世峰",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "本研贯通",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 190,
+    "classes": [],
+    "rawSchedule": "2~16周 3B101: 2(6,7) 4(6,7)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          16
+        ],
+        "room": "3B101",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          16
+        ],
+        "room": "3B101",
+        "day": 4,
+        "periods": [
+          6,
+          7
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE6101P.01",
+    "courseName": "核安全学",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "胡广月",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~15周 3C304: 2(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          15
+        ],
+        "room": "3C304",
+        "day": 2,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE6103P.01",
+    "courseName": "核动力系统与设备",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "陈志",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（开卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "2~15周 3B201: 1(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          15
+        ],
+        "room": "3B201",
+        "day": 1,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE7102P.01",
+    "courseName": "放射肿瘤学与前沿",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "徐榭,周解平",
+    "credits": 3.0,
+    "hours": 60,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 40,
+    "classes": [],
+    "rawSchedule": "2~16周 3A407: 5(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          16
+        ],
+        "room": "3A407",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE7104P.01",
+    "courseName": "反应堆材料",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "彭蕾",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~15周 3A313: 1(8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          15
+        ],
+        "room": "3A313",
+        "day": 1,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE7105P.01",
+    "courseName": "核燃料循环",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "叶亚楠",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "2~15周 3C204: 4(8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          15
+        ],
+        "room": "3C204",
+        "day": 4,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "NSTE7229P.01",
+    "courseName": "微波技术",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "周楚",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~15周 3A107: 2(8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          15
+        ],
+        "room": "3A107",
+        "day": 2,
+        "periods": [
+          8,
+          9,
+          10
         ]
       }
     ]
@@ -54048,42 +58775,6 @@ export const courses: CourseSection[] = [
         ],
         "room": "东区操场（男生）",
         "day": 4,
-        "periods": [
-          6,
-          7
-        ]
-      }
-    ]
-  },
-  {
-    "id": "PE00001.59",
-    "courseName": "基础体育",
-    "department": {
-      "code": "103",
-      "name": "体育教学中心"
-    },
-    "teacher": "杨旭东",
-    "credits": 1.0,
-    "hours": 40,
-    "level": "本科",
-    "sectionType": "体育",
-    "category": "",
-    "courseType": "理论课",
-    "language": "中文",
-    "examType": "体育测试",
-    "undergradShared": false,
-    "enrolled": 0,
-    "capacity": 28,
-    "classes": [],
-    "rawSchedule": "2~18周 东区操场（男生）: 1(6,7)",
-    "schedule": [
-      {
-        "weeks": [
-          2,
-          18
-        ],
-        "room": "东区操场（男生）",
-        "day": 1,
         "periods": [
           6,
           7
@@ -57421,7 +62112,7 @@ export const courses: CourseSection[] = [
     "examType": "体育测试",
     "undergradShared": false,
     "enrolled": 0,
-    "capacity": 30,
+    "capacity": 20,
     "classes": [],
     "rawSchedule": "1~18周 西区操场: 3(1,2)",
     "schedule": [
@@ -57504,6 +62195,398 @@ export const courses: CourseSection[] = [
         ],
         "room": "中体Z102",
         "day": 1,
+        "periods": [
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6101U.02",
+    "courseName": "自然辩证法概论",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "吕凌峰",
+    "credits": 1.0,
+    "hours": 20,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~5,7~8周 G3-110: 3(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-110",
+        "day": 3,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          8
+        ],
+        "room": "G3-110",
+        "day": 3,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6101U.03",
+    "courseName": "自然辩证法概论",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "吕凌峰",
+    "credits": 1.0,
+    "hours": 20,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "9~14周 G3-110: 3(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          9,
+          14
+        ],
+        "room": "G3-110",
+        "day": 3,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6101U.04",
+    "courseName": "自然辩证法概论",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "张贵红",
+    "credits": 1.0,
+    "hours": 20,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "2~5,7~8周 G3-108: 3(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          5
+        ],
+        "room": "G3-108",
+        "day": 3,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          8
+        ],
+        "room": "G3-108",
+        "day": 3,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6101U.05",
+    "courseName": "自然辩证法概论",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "张贵红",
+    "credits": 1.0,
+    "hours": 20,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 120,
+    "classes": [],
+    "rawSchedule": "9~14周 G3-113: 5(11,12,13)",
+    "schedule": [
+      {
+        "weeks": [
+          9,
+          14
+        ],
+        "room": "G3-113",
+        "day": 5,
+        "periods": [
+          11,
+          12,
+          13
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6301U.01",
+    "courseName": "工程伦理",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "王高峰",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 153,
+    "classes": [],
+    "rawSchedule": "2~3,7~13周 G3-109: 6(6,7,8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          3
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          7,
+          13
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6301U.02",
+    "courseName": "工程伦理",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "王高峰",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 153,
+    "classes": [],
+    "rawSchedule": "11~19周 G3-110: 1(2,3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          11,
+          19
+        ],
+        "room": "G3-110",
+        "day": 1,
+        "periods": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL6301U.03",
+    "courseName": "工程伦理",
+    "department": {
+      "code": "A14",
+      "name": "软件学院苏州"
+    },
+    "teacher": "王高峰",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "公选课",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 153,
+    "classes": [],
+    "rawSchedule": "13~17,19周 G3-108: 5(6,7,8,9)_x000d_\n16~17,19周 G3-109: 6(2,3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          13,
+          17
+        ],
+        "room": "G3-108",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-108",
+        "day": 5,
+        "periods": [
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      {
+        "weeks": [
+          16,
+          17
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "weeks": [
+          19,
+          19
+        ],
+        "room": "G3-109",
+        "day": 6,
+        "periods": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHIL7101U.16",
+    "courseName": "中国马克思主义与当代",
+    "department": {
+      "code": "175",
+      "name": "长春应化所"
+    },
+    "teacher": "王勇",
+    "credits": 2.0,
+    "hours": 40,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 140,
+    "classes": [],
+    "rawSchedule": "2~11周 教育大厦6040: 2(6,7) 2(8,9)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          11
+        ],
+        "room": "教育大厦6040",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          11
+        ],
+        "room": "教育大厦6040",
+        "day": 2,
         "periods": [
           8,
           9
@@ -60724,7 +65807,7 @@ export const courses: CourseSection[] = [
       "code": "042",
       "name": "物理实验教学中心"
     },
-    "teacher": "张杨,张华洋,蒋景华,张乔枫,蔡俊,陶小平,浦其荣,孙晓宇,吴玉椿,宋国锋,王中平,梁燕,张权,韦先涛,赵伟,赵霞,郭玉刚,祝巍,刘应玲,张增明,曾华凌,王晓方,代如成,曲广媛,李恒一,沈镇,岳盈,王鹤,胡晓敏",
+    "teacher": "张杨,蔡俊,陶小平,浦其荣,吴玉椿,王中平,梁燕,张权,韦先涛,赵伟,赵霞,郭玉刚,祝巍,刘应玲,张增明,曾华凌,王晓方,代如成,曲广媛,李恒一,沈镇,胡晓敏,蒋景华,张乔枫,孙晓宇,宋国锋,岳盈,王鹤,张华洋",
     "credits": 0.5,
     "hours": 20,
     "level": "本科",
@@ -60737,7 +65820,11 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 225,
     "classes": [
-      "25计算机科学与技术*"
+      "25计算机科学与技术*",
+      "25数据科学与大数据技术",
+      "25临床医学",
+      "25中国科大-协和医学英才班U",
+      "25级209院06班"
     ],
     "rawSchedule": "3~18周 东区教1楼物理实验室: 1(11,12,13)",
     "schedule": [
@@ -60776,13 +65863,11 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 225,
     "classes": [
-      "25工商管理",
       "25统计学",
       "25数学学院（大类）*",
       "25管理科学",
       "25少院数学（大类）Y",
-      "25大数据管理与应用",
-      "25商业人工智能"
+      "25大数据管理与应用"
     ],
     "rawSchedule": "3~18周 东区教1楼物理实验室: 2(6,7,8,9)",
     "schedule": [
@@ -60809,7 +65894,7 @@ export const courses: CourseSection[] = [
       "code": "042",
       "name": "物理实验教学中心"
     },
-    "teacher": "张杨,张华洋,陶小平,浦其荣,吴玉椿,王中平,梁燕,张权,韦先涛,赵伟,赵霞,郭玉刚,祝巍,刘应玲,张增明,曾华凌,王晓方,代如成,曲广媛,李恒一,沈镇,胡晓敏,蒋景华,张乔枫,孙晓宇,宋国锋,岳盈,王鹤,蔡俊",
+    "teacher": "张杨,蔡俊,陶小平,浦其荣,吴玉椿,王中平,梁燕,张权,韦先涛,赵伟,赵霞,郭玉刚,祝巍,刘应玲,张增明,曾华凌,王晓方,代如成,曲广媛,李恒一,沈镇,胡晓敏,蒋景华,张乔枫,孙晓宇,宋国锋,岳盈,王鹤,张华洋",
     "credits": 0.5,
     "hours": 20,
     "level": "本科",
@@ -60822,12 +65907,7 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 225,
     "classes": [
-      "25数据科学与大数据技术",
-      "25级209院06班",
-      "25级210院02班",
-      "25级210院03班",
-      "25级210院01班*",
-      "25级206院012系01班*",
+      "25计算机科学与技术*",
       "25电子信息工程"
     ],
     "rawSchedule": "3~18周 东区教1楼物理实验室: 2(11,12,13)",
@@ -60867,14 +65947,15 @@ export const courses: CourseSection[] = [
     "enrolled": 0,
     "capacity": 225,
     "classes": [
+      "25工商管理",
       "25生命科学学院（大类）*",
+      "25计算机科学与技术*",
       "25金融学",
       "25临床医学",
       "25生命科学学院（大类）(强基)",
       "25中国科大-协和医学英才班U",
-      "25级210院04班",
-      "25级210院05班",
-      "25自动化"
+      "25自动化",
+      "25商业人工智能"
     ],
     "rawSchedule": "3~18周 东区教1楼物理实验室: 3(11,12,13)",
     "schedule": [
@@ -60917,7 +65998,8 @@ export const courses: CourseSection[] = [
       "25级209院01班",
       "25级209院03班",
       "25级209院04班",
-      "25级206院材料01班"
+      "25级206院材料01班",
+      "25级206院012系01班*"
     ],
     "rawSchedule": "3~18周 东区教1楼物理实验室: 4(6,7,8,9)",
     "schedule": [
@@ -61633,6 +66715,202 @@ export const courses: CourseSection[] = [
           7,
           8,
           9
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHYS6152P.01",
+    "courseName": "等离子体物理学基础",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "蔡辉山",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "笔试（闭卷）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "2~17周 5303: 2(6,7) 5(8,9,10)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "5303",
+        "day": 2,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "5303",
+        "day": 5,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHYS6153P.01",
+    "courseName": "等离子体诊断方法",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "谢锦林",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "2~17周 3C201: 1(6,7) 4(6,7,8)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "3C201",
+        "day": 1,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "3C201",
+        "day": 4,
+        "periods": [
+          6,
+          7,
+          8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHYS7555P.01",
+    "courseName": "前沿等离子体物理与技术",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "孙玄,祝曹祥,贾青,张彦增",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "大作业（论文、报告、项目或作品等）",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 100,
+    "classes": [],
+    "rawSchedule": "2~17周 3A310: 3(6,7) 5(3,4,5)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "3A310",
+        "day": 3,
+        "periods": [
+          6,
+          7
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "3A310",
+        "day": 5,
+        "periods": [
+          3,
+          4,
+          5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PHYS7557P.01",
+    "courseName": "惯性约束聚变物理",
+    "department": {
+      "code": "214",
+      "name": "核科学技术学院"
+    },
+    "teacher": "郑坚,李俊",
+    "credits": 4.0,
+    "hours": 80,
+    "level": "研究生",
+    "sectionType": "基础",
+    "category": "",
+    "courseType": "理论课",
+    "language": "中文",
+    "examType": "其他",
+    "undergradShared": false,
+    "enrolled": 0,
+    "capacity": 60,
+    "classes": [],
+    "rawSchedule": "2~17周 5107: 1(8,9,10) 4(1,2)",
+    "schedule": [
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "5107",
+        "day": 1,
+        "periods": [
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "weeks": [
+          2,
+          17
+        ],
+        "room": "5107",
+        "day": 4,
+        "periods": [
+          1,
+          2
         ]
       }
     ]
@@ -63183,7 +68461,7 @@ export const courses: CourseSection[] = [
       "code": "206",
       "name": "化学与材料科学学院"
     },
-    "teacher": "朱濯缨",
+    "teacher": "朱濯缨,陈林江",
     "credits": 3.0,
     "hours": 80,
     "level": "本科",
