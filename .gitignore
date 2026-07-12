@@ -8,6 +8,9 @@ wheels/
 # Virtual environments
 .venv/
 
+# Excel 数据源（每学期从教务系统导出，不入 git）
+*.xlsx
+
 # Node / build
 node_modules/
 dist/
