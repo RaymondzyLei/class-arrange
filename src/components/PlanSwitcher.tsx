@@ -170,7 +170,7 @@ export default function PlanSwitcher({
           showSearch
           allowClear
           value={selectedCurriculumId ?? undefined}
-          placeholder="选择或搜索培养方案"
+          placeholder="选择或键入搜索培养方案"
           options={curriculumOptions}
           filterOption={filterCurriculumOption}
           optionFilterProp="label"

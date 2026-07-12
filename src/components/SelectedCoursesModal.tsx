@@ -804,7 +804,7 @@ export default function SelectedCoursesModal({
                       className="selected-courses-curriculum-select"
                       showSearch
                       allowClear
-                      placeholder="选择或搜索培养方案"
+                      placeholder="选择或键入搜索培养方案"
                       value={selectedCurriculumId ?? undefined}
                       options={curriculumOptions}
                       filterOption={filterCurriculumOption}
