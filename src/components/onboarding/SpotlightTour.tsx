@@ -366,6 +366,13 @@ export default function SpotlightTour({
   }, [open, stepIndex, updateGeometry]);
 
   useEffect(() => {
+    if (!open || !cardRef.current || typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(() => updateGeometry());
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, [open, updateGeometry]);
+
+  useEffect(() => {
     if (!open) return undefined;
     let frame = 0;
     let resizeTimer = 0;

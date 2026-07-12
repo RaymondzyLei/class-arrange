@@ -30,7 +30,7 @@ export default function TourCard({
     <div className="tour-card">
       {!isLast ? <div className="tour-card__step">步骤 {index + 1} / {stepTotal}</div> : null}
       <h2 className="tour-card__title">{step.title}</h2>
-      <p className="tour-card__description">{step.description}</p>
+      <div className="tour-card__description">{step.description}</div>
       {step.tip ? <p className="tour-card__tip">{step.tip}</p> : null}
       <div className="tour-card__actions">
         {!isFirst ? <Button onClick={onPrevious}>上一步</Button> : null}

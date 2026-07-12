@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import ContributorList from '@/components/ContributorList';
+import { PROJECT_LINKS } from '@/content/projectCredits';
 
 export type TourPlacement = 'right' | 'bottom' | 'left' | 'top' | 'center';
 
@@ -118,7 +120,7 @@ export const tourSteps: TourStep[] = [
         现在你已经学会了这个工具的基础使用方法，祝您排课愉快！如果遇到问题或想提建议，欢迎前往{' '}
         <a
           className="tour-card__inline-link"
-          href="https://github.com/RaymondzyLei/class-arrange"
+          href={PROJECT_LINKS.repository}
           target="_blank"
           rel="noreferrer"
         >
@@ -129,7 +131,7 @@ export const tourSteps: TourStep[] = [
         欢迎访问制作者的个人主页{' '}
         <a
           className="tour-card__inline-link"
-          href="https://raymondzylei.me/"
+          href={PROJECT_LINKS.raymondHome}
           target="_blank"
           rel="noreferrer"
         >
@@ -138,69 +140,18 @@ export const tourSteps: TourStep[] = [
         {' '}了解更多，欢迎访问第二制作者的主页{' '}
         <a
           className="tour-card__inline-link"
-          href="https://github.com/syhalex/"
+          href={PROJECT_LINKS.syhalexHome}
           target="_blank"
           rel="noreferrer"
         >
           syhalex
         </a>
         {' '}。
-        <br />
-        <br />
-        贡献列表：
-        <br />
-        1.{' '}
-        <a
-          className="tour-card__inline-link"
-          href="https://github.com/RaymondzyLei"
-          target="_blank"
-          rel="noreferrer"
-        >
-          RaymondzyLei
-        </a>
-        <br />
-        2.{' '}
-        <a
-          className="tour-card__inline-link"
-          href="https://github.com/claude"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Claude
-        </a>
-        <br />
-        3.{' '}
-        <a
-          className="tour-card__inline-link"
-          href="https://github.com/syhalex"
-          target="_blank"
-          rel="noreferrer"
-        >
-          syhalex
-        </a>
-        <br />
-        4.{' '}
-        <a
-          className="tour-card__inline-link"
-          href="https://github.com/openai/codex"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Codex
-        </a>
-        <br />
-        5.{' '}
-        <a
-          className="tour-card__inline-link"
-          href="https://github.com/quantai1314"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Quantai
-        </a>
-        <br />
-        <br />
-        再次查看引导可以从“自定义”里的“重新查看新手引导”进入。
+        <span className="tour-card__credits-title">贡献列表：</span>
+        <ContributorList variant="links" />
+        <span className="tour-card__closing-note">
+          再次查看引导可以从“自定义”里的“重新查看新手引导”进入。
+        </span>
       </>
     ),
     action: 'closeCustomization',

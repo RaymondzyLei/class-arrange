@@ -6,6 +6,7 @@ import {
   type CustomScheduleSettings,
 } from '@/utils/customization';
 import BottomModal from './BottomModal';
+import { PreferenceSwitchVisual } from './onboarding/PreferenceSwitch';
 
 interface Props {
   open: boolean;
@@ -15,66 +16,25 @@ interface Props {
   onRestartOnboarding: () => void;
 }
 
-interface AppleToggleProps {
+function PreferenceToggle({
+  checked,
+  label,
+  onChange,
+}: {
   checked: boolean;
   label: string;
   onChange: (checked: boolean) => void;
-}
-
-function AppleToggle({ checked, label, onChange }: AppleToggleProps) {
-  const pointerRef = useRef<{
-    pointerId: number;
-    startX: number;
-    initial: boolean;
-    moved: boolean;
-    lastValue: boolean;
-  } | null>(null);
-
+}) {
   return (
     <button
       type="button"
+      className="customization__preference-toggle"
       role="switch"
       aria-label={label}
       aria-checked={checked}
-      className={`apple-toggle${checked ? ' apple-toggle--checked' : ''}`}
-      onPointerDown={(event) => {
-        if (event.button !== 0) return;
-        event.preventDefault();
-        event.currentTarget.setPointerCapture(event.pointerId);
-        pointerRef.current = {
-          pointerId: event.pointerId,
-          startX: event.clientX,
-          initial: checked,
-          moved: false,
-          lastValue: checked,
-        };
-      }}
-      onPointerMove={(event) => {
-        const pointer = pointerRef.current;
-        if (!pointer || pointer.pointerId !== event.pointerId) return;
-        const delta = event.clientX - pointer.startX;
-        if (Math.abs(delta) < 4) return;
-        pointer.moved = true;
-        const next = delta > 0;
-        if (next === pointer.lastValue) return;
-        pointer.lastValue = next;
-        onChange(next);
-      }}
-      onPointerUp={(event) => {
-        const pointer = pointerRef.current;
-        if (!pointer || pointer.pointerId !== event.pointerId) return;
-        if (!pointer.moved) onChange(!pointer.initial);
-        pointerRef.current = null;
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }}
-      onPointerCancel={() => {
-        pointerRef.current = null;
-      }}
-      onClick={(event) => {
-        if (event.detail === 0) onChange(!checked);
-      }}
+      onClick={() => onChange(!checked)}
     >
-      <span className="apple-toggle__thumb" />
+      <PreferenceSwitchVisual checked={checked} />
     </button>
   );
 }
@@ -164,7 +124,7 @@ export default function CustomizationModal({
           <div className="customization__preference-list">
             <div className="customization__preference-row">
               <span className="customization__preference-label">优先空出半天</span>
-              <AppleToggle
+              <PreferenceToggle
                 checked={settings.preferHalfDay}
                 label="优先空出半天"
                 onChange={setPreferHalfDay}
@@ -172,7 +132,7 @@ export default function CustomizationModal({
             </div>
             <div className="customization__preference-row">
               <span className="customization__preference-label">优先减少早八天数</span>
-              <AppleToggle
+              <PreferenceToggle
                 checked={settings.preferFewerEarlyMornings}
                 label="优先减少早八天数"
                 onChange={setPreferFewerEarlyMornings}

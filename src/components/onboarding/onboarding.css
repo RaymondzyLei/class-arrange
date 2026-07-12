@@ -384,6 +384,10 @@
   border-radius: 16px;
   background: var(--panel-bg);
   box-shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .tour-card__title {
@@ -419,6 +423,12 @@
 .tour-card__inline-link:focus-visible {
   color: color-mix(in srgb, var(--accent) 78%, var(--text));
   outline: 0;
+}
+
+.tour-card__credits-title,
+.tour-card__closing-note {
+  display: block;
+  margin-top: 14px;
 }
 
 .tour-card__actions {

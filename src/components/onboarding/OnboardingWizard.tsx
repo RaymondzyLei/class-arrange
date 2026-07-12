@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { OnboardingPreferences } from '@/onboarding/useOnboarding';
 import OnboardingConfirm from './OnboardingConfirm';
+import PreferenceSwitch from './PreferenceSwitch';
 import './onboarding.css';
 
 interface Props {
@@ -27,33 +28,6 @@ const PREFERENCE_OPTIONS: PreferenceOption[] = [
     title: '优先减少早八天数',
   },
 ];
-
-function PreferenceSwitch({
-  checked,
-  title,
-  onChange,
-}: {
-  checked: boolean;
-  title: string;
-  onChange: (checked: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      className="onboarding-preference"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-    >
-      <span className="onboarding-preference__copy">
-        <span className="onboarding-preference__title">{title}</span>
-      </span>
-      <span className={`onboarding-preference__switch${checked ? ' onboarding-preference__switch--checked' : ''}`}>
-        <span className="onboarding-preference__thumb" />
-      </span>
-    </button>
-  );
-}
 
 export default function OnboardingWizard({ open, preferences, onComplete, onSkip }: Props) {
   const [step, setStep] = useState(0);

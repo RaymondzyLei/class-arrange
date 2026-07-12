@@ -1,5 +1,5 @@
 import { Button, Slider } from 'antd';
-import { useMemo, type CSSProperties, type Ref } from 'react';
+import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
 import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
@@ -26,6 +26,9 @@ import { DownloadIcon, MoonIcon, SunIcon, WarningIcon } from './icons';
 import { GearIcon } from './icons';
 import SelectWithChevron from './SelectWithChevron';
 import { blockedSlotKey } from '@/utils/customization';
+import { PROJECT_LINKS } from '@/content/projectCredits';
+import BottomModal from './BottomModal';
+import ContributorList from './ContributorList';
 
 interface Props {
   weekSelection: WeekSelection;
@@ -517,10 +520,12 @@ function DayHead({ day, info }: { day: number; info?: CalendarDateInfo }) {
         info?.makeup ? 'timetable__day-head--makeup' : '',
       ].filter(Boolean).join(' ')}
     >
-      <span className="timetable__day-title">{DAY_LABELS[day]}</span>
+      <span className="timetable__day-label-row">
+        <span className="timetable__day-title">{DAY_LABELS[day]}</span>
+        {info?.holiday ? <span className="timetable__day-badge">休</span> : null}
+        {info?.makeup ? <span className="timetable__day-badge timetable__day-badge--makeup">{info.makeup.label}</span> : null}
+      </span>
       {info ? <span className="timetable__day-date">{formatShortDate(info.iso)}</span> : null}
-      {info?.holiday ? <span className="timetable__day-badge">休</span> : null}
-      {info?.makeup ? <span className="timetable__day-badge timetable__day-badge--makeup">{info.makeup.label}</span> : null}
     </th>
   );
 }
@@ -648,6 +653,13 @@ export default function CourseTable({
   const toggleLabel = themeMode === 'dark' ? '切换到亮色模式' : '切换到暗色模式';
   const weekOptions = useMemo(() => getWeekOptions(), []);
   const sliderWeek = typeof weekSelection === 'number' ? weekSelection : 1;
+  const [contributorsOpen, setContributorsOpen] = useState(false);
+  const contributorsTriggerRef = useRef<HTMLButtonElement>(null);
+
+  const closeContributors = () => {
+    setContributorsOpen(false);
+    window.requestAnimationFrame(() => contributorsTriggerRef.current?.focus());
+  };
 
   return (
     <div className="panel-inner course-table-wrap" data-tour="timetable-area">
@@ -724,6 +736,27 @@ export default function CourseTable({
         />
       </div>
 
+      <div className="course-table__project-footer no-print">
+        <span>点击访问</span>
+        <a
+          className="course-table__project-footer-link"
+          href={PROJECT_LINKS.repository}
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub 页面
+        </a>
+        <span>或点击查看</span>
+        <button
+          ref={contributorsTriggerRef}
+          className="course-table__project-footer-link course-table__contributors-button"
+          type="button"
+          onClick={() => setContributorsOpen(true)}
+        >
+          贡献列表
+        </button>
+      </div>
+
       <div className="timetable-export-stage" ref={exportRef}>
         <TimetableView
           weekSelection={weekSelection}
@@ -733,6 +766,16 @@ export default function CourseTable({
           blockedSlots={blockedSlots}
         />
       </div>
+
+      <BottomModal
+        className="contributors-modal"
+        open={contributorsOpen}
+        title="贡献详情"
+        onClose={closeContributors}
+        width={680}
+      >
+        <ContributorList variant="detail" />
+      </BottomModal>
     </div>
   );
 }
