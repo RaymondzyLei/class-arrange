@@ -134,6 +134,16 @@ def lesson_api_fixtures():
     return semester, lessons, details
 
 
+def snapshot_files(root: Path) -> dict[str, bytes]:
+    if not root.exists():
+        return {}
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+
+
 def test_batch_codes_uses_fifty_items():
     codes = [f"C{i:03}.01" for i in range(101)]
     assert [len(batch) for batch in batch_codes(codes)] == [50, 50, 1]
@@ -492,6 +502,132 @@ def test_successful_batch_is_checkpointed_before_later_non_retryable_failure(tmp
     assert json.loads(old_catalog.read_text(encoding="utf-8")) == {"old": "catalog"}
     assert json.loads(old_manifest.read_text(encoding="utf-8")) == {"old": "manifest"}
     assert delays == []
+
+
+def test_second_semester_fetch_failure_leaves_entire_public_tree_unchanged(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    fall, lessons, details = lesson_api_fixtures
+    summer = {
+        "id": 462,
+        "nameZh": "2026年夏季学期",
+        "start": "2026-06-29",
+        "end": "2026-08-23",
+        "generatedAt": "2026-07-13T00:00:00Z",
+    }
+    request = LessonRequest(
+        [fall, summer],
+        lessons,
+        [FakeResponse(details), FakeResponse({}, status=400)],
+    )
+    raw_root = tmp_path / "raw"
+    public_root = tmp_path / "public"
+    write_json_atomic(public_root / "2026-fall" / "courses.json", {"old": "fall"})
+    write_json_atomic(
+        public_root / "2025-spring" / "courses.json",
+        {"old": "unrelated"},
+    )
+    write_json_atomic(
+        public_root / "index.json",
+        {
+            "schemaVersion": 1,
+            "defaultSemester": "2025-spring",
+            "semesters": [
+                {
+                    "key": "2025-spring",
+                    "name": "2025年春季学期",
+                    "file": "2025-spring/courses.json",
+                }
+            ],
+        },
+    )
+    before = snapshot_files(public_root)
+
+    with pytest.raises(SyncError, match="returned 400"):
+        sync_requested_semesters(
+            request,
+            [fall["nameZh"], summer["nameZh"]],
+            activate=fall["nameZh"],
+            raw_lessons_dir=raw_root,
+            public_semesters_dir=public_root,
+            calendar_overrides={},
+        )
+
+    assert snapshot_files(public_root) == before
+    assert (raw_root / "2026-fall" / "details.json").exists()
+    assert (raw_root / "2026-summer" / "details.json").exists()
+
+
+def test_manifest_write_failure_rolls_back_every_public_file_and_absence(
+    tmp_path,
+    monkeypatch,
+    lesson_api_fixtures,
+):
+    import catalog_spider.lesson_sync as lesson_sync_module
+
+    fall, lessons, details = lesson_api_fixtures
+    summer = {
+        "id": 462,
+        "nameZh": "2026年夏季学期",
+        "start": "2026-06-29",
+        "end": "2026-08-23",
+        "generatedAt": "2026-07-13T00:00:00Z",
+    }
+    request = LessonRequest(
+        [fall, summer],
+        lessons,
+        [FakeResponse(details), FakeResponse(details)],
+    )
+    raw_root = tmp_path / "raw"
+    public_root = tmp_path / "public"
+    manifest_path = public_root / "index.json"
+    write_json_atomic(public_root / "2026-fall" / "courses.json", {"old": "fall"})
+    write_json_atomic(
+        manifest_path,
+        {
+            "schemaVersion": 1,
+            "defaultSemester": "2025-spring",
+            "semesters": [
+                {
+                    "key": "2025-spring",
+                    "name": "2025年春季学期",
+                    "file": "2025-spring/courses.json",
+                }
+            ],
+        },
+    )
+    before = snapshot_files(public_root)
+    real_writer = lesson_sync_module.write_json_atomic
+    failed = False
+
+    def fail_after_replacing_manifest(path, payload):
+        nonlocal failed
+        real_writer(path, payload)
+        if path == manifest_path and not failed:
+            failed = True
+            raise OSError("simulated manifest failure after replace")
+
+    monkeypatch.setattr(
+        lesson_sync_module,
+        "write_json_atomic",
+        fail_after_replacing_manifest,
+    )
+
+    with pytest.raises(OSError, match="simulated manifest failure"):
+        sync_requested_semesters(
+            request,
+            [fall["nameZh"], summer["nameZh"]],
+            activate=summer["nameZh"],
+            raw_lessons_dir=raw_root,
+            public_semesters_dir=public_root,
+            calendar_overrides={},
+        )
+
+    assert failed is True
+    assert snapshot_files(public_root) == before
+    assert (raw_root / "2026-fall" / "details.json").exists()
+    assert (raw_root / "2026-summer" / "details.json").exists()
 
 
 def test_detail_schema_error_is_not_retried_or_published(

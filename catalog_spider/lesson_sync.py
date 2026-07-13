@@ -181,6 +181,60 @@ def _read_json(path: Path, *, default: object) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _snapshot_files(root: Path) -> dict[Path, bytes]:
+    if not root.exists():
+        return {}
+    return {
+        path.relative_to(root): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+
+
+def _write_bytes_atomic(path: Path, payload: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".rollback.tmp")
+    temporary.write_bytes(payload)
+    temporary.replace(path)
+
+
+def _restore_file_snapshot(root: Path, snapshot: dict[Path, bytes]) -> None:
+    failures: list[OSError] = []
+    current_files = (
+        [path for path in root.rglob("*") if path.is_file()]
+        if root.exists()
+        else []
+    )
+    for path in current_files:
+        if path.relative_to(root) not in snapshot:
+            try:
+                path.unlink()
+            except OSError as error:
+                failures.append(error)
+    for relative_path, payload in snapshot.items():
+        try:
+            _write_bytes_atomic(root / relative_path, payload)
+        except OSError as error:
+            failures.append(error)
+    if failures:
+        raise SyncError(
+            f"failed to restore {len(failures)} public file(s) after publication error"
+        ) from failures[0]
+
+
+def _publish_json_transaction(root: Path, outputs: dict[Path, object]) -> None:
+    snapshot = _snapshot_files(root)
+    try:
+        for path, payload in outputs.items():
+            write_json_atomic(path, payload)
+    except BaseException as publication_error:
+        try:
+            _restore_file_snapshot(root, snapshot)
+        except SyncError as rollback_error:
+            raise rollback_error from publication_error
+        raise
+
+
 def _detail_batch_with_retry(
     request,
     codes: list[str],
@@ -330,19 +384,30 @@ def sync_requested_semesters(
         )
         validate_semester_catalog(catalog)
 
-        manifest_path = public_semesters_dir / "index.json"
-        current_manifest = _read_json(manifest_path, default=None)
-        if current_manifest is not None and not isinstance(current_manifest, dict):
-            raise SyncError("semester manifest must be an object")
+        catalogs.append(catalog)
+
+    if not catalogs:
+        return catalogs
+
+    manifest_path = public_semesters_dir / "index.json"
+    current_manifest = _read_json(manifest_path, default=None)
+    if current_manifest is not None and not isinstance(current_manifest, dict):
+        raise SyncError("semester manifest must be an object")
+
+    manifest = current_manifest
+    outputs: dict[Path, object] = {}
+    for catalog in catalogs:
+        key = catalog["semester"]["key"]
+        name = catalog["semester"]["name"]
         manifest = build_manifest(
-            current_manifest,
+            manifest,
             key,
             name,
             activate=activate == name,
         )
-        write_json_atomic(public_semesters_dir / key / "courses.json", catalog)
-        write_json_atomic(manifest_path, manifest)
-        catalogs.append(catalog)
+        outputs[public_semesters_dir / key / "courses.json"] = catalog
+    outputs[manifest_path] = manifest
+    _publish_json_transaction(public_semesters_dir, outputs)
 
     return catalogs
 
