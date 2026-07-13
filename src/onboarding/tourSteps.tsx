@@ -128,25 +128,25 @@ export const tourSteps: TourStep[] = [
         </a>
         {' '}提 issue 或 pr，欢迎点 star。
         <br />
-        欢迎访问制作者的个人主页{' '}
+        欢迎访问{' '}
         <a
           className="tour-card__inline-link"
           href={PROJECT_LINKS.raymondHome}
           target="_blank"
           rel="noreferrer"
         >
-          RaymondzyLei
+          精美的个人主页
         </a>
-        {' '}了解更多，欢迎访问第二制作者的主页{' '}
+        {' '}了解更多，也欢迎访问{' '}
         <a
           className="tour-card__inline-link"
           href={PROJECT_LINKS.syhalexHome}
           target="_blank"
           rel="noreferrer"
         >
-          syhalex
+          第二制作者的主页
         </a>
-        {' '}。
+        {' '}了解更多。
         <span className="tour-card__credits-title">贡献列表：</span>
         <ContributorList variant="links" />
         <span className="tour-card__closing-note">
