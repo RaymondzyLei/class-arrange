@@ -14,7 +14,25 @@ TERM_NAMES = {"春季": "spring", "夏季": "summer", "秋季": "fall"}
 SOURCE_URL = "https://catalog.ustc.edu.cn/query/lesson"
 
 _SLOT_RE = re.compile(r"(\d+)\s*\((\d+(?:,\d+)*)\)")
+_CLOCK_SLOT_RE = re.compile(
+    r"(\d+)\s*\((\d{1,2}:\d{2})\s*~\s*(\d{1,2}:\d{2})\)"
+)
 _WEEK_HEAD_RE = re.compile(r"^([0-9~,()单双]+周)")
+_PERIOD_CLOCKS = (
+    (1, "07:50", "08:35"),
+    (2, "08:40", "09:25"),
+    (3, "09:45", "10:30"),
+    (4, "10:35", "11:20"),
+    (5, "11:25", "12:10"),
+    (6, "14:00", "14:45"),
+    (7, "14:50", "15:35"),
+    (8, "15:55", "16:40"),
+    (9, "16:45", "17:30"),
+    (10, "17:35", "18:20"),
+    (11, "19:30", "20:15"),
+    (12, "20:20", "21:05"),
+    (13, "21:10", "21:55"),
+)
 _TEXTBOOK_FIELDS = (
     "nameZh",
     "edition",
@@ -97,7 +115,117 @@ def _parse_week_ranges(value: str) -> list[list[int]]:
     return [week_range for week_range in ranges if week_range]
 
 
-def _schedule_slots(raw: Any) -> list[dict]:
+def _clock_minutes(value: str) -> int:
+    hour, minute = value.split(":", maxsplit=1)
+    return int(hour) * 60 + int(minute)
+
+
+def _clock_periods(start_time: str, end_time: str) -> list[int]:
+    start = _clock_minutes(start_time)
+    end = _clock_minutes(end_time)
+    if end <= start:
+        return []
+
+    period_ranges = [
+        (period, _clock_minutes(period_start), _clock_minutes(period_end))
+        for period, period_start, period_end in _PERIOD_CLOCKS
+    ]
+    overlapping = [
+        period
+        for period, period_start, period_end in period_ranges
+        if max(start, period_start) < min(end, period_end)
+    ]
+    if overlapping:
+        return overlapping
+
+    distances = []
+    for period, period_start, period_end in period_ranges:
+        if end <= period_start:
+            distance = period_start - end
+        elif period_end <= start:
+            distance = start - period_end
+        else:
+            distance = 0
+        distances.append((distance, period))
+    closest = min(distance for distance, _period in distances)
+    return [period for distance, period in distances if distance == closest]
+
+
+def _normalized_weeks(week_range: list[int]) -> list[int]:
+    return (
+        week_range
+        if len(week_range) > 2
+        else [min(week_range), max(week_range)]
+    )
+
+
+def _logical_person_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    current = ""
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if _WEEK_HEAD_RE.match(line):
+            if current:
+                lines.append(current)
+            current = line
+        elif current:
+            current = f"{current} {line}"
+        else:
+            current = line
+    if current:
+        lines.append(current)
+    return lines
+
+
+def _person_schedule_slots(text: str) -> list[dict]:
+    slots: list[dict] = []
+    for line in _logical_person_lines(text):
+        week_match = _WEEK_HEAD_RE.match(line)
+        if not week_match:
+            raise ValueError(f"schedule record missing week range: {line}")
+        week_ranges = _parse_week_ranges(week_match.group(1)[:-1])
+        if not week_ranges:
+            raise ValueError(f"schedule record has invalid week range: {line}")
+
+        rest = line[week_match.end() :].strip()
+        numeric_matches = [(match.start(), "periods", match) for match in _SLOT_RE.finditer(rest)]
+        clock_matches = [(match.start(), "clock", match) for match in _CLOCK_SLOT_RE.finditer(rest)]
+        matches = numeric_matches + clock_matches
+        if not matches:
+            raise ValueError(f"schedule record has no supported time: {line}")
+
+        _offset, kind, match = max(matches, key=lambda item: item[0])
+        room = rest[: match.start()].rstrip()
+        if room.endswith(":"):
+            room = room[:-1].rstrip()
+        day = int(match.group(1))
+
+        if kind == "clock":
+            start_time, end_time = match.group(2), match.group(3)
+            periods = _clock_periods(start_time, end_time)
+            if not periods:
+                raise ValueError(f"schedule record has invalid clock time: {line}")
+        else:
+            start_time = end_time = ""
+            periods = [int(period) for period in match.group(2).split(",")]
+
+        for week_range in week_ranges:
+            slot = {
+                "weeks": _normalized_weeks(week_range),
+                "room": room,
+                "day": day,
+                "periods": periods,
+            }
+            if start_time:
+                slot["startTime"] = start_time
+                slot["endTime"] = end_time
+            slots.append(slot)
+    return slots
+
+
+def _schedule_slots(raw: Any, *, person_text: bool = False) -> list[dict]:
     if not raw:
         return []
     text = _text(raw)
@@ -112,43 +240,56 @@ def _schedule_slots(raw: Any) -> list[dict]:
         .replace("：", ":")
     )
     slots: list[dict] = []
-    for line in text.splitlines():
-        current_weeks: list[list[int]] = []
-        for segment in line.split(";"):
-            segment = segment.strip()
-            if not segment:
-                continue
-            week_match = _WEEK_HEAD_RE.match(segment)
-            if week_match:
-                current_weeks = _parse_week_ranges(week_match.group(1)[:-1])
-                segment = segment[week_match.end() :].strip()
-            if not current_weeks or not segment:
-                continue
+    if person_text:
+        slots = _person_schedule_slots(text)
+    else:
+        for line in text.splitlines():
+            current_weeks: list[list[int]] = []
+            for segment in line.split(";"):
+                segment = segment.strip()
+                if not segment:
+                    continue
+                week_match = _WEEK_HEAD_RE.match(segment)
+                if week_match:
+                    current_weeks = _parse_week_ranges(week_match.group(1)[:-1])
+                    segment = segment[week_match.end() :].strip()
+                if not current_weeks or not segment:
+                    continue
 
-            room, separator, times = segment.partition(":")
-            if not separator:
-                pieces = segment.split(maxsplit=1)
-                room = pieces[0] if pieces and not _SLOT_RE.fullmatch(pieces[0]) else ""
-                times = pieces[1] if len(pieces) == 2 else segment
-            room = room.strip()
-            for slot_match in _SLOT_RE.finditer(times):
-                day = int(slot_match.group(1))
-                periods = [int(period) for period in slot_match.group(2).split(",")]
-                for week_range in current_weeks:
-                    weeks = (
-                        week_range
-                        if len(week_range) > 2
-                        else [min(week_range), max(week_range)]
-                    )
-                    slots.append(
-                        {
-                            "weeks": weeks,
-                            "room": room,
-                            "day": day,
-                            "periods": periods,
-                        }
-                    )
-    return slots
+                room, separator, times = segment.partition(":")
+                if not separator:
+                    pieces = segment.split(maxsplit=1)
+                    room = pieces[0] if pieces and not _SLOT_RE.fullmatch(pieces[0]) else ""
+                    times = pieces[1] if len(pieces) == 2 else segment
+                room = room.strip()
+                for slot_match in _SLOT_RE.finditer(times):
+                    day = int(slot_match.group(1))
+                    periods = [int(period) for period in slot_match.group(2).split(",")]
+                    for week_range in current_weeks:
+                        slots.append(
+                            {
+                                "weeks": _normalized_weeks(week_range),
+                                "room": room,
+                                "day": day,
+                                "periods": periods,
+                            }
+                        )
+    unique_slots: list[dict] = []
+    seen: set[tuple] = set()
+    for slot in slots:
+        key = (
+            tuple(slot["weeks"]),
+            slot["room"],
+            slot["day"],
+            tuple(slot["periods"]),
+            slot.get("startTime", ""),
+            slot.get("endTime", ""),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        unique_slots.append(slot)
+    return unique_slots
 
 
 def _normalize_textbook(textbook: dict) -> dict:
@@ -202,6 +343,8 @@ def _normalize_lesson(lesson: dict, detail: dict | None) -> dict:
     teachers = lesson.get("teacherAssignmentList") or []
     classes = lesson.get("adminClasses") or []
     raw_schedule = _text(lesson.get("dateTimePlaceText"))
+    person_schedule = _localized(lesson.get("dateTimePlacePersonText"))
+    schedule_source = person_schedule or raw_schedule
     return {
         "id": code,
         "courseName": _localized(course),
@@ -224,7 +367,7 @@ def _normalize_lesson(lesson: dict, detail: dict | None) -> dict:
         "capacity": _integer(lesson.get("limitCount")),
         "classes": list(filter(None, (_localized(admin_class) for admin_class in classes))),
         "rawSchedule": raw_schedule,
-        "schedule": _schedule_slots(raw_schedule),
+        "schedule": _schedule_slots(schedule_source, person_text=bool(person_schedule)),
     }
 
 
@@ -296,3 +439,11 @@ def validate_semester_catalog(catalog: dict) -> None:
     ]
     if grading_mismatches:
         raise ValueError(f"grading mismatch: {', '.join(grading_mismatches)}")
+
+    unparsed_schedules = [
+        course["id"]
+        for course in catalog.get("courses", [])
+        if _text(course.get("rawSchedule")) and not course.get("schedule")
+    ]
+    if unparsed_schedules:
+        raise ValueError(f"unparsed schedules: {', '.join(unparsed_schedules)}")

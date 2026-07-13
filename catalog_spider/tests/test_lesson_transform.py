@@ -144,6 +144,147 @@ def test_build_catalog_normalizes_course_fields_and_schedule(fixtures):
     ]
 
 
+def test_schedule_uses_person_text_when_compact_text_omits_weeks(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "code": "001101.01",
+        "dateTimePlaceText": "5401: 1(8,9);5401: 3(6,7);5401: 5(3,4)",
+        "dateTimePlacePersonText": {
+            "cn": (
+                "1~9周 5401 :1(8,9) 章俊彦\n"
+                "1~9周 5401 :3(6,7) 章俊彦\n"
+                "1~9周 5401 :5(3,4) 章俊彦"
+            )
+        },
+    }
+    detail = {**fixtures.details_by_code[fixtures.lessons[0]["code"]], "code": lesson["code"]}
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: detail},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["rawSchedule"] == lesson["dateTimePlaceText"]
+    assert catalog["courses"][0]["schedule"] == [
+        {"weeks": [1, 9], "room": "5401", "day": 1, "periods": [8, 9]},
+        {"weeks": [1, 9], "room": "5401", "day": 3, "periods": [6, 7]},
+        {"weeks": [1, 9], "room": "5401", "day": 5, "periods": [3, 4]},
+    ]
+
+
+def test_schedule_deduplicates_person_lines_for_multiple_teachers(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": "5201: 1(1,2)",
+        "dateTimePlacePersonText": {
+            "cn": "1~4周 5201 :1(1,2) 张老师\n1~4周 5201 :1(1,2) 李老师"
+        },
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["schedule"] == [
+        {"weeks": [1, 4], "room": "5201", "day": 1, "periods": [1, 2]},
+    ]
+
+
+def test_schedule_keeps_semicolons_inside_person_text_assignment(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": "复杂地点说明: 4(6,7)",
+        "dateTimePlacePersonText": {
+            "cn": (
+                "2~4,7~9(单),12~16(双),17周 "
+                "周四下午6、7节；第7周在操场；第9周在附楼K408 "
+                ":4(6,7) 赵老师\n"
+                "5~6周 周四下午6、7节；第5周在附楼K104 :4(6,7) 王老师"
+            )
+        },
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    schedule = catalog["courses"][0]["schedule"]
+    expanded_weeks = set()
+    for slot in schedule:
+        assert slot["day"] == 4
+        assert slot["periods"] == [6, 7]
+        if len(slot["weeks"]) == 2:
+            expanded_weeks.update(range(slot["weeks"][0], slot["weeks"][1] + 1))
+        else:
+            expanded_weeks.update(slot["weeks"])
+    assert expanded_weeks == {2, 3, 4, 5, 6, 7, 9, 12, 14, 16, 17}
+
+
+def test_schedule_preserves_clock_time_and_maps_it_to_grid_periods(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": "国金院5号楼101室: 2(14:00~17:00)",
+        "dateTimePlacePersonText": {
+            "cn": "2~5,7~9周 国金院5号楼101室 :2(14:00~17:00) 王老师"
+        },
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["schedule"] == [
+        {
+            "weeks": [2, 5],
+            "room": "国金院5号楼101室",
+            "day": 2,
+            "periods": [6, 7, 8, 9],
+            "startTime": "14:00",
+            "endTime": "17:00",
+        },
+        {
+            "weeks": [7, 9],
+            "room": "国金院5号楼101室",
+            "day": 2,
+            "periods": [6, 7, 8, 9],
+            "startTime": "14:00",
+            "endTime": "17:00",
+        },
+    ]
+
+
+def test_schedule_maps_between_period_clock_time_to_nearest_grid_period(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": "国金院5号楼101室: 2(19:00~19:30)",
+        "dateTimePlacePersonText": {
+            "cn": "2~4周 国金院5号楼101室 :2(19:00~19:30) 王老师"
+        },
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    slot = catalog["courses"][0]["schedule"][0]
+    assert slot["periods"] == [11]
+    assert (slot["startTime"], slot["endTime"]) == ("19:00", "19:30")
+
+
 def test_schedule_splits_two_noncontiguous_parity_weeks(fixtures):
     lesson = {
         **fixtures.lessons[0],
@@ -272,6 +413,19 @@ def test_validate_catalog_rejects_grading_mismatch(fixtures):
     )
     catalog["courses"][0]["grading"] = "五分制"
     with pytest.raises(ValueError, match="grading mismatch"):
+        validate_semester_catalog(catalog)
+
+
+def test_validate_catalog_rejects_unparsed_nonempty_schedule(fixtures):
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        fixtures.lessons,
+        fixtures.details_by_code,
+        calendar_overrides={},
+    )
+    catalog["courses"][0]["schedule"] = []
+
+    with pytest.raises(ValueError, match="unparsed schedules: 001108.01"):
         validate_semester_catalog(catalog)
 
 
