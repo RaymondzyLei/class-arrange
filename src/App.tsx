@@ -350,21 +350,23 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             />
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
-          <CalculationStatus
-            phase={calculation.phase}
-            mode={calculation.draft.settings.calculationMode}
-            hasSnapshot={calculation.hasSnapshot}
-            actionLabel={calculation.actionLabel}
-            error={calculation.error}
-            onCalculate={calculation.startCalculation}
-          />
-          {arrangements.length > 1 && (
-            <ArrangementPanel
-              arrangements={arrangements}
-              selectedId={appliedArrangement?.id ?? null}
-              onSelect={handleArrangementChange}
+          <div className="panel-inner calculation-results no-print">
+            <CalculationStatus
+              phase={calculation.phase}
+              mode={calculation.draft.settings.calculationMode}
+              hasSnapshot={calculation.hasSnapshot}
+              actionLabel={calculation.actionLabel}
+              error={calculation.error}
+              onCalculate={calculation.startCalculation}
             />
-          )}
+            {arrangements.length > 1 && (
+              <ArrangementPanel
+                arrangements={arrangements}
+                selectedId={appliedArrangement?.id ?? null}
+                onSelect={handleArrangementChange}
+              />
+            )}
+          </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
             <FilterBar
               filter={filter}

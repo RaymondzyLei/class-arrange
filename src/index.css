@@ -984,8 +984,19 @@ html {
   --arrangement-list-gap: 8px;
   --arrangement-ring-space: 2px;
   --arrangement-scroll-space: 8px;
-  margin-top: 8px;
   padding: 10px 14px;
+}
+
+.calculation-results {
+  flex: 0 0 auto;
+}
+
+.calculation-results .calculation-status {
+  border: 0;
+}
+
+.calculation-results .arrangement-panel {
+  border-top: 1px solid var(--border);
 }
 
 .arrangement-panel__head {

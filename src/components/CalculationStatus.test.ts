@@ -1,7 +1,11 @@
 import { createElement } from 'react';
+import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import CalculationStatus from './CalculationStatus';
+
+const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
+const arrangementPanelSource = readFileSync(new URL('./ArrangementPanel.tsx', import.meta.url), 'utf8');
 
 function renderStatus(
   phase: 'dirty' | 'ready',
@@ -18,6 +22,13 @@ function renderStatus(
 }
 
 describe('CalculationStatus', () => {
+  it('shares one panel with the arrangement list', () => {
+    expect(appSource).toMatch(
+      /className="panel-inner calculation-results no-print"[\s\S]*<CalculationStatus[\s\S]*<ArrangementPanel/,
+    );
+    expect(arrangementPanelSource).not.toContain('panel-inner arrangement-panel');
+  });
+
   it('shows only the changed-input message for a dirty timetable', () => {
     const html = renderStatus('dirty', true);
 
