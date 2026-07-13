@@ -4026,6 +4026,33 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   white-space: nowrap;
 }
 
+.course-table__term-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+#root .course-table__semester-toggle.ant-btn {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  padding: 0;
+  color: var(--text-sub);
+}
+
+#root .course-table__semester-toggle.ant-btn:hover,
+#root .course-table__semester-toggle.ant-btn:focus-visible {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.course-table__semester-toggle .select-chevron {
+  width: 14px;
+  height: 14px;
+}
+
 .course-table__project-footer-link,
 .contributor-list__link {
   color: var(--accent);

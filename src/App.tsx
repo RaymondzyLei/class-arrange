@@ -128,12 +128,16 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { activePlan } = usePlans();
   const {
+    manifest,
+    catalog,
     courses,
     courseMap,
     groups,
     groupByKey,
     groupsByCode,
     filterOptions,
+    status: catalogStatus,
+    switchSemester,
   } = useSemesterCatalog();
   const { message } = AntApp.useApp();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
@@ -209,6 +213,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     saveCustomScheduleSettings(customSettings);
     setSelectedArrangementId(null);
   }, [customSettings]);
+
+  useEffect(() => {
+    if (catalogStatus.error) void message.error(catalogStatus.error);
+  }, [catalogStatus.error, message]);
 
   // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => {
@@ -373,6 +381,13 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             exporting={exporting}
             blockedSlots={customSettings.blockedSlots}
             onOpenCustomization={() => setCustomizationOpen(true)}
+            calendar={catalog.semester.calendar}
+            semesters={manifest.semesters}
+            semesterKey={catalog.semester.key}
+            semesterSwitching={catalogStatus.phase === 'switching'}
+            onSemesterChange={async (semesterKey) => {
+              await switchSemester(semesterKey);
+            }}
           />
         </div>
       </Layout.Content>

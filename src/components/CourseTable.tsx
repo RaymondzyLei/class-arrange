@@ -18,8 +18,8 @@ import {
   formatShortDate,
   getCalendarDatesForSelection,
   getWeekOptions,
-  TERM_CALENDAR,
   type CalendarDateInfo,
+  type TermCalendar,
   type WeekSelection,
 } from '@/config/termCalendar';
 import { DownloadIcon, MoonIcon, SunIcon, WarningIcon } from './icons';
@@ -29,6 +29,8 @@ import { blockedSlotKey } from '@/utils/customization';
 import { PROJECT_LINKS } from '@/content/projectCredits';
 import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
+import SemesterDropdown from './SemesterDropdown';
+import type { SemesterManifestEntry } from '@/types';
 
 interface Props {
   weekSelection: WeekSelection;
@@ -42,6 +44,11 @@ interface Props {
   exporting?: boolean;
   blockedSlots: string[];
   onOpenCustomization: () => void;
+  calendar: TermCalendar;
+  semesters: SemesterManifestEntry[];
+  semesterKey: string;
+  semesterSwitching: boolean;
+  onSemesterChange: (semesterKey: string) => void | Promise<void>;
 }
 
 interface TimetableViewProps {
@@ -51,6 +58,7 @@ interface TimetableViewProps {
   themeMode: 'light' | 'dark';
   onOpenDetail?: (id: string) => void;
   blockedSlots: string[];
+  calendar: TermCalendar;
 }
 
 interface TimetableEntry {
@@ -172,8 +180,9 @@ function buildEntries(
   weekSelection: WeekSelection,
   themeMode: 'light' | 'dark',
   blockedSlots: Set<string>,
+  calendar: TermCalendar,
 ): TimetableEntry[] {
-  const dates = getCalendarDatesForSelection(weekSelection, TERM_CALENDAR, {
+  const dates = getCalendarDatesForSelection(weekSelection, calendar, {
     includeSpecialDates: weekSelection !== 'all',
   }).filter((date) => date.instructional);
   const entries = new Map<string, MutableTimetableEntry>();
@@ -537,17 +546,18 @@ function TimetableView({
   themeMode,
   onOpenDetail,
   blockedSlots,
+  calendar,
 }: TimetableViewProps) {
   const colorTheme = exportMode ? 'light' : themeMode;
   const blockedSlotSet = useMemo(() => new Set(blockedSlots), [blockedSlots]);
   const entries = useMemo(
-    () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet),
-    [blockedSlotSet, groups, weekSelection, colorTheme],
+    () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet, calendar),
+    [blockedSlotSet, calendar, groups, weekSelection, colorTheme],
   );
   const { starts, covers } = useMemo(() => buildEntryMaps(entries), [entries]);
   const selectedWeekDates = useMemo(
-    () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection)),
-    [weekSelection],
+    () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection, calendar)),
+    [calendar, weekSelection],
   );
   const dateByWeekday = new Map(selectedWeekDates.map((info) => [info.weekday, info]));
   const skipped = new Set<string>();
@@ -649,9 +659,14 @@ export default function CourseTable({
   exporting = false,
   blockedSlots,
   onOpenCustomization,
+  calendar,
+  semesters,
+  semesterKey,
+  semesterSwitching,
+  onSemesterChange,
 }: Props) {
   const toggleLabel = themeMode === 'dark' ? '切换到亮色模式' : '切换到暗色模式';
-  const weekOptions = useMemo(() => getWeekOptions(), []);
+  const weekOptions = useMemo(() => getWeekOptions(calendar), [calendar]);
   const sliderWeek = typeof weekSelection === 'number' ? weekSelection : 1;
   const [contributorsOpen, setContributorsOpen] = useState(false);
   const contributorsTriggerRef = useRef<HTMLButtonElement>(null);
@@ -669,7 +684,7 @@ export default function CourseTable({
           <Slider
             className="week-slider"
             min={1}
-            max={TERM_CALENDAR.weekCount}
+            max={calendar.weekCount}
             value={sliderWeek}
             included={false}
             tooltip={{ open: false }}
@@ -688,8 +703,16 @@ export default function CourseTable({
           />
         </div>
         <div className="course-table__term-date">
-          <span className="course-table__term-name">{TERM_CALENDAR.termName}</span>
-          <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+          <span className="course-table__term-selector">
+            <span className="course-table__term-name">{calendar.termName}</span>
+            <SemesterDropdown
+              semesters={semesters}
+              semesterKey={semesterKey}
+              loading={semesterSwitching}
+              onSelect={onSemesterChange}
+            />
+          </span>
+          <span className="course-table__date-range">{formatDateRange(weekSelection, calendar)}</span>
         </div>
         <div className="course-table__actions no-print">
           <Button
@@ -732,6 +755,7 @@ export default function CourseTable({
           groups={groups}
           themeMode={themeMode}
           blockedSlots={blockedSlots}
+          calendar={calendar}
           onOpenDetail={onOpenDetail}
         />
       </div>
@@ -764,6 +788,7 @@ export default function CourseTable({
           exportMode
           themeMode="light"
           blockedSlots={blockedSlots}
+          calendar={calendar}
         />
       </div>
 
