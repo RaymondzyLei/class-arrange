@@ -128,7 +128,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const { activePlan } = usePlans();
   const { message } = AntApp.useApp();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
-  const [weekSelection, setWeekSelection] = useState<WeekSelection>(1);
+  const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
   const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
