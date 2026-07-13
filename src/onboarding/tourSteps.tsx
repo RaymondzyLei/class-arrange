@@ -135,7 +135,7 @@ export const tourSteps: TourStep[] = [
           target="_blank"
           rel="noreferrer"
         >
-          精美的个人主页
+          制作者的精美的个人主页
         </a>
         {' '}了解更多，也欢迎访问{' '}
         <a
