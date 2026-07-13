@@ -10,6 +10,7 @@ import {
   failArrangementCalculation,
   recoverCancelledArrangementCalculation,
   resolveSelectedArrangementId,
+  shouldSynchronizeArrangementCalculationProjection,
   shouldAutomaticallyCalculate,
   startArrangementCalculation,
   syncArrangementCalculationInputs,
@@ -243,6 +244,41 @@ describe('arrangement calculation state', () => {
     expect(state.phase).toBe('ready');
     expect(state.committed).toBe(committed);
     expect(state.draft.settings.calculationMode).toBe('manual');
+  });
+
+  it('does not synchronize a stale mode-only projection over a newer completion', () => {
+    const groups = [group('A', 'a')];
+    const rendered = startArrangementCalculation(
+      createArrangementCalculationState(
+        'fall:plan-a',
+        groups,
+        settings({ calculationMode: 'auto' }),
+      ),
+      1,
+    );
+    const projected = syncArrangementCalculationInputs(
+      rendered,
+      'fall:plan-a',
+      groups,
+      settings({ calculationMode: 'manual' }),
+    );
+
+    expect(projected.phase).toBe('calculating');
+    expect(shouldSynchronizeArrangementCalculationProjection(
+      rendered,
+      projected,
+      projected,
+    )).toBe(true);
+
+    const completed = completeArrangementCalculation(projected, 1, [
+      arrangement('a', groups),
+    ]);
+    expect(completed.phase).toBe('ready');
+    expect(shouldSynchronizeArrangementCalculationProjection(
+      rendered,
+      projected,
+      completed,
+    )).toBe(false);
   });
 });
 

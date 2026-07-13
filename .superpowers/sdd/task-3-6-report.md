@@ -56,3 +56,13 @@ DONE
 ## Concerns
 
 - No blocking concerns. The existing main-bundle size warning is unchanged and outside this task's scope.
+
+## Follow-up race fix: calculation-mode projection
+
+- Review found a render/effect race in `useArrangementCalculation`: a calculation-mode-only render projected an in-flight state and wrote it to `stateRef`; if the Worker completed before that render's synchronization effect, the effect could overwrite the newer `ready` state with its captured `calculating` projection.
+- Added a pure regression that models the exact ordering: create an active generation, render a mode-only projection, complete that generation, then verify the stale projection is no longer eligible for effect synchronization.
+- RED: `pnpm test -- src/utils/arrangementCalculationState.test.ts` ran the repository suite because of script argument forwarding and failed only the new race test with `shouldSynchronizeArrangementCalculationProjection is not a function`; the other 88 tests passed.
+- Fix: the synchronization effect now commits a projection only when `stateRef.current` still has that exact projection identity. A completion, failure, or other newer transition changes the ref identity and therefore wins.
+- GREEN: `pnpm exec vitest run src/utils/arrangementCalculationState.test.ts src/utils/arrangementWorkerClient.test.ts` — 2 files, 19 tests passed.
+- Type check: `pnpm exec tsc -b --pretty false` — exit 0.
+- Scope check: the paused untracked `src/utils/courseSelection.ts` and `src/utils/courseSelection.test.ts` were neither edited nor staged.

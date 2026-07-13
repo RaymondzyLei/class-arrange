@@ -107,6 +107,14 @@ export function syncArrangementCalculationInputs(
   };
 }
 
+export function shouldSynchronizeArrangementCalculationProjection(
+  renderedState: ArrangementCalculationState,
+  projectedState: ArrangementCalculationState,
+  latestState: ArrangementCalculationState,
+): boolean {
+  return projectedState !== renderedState && latestState === projectedState;
+}
+
 export function canStartArrangementCalculation(state: ArrangementCalculationState): boolean {
   return state.phase === 'dirty' || state.phase === 'error';
 }

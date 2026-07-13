@@ -8,6 +8,7 @@ import {
   createArrangementCalculationState,
   failArrangementCalculation,
   recoverCancelledArrangementCalculation,
+  shouldSynchronizeArrangementCalculationProjection,
   shouldAutomaticallyCalculate,
   startArrangementCalculation,
   syncArrangementCalculationInputs,
@@ -109,7 +110,13 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     if (inputsChanged && state.activeGeneration !== null) {
       clientRef.current?.cancel();
     }
-    if (projectedState !== state) setCurrentState(projectedState);
+    if (shouldSynchronizeArrangementCalculationProjection(
+      state,
+      projectedState,
+      stateRef.current,
+    )) {
+      setCurrentState(projectedState);
+    }
   }, [inputKey, projectedState, scopeKey, setCurrentState, state]);
 
   useEffect(() => {
