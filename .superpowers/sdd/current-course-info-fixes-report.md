@@ -37,3 +37,13 @@
 ## Concerns
 
 - No functional concerns. The production build retains the repository's existing chunk-size advisory.
+
+## Follow-up: complete browser entity decoding
+
+- Reviewer finding: the original non-DOM decoder recognized only a small named-entity table, so real summer descriptions containing French entities such as `&eacute;` and `&egrave;` were rendered literally.
+- Root cause evidence: `public/data/semesters/2026-summer/courses.json` contains 181 `&eacute;`, 8 `&egrave;`, and 20 `&mdash;` occurrences, while Vitest runs in its configured Node environment without `document`.
+- Fix: browser rendering now delegates entity decoding to a detached `<textarea>`, which uses the browser's complete HTML parser entity set; React still receives and renders only the decoded text. The deterministic non-DOM fallback covers the SSR regression suite, including `eacute`, `egrave`, `mdash`, and `emsp`, and retains numeric-entity decoding.
+- RED: `pnpm vitest run src/components/CourseDescriptionPanel.test.ts` reported 1 failed / 4 passed. The realistic summer-description case expected `Probabilités discrètes — Dénombrements` but received literal `&amp;eacute;`, `&amp;egrave;`, `&amp;mdash;`, and `&amp;emsp;` sequences.
+- GREEN: `pnpm vitest run src/components/CourseDescriptionPanel.test.ts` exited 0 with 1 file and 5 tests passed.
+- Build: `pnpm build` exited 0 after TypeScript and Vite completed; the existing large-chunk advisory remains non-failing.
+- Scope: only `CourseDescriptionPanel.tsx`, its focused test, and this report were changed; the unrelated detail-order test and the pre-existing `.codex-temp/` directory remain untouched.

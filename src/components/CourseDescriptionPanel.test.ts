@@ -60,6 +60,19 @@ describe('CourseDescriptionPanel', () => {
     expect(html).not.toContain('&lt;p&gt;');
   });
 
+  it('decodes realistic named entities from scraped summer descriptions', () => {
+    const html = renderPanel(makeDetail({
+      cn: '',
+      en: '<p>Probabilit&eacute;s discr&egrave;tes&emsp;&mdash;&emsp;D&eacute;nombrements</p>',
+    }), true);
+
+    expect(html).toContain('Probabilités discrètes — Dénombrements');
+    expect(html).not.toContain('&amp;eacute;');
+    expect(html).not.toContain('&amp;egrave;');
+    expect(html).not.toContain('&amp;mdash;');
+    expect(html).not.toContain('&amp;emsp;');
+  });
+
   it('shows a clear empty state when neither description exists', () => {
     const html = renderPanel(makeDetail({ cn: ' ', en: '' }), true);
     expect(html).toContain('暂无课程简介');
