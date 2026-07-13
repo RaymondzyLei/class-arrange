@@ -28,11 +28,17 @@ describe('semester-scoped plans', () => {
     expect(plansStorageKey('2026-summer')).toBe('class-arrange:v2:plans:2026-summer');
   });
 
-  test('saves and loads semesters independently', () => {
+  test('saves and loads distinct plans for each semester', () => {
     const storage = new MemoryStorage();
-    savePlansState('2026-fall', state, storage);
+    const summerState: PlansState = {
+      plans: [{ id: 'p2', name: '暑期方案', createdAt: 2, updatedAt: 2, courseIds: ['B.01'] }],
+      activePlanId: 'p2',
+    };
+
+    expect(savePlansState('2026-fall', state, storage)).toBe(true);
+    expect(savePlansState('2026-summer', summerState, storage)).toBe(true);
     expect(loadPlansState('2026-fall', { defaultSemester: '2026-fall', storage })).toEqual(state);
-    expect(loadPlansState('2026-summer', { defaultSemester: '2026-fall', storage })).toBeNull();
+    expect(loadPlansState('2026-summer', { defaultSemester: '2026-fall', storage })).toEqual(summerState);
   });
 
   test('migrates the legacy payload only into the default semester', () => {

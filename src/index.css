@@ -2419,6 +2419,36 @@ html {
   border-color: var(--detail-grid-border) !important;
 }
 
+.course-description-disclosure {
+  margin-bottom: 12px;
+}
+
+.course-description-panel {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--detail-grid-border);
+  border-radius: 8px;
+  background: var(--detail-label-bg);
+}
+
+.course-description-panel__section + .course-description-panel__section {
+  margin-top: 12px;
+}
+
+.course-description-panel__section .ant-typography {
+  color: var(--text);
+}
+
+.course-description-panel__section p.ant-typography {
+  margin: 4px 0 0;
+  color: var(--text-sub);
+  white-space: pre-wrap;
+}
+
+.course-description-panel .ant-empty {
+  margin-block: 8px;
+}
+
 .detail-table .ant-table {
   table-layout: auto !important;
   background: transparent !important;
