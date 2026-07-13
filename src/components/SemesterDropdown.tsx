@@ -39,11 +39,10 @@ export default function SemesterDropdown({
         aria-label="选择学期"
         aria-expanded={open}
         loading={loading}
-      >
-        {!loading ? (
+        icon={!loading ? (
           <ChevronIcon className={`select-chevron${open ? ' select-chevron--open' : ''}`} />
-        ) : null}
-      </Button>
+        ) : undefined}
+      />
     </Dropdown>
   );
 }
