@@ -69,13 +69,16 @@ def authenticated_request_context(
             print("请在浏览器中完成登录；脚本将等待认证状态。")
             deadline = monotonic() + _AUTH_TIMEOUT_SECONDS
             while True:
-                response = context.request.get(
-                    BASE_URL + "/api/teach/semester/list",
-                    timeout=30_000,
-                )
-                print(f"登录状态: {response.status}")
-                if response.ok:
-                    break
+                try:
+                    response = context.request.get(
+                        BASE_URL + "/api/teach/semester/list",
+                        timeout=30_000,
+                    )
+                    print(f"登录状态: {response.status}")
+                    if response.ok:
+                        break
+                except Exception:
+                    print("登录状态: 网络暂不可用，继续等待")
                 if monotonic() >= deadline:
                     raise SyncError("authentication timed out after 600 seconds")
                 sleep(_AUTH_POLL_SECONDS)

@@ -1,7 +1,7 @@
 # class-arrange · 中国科大排课协助
 
-一个帮助 USTC 学生在线排课的轻量前端。每学期从教务系统导出开课 Excel →
-脚本转成 TS → 浏览器按多维度筛选、时间冲突检测生成可视化课表，并支持 icourse.club
+一个帮助 USTC 学生在线排课的轻量前端。每学期从教务系统同步开课与课堂详情 →
+生成独立的 `courses.json` → 浏览器只加载当前学期数据，按多维度筛选、时间冲突检测生成可视化课表，并支持 icourse.club
 评分查询（多班次各自评分）以及教务系统培养方案辅助选课。
 
 ## 界面预览
@@ -28,7 +28,7 @@
 
 ## 功能
 
-- **课程池**：按开课单位、课程类型、课堂类型、考核方式、授课语言筛选；默认搜索课程名 / 课堂号，可按需启用任课老师搜索
+- **课程池**：按开课单位、课程类型、课堂类型、考核方式、评分制、授课语言筛选；默认搜索课程名 / 课堂号，可按需启用任课老师搜索
 - **虚拟滚动列表**：课程卡顿问题通过 `react-window` 的 `List` + `useDynamicRowHeight` 动态行高彻底解决
 - **冲突检测**：自动检测课程之间、课程与自定义"有事"时段之间的冲突，并在课表和课程列表中同步标记
 - **真实节次布局**：混合时长课程按实际节次占位；桌面端使用冲突轨道，移动端展示包含关系和完整时间色条
@@ -36,7 +36,7 @@
 - **已选课程管理**：集中查看当前排课、全部已选和培养方案内课程，可按时间组或整门课程移除、补选、批量移除
 - **培养方案辅助**：切换培养方案和学期，查看必修课程及可选时间组，支持一键加入当前学期必修课、清除一键新增的课堂，并跳转到教务系统核查原始方案
 - **排课枚举**：当一门课选了多个不同 group 时，自动枚举所有可能的排课组合，按冲突数从少到多列出最多 8 种方案，课表与状态栏默认显示冲突最少的一种，可在小卡片间切换
-- **多方案**：本地保存多个选课方案，互相独立
+- **多方案**：本地保存多个选课方案，并按学期完全隔离
 - **自定义占位**：标记固定"有事"时段（按节次粒度），并将其纳入冲突统计和排课排序
 - **排课倾向**：在新手引导中可选择"优先空出半天"和"优先减少早八天数"，与冲突数共同影响方案排序
 - **本地持久化**：方案数据、培养方案选择、自定义设置、新手引导状态存 `localStorage`，刷新不丢失
@@ -83,7 +83,7 @@ class-arrange/
 │   ├── App.tsx                   # 应用根、主题、布局
 │   ├── main.tsx
 │   ├── data/
-│   │   ├── courses.ts            # 由 scripts/excel_to_ts.py 自动生成
+│   │   ├── semesterCatalog.ts    # 学期索引与单学期 JSON 加载/校验
 │   │   ├── curricula.ts          # 由 scripts/curricula_to_ts.py 自动生成
 │   │   ├── icourseRatings.ts     # 由 scripts/ratings_to_ts.py 自动生成
 │   │   └── index.ts
@@ -101,7 +101,8 @@ class-arrange/
 │   └── styles/                   # tokens / print
 │
 ├── scripts/
-│   ├── excel_to_ts.py            # 开课 Excel → src/data/courses.ts
+│   ├── sync_semester_courses.ps1 # 登录后同步一个或多个学期（主流程）
+│   ├── excel_to_ts.py            # 旧版 Excel 转换工具（仅兼容历史流程）
 │   ├── curricula_to_ts.py        # 培养方案 index → src/data/curricula.ts
 │   └── ratings_to_ts.py          # icourse 评分 JSON → src/data/icourseRatings.ts
 │
@@ -174,26 +175,30 @@ pnpm preview       # 本地预览生产构建
 
 ## 数据更新流程
 
-### 更新开课 Excel
+### 更新学期开课与课堂详情
 
-把新学期的 `全校开课查询结果.xlsx` 放到项目根目录，然后：
-
-```powershell
-uv run python scripts/excel_to_ts.py
-```
-
-会重新生成 `src/data/courses.ts`。脚本会自动：
-
-- 解析"时间地点"字段（支持 `1~9周`、`1,3,5周`、`2,7~9(单)周`、`8~10(双)周` 等格式）
-- 拆分多老师字段（`,` `，` `、` `/`）
-- 报告时间地点解析失败的行
-- 报告重复课堂号
-
-可选：显式指定 Excel 路径：
+首次使用先安装抓取依赖；以后每学期只运行同步脚本：
 
 ```powershell
-uv run python scripts/excel_to_ts.py "path/to/开课查询.xlsx"
+uv sync --group spider --group dev
+./scripts/sync_semester_courses.ps1 `
+  -Semester '2026年秋季学期','2026年夏季学期' `
+  -Activate '2026年秋季学期'
 ```
+
+脚本会打开可见浏览器。若教务系统要求认证，手动登录一次即可；登录会话保存在已忽略的专用 profile 中，后续运行可直接复用。抓取按 50 个课堂一批保存断点，失败后重跑只补缺失详情。
+
+每个学期发布为单独文件：
+
+```text
+public/data/semesters/index.json
+public/data/semesters/2026-fall/courses.json
+public/data/semesters/2026-summer/courses.json
+```
+
+`courses.json` 同时包含课程列表和 `detailsBySection`。前端先读取轻量索引，用户选择哪个学期才加载哪个学期文件；方案也存入对应学期的独立命名空间。
+
+旧版 `scripts/excel_to_ts.py` 仅保留作历史数据兼容工具，不再是网站的主数据流程。
 
 ### 更新培养方案
 
