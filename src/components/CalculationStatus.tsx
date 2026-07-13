@@ -49,6 +49,7 @@ export default function CalculationStatus(props: Props) {
       <span className="calculation-status__message">{message}</span>
       {showAction ? (
         <Button
+          size="small"
           type={props.phase === 'dirty' && !props.hasSnapshot ? 'primary' : 'default'}
           loading={calculating}
           disabled={calculating}

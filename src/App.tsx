@@ -149,7 +149,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
-  const [selectedArrangementId, setSelectedArrangementId] = useState<string | null>(null);
+  const [arrangementSelection, setArrangementSelection] = useState<{
+    inputKey: string | null;
+    id: string | null;
+  }>({ inputKey: null, id: null });
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [customizationOpen, setCustomizationOpen] = useState(false);
@@ -183,6 +186,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     settings: customSettings,
   });
   const arrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
+  const committedArrangementInputKey = calculation.committed?.inputKey ?? null;
+  const selectedArrangementId = arrangementSelection.inputKey === committedArrangementInputKey
+    ? arrangementSelection.id
+    : null;
 
   // 用户选择有效 → 应用之；否则用默认（最低冲突）
   const appliedArrangement: Arrangement | null = useMemo(() => {
@@ -229,11 +236,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => {
     setDetailGroupKey(null);
-    setSelectedArrangementId(null);
+    setArrangementSelection({ inputKey: null, id: null });
   }, [activePlan?.id]);
   useLayoutEffect(() => {
-    setSelectedArrangementId((current) => resolveSelectedArrangementId(current, arrangements));
-  }, [arrangements]);
+    setArrangementSelection((current) => ({
+      inputKey: committedArrangementInputKey,
+      id: resolveSelectedArrangementId(current.id, arrangements),
+    }));
+  }, [arrangements, committedArrangementInputKey]);
 
   const handleExport = async () => {
     if (!exportRef.current) {
@@ -271,7 +281,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleArrangementChange = (id: string) => {
     if (id === appliedArrangement?.id) return;
     const index = arrangements.findIndex((arrangement) => arrangement.id === id);
-    setSelectedArrangementId(id);
+    setArrangementSelection({ inputKey: committedArrangementInputKey, id });
     if (index >= 0) message.success(`已切换到排课方案 #${index}`);
   };
 

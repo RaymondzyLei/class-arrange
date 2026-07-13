@@ -6,6 +6,7 @@ import CalculationStatus from './CalculationStatus';
 
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const arrangementPanelSource = readFileSync(new URL('./ArrangementPanel.tsx', import.meta.url), 'utf8');
+const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 
 function renderStatus(
   phase: 'dirty' | 'ready',
@@ -33,6 +34,7 @@ describe('CalculationStatus', () => {
     const html = renderStatus('dirty', true);
 
     expect(html).toContain('课程或偏好已变更。');
+    expect(html).toContain('ant-btn-sm');
     expect(html).not.toContain('待重新计算');
     expect(html).not.toContain('当前仍显示上次计算的课表');
   });
@@ -45,10 +47,18 @@ describe('CalculationStatus', () => {
     expect(html).toContain('calculation-status__message');
   });
 
+  it('keeps every calculation state row at the same height', () => {
+    const statusRule = stylesSource.match(/\n\.calculation-status\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+    expect(statusRule).toContain('min-height: 38px');
+    expect(statusRule).toContain('box-sizing: border-box');
+  });
+
   it('applies the newly ranked first arrangement before the browser paints', () => {
     expect(appSource).toContain('useLayoutEffect');
-    expect(appSource).toMatch(
-      /useLayoutEffect\(\(\) => \{\s*setSelectedArrangementId\(\(current\) => resolveSelectedArrangementId\(current, arrangements\)\);\s*\}, \[arrangements\]\);/,
-    );
+    expect(appSource).toContain('arrangementSelection.inputKey === committedArrangementInputKey');
+    expect(appSource).toContain('setArrangementSelection((current) => ({');
+    expect(arrangementPanelSource).toContain('key={index}');
+    const cardRule = stylesSource.match(/\.arrangement-card\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+    expect(cardRule).not.toContain('transition:');
   });
 });

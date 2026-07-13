@@ -28,7 +28,7 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
           const conflictFree = a.conflictCount === 0;
           return (
             <button
-              key={a.id}
+              key={index}
               type="button"
               className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
               onClick={() => onSelect(a.id)}
