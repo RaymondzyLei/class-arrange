@@ -44,4 +44,11 @@ describe('CalculationStatus', () => {
     expect(html).not.toContain('排课结果已就绪');
     expect(html).toContain('calculation-status__message');
   });
+
+  it('applies the newly ranked first arrangement before the browser paints', () => {
+    expect(appSource).toContain('useLayoutEffect');
+    expect(appSource).toMatch(
+      /useLayoutEffect\(\(\) => \{\s*setSelectedArrangementId\(\(current\) => resolveSelectedArrangementId\(current, arrangements\)\);\s*\}, \[arrangements\]\);/,
+    );
+  });
 });

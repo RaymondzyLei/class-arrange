@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -231,7 +231,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(null);
     setSelectedArrangementId(null);
   }, [activePlan?.id]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setSelectedArrangementId((current) => resolveSelectedArrangementId(current, arrangements));
   }, [arrangements]);
 
