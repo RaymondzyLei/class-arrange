@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { App, Button, Descriptions, Table, Tag, Typography } from 'antd';
-import type { CourseGroup } from '@/types';
+import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
+import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
 
 interface Props {
   group: CourseGroup | null;
+  detail?: CourseDetail;
   open: boolean;
   onClose: () => void;
 }
@@ -72,19 +74,26 @@ function formatClassLabels(classes: string[]): string {
   return classes.map((label) => label.replace(/\*+$/, '')).join('，');
 }
 
-export default function CourseDetailModal({ group, open, onClose }: Props) {
+export default function CourseDetailModal({ group, detail, open, onClose }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
+  const [cachedDetail, setCachedDetail] = useState<CourseDetail | undefined>(undefined);
   useEffect(() => {
-    if (group) setCached(group);
-  }, [group]);
+    if (!group) return;
+    setCached(group);
+    setCachedDetail(detail);
+  }, [group, detail]);
   const display = group ?? cached;
+  const displayDetail = group ? detail : cachedDetail;
 
   if (!display) return null;
 
   const rep = display.sections[0];
+  const examType = displayDetail?.examType.trim() || rep?.examType.trim() || '—';
+  const grading = displayDetail?.grading.trim() || rep?.grading.trim() || '—';
+  const materialDisplay = formatCourseMaterialDisplay(displayDetail);
   const sectionLabel = sectionLabelForGroup(display);
   const selected = display.sectionIds.every((id) => activePlan?.courseIds.includes(id));
   const singleRating =
@@ -166,9 +175,10 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
             {formatTeacherList(display.teachers, '—')}
           </Descriptions.Item>
           <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
-          <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
-          <Descriptions.Item label="课程类型">{rep?.courseType ?? '—'}</Descriptions.Item>
-          <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="课程类型">{rep?.courseType || '—'}</Descriptions.Item>
+          <Descriptions.Item label="考核方式">{examType}</Descriptions.Item>
+          <Descriptions.Item label="评分制">{grading}</Descriptions.Item>
+          <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
           {rep?.undergradShared ? (
             <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
           ) : null}
@@ -177,6 +187,19 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
               <RatingLink rating={singleRating} />
             </Descriptions.Item>
           ) : null}
+          <Descriptions.Item label="教材 / 讲义" span={2}>
+            <div>
+              <Typography.Text type="secondary">教材：</Typography.Text>
+              {materialDisplay.textbooks}
+            </div>
+            <div>
+              <Typography.Text type="secondary">讲义：</Typography.Text>
+              {materialDisplay.materials}
+            </div>
+          </Descriptions.Item>
+          <Descriptions.Item label="参考书" span={2}>
+            {materialDisplay.referenceBooks}
+          </Descriptions.Item>
         </Descriptions>
       </div>
 
@@ -190,14 +213,18 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
             <span className="mobile-field__label">授课教师</span>
             <span className="mobile-field__value">{formatTeacherList(display.teachers, '—')}</span>
           </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">学分 / 学时</span>
+            <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+          </div>
           <div className="mobile-field mobile-field--pair">
             <span>
-              <span className="mobile-field__label">学分 / 学时</span>
-              <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+              <span className="mobile-field__label">考核方式</span>
+              <span className="mobile-field__value">{examType}</span>
             </span>
             <span>
-              <span className="mobile-field__label">考核方式</span>
-              <span className="mobile-field__value">{rep?.examType ?? '—'}</span>
+              <span className="mobile-field__label">评分制</span>
+              <span className="mobile-field__value">{grading}</span>
             </span>
           </div>
           <div className="mobile-field mobile-field--pair">
@@ -226,6 +253,18 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
               <span className="mobile-field__value"><RatingLink rating={singleRating} /></span>
             </div>
           ) : null}
+          <div className="mobile-field">
+            <span className="mobile-field__label">教材</span>
+            <span className="mobile-field__value">{materialDisplay.textbooks}</span>
+          </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">讲义</span>
+            <span className="mobile-field__value">{materialDisplay.materials}</span>
+          </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">参考书</span>
+            <span className="mobile-field__value">{materialDisplay.referenceBooks}</span>
+          </div>
         </section>
       </div>
 
