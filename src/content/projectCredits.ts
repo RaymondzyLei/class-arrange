@@ -18,7 +18,7 @@ export interface Contributor {
 export const CONTRIBUTORS: readonly Contributor[] = [
   {
     name: 'RaymondzyLei',
-    url: 'https://github.com/RaymondzyLei',
+    url: PROJECT_LINKS.raymondHome,
     githubLogin: 'RaymondzyLei',
   },
   { name: 'Claude', url: 'https://github.com/claude', githubLogin: 'claude' },
