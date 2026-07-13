@@ -1,0 +1,51 @@
+import { describe, expect, it } from 'vitest';
+import {
+  CALCULATION_MODE_OPTIONS,
+  DEFAULT_CUSTOM_SETTINGS,
+  normalizeCustomScheduleSettings,
+  parseCustomScheduleSettings,
+} from './customization';
+
+describe('custom schedule settings persistence', () => {
+  it('exposes the shared automatic/manual labels and explanations', () => {
+    expect(CALCULATION_MODE_OPTIONS).toEqual([
+      {
+        value: 'auto',
+        label: '自动排课',
+        description: '课程或排课偏好变化后自动重新计算。',
+      },
+      {
+        value: 'manual',
+        label: '手动开始排课',
+        description: '修改后保留当前课表，按需点击开始或重新计算。',
+      },
+    ]);
+  });
+
+  it('defaults new and missing calculation modes to auto', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.calculationMode).toBe('auto');
+    expect(normalizeCustomScheduleSettings({}).calculationMode).toBe('auto');
+    expect(normalizeCustomScheduleSettings(null).calculationMode).toBe('auto');
+  });
+
+  it('preserves manual and normalizes invalid persisted modes to auto', () => {
+    expect(normalizeCustomScheduleSettings({ calculationMode: 'manual' }).calculationMode)
+      .toBe('manual');
+    expect(normalizeCustomScheduleSettings({ calculationMode: 'auto' }).calculationMode)
+      .toBe('auto');
+    expect(normalizeCustomScheduleSettings({ calculationMode: 'later' }).calculationMode)
+      .toBe('auto');
+  });
+
+  it('retains legacy preference migration and blocked-slot validation', () => {
+    expect(parseCustomScheduleSettings(JSON.stringify({
+      schedulePreference: 'half-day',
+      blockedSlots: ['2-6', 'bad', '2-6', '1-1'],
+    }))).toEqual({
+      calculationMode: 'auto',
+      preferHalfDay: true,
+      preferFewerEarlyMornings: true,
+      blockedSlots: ['1-1', '2-6'],
+    });
+  });
+});

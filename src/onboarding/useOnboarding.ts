@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
+import type { CalculationMode } from '@/utils/customization';
 
 const ONBOARDING_STORAGE_KEY = 'class-arrange:v1:onboarding';
 const LEGACY_COMPLETED_KEY = 'onboardingCompleted';
 
 export interface OnboardingPreferences {
+  calculationMode: CalculationMode;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
 }
@@ -19,6 +21,7 @@ export type OnboardingStage = 'hidden' | 'wizard' | 'tour';
 export type OnboardingTourEntryMode = 'wizard' | 'manual';
 
 export const DEFAULT_ONBOARDING_PREFERENCES: OnboardingPreferences = {
+  calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
 };
@@ -40,6 +43,7 @@ function normalizePreferences(value: unknown): OnboardingPreferences {
     : {};
 
   return {
+    calculationMode: source.calculationMode === 'manual' ? 'manual' : 'auto',
     preferHalfDay: booleanFrom(
       source.preferHalfDay ?? source.preferCompactSchedule,
       DEFAULT_ONBOARDING_PREFERENCES.preferHalfDay,

@@ -66,6 +66,19 @@
   margin-top: 0;
 }
 
+.onboarding-wizard__calculation-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.onboarding-wizard__calculation-mode > p {
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .onboarding-preference {
   width: 100%;
   min-height: 48px;

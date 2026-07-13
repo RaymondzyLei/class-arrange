@@ -11,6 +11,7 @@ import {
 import { enumerateArrangementsOracle } from './arrangementOracle';
 
 const NO_PREFERENCES: CustomScheduleSettings = {
+  calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: false,
   blockedSlots: [],
@@ -78,6 +79,7 @@ function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
 describe('compareArrangementRanks', () => {
   it('applies the exact conflict, half-day, early-morning, key, and credit ordering', () => {
     const allPreferences: CustomScheduleSettings = {
+      calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
       blockedSlots: [],
@@ -185,6 +187,7 @@ describe('exact Top-8 differential contract', () => {
       for (const preferHalfDay of [false, true]) {
         for (const preferFewerEarlyMornings of [false, true]) {
           const settings: CustomScheduleSettings = {
+            calculationMode: 'auto',
             preferHalfDay,
             preferFewerEarlyMornings,
             blockedSlots: blockedSlotsForSeed(seed),
@@ -235,6 +238,7 @@ describe('exact Top-8 differential contract', () => {
       }
     }
     expect(enumerateArrangements(halfDayGroups, {
+      calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: false,
       blockedSlots: afternoonBlocks,
@@ -248,6 +252,7 @@ describe('exact Top-8 differential contract', () => {
       makeGroup('A', 'z-late', [{ weeks: [1, 2], day: 2, periods: [3], room: '' }]),
     ];
     expect(enumerateArrangements(earlyGroups, {
+      calculationMode: 'auto',
       preferHalfDay: false,
       preferFewerEarlyMornings: true,
       blockedSlots: [],
