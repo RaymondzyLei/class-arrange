@@ -418,6 +418,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       />
       <CourseDetailModal
         group={detailGroup}
+        detail={
+          detailGroup?.sections[0]
+            ? catalog.detailsBySection[detailGroup.sections[0].id]
+            : undefined
+        }
         open={!!detailGroup}
         onClose={() => setDetailGroupKey(null)}
       />
