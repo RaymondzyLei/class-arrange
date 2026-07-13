@@ -6,6 +6,8 @@ export interface ArrangementWorkerScheduleDto {
   weeks: number[];
   day: number;
   periods: number[];
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface ArrangementWorkerGroupDto {
@@ -67,6 +69,8 @@ export function createArrangementWorkerRequest(
         weeks: [...slot.weeks],
         day: slot.day,
         periods: [...slot.periods],
+        ...(slot.startTime ? { startTime: slot.startTime } : {}),
+        ...(slot.endTime ? { endTime: slot.endTime } : {}),
       })),
       credits: group.sections[0]?.credits ?? 0,
       hours: group.sections[0]?.hours ?? 0,
@@ -88,6 +92,8 @@ function rehydrateWorkerInputGroup(dto: ArrangementWorkerGroupDto): CourseGroup 
       room: '',
       day: slot.day,
       periods: slot.periods,
+      ...(slot.startTime ? { startTime: slot.startTime } : {}),
+      ...(slot.endTime ? { endTime: slot.endTime } : {}),
     })),
     fingerprint: '',
     sectionIds: [],

@@ -10,7 +10,11 @@ import {
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
-import { formatScheduleCompact } from '@/utils/scheduleFormat';
+import {
+  formatScheduleCompact,
+  formatScheduleSlotTime,
+} from '@/utils/scheduleFormat';
+import { hasExactScheduleTime } from '@/utils/scheduleTime';
 import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
 import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
@@ -30,7 +34,8 @@ interface ScheduleRow {
   weeks: string;
   weeksExpanded: string;
   day: string | number;
-  periods: string;
+  time: string;
+  exactTime: boolean;
   room: string;
 }
 
@@ -130,7 +135,8 @@ export default function CourseDetailModal({
     weeks: formatWeeks(s.weeks),
     weeksExpanded: expandWeeks(s.weeks).join(', '),
     day: DAY_LABELS[s.day] ?? s.day,
-    periods: s.periods.join(', '),
+    time: formatScheduleSlotTime(s),
+    exactTime: hasExactScheduleTime(s),
     room: s.room || '—',
   } satisfies ScheduleRow));
 
@@ -373,7 +379,7 @@ export default function CourseDetailModal({
           { title: '周次', dataIndex: 'weeks', width: 120 },
           { title: '展开周', dataIndex: 'weeksExpanded', render: (v: string) => <Typography.Text type="secondary" style={{ fontSize: 12 }}>{v}</Typography.Text> },
           { title: '星期', dataIndex: 'day', width: 70 },
-          { title: '节次', dataIndex: 'periods', width: 90 },
+          { title: '时间 / 节次', dataIndex: 'time', width: 130 },
           { title: '教室', dataIndex: 'room' },
         ]}
       />
@@ -382,7 +388,9 @@ export default function CourseDetailModal({
           <article className="mobile-card course-detail-schedule-card" key={row.key}>
             <div className="mobile-card__head">
               <span className="mobile-card__title">{row.weeks}</span>
-              <span className="mobile-card__meta">{row.day} · {row.periods} 节</span>
+              <span className="mobile-card__meta">
+                {row.day} · {row.time}{row.exactTime ? '' : ' 节'}
+              </span>
             </div>
             <div className="mobile-card__line">{row.room}</div>
             <div className="mobile-card__subline">展开周：{row.weeksExpanded || '—'}</div>

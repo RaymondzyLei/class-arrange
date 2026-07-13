@@ -1,7 +1,7 @@
 import { Button, Slider } from 'antd';
 import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
-import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
+import { DAYS, PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
@@ -31,6 +31,13 @@ import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
 import SemesterDropdown from './SemesterDropdown';
 import type { SemesterManifestEntry } from '@/types';
+import {
+  blockedMinuteIntervalsByDay,
+  exactScheduleInterval,
+  minuteIntervalsOverlap,
+  periodMinuteInterval,
+  type MinuteInterval,
+} from '@/utils/scheduleTime';
 
 interface Props {
   weekSelection: WeekSelection;
@@ -75,6 +82,7 @@ interface TimetableEntry {
   start: number;
   end: number;
   periods: number[];
+  timeIntervals: MinuteInterval[];
   span: number;
   activeDates: string[];
   specialLabels: string[];
@@ -86,22 +94,6 @@ interface MutableTimetableEntry extends TimetableEntry {
   activeDateSet: Set<string>;
   specialLabelSet: Set<string>;
 }
-
-const PERIOD_TIMES: Record<number, { start: string; end: string }> = {
-  1: { start: '07:50', end: '08:35' },
-  2: { start: '08:40', end: '09:25' },
-  3: { start: '09:45', end: '10:30' },
-  4: { start: '10:35', end: '11:20' },
-  5: { start: '11:25', end: '12:10' },
-  6: { start: '14:00', end: '14:45' },
-  7: { start: '14:50', end: '15:35' },
-  8: { start: '15:55', end: '16:40' },
-  9: { start: '16:45', end: '17:30' },
-  10: { start: '17:35', end: '18:20' },
-  11: { start: '19:30', end: '20:15' },
-  12: { start: '20:20', end: '21:05' },
-  13: { start: '21:10', end: '21:55' },
-};
 
 const BAND_STARTS: Record<number, { label: string; rowSpan: number }> = {
   1: { label: '上午', rowSpan: 5 },
@@ -132,8 +124,9 @@ function keyFor(day: number, period: number): string {
   return `${day}-${period}`;
 }
 
-function periodOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
-  return a.periods.some((period) => b.periods.includes(period));
+function timeOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
+  return a.timeIntervals.some((left) =>
+    b.timeIntervals.some((right) => minuteIntervalsOverlap(left, right)));
 }
 
 function dateOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
@@ -143,13 +136,14 @@ function dateOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
 
 function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): TimetableEntry[] {
   const conflictIds = new Set<string>();
+  const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
   for (let i = 0; i < entries.length; i += 1) {
     for (let j = i + 1; j < entries.length; j += 1) {
       const a = entries[i];
       const b = entries[j];
       if (a.groupKey === b.groupKey) continue;
       if (a.displayDay !== b.displayDay) continue;
-      if (!periodOverlaps(a, b)) continue;
+      if (!timeOverlaps(a, b)) continue;
       if (!dateOverlaps(a, b)) continue;
       conflictIds.add(a.id);
       conflictIds.add(b.id);
@@ -158,9 +152,9 @@ function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): Ti
   return entries.map((entry) => ({
     ...entry,
     conflict: conflictIds.has(entry.id)
-      || entry.periods.some((period) =>
-        blockedSlots.has(blockedSlotKey(entry.displayDay, period)),
-      ),
+      || entry.timeIntervals.some((interval) =>
+        blockedByDay.get(entry.displayDay)?.some((blockedInterval) =>
+          minuteIntervalsOverlap(interval, blockedInterval))),
   }));
 }
 
@@ -192,6 +186,7 @@ function buildEntries(
     for (let slotIndex = 0; slotIndex < group.schedule.length; slotIndex += 1) {
       const slot = group.schedule[slotIndex];
       if (slot.day < 1 || slot.day > 7) continue;
+      const exactInterval = exactScheduleInterval(slot);
       const runs = splitConsecutivePeriods(slot.periods.filter((p) => p >= 1 && p <= 13));
       for (const date of dates) {
         if (date.effectiveWeekday !== slot.day) continue;
@@ -225,6 +220,12 @@ function buildEntries(
               start,
               end,
               periods,
+              timeIntervals: exactInterval
+                ? [exactInterval]
+                : periods.flatMap((period) => {
+                  const interval = periodMinuteInterval(period);
+                  return interval ? [interval] : [];
+                }),
               span: end - start + 1,
               activeDates: [],
               specialLabels: [],

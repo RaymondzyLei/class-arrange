@@ -26,4 +26,9 @@ describe('CourseDetailModal information order', () => {
     const end = source.indexOf('</section>', start);
     expectReferenceBooksBeforeMaterials(source.slice(start, end));
   });
+
+  it('uses the exact-time-aware formatter in the schedule detail table', () => {
+    expect(source).toContain('formatScheduleSlotTime(s)');
+    expect(source).toContain("title: '时间 / 节次'");
+  });
 });

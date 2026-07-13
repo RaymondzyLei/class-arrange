@@ -1,5 +1,8 @@
 import type { ScheduleSlot } from '@/types';
 import { expandWeeks, formatWeeks } from './weeks';
+import { formatScheduleSlotTime } from './scheduleTime';
+
+export { formatScheduleSlotTime } from './scheduleTime';
 
 function firstWeek(slot: ScheduleSlot): number {
   return expandWeeks(slot.weeks)[0] ?? 999;
@@ -24,7 +27,7 @@ export function formatScheduleCompact(schedule: ScheduleSlot[]): string {
     const weeks = formatWeeks(slot.weeks);
     const room = slot.room || '地点未定';
     const key = `${weeks} ${room}`;
-    const value = `${slot.day}(${slot.periods.join(',')})`;
+    const value = `${slot.day}(${formatScheduleSlotTime(slot)})`;
     const existing = grouped.get(key);
     if (existing) existing.push(value);
     else grouped.set(key, [value]);

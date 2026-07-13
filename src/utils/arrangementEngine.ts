@@ -5,6 +5,12 @@ import {
   type CustomScheduleSettings,
 } from './customization';
 import { expandWeeks } from './weeks';
+import {
+  blockedMinuteIntervalsByDay,
+  minuteIntervalsOverlap,
+  scheduleSlotMinuteIntervals,
+  scheduleSlotOverlapsBlocked,
+} from './scheduleTime';
 
 const RESULT_LIMIT = 8;
 
@@ -26,13 +32,24 @@ export interface ArrangementSearchDiagnostics {
 interface PrecomputedGroup {
   group: CourseGroup;
   keyId: number;
-  expandedSlotKeys: string[];
+  expandedIntervals: ExpandedInterval[];
   occupiedDayPeriods: string[];
   earlyMorningDays: number[];
   blockedSlotHit: boolean;
   credits: number;
   hours: number;
   conflictNeighbors: number[];
+}
+
+interface ExpandedInterval {
+  week: number;
+  day: number;
+  start: number;
+  end: number;
+}
+
+interface IndexedInterval extends ExpandedInterval {
+  groupIndex: number;
 }
 
 interface TotalsSnapshot {
@@ -153,6 +170,7 @@ function precomputeGroups(
   blockedSlots: Set<string>,
 ): PrecomputedGroup[] {
   const keyIds = new Map<string, number>();
+  const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
   const records = groups.map((group): PrecomputedGroup => {
     let keyId = keyIds.get(group.key);
     if (keyId === undefined) {
@@ -160,14 +178,19 @@ function precomputeGroups(
       keyIds.set(group.key, keyId);
     }
 
-    const expandedSlotKeys = new Set<string>();
+    const expandedIntervals = new Map<string, ExpandedInterval>();
     const occupiedDayPeriods = new Set<string>();
     const earlyMorningDays = new Set<number>();
     let blockedSlotHit = false;
     for (const slot of group.schedule) {
+      const minuteIntervals = scheduleSlotMinuteIntervals(slot);
       for (const week of expandWeeks(slot.weeks)) {
-        for (const period of slot.periods) {
-          expandedSlotKeys.add(`${week}-${slot.day}-${period}`);
+        for (const interval of minuteIntervals) {
+          const expanded = { week, day: slot.day, ...interval };
+          expandedIntervals.set(
+            `${week}-${slot.day}-${interval.start}-${interval.end}`,
+            expanded,
+          );
         }
       }
       if (slot.day >= 1 && slot.day <= 7) {
@@ -178,7 +201,7 @@ function precomputeGroups(
       if (slot.periods.some((period) => period === 1 || period === 2)) {
         earlyMorningDays.add(slot.day);
       }
-      if (slot.periods.some((period) => blockedSlots.has(blockedSlotKey(slot.day, period)))) {
+      if (scheduleSlotOverlapsBlocked(slot, blockedByDay)) {
         blockedSlotHit = true;
       }
     }
@@ -186,7 +209,7 @@ function precomputeGroups(
     return {
       group,
       keyId,
-      expandedSlotKeys: [...expandedSlotKeys],
+      expandedIntervals: [...expandedIntervals.values()],
       occupiedDayPeriods: [...occupiedDayPeriods],
       earlyMorningDays: [...earlyMorningDays],
       blockedSlotHit,
@@ -196,24 +219,29 @@ function precomputeGroups(
     };
   });
 
-  const groupsBySlot = new Map<string, number[]>();
+  const intervalsByWeekDay = new Map<string, IndexedInterval[]>();
   for (let index = 0; index < records.length; index += 1) {
-    for (const slotKey of records[index].expandedSlotKeys) {
-      const occupants = groupsBySlot.get(slotKey);
-      if (occupants) occupants.push(index);
-      else groupsBySlot.set(slotKey, [index]);
+    for (const interval of records[index].expandedIntervals) {
+      const key = `${interval.week}-${interval.day}`;
+      const indexed = { groupIndex: index, ...interval };
+      const occupants = intervalsByWeekDay.get(key);
+      if (occupants) occupants.push(indexed);
+      else intervalsByWeekDay.set(key, [indexed]);
     }
   }
 
   const neighbors = records.map(() => new Set<number>());
-  for (const occupants of groupsBySlot.values()) {
+  for (const occupants of intervalsByWeekDay.values()) {
+    occupants.sort((left, right) => left.start - right.start || left.end - right.end);
     for (let leftIndex = 0; leftIndex < occupants.length; leftIndex += 1) {
       const left = occupants[leftIndex];
       for (let rightIndex = leftIndex + 1; rightIndex < occupants.length; rightIndex += 1) {
         const right = occupants[rightIndex];
-        if (records[left].keyId === records[right].keyId) continue;
-        neighbors[left].add(right);
-        neighbors[right].add(left);
+        if (right.start >= left.end) break;
+        if (left.groupIndex === right.groupIndex || !minuteIntervalsOverlap(left, right)) continue;
+        if (records[left.groupIndex].keyId === records[right.groupIndex].keyId) continue;
+        neighbors[left.groupIndex].add(right.groupIndex);
+        neighbors[right.groupIndex].add(left.groupIndex);
       }
     }
   }

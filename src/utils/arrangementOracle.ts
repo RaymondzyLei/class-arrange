@@ -6,37 +6,52 @@
 import type { Arrangement, CourseGroup } from '@/types';
 import { expandWeeks } from './weeks';
 import {
-  blockedSlotKey,
   DEFAULT_CUSTOM_SETTINGS,
   type CustomScheduleSettings,
 } from './customization';
+import {
+  blockedMinuteIntervalsByDay,
+  minuteIntervalsOverlap,
+  scheduleSlotMinuteIntervals,
+  scheduleSlotOverlapsBlocked,
+} from './scheduleTime';
 
-function countConflicts(groups: CourseGroup[], blockedSlots: Set<string>): number {
-  const occ = new Map<string, Set<string>>();
-  for (const g of groups) {
-    for (const slot of g.schedule) {
-      for (const w of expandWeeks(slot.weeks)) {
-        for (const p of slot.periods) {
-          const k = `${w}-${slot.day}-${p}`;
-          let s = occ.get(k);
-          if (!s) {
-            s = new Set<string>();
-            occ.set(k, s);
-          }
-          s.add(g.key);
-        }
+function weeksOverlap(left: number[], right: number[]): boolean {
+  const leftWeeks = new Set(expandWeeks(left));
+  return expandWeeks(right).some((week) => leftWeeks.has(week));
+}
+
+function groupsOverlap(left: CourseGroup, right: CourseGroup): boolean {
+  for (const leftSlot of left.schedule) {
+    for (const rightSlot of right.schedule) {
+      if (leftSlot.day !== rightSlot.day || !weeksOverlap(leftSlot.weeks, rightSlot.weeks)) {
+        continue;
+      }
+      const leftIntervals = scheduleSlotMinuteIntervals(leftSlot);
+      const rightIntervals = scheduleSlotMinuteIntervals(rightSlot);
+      if (leftIntervals.some((leftInterval) =>
+        rightIntervals.some((rightInterval) =>
+          minuteIntervalsOverlap(leftInterval, rightInterval)))) {
+        return true;
       }
     }
   }
+  return false;
+}
+
+function countConflicts(groups: CourseGroup[], blockedSlots: Set<string>): number {
   const seen = new Set<string>();
-  for (const s of occ.values()) {
-    if (s.size >= 2) for (const k of s) seen.add(k);
+  for (let leftIndex = 0; leftIndex < groups.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < groups.length; rightIndex += 1) {
+      if (!groupsOverlap(groups[leftIndex], groups[rightIndex])) continue;
+      seen.add(groups[leftIndex].key);
+      seen.add(groups[rightIndex].key);
+    }
   }
   if (blockedSlots.size > 0) {
+    const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
     for (const group of groups) {
-      if (group.schedule.some((slot) =>
-        slot.periods.some((period) => blockedSlots.has(blockedSlotKey(slot.day, period))),
-      )) {
+      if (group.schedule.some((slot) => scheduleSlotOverlapsBlocked(slot, blockedByDay))) {
         seen.add(group.key);
       }
     }

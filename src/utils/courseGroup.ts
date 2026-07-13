@@ -1,5 +1,6 @@
 import type { CourseGroup, CourseSection, ScheduleSlot } from '@/types';
 import { expandWeeks } from './weeks';
+import { exactScheduleInterval } from './scheduleTime';
 
 /**
  * 从课堂号提取课程号：去掉最后一个 "." 及其后的班次后缀。
@@ -20,7 +21,13 @@ export function getCourseCode(id: string): string {
 function slotFingerprint(slot: ScheduleSlot): string {
   const weeks = expandWeeks(slot.weeks).sort((a, b) => a - b);
   const periods = [...slot.periods].sort((a, b) => a - b);
-  return `${weeks.join(',')}:${slot.day}:${periods.join(',')}`;
+  const exact = exactScheduleInterval(slot);
+  const clock = exact
+    ? `:${exact.start}-${exact.end}`
+    : slot.startTime || slot.endTime
+      ? `:raw-${slot.startTime?.trim() ?? ''}-${slot.endTime?.trim() ?? ''}`
+      : '';
+  return `${weeks.join(',')}:${slot.day}:${periods.join(',')}${clock}`;
 }
 
 /**

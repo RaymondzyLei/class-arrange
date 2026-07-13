@@ -16,6 +16,10 @@ export interface ScheduleSlot {
   day: number;
   /** 节次列表，如 [8, 9] 或 [3, 4, 5] */
   periods: number[];
+  /** 非标准节次课程的精确开始时间（HH:MM） */
+  startTime?: string;
+  /** 非标准节次课程的精确结束时间（HH:MM） */
+  endTime?: string;
 }
 
 export interface CourseSection {

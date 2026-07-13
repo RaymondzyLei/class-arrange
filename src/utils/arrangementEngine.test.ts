@@ -222,6 +222,46 @@ describe('exact Top-8 differential contract', () => {
     ]);
   });
 
+  it('matches the oracle for exact clock overlaps and blocked-slot endpoints', () => {
+    const groups = [
+      makeGroup('A', 'a-touching', [{
+        weeks: [1, 2],
+        day: 1,
+        periods: [11],
+        room: '',
+        startTime: '19:00',
+        endTime: '19:30',
+      } as ScheduleSlot]),
+      makeGroup('A', 'z-overlap', [{
+        weeks: [1, 2],
+        day: 1,
+        periods: [10],
+        room: '',
+        startTime: '19:15',
+        endTime: '19:45',
+      } as ScheduleSlot]),
+      makeGroup('B', 'b-standard', [{
+        weeks: [1, 2],
+        day: 1,
+        periods: [11],
+        room: '',
+      }]),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      blockedSlots: ['1-11'],
+    };
+
+    const expected = enumerateArrangementsOracle(groups, settings);
+    const actual = enumerateArrangementsExact(groups, settings);
+
+    expect(actual).toEqual(expected);
+    expect(actual.map((result) => [result.id, result.conflictCount])).toEqual([
+      ['a-touching||b-standard', 1],
+      ['b-standard||z-overlap', 2],
+    ]);
+  });
+
   it('computes preference metrics before applying their comparator keys', () => {
     const halfDayGroups = [
       makeGroup('A', 'a-busy-afternoon', [
