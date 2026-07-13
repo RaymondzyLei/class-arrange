@@ -6,7 +6,7 @@ import { PlansProvider, usePlans } from '@/store/plansContext';
 import { computeStats } from '@/utils/stats';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
-import { enumerateArrangements, pickDefaultArrangement } from '@/utils/arrangement';
+import { pickDefaultArrangement } from '@/utils/arrangement';
 import type { Arrangement, CourseGroup, FilterState } from '@/types';
 import PlanSwitcher from '@/components/PlanSwitcher';
 import FilterBar from '@/components/FilterBar';
@@ -14,6 +14,7 @@ import CoursePool from '@/components/CoursePool';
 import CourseTable from '@/components/CourseTable';
 import StatsBar from '@/components/StatsBar';
 import ArrangementPanel from '@/components/ArrangementPanel';
+import CalculationStatus from '@/components/CalculationStatus';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
 import CustomizationModal from '@/components/CustomizationModal';
@@ -21,6 +22,7 @@ import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import SpotlightTour from '@/components/onboarding/SpotlightTour';
 import { useConflicts } from '@/hooks/useConflicts';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
+import { useArrangementCalculation } from '@/hooks/useArrangementCalculation';
 import {
   readOnboardingState,
   useOnboarding,
@@ -41,6 +43,7 @@ import {
   saveCustomScheduleSettings,
   type CustomScheduleSettings,
 } from '@/utils/customization';
+import { resolveSelectedArrangementId } from '@/utils/arrangementCalculationState';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -54,6 +57,9 @@ const EMPTY_FILTER: FilterState = {
 };
 
 const EMPTY_IDS: Set<string> = new Set();
+const EMPTY_GROUPS: CourseGroup[] = [];
+const EMPTY_ARRANGEMENTS: Arrangement[] = [];
+const EMPTY_BLOCKED_SLOTS: string[] = [];
 const THEME_KEY = 'class-arrange:v1:theme';
 const CURRICULUM_SELECTION_KEY = 'class-arrange:v1:curriculum-selection';
 type Theme = 'light' | 'dark';
@@ -171,11 +177,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     [activePlan],
   );
 
-  // 枚举：可能 0 个、1 个（无歧义）、≤8 个（按冲突升序取前 8）
-  const arrangements = useMemo(
-    () => enumerateArrangements(allSelectedGroups, customSettings),
-    [allSelectedGroups, customSettings],
-  );
+  const calculation = useArrangementCalculation({
+    scopeKey: `${catalog.semester.key}:${activePlan?.id ?? 'no-plan'}`,
+    groups: allSelectedGroups,
+    settings: customSettings,
+  });
+  const arrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
 
   // 用户选择有效 → 应用之；否则用默认（最低冲突）
   const appliedArrangement: Arrangement | null = useMemo(() => {
@@ -187,9 +194,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     return pickDefaultArrangement(arrangements);
   }, [arrangements, selectedArrangementId]);
 
-  const appliedGroups = appliedArrangement?.groups ?? [];
+  const appliedGroups = appliedArrangement?.groups ?? EMPTY_GROUPS;
+  const committedBlockedSlots = calculation.committed?.settings.blockedSlots
+    ?? EMPTY_BLOCKED_SLOTS;
 
-  const { conflictGroupKeys } = useConflicts(appliedGroups, customSettings.blockedSlots);
+  const { conflictGroupKeys } = useConflicts(appliedGroups, committedBlockedSlots);
 
   const stats = useMemo(
     () => computeStats(appliedGroups, conflictGroupKeys),
@@ -211,7 +220,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   useEffect(() => {
     saveCustomScheduleSettings(customSettings);
-    setSelectedArrangementId(null);
   }, [customSettings]);
 
   useEffect(() => {
@@ -223,12 +231,9 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(null);
     setSelectedArrangementId(null);
   }, [activePlan?.id]);
-  // 用户加减课时，若选择的小卡片不再有效，重置选择回默认
   useEffect(() => {
-    if (selectedArrangementId && appliedArrangement?.id !== selectedArrangementId) {
-      setSelectedArrangementId(null);
-    }
-  }, [selectedArrangementId, appliedArrangement]);
+    setSelectedArrangementId((current) => resolveSelectedArrangementId(current, arrangements));
+  }, [arrangements]);
 
   const handleExport = async () => {
     if (!exportRef.current) {
@@ -282,6 +287,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleWizardComplete = (preferences: OnboardingPreferences, startTour: boolean) => {
     setCustomSettings((current) => ({
       ...current,
+      calculationMode: preferences.calculationMode,
       preferHalfDay: preferences.preferHalfDay,
       preferFewerEarlyMornings: preferences.preferFewerEarlyMornings,
     }));
@@ -344,6 +350,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             />
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
+          <CalculationStatus
+            phase={calculation.phase}
+            mode={calculation.draft.settings.calculationMode}
+            hasSnapshot={calculation.hasSnapshot}
+            actionLabel={calculation.actionLabel}
+            error={calculation.error}
+            onCalculate={calculation.startCalculation}
+          />
           {arrangements.length > 1 && (
             <ArrangementPanel
               arrangements={arrangements}
@@ -365,6 +379,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               themeMode={themeMode}
               onOpenDetail={setDetailGroupKey}
               courseMap={courseMap}
+              groupsByCode={groupsByCode}
             />
           </div>
         </div>
@@ -379,7 +394,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             onToggleTheme={onToggleTheme}
             onExport={handleExport}
             exporting={exporting}
-            blockedSlots={customSettings.blockedSlots}
+            blockedSlots={committedBlockedSlots}
             onOpenCustomization={() => setCustomizationOpen(true)}
             calendar={catalog.semester.calendar}
             semesters={manifest.semesters}
@@ -425,6 +440,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         }
         open={!!detailGroup}
         onClose={() => setDetailGroupKey(null)}
+        allSelectedGroups={allSelectedGroups}
+        groupsByCode={groupsByCode}
       />
       <OnboardingWizard
         open={onboarding.stage === 'wizard'}

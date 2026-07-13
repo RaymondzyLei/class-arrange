@@ -6,6 +6,7 @@ import {
   type CustomScheduleSettings,
 } from '@/utils/customization';
 import BottomModal from './BottomModal';
+import CalculationModePicker from './CalculationModePicker';
 import { PreferenceSwitchVisual } from './onboarding/PreferenceSwitch';
 
 interface Props {
@@ -77,6 +78,12 @@ export default function CustomizationModal({
   const setPreferFewerEarlyMornings = (preferFewerEarlyMornings: boolean) => {
     onChange({ ...settings, preferFewerEarlyMornings });
     message.success('排课倾向已更新');
+  };
+
+  const setCalculationMode = (calculationMode: CustomScheduleSettings['calculationMode']) => {
+    if (calculationMode === settings.calculationMode) return;
+    onChange({ ...settings, calculationMode });
+    message.success('排课计算方式已更新');
   };
 
   const toggleBlockedSlot = (day: number, period: number) => {
@@ -217,12 +224,15 @@ export default function CustomizationModal({
           </div>
         </section>
 
-        <section className="customization__section customization__section--compact">
-          <div>
-            <h3>设置</h3>
-            <p>更多说明与设置入口将在这里提供。</p>
+        <section className="customization__section customization__section--settings">
+          <div className="customization__section-head customization__section-head--inline">
+            <div>
+              <h3>设置</h3>
+              <p>选择修改课程或排课偏好后的计算方式。</p>
+            </div>
+            <Button onClick={onRestartOnboarding}>重新查看新手引导</Button>
           </div>
-          <Button onClick={onRestartOnboarding}>重新查看新手引导</Button>
+          <CalculationModePicker value={settings.calculationMode} onChange={setCalculationMode} />
         </section>
       </div>
     </BottomModal>

@@ -2,7 +2,11 @@ import { App, Button, Empty, Space, Table, Tabs, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import type { TableProps } from 'antd';
 import type { Arrangement, CourseGroup } from '@/types';
-import { conflictGroupSet, detectConflicts } from '@/utils/conflict';
+import {
+  conflictingCourseNamesForSelection,
+  idsForCourse,
+  idsForGroup,
+} from '@/utils/courseSelection';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import {
   ALL_CURRICULUM_TERMS,
@@ -58,6 +62,7 @@ interface CurriculumRow {
   course: CurriculumCourse;
   matches: CourseGroup[];
   selected: boolean;
+  allSelected: boolean;
 }
 
 function sectionLabelForGroup(group: CourseGroup): string {
@@ -87,23 +92,15 @@ function dedupeCurriculumCourses(courses: CurriculumCourse[]): CurriculumCourse[
 }
 
 function groupIsSelected(group: CourseGroup, selectedIds: Set<string>): boolean {
-  return group.sectionIds.every((id) => selectedIds.has(id));
+  return idsForGroup(group).every((id) => selectedIds.has(id));
 }
 
 function conflictStatusForCandidate(candidate: CourseGroup, currentGroups: CourseGroup[]): {
   conflict: boolean;
   names: string[];
 } {
-  const comparableGroups = currentGroups.filter((group) => group.courseCode !== candidate.courseCode);
-  const conflicts = detectConflicts([...comparableGroups, candidate]);
-  const conflictKeys = conflictGroupSet(conflicts);
-  if (!conflictKeys.has(candidate.key)) return { conflict: false, names: [] };
-  return {
-    conflict: true,
-    names: comparableGroups
-      .filter((group) => conflictKeys.has(group.key))
-      .map((group) => group.courseName),
-  };
+  const names = conflictingCourseNamesForSelection([candidate], currentGroups);
+  return { conflict: names.length > 0, names };
 }
 
 function isInteractiveClick(target: EventTarget | null): boolean {
@@ -244,13 +241,17 @@ export default function SelectedCoursesModal({
   const currentRows = useMemo(() => makeRows(appliedGroups), [appliedGroups, appliedKeys, conflictGroupKeys]);
   const allRows = useMemo(() => makeRows(allSelectedGroups), [allSelectedGroups, appliedKeys, conflictGroupKeys]);
   const curriculumRows = useMemo<CurriculumRow[]>(
-    () => visibleCurriculumCourses.map((course, index) => ({
-      key: `${course.code}-${index}`,
-      course,
-      matches: groupsByCode.get(course.code) ?? [],
-      selected: selectedCourseCodes.has(course.code),
-    })),
-    [visibleCurriculumCourses, groupsByCode, selectedCourseCodes],
+    () => visibleCurriculumCourses.map((course, index) => {
+      const courseIds = idsForCourse(course.code, groupsByCode);
+      return {
+        key: `${course.code}-${index}`,
+        course,
+        matches: groupsByCode.get(course.code) ?? [],
+        selected: selectedCourseCodes.has(course.code),
+        allSelected: courseIds.length > 0 && courseIds.every((id) => selectedIds.has(id)),
+      };
+    }),
+    [visibleCurriculumCourses, groupsByCode, selectedCourseCodes, selectedIds],
   );
   const requiredCurriculumCourses = useMemo(
     () => visibleCurriculumCourses.filter((course) => course.compulsory),
@@ -258,9 +259,7 @@ export default function SelectedCoursesModal({
   );
   const requiredCourseIds = useMemo(
     () => dedupe(
-      requiredCurriculumCourses.flatMap((course) =>
-        (groupsByCode.get(course.code) ?? []).flatMap((group) => group.sectionIds),
-      ),
+      requiredCurriculumCourses.flatMap((course) => idsForCourse(course.code, groupsByCode)),
     ),
     [groupsByCode, requiredCurriculumCourses],
   );
@@ -302,19 +301,20 @@ export default function SelectedCoursesModal({
   }, [open]);
 
   const removeGroup = (group: CourseGroup) => {
-    dispatch({ type: 'removeCourses', courseIds: group.sectionIds });
-    message.success(`已移除「${group.courseName}」`);
+    dispatch({ type: 'removeCourses', courseIds: idsForGroup(group) });
+    message.success(`已移除「${group.courseName}」的此时间组`);
   };
 
   const removeCourse = (courseCode: string, courseName: string) => {
-    const ids = dedupe(
-      allSelectedGroups
-        .filter((group) => group.courseCode === courseCode)
-        .flatMap((group) => group.sectionIds),
-    );
+    const ids = idsForCourse(courseCode, groupsByCode);
     if (ids.length === 0) return;
     dispatch({ type: 'removeCourses', courseIds: ids });
-    message.success(`已移除课程「${courseName}」`);
+    message.success(`已移除「${courseName}」的全部时间组`);
+  };
+
+  const courseIsFullySelected = (courseCode: string) => {
+    const ids = idsForCourse(courseCode, groupsByCode);
+    return ids.length > 0 && ids.every((id) => selectedIds.has(id));
   };
 
   const removeSelectedGroups = () => {
@@ -322,7 +322,7 @@ export default function SelectedCoursesModal({
     const ids = dedupe(
       allSelectedGroups
         .filter((group) => selectedKeySet.has(group.key))
-        .flatMap((group) => group.sectionIds),
+        .flatMap(idsForGroup),
     );
     if (ids.length === 0) return;
     dispatch({ type: 'removeCourses', courseIds: ids });
@@ -355,8 +355,48 @@ export default function SelectedCoursesModal({
       message.info('该时间组已在当前方案中');
       return;
     }
-    dispatch({ type: 'addCourses', courseIds: group.sectionIds });
-    message.success(`已加入「${group.courseName}」`);
+    const conflictNames = conflictingCourseNamesForSelection([group], appliedGroups);
+    dispatch({ type: 'addCourses', courseIds: idsForGroup(group) });
+    if (conflictNames.length > 0) {
+      message.warning(
+        `「${group.courseName}」的此时间组与当前排课存在时间冲突：${conflictNames.slice(0, 3).join('、')}（仍已选择）`,
+      );
+      return;
+    }
+    message.success(`已选择「${group.courseName}」的此时间组`);
+  };
+
+  const addCourse = (courseCode: string, courseName: string) => {
+    if (!activePlan) {
+      message.warning('请先新建一个方案');
+      return;
+    }
+    const ids = idsForCourse(courseCode, groupsByCode);
+    if (ids.length === 0) return;
+    if (ids.every((id) => selectedIds.has(id))) {
+      message.info('该课程的全部时间组已在当前方案中');
+      return;
+    }
+    const targetGroups = groupsByCode.get(courseCode) ?? [];
+    const conflictNames = conflictingCourseNamesForSelection(targetGroups, appliedGroups);
+    dispatch({ type: 'addCourses', courseIds: ids });
+    if (conflictNames.length > 0) {
+      message.warning(
+        `「${courseName}」的部分时间组与当前排课存在时间冲突：${conflictNames.slice(0, 3).join('、')}（仍已选择全部时间组）`,
+      );
+      return;
+    }
+    message.success(`已选择「${courseName}」的全部时间组`);
+  };
+
+  const toggleGroup = (group: CourseGroup) => {
+    if (groupIsSelected(group, selectedIds)) removeGroup(group);
+    else addGroup(group);
+  };
+
+  const toggleCourse = (courseCode: string, courseName: string) => {
+    if (courseIsFullySelected(courseCode)) removeCourse(courseCode, courseName);
+    else addCourse(courseCode, courseName);
   };
 
   const addCurrentTermRequiredCourses = () => {
@@ -369,7 +409,20 @@ export default function SelectedCoursesModal({
         ...unselectedRequiredIds,
       ]),
     }));
-    message.success(`已加入 ${unselectedRequiredIds.length} 个必修课程课堂`);
+    const requiredGroups = requiredCurriculumCourses.flatMap(
+      (course) => groupsByCode.get(course.code) ?? [],
+    );
+    const conflictNames = conflictingCourseNamesForSelection(
+      requiredGroups,
+      [...appliedGroups, ...requiredGroups],
+    );
+    if (conflictNames.length > 0) {
+      message.warning(
+        `已选择 ${unselectedRequiredIds.length} 个必修课程课堂；部分时间组存在冲突：${conflictNames.slice(0, 3).join('、')}`,
+      );
+      return;
+    }
+    message.success(`已选择 ${unselectedRequiredIds.length} 个必修课程课堂`);
   };
 
   const clearAutoAddedRequiredCourses = () => {
@@ -397,6 +450,68 @@ export default function SelectedCoursesModal({
     }
   };
 
+  const renderGroupScopeActions = (group: CourseGroup, removeOnly = false) => {
+    const currentSelected = groupIsSelected(group, selectedIds);
+    const allSelected = courseIsFullySelected(group.courseCode);
+    const removeCurrent = removeOnly || currentSelected;
+    const removeAll = removeOnly || allSelected;
+    const currentLabel = removeCurrent ? '移除此时间组' : '选择此时间组';
+    const allLabel = removeAll ? '移除全部时间组' : '选择全部时间组';
+    return (
+      <Space
+        size={4}
+        wrap
+        className="course-selection-actions"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <Button
+          size="small"
+          type={removeCurrent ? 'default' : 'primary'}
+          danger={removeCurrent}
+          aria-label={`${currentLabel}：${group.courseName}`}
+          onClick={() => (removeOnly ? removeGroup(group) : toggleGroup(group))}
+        >
+          {currentLabel}
+        </Button>
+        <Button
+          size="small"
+          type={removeAll ? 'default' : 'primary'}
+          danger={removeAll}
+          aria-label={`${allLabel}：${group.courseName}`}
+          onClick={() => (removeOnly
+            ? removeCourse(group.courseCode, group.courseName)
+            : toggleCourse(group.courseCode, group.courseName))}
+        >
+          {allLabel}
+        </Button>
+      </Space>
+    );
+  };
+
+  const renderCourseScopeButton = (
+    courseCode: string,
+    courseName: string,
+    disabled = false,
+  ) => {
+    const allSelected = courseIsFullySelected(courseCode);
+    const label = allSelected ? '移除全部时间组' : '选择全部时间组';
+    return (
+      <Button
+        size="small"
+        type={allSelected ? 'default' : 'primary'}
+        danger={allSelected}
+        disabled={disabled}
+        aria-label={`${label}：${courseName}`}
+        onClick={(event) => {
+          event.stopPropagation();
+          toggleCourse(courseCode, courseName);
+        }}
+      >
+        {label}
+      </Button>
+    );
+  };
+
   const groupColumns: TableProps<GroupRow>['columns'] = [
     { title: '课程名', dataIndex: 'courseName', width: 170 },
     { title: '课堂号/班次', dataIndex: 'sectionLabel', width: 130 },
@@ -413,19 +528,8 @@ export default function SelectedCoursesModal({
     },
     {
       title: '操作',
-      width: 180,
-      render: (_, row) => (
-        <Space size={4} wrap onClick={(event) => event.stopPropagation()}>
-          <Button size="small" danger onClick={() => removeGroup(row.group)}>移除此时间组</Button>
-          <Button
-            size="small"
-            danger
-            onClick={() => removeCourse(row.group.courseCode, row.group.courseName)}
-          >
-            移除此课程
-          </Button>
-        </Space>
-      ),
+      width: 250,
+      render: (_, row) => renderGroupScopeActions(row.group, true),
     },
   ];
 
@@ -467,49 +571,35 @@ export default function SelectedCoursesModal({
     },
     {
       title: '选择状态',
-      width: 96,
-      render: (_, row) => (row.selected ? <Tag color="green">已选</Tag> : <Tag>未选</Tag>),
+      width: 120,
+      render: (_, row) => (row.allSelected
+        ? <Tag color="green">已选全部时间组</Tag>
+        : row.selected ? <Tag color="blue">已选部分时间组</Tag> : <Tag>未选</Tag>),
     },
     {
       title: '操作',
-      width: 120,
+      width: 290,
       render: (_, row) => {
         if (row.matches.length === 0) {
           return (
             <Button size="small" disabled onClick={(event) => event.stopPropagation()}>
-              加入
+              选择全部时间组
             </Button>
           );
         }
         if (row.matches.length === 1) {
-          const [group] = row.matches;
-          const selected = groupIsSelected(group, selectedIds);
-          return (
-            <Button
-              size="small"
-              type={selected ? 'default' : 'primary'}
-              danger={selected}
-              onClick={(event) => {
-                event.stopPropagation();
-                if (selected) removeGroup(group);
-                else addGroup(group);
-              }}
-            >
-              {selected ? '移除' : '加入'}
-            </Button>
-          );
+          return renderGroupScopeActions(row.matches[0]);
         }
         return (
-          <Button
-            size="small"
-            type="primary"
-            onClick={(event) => {
-              event.stopPropagation();
-              setCandidateCourse(row.course);
-            }}
-          >
-            {row.selected ? '修改时间组' : '选择时间组'}
-          </Button>
+          <Space size={4} wrap onClick={(event) => event.stopPropagation()}>
+            <Button
+              size="small"
+              onClick={() => setCandidateCourse(row.course)}
+            >
+              {row.selected ? '修改所选时间组' : '选择时间组'}
+            </Button>
+            {renderCourseScopeButton(row.course.code, row.course.name)}
+          </Space>
         );
       },
     },
@@ -537,24 +627,8 @@ export default function SelectedCoursesModal({
     },
     {
       title: '操作',
-      width: 90,
-      render: (_, group) => (
-        <Space size={4} onClick={(event) => event.stopPropagation()}>
-          {groupIsSelected(group, selectedIds) ? (
-            <Button size="small" danger onClick={() => removeGroup(group)}>
-              移除
-            </Button>
-          ) : (
-          <Button
-            size="small"
-            type="primary"
-            onClick={() => addGroup(group)}
-          >
-            加入
-          </Button>
-          )}
-        </Space>
-      ),
+      width: 250,
+      render: (_, group) => renderGroupScopeActions(group),
     },
   ];
 
@@ -605,11 +679,12 @@ export default function SelectedCoursesModal({
           </div>
           <div className="selected-courses-card__line">{row.teachers}</div>
           <div className="selected-courses-card__schedule">{row.schedule || '时间地点待定'}</div>
-          <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
-            <Button size="small" danger onClick={() => removeGroup(row.group)}>移除此时间组</Button>
-            <Button size="small" danger onClick={() => removeCourse(row.group.courseCode, row.group.courseName)}>
-              移除此课程
-            </Button>
+          <div
+            className="selected-courses-card__actions"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
+            {renderGroupScopeActions(row.group, true)}
           </div>
         </article>
       ))}
@@ -636,7 +711,7 @@ export default function SelectedCoursesModal({
           <div className="selected-courses-card__meta">
             <span>{row.course.credits} 学分</span>
             <span>{row.course.compulsory ? '必修' : '选修'}</span>
-            <span>{row.selected ? '已选' : '未选'}</span>
+            <span>{row.allSelected ? '已选全部时间组' : row.selected ? '已选部分时间组' : '未选'}</span>
           </div>
           <div className="selected-courses-card__line">{row.course.modulePath.join(' / ')}</div>
           <div className="selected-courses-card__schedule">
@@ -646,19 +721,22 @@ export default function SelectedCoursesModal({
                 ? formatScheduleCompact(row.matches[0].schedule)
                 : `${row.matches.length} 个时间组`}
           </div>
-          <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
+          <div
+            className="selected-courses-card__actions"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+          >
             {row.matches.length === 0 ? (
-              <Button size="small" disabled>加入</Button>
+              <Button size="small" disabled>选择全部时间组</Button>
             ) : row.matches.length === 1 ? (
-              groupIsSelected(row.matches[0], selectedIds) ? (
-                <Button size="small" danger onClick={() => removeGroup(row.matches[0])}>移除</Button>
-              ) : (
-                <Button size="small" type="primary" onClick={() => addGroup(row.matches[0])}>加入</Button>
-              )
+              renderGroupScopeActions(row.matches[0])
             ) : (
-              <Button size="small" type="primary" onClick={() => setCandidateCourse(row.course)}>
-                {row.selected ? '修改时间组' : '选择时间组'}
-              </Button>
+              <>
+                <Button size="small" onClick={() => setCandidateCourse(row.course)}>
+                  {row.selected ? '修改所选时间组' : '选择时间组'}
+                </Button>
+                {renderCourseScopeButton(row.course.code, row.course.name)}
+              </>
             )}
           </div>
         </article>
@@ -670,7 +748,6 @@ export default function SelectedCoursesModal({
     <div className="selected-courses-mobile-list">
       {groups.map((group) => {
         const status = conflictStatusForCandidate(group, appliedGroups);
-        const selected = groupIsSelected(group, selectedIds);
         return (
           <article
             className="selected-courses-card selected-courses-card--clickable"
@@ -691,12 +768,12 @@ export default function SelectedCoursesModal({
               <span>{formatTeacherList(group.teachers)}</span>
             </div>
             <div className="selected-courses-card__schedule">{formatScheduleCompact(group.schedule)}</div>
-            <div className="selected-courses-card__actions" onClick={(event) => event.stopPropagation()}>
-              {selected ? (
-                <Button size="small" danger onClick={() => removeGroup(group)}>移除</Button>
-              ) : (
-                <Button size="small" type="primary" onClick={() => addGroup(group)}>加入</Button>
-              )}
+            <div
+              className="selected-courses-card__actions"
+              onClick={(event) => event.stopPropagation()}
+              onKeyDown={(event) => event.stopPropagation()}
+            >
+              {renderGroupScopeActions(group)}
             </div>
           </article>
         );
@@ -921,6 +998,9 @@ export default function SelectedCoursesModal({
           : '选择时间组'}
         onClose={() => setCandidateCourse(null)}
         width={900}
+        actions={candidateCourse
+          ? renderCourseScopeButton(candidateCourse.code, candidateCourse.name)
+          : undefined}
       >
         <Table<CourseGroup>
           className="detail-table selected-courses-table"
