@@ -369,7 +369,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             <FilterBar
               filter={filter}
               setFilter={setFilter}
-              resultCount={filteredGroups.length}
               options={filterOptions}
             />
             <CoursePool

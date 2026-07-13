@@ -428,7 +428,7 @@ html {
 
 .filter-bar__search {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) max-content;
   align-items: center;
   gap: 8px;
 }
@@ -440,17 +440,6 @@ html {
 
 .filter-bar__search .ant-input-affix-wrapper {
   min-width: 0;
-}
-
-.filter-bar__count {
-  color: var(--text-sub);
-  font-size: 12px;
-  line-height: 22px;
-  white-space: nowrap;
-  padding: 0 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel-bg-2);
 }
 
 .filter-bar__controls {
@@ -466,8 +455,7 @@ html {
 }
 
 .filter-bar__teacher-toggle {
-  /* Keep the teacher-search control centered beneath the third filter. */
-  justify-self: center;
+  justify-self: end;
   color: var(--text-sub);
   font-size: 12px;
   line-height: 18px;
@@ -1499,14 +1487,6 @@ html {
 @media (max-width: 520px) {
   .course-table__export-label {
     display: none;
-  }
-
-  .filter-bar__search {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-bar__count {
-    justify-self: start;
   }
 }
 
@@ -2874,12 +2854,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .filter-bar__search {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) max-content;
     gap: 8px;
-  }
-
-  .filter-bar__count {
-    justify-self: end;
   }
 
   .filter-bar__controls {
@@ -3674,12 +3650,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 :root[data-theme='dark'] .pool-item__conflict-tag {
   color: #1a0d10;
   font-weight: 700;
-}
-
-:root[data-theme='dark'] .filter-bar__count {
-  background: var(--dark-surface-recessed);
-  border-color: var(--border);
-  color: var(--text-sub);
 }
 
 :root[data-theme='dark'] .stats-bar__item--button:hover,

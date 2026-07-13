@@ -6,11 +6,10 @@ import SelectWithChevron from './SelectWithChevron';
 interface Props {
   filter: FilterState;
   setFilter: (f: FilterState) => void;
-  resultCount: number;
   options: CourseFilterOptions;
 }
 
-export default function FilterBar({ filter, setFilter, resultCount, options }: Props) {
+export default function FilterBar({ filter, setFilter, options }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
 
   return (
@@ -22,7 +21,13 @@ export default function FilterBar({ filter, setFilter, resultCount, options }: P
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
         />
-        <span className="filter-bar__count">共 {resultCount} 门</span>
+        <Checkbox
+          className="filter-bar__teacher-toggle"
+          checked={filter.includeTeacher}
+          onChange={(event) => update({ includeTeacher: event.target.checked })}
+        >
+          查询任课老师
+        </Checkbox>
       </div>
       <div className="filter-bar__controls">
         <SelectWithChevron
@@ -79,13 +84,6 @@ export default function FilterBar({ filter, setFilter, resultCount, options }: P
           allowClear
           options={options.languages.map((v) => ({ label: v, value: v }))}
         />
-        <Checkbox
-          className="filter-bar__teacher-toggle"
-          checked={filter.includeTeacher}
-          onChange={(event) => update({ includeTeacher: event.target.checked })}
-        >
-          查询任课老师
-        </Checkbox>
       </div>
     </div>
   );
