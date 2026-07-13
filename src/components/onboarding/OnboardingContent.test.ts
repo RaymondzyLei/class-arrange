@@ -19,4 +19,11 @@ describe('onboarding content', () => {
     expect(tourStepsSource).toContain('最多展示 8 种');
     expect(tourStepsSource).toContain('不同时间组组合');
   });
+
+  it('removes the former step 10 preference spotlight but keeps blocked slots', () => {
+    expect(tourStepsSource).not.toContain("id: 'customization-preferences'");
+    expect(tourStepsSource).not.toContain("title: '调整排课倾向'");
+    expect(tourStepsSource).toContain("id: 'customization-blocked-slots'");
+    expect(tourStepsSource).toContain("title: '设置占位时间'");
+  });
 });

@@ -95,16 +95,6 @@ export const tourSteps: TourStep[] = [
     placement: 'left',
   },
   {
-    id: 'customization-preferences',
-    target: '[data-tour="customization-preferences"]',
-    title: '调整排课倾向',
-    description: '在冲突课程尽可能少的前提下，按照所选倾向排列方案。',
-    action: 'openCustomization',
-    clickTarget: '[data-tour="customization"]',
-    placement: 'right',
-    entryAnimation: 'float',
-  },
-  {
     id: 'customization-blocked-slots',
     target: '[data-tour="customization-blocked-slots"]',
     title: '设置占位时间',
