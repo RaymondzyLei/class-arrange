@@ -2,7 +2,6 @@ import { App, Button, Empty, Space, Table, Tabs, Tag } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import type { TableProps } from 'antd';
 import type { Arrangement, CourseGroup } from '@/types';
-import { getAllCourseGroups } from '@/utils/courseGroup';
 import { conflictGroupSet, detectConflicts } from '@/utils/conflict';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import {
@@ -39,6 +38,7 @@ interface Props {
   onCurriculumChange: (id: string | null) => void;
   onCurriculumTermChange: (term: string | null) => void;
   onOpenDetail: (groupKey: string) => void;
+  groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
 interface GroupRow {
@@ -84,16 +84,6 @@ function dedupeCurriculumCourses(courses: CurriculumCourse[]): CurriculumCourse[
     seen.add(key);
     return true;
   });
-}
-
-function buildGroupsByCode(): Map<string, CourseGroup[]> {
-  const map = new Map<string, CourseGroup[]>();
-  for (const group of getAllCourseGroups()) {
-    const current = map.get(group.courseCode);
-    if (current) current.push(group);
-    else map.set(group.courseCode, [group]);
-  }
-  return map;
 }
 
 function groupIsSelected(group: CourseGroup, selectedIds: Set<string>): boolean {
@@ -148,6 +138,7 @@ export default function SelectedCoursesModal({
   onCurriculumChange,
   onCurriculumTermChange,
   onOpenDetail,
+  groupsByCode,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
@@ -165,7 +156,6 @@ export default function SelectedCoursesModal({
     () => new Set(allSelectedGroups.map((group) => group.courseCode)),
     [allSelectedGroups],
   );
-  const groupsByCode = useMemo(buildGroupsByCode, []);
   const planOptions = useMemo(
     () => state.plans.map((plan) => ({
       value: plan.id,

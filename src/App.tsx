@@ -3,9 +3,9 @@ import { flushSync } from 'react-dom';
 import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
-import { getCourseById } from '@/data';
 import { computeStats } from '@/utils/stats';
-import { buildCourseGroups, getAllCourseGroupsByKey } from '@/utils/courseGroup';
+import { buildCourseGroups } from '@/utils/courseGroup';
+import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
 import { enumerateArrangements, pickDefaultArrangement } from '@/utils/arrangement';
 import type { Arrangement, CourseGroup, FilterState } from '@/types';
 import PlanSwitcher from '@/components/PlanSwitcher';
@@ -127,6 +127,14 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { activePlan } = usePlans();
+  const {
+    courses,
+    courseMap,
+    groups,
+    groupByKey,
+    groupsByCode,
+    filterOptions,
+  } = useSemesterCatalog();
   const { message } = AntApp.useApp();
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
@@ -142,16 +150,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
-  const filteredGroups = useFilteredCourses(filter);
+  const filteredGroups = useFilteredCourses(courses, groups, filter);
 
   // 已选 sections → CourseGroup[]（按 groupKey 聚合）
   const allSelectedGroups = useMemo<CourseGroup[]>(() => {
     if (!activePlan) return [];
     const sections = activePlan.courseIds
-      .map((id) => getCourseById(id))
+      .map((id) => courseMap.get(id))
       .filter((c): c is NonNullable<typeof c> => Boolean(c));
     return buildCourseGroups(sections);
-  }, [activePlan]);
+  }, [activePlan, courseMap]);
 
   // 已选 stable Set
   const selectedIds = useMemo<Set<string>>(
@@ -183,9 +191,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     () => computeStats(appliedGroups, conflictGroupKeys),
     [appliedGroups, conflictGroupKeys],
   );
-
-  // 全量选课单元索引（模块级懒加载缓存，弹窗按 groupKey 查找）
-  const groupByKey = getAllCourseGroupsByKey();
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
@@ -339,13 +344,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             />
           )}
           <div className="course-search-tour-target" data-tour="course-search-area">
-            <FilterBar filter={filter} setFilter={setFilter} resultCount={filteredGroups.length} />
+            <FilterBar
+              filter={filter}
+              setFilter={setFilter}
+              resultCount={filteredGroups.length}
+              options={filterOptions}
+            />
             <CoursePool
               groups={filteredGroups}
               selectedIds={selectedIds}
               conflictGroupKeys={conflictGroupKeys}
               themeMode={themeMode}
               onOpenDetail={setDetailGroupKey}
+              courseMap={courseMap}
             />
           </div>
         </div>
@@ -381,6 +392,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onCurriculumChange={handleCurriculumChange}
         onCurriculumTermChange={handleCurriculumTermChange}
         onOpenDetail={openCourseDetailFromManager}
+        groupsByCode={groupsByCode}
       />
       <CustomizationModal
         open={customizationOpen}
@@ -412,6 +424,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 }
 
 export default function App() {
+  const { catalog, courseMap, manifest } = useSemesterCatalog();
+  const validCourseIds = useMemo(() => new Set(courseMap.keys()), [courseMap]);
   const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
   const activeThemeTransitionRef = useRef<ReturnType<Document['startViewTransition']> | null>(null);
 
@@ -502,7 +516,12 @@ export default function App() {
       }}
     >
       <AntApp>
-        <PlansProvider>
+        <PlansProvider
+          key={catalog.semester.key}
+          semesterKey={catalog.semester.key}
+          defaultSemesterKey={manifest.defaultSemester}
+          validCourseIds={validCourseIds}
+        >
           <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
         </PlansProvider>
       </AntApp>

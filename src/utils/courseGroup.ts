@@ -1,5 +1,4 @@
 import type { CourseGroup, CourseSection, ScheduleSlot } from '@/types';
-import { courses } from '@/data';
 import { expandWeeks } from './weeks';
 
 /**
@@ -92,21 +91,4 @@ export function buildGroupIndex(sections: CourseSection[]): Map<string, CourseGr
     for (const id of g.sectionIds) index.set(id, g);
   }
   return index;
-}
-
-let _allGroupsCache: CourseGroup[] | null = null;
-let _groupByKeyCache: Map<string, CourseGroup> | null = null;
-
-/** 全量课程聚合：模块级懒加载、所有调用方共享同一份引用 */
-export function getAllCourseGroups(): CourseGroup[] {
-  if (_allGroupsCache) return _allGroupsCache;
-  _allGroupsCache = buildCourseGroups(courses);
-  return _allGroupsCache;
-}
-
-/** 全量选课单元的 groupKey → CourseGroup 索引。弹窗按 groupKey O(1) 查找 */
-export function getAllCourseGroupsByKey(): Map<string, CourseGroup> {
-  if (_groupByKeyCache) return _groupByKeyCache;
-  _groupByKeyCache = new Map(getAllCourseGroups().map((g) => [g.key, g]));
-  return _groupByKeyCache;
 }

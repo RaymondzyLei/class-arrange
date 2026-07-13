@@ -1,21 +1,16 @@
 import { Checkbox, Input } from 'antd';
 import type { FilterState } from '@/types';
-import {
-  DEPARTMENT_OPTIONS,
-  COURSE_TYPE_OPTIONS,
-  SECTION_TYPE_OPTIONS,
-  EXAM_TYPE_OPTIONS,
-  LANGUAGE_OPTIONS,
-} from '@/constants/filterOptions';
+import type { CourseFilterOptions } from '@/constants/filterOptions';
 import SelectWithChevron from './SelectWithChevron';
 
 interface Props {
   filter: FilterState;
   setFilter: (f: FilterState) => void;
   resultCount: number;
+  options: CourseFilterOptions;
 }
 
-export default function FilterBar({ filter, setFilter, resultCount }: Props) {
+export default function FilterBar({ filter, setFilter, resultCount, options }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
 
   return (
@@ -37,7 +32,7 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           value={filter.department || undefined}
           onChange={(v) => update({ department: v ?? '' })}
           allowClear
-          options={DEPARTMENT_OPTIONS.map((v) => ({ label: v, value: v }))}
+          options={options.departments.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
           className="filter-bar__select"
@@ -46,7 +41,7 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           value={filter.courseType || undefined}
           onChange={(v) => update({ courseType: v ?? '' })}
           allowClear
-          options={COURSE_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
+          options={options.courseTypes.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
           className="filter-bar__select"
@@ -55,7 +50,7 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           value={filter.sectionType || undefined}
           onChange={(v) => update({ sectionType: v ?? '' })}
           allowClear
-          options={SECTION_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
+          options={options.sectionTypes.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
           className="filter-bar__select"
@@ -64,7 +59,16 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           value={filter.examType || undefined}
           onChange={(v) => update({ examType: v ?? '' })}
           allowClear
-          options={EXAM_TYPE_OPTIONS.map((v) => ({ label: v, value: v }))}
+          options={options.examTypes.map((v) => ({ label: v, value: v }))}
+        />
+        <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
+          placeholder="评分制"
+          value={filter.grading || undefined}
+          onChange={(v) => update({ grading: v ?? '' })}
+          allowClear
+          options={options.gradings.map((v) => ({ label: v, value: v }))}
         />
         <SelectWithChevron
           className="filter-bar__select"
@@ -73,7 +77,7 @@ export default function FilterBar({ filter, setFilter, resultCount }: Props) {
           value={filter.language || undefined}
           onChange={(v) => update({ language: v ?? '' })}
           allowClear
-          options={LANGUAGE_OPTIONS.map((v) => ({ label: v, value: v }))}
+          options={options.languages.map((v) => ({ label: v, value: v }))}
         />
         <Checkbox
           className="filter-bar__teacher-toggle"

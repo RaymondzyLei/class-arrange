@@ -2,10 +2,9 @@ import { App, Empty } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { List, useDynamicRowHeight, useListRef, type RowComponentProps } from 'react-window';
 import { usePlans } from '@/store/plansContext';
-import { getCourseById } from '@/data';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import { detectConflicts } from '@/utils/conflict';
-import type { CourseGroup } from '@/types';
+import type { CourseGroup, CourseSection } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
 interface Props {
@@ -14,6 +13,7 @@ interface Props {
   conflictGroupKeys: Set<string>;
   themeMode: 'light' | 'dark';
   onOpenDetail: (groupKey: string) => void;
+  courseMap: ReadonlyMap<string, CourseSection>;
 }
 
 /** react-window 2.x: List <RowProps> 的"单元格 props"。
@@ -71,7 +71,14 @@ function PoolRow({
 const DEFAULT_ROW_HEIGHT = 150;
 const ROW_GAP = 4;
 
-export default function CoursePool({ groups, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
+export default function CoursePool({
+  groups,
+  selectedIds,
+  conflictGroupKeys,
+  themeMode,
+  onOpenDetail,
+  courseMap,
+}: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const listRef = useListRef(null);
@@ -109,7 +116,7 @@ export default function CoursePool({ groups, selectedIds, conflictGroupKeys, the
     }
     // 冲突预检：把已选 sections + 本组 sections 聚合成 groups 再检测
     const existing = activePlan.courseIds
-      .map((cid) => getCourseById(cid))
+      .map((cid) => courseMap.get(cid))
       .filter((c): c is NonNullable<typeof c> => Boolean(c));
     const previewSections = [...existing, ...group.sections];
     const previewGroups = buildCourseGroups(previewSections);
@@ -132,7 +139,7 @@ export default function CoursePool({ groups, selectedIds, conflictGroupKeys, the
       message.success(`已加入「${group.courseName}」`);
     }
     dispatch({ type: 'addCourses', courseIds: group.sectionIds });
-  }, [activePlan, selectedIds, dispatch, message]);
+  }, [activePlan, courseMap, selectedIds, dispatch, message]);
 
   const rowProps = useMemo<RowExtraProps>(() => ({
     groups,

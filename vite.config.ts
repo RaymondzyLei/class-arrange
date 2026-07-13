@@ -17,9 +17,6 @@ export default defineConfig({
           if (id.includes('node_modules/antd') || id.includes('node_modules/@ant-design')) {
             return 'antd'
           }
-          if (id.includes('src/data/courses')) {
-            return 'courses'
-          }
           return undefined
         },
       },

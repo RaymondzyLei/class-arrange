@@ -11,6 +11,10 @@ import {
 import type { CourseGroup, CourseSection, SemesterCatalog, SemesterManifest } from '@/types';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import {
+  buildCourseFilterOptions,
+  type CourseFilterOptions,
+} from '@/constants/filterOptions';
+import {
   SEMESTER_SELECTION_KEY,
   SemesterCatalogError,
   loadSemesterCatalog,
@@ -18,15 +22,6 @@ import {
   selectInitialSemester,
   type CatalogFetcher,
 } from './semesterCatalog';
-
-export interface SemesterFilterOptions {
-  departments: string[];
-  courseTypes: string[];
-  sectionTypes: string[];
-  examTypes: string[];
-  gradings: string[];
-  languages: string[];
-}
 
 export interface SemesterCatalogStatus {
   phase: 'loading' | 'ready' | 'switching' | 'error';
@@ -42,7 +37,7 @@ interface SemesterCatalogValue {
   groups: CourseGroup[];
   groupByKey: Map<string, CourseGroup>;
   groupsByCode: Map<string, CourseGroup[]>;
-  filterOptions: SemesterFilterOptions;
+  filterOptions: CourseFilterOptions;
   status: SemesterCatalogStatus;
   switchSemester: (semesterKey: string) => Promise<boolean>;
 }
@@ -77,21 +72,6 @@ function isAbort(error: unknown): boolean {
 function errorMessage(error: unknown, prefix: string): string {
   if (error instanceof SemesterCatalogError) return `${prefix}：${error.message}`;
   return `${prefix}，请稍后重试`;
-}
-
-function unique(values: string[]): string[] {
-  return [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, 'zh'));
-}
-
-function buildFilterOptions(courses: CourseSection[]): SemesterFilterOptions {
-  return {
-    departments: unique(courses.map((course) => course.department.name)),
-    courseTypes: unique(courses.map((course) => course.courseType)),
-    sectionTypes: unique(courses.map((course) => course.sectionType)),
-    examTypes: unique(courses.map((course) => course.examType)),
-    gradings: unique(courses.map((course) => course.grading)),
-    languages: unique(courses.map((course) => course.language)),
-  };
 }
 
 export function SemesterCatalogProvider({
@@ -205,7 +185,7 @@ export function SemesterCatalogProvider({
     }
     return result;
   }, [groups]);
-  const filterOptions = useMemo(() => buildFilterOptions(courses), [courses]);
+  const filterOptions = useMemo(() => buildCourseFilterOptions(courses), [courses]);
 
   const value = useMemo<SemesterCatalogValue | null>(() => {
     if (!data) return null;
