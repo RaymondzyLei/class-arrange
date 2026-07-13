@@ -3286,25 +3286,12 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   background: var(--danger, #d94b55);
 }
 
-.calculation-status__copy {
+.calculation-status__message {
   min-width: 0;
   flex: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.calculation-status__copy strong {
-  flex: 0 0 auto;
-  color: var(--text);
-  font-size: 13px;
-}
-
-.calculation-status__copy span {
-  min-width: 0;
   overflow: hidden;
   color: var(--text-sub);
-  font-size: 12px;
+  font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
