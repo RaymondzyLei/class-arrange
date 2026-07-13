@@ -8,27 +8,38 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-const HTML_ENTITIES: Record<string, string> = {
+const FALLBACK_HTML_ENTITIES: Record<string, string> = {
   amp: '&',
   apos: "'",
+  eacute: 'é',
+  egrave: 'è',
+  emsp: '\u2003',
   gt: '>',
   ldquo: '“',
   lsquo: '‘',
   lt: '<',
+  mdash: '—',
   nbsp: ' ',
   quot: '"',
   rdquo: '”',
   rsquo: '’',
 };
 
-function decodeHtmlEntities(value: string): string {
+function decodeHtmlEntitiesFallback(value: string): string {
   return value.replace(/&(#(?:x[\da-f]+|\d+)|[a-z]+);/gi, (match, entity: string) => {
-    if (entity[0] !== '#') return HTML_ENTITIES[entity.toLowerCase()] ?? match;
+    if (entity[0] !== '#') return FALLBACK_HTML_ENTITIES[entity.toLowerCase()] ?? match;
     const hexadecimal = entity[1]?.toLowerCase() === 'x';
     const codePoint = Number.parseInt(entity.slice(hexadecimal ? 2 : 1), hexadecimal ? 16 : 10);
     if (!Number.isInteger(codePoint) || codePoint < 0 || codePoint > 0x10ffff) return match;
     return String.fromCodePoint(codePoint);
   });
+}
+
+function decodeHtmlEntities(value: string): string {
+  if (typeof document === 'undefined') return decodeHtmlEntitiesFallback(value);
+  const decoder = document.createElement('textarea');
+  decoder.innerHTML = value;
+  return decoder.value;
 }
 
 function readableDescription(value: string | undefined): string {
