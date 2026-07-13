@@ -1,13 +1,25 @@
-import { courses } from '@/data';
+import type { CourseSection } from '@/types';
 
-function unique(values: string[]): string[] {
-  const set = new Set<string>();
-  for (const v of values) if (v) set.add(v);
-  return Array.from(set).sort((a, b) => a.localeCompare(b, 'zh'));
+export interface CourseFilterOptions {
+  departments: string[];
+  courseTypes: string[];
+  sectionTypes: string[];
+  examTypes: string[];
+  gradings: string[];
+  languages: string[];
 }
 
-export const DEPARTMENT_OPTIONS = unique(courses.map((c) => c.department.name));
-export const COURSE_TYPE_OPTIONS = unique(courses.map((c) => c.courseType));
-export const SECTION_TYPE_OPTIONS = unique(courses.map((c) => c.sectionType));
-export const EXAM_TYPE_OPTIONS = unique(courses.map((c) => c.examType));
-export const LANGUAGE_OPTIONS = unique(courses.map((c) => c.language));
+function unique(values: string[]): string[] {
+  return [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, 'zh'));
+}
+
+export function buildCourseFilterOptions(courses: CourseSection[]): CourseFilterOptions {
+  return {
+    departments: unique(courses.map((course) => course.department.name)),
+    courseTypes: unique(courses.map((course) => course.courseType)),
+    sectionTypes: unique(courses.map((course) => course.sectionType)),
+    examTypes: unique(courses.map((course) => course.examType)),
+    gradings: unique(courses.map((course) => course.grading)),
+    languages: unique(courses.map((course) => course.language)),
+  };
+}

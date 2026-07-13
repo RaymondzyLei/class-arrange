@@ -1,4 +1,24 @@
+export type CalculationMode = 'auto' | 'manual';
+
+export const CALCULATION_MODE_OPTIONS = [
+  {
+    value: 'auto',
+    label: '自动排课',
+    description: '课程或排课偏好变化后自动重新计算。',
+  },
+  {
+    value: 'manual',
+    label: '手动开始排课',
+    description: '修改后保留当前课表，按需点击开始或重新计算。',
+  },
+] as const satisfies ReadonlyArray<{
+  value: CalculationMode;
+  label: string;
+  description: string;
+}>;
+
 export interface CustomScheduleSettings {
+  calculationMode: CalculationMode;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
   blockedSlots: string[];
@@ -7,6 +27,7 @@ export interface CustomScheduleSettings {
 export const CUSTOM_SETTINGS_KEY = 'class-arrange:v1:custom-settings';
 
 export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
+  calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
   blockedSlots: [],
@@ -22,24 +43,33 @@ function isBlockedSlot(value: unknown): value is string {
   return Boolean(match);
 }
 
+export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleSettings {
+  const source = value && typeof value === 'object'
+    ? value as Record<string, unknown>
+    : {};
+  return {
+    calculationMode: source.calculationMode === 'manual' ? 'manual' : 'auto',
+    preferHalfDay: typeof source.preferHalfDay === 'boolean'
+      ? source.preferHalfDay
+      : source.schedulePreference === 'half-day',
+    preferFewerEarlyMornings: typeof source.preferFewerEarlyMornings === 'boolean'
+      ? source.preferFewerEarlyMornings
+      : DEFAULT_CUSTOM_SETTINGS.preferFewerEarlyMornings,
+    blockedSlots: Array.isArray(source.blockedSlots)
+      ? [...new Set(source.blockedSlots.filter(isBlockedSlot))].sort()
+      : [],
+  };
+}
+
+export function parseCustomScheduleSettings(raw: string): CustomScheduleSettings {
+  return normalizeCustomScheduleSettings(JSON.parse(raw));
+}
+
 export function readCustomScheduleSettings(): CustomScheduleSettings {
   try {
     const raw = localStorage.getItem(CUSTOM_SETTINGS_KEY);
     if (!raw) return DEFAULT_CUSTOM_SETTINGS;
-    const parsed = JSON.parse(raw) as Partial<CustomScheduleSettings> & {
-      schedulePreference?: unknown;
-    };
-    return {
-      preferHalfDay: typeof parsed.preferHalfDay === 'boolean'
-        ? parsed.preferHalfDay
-        : parsed.schedulePreference === 'half-day',
-      preferFewerEarlyMornings: typeof parsed.preferFewerEarlyMornings === 'boolean'
-        ? parsed.preferFewerEarlyMornings
-        : DEFAULT_CUSTOM_SETTINGS.preferFewerEarlyMornings,
-      blockedSlots: Array.isArray(parsed.blockedSlots)
-        ? [...new Set(parsed.blockedSlots.filter(isBlockedSlot))].sort()
-        : [],
-    };
+    return parseCustomScheduleSettings(raw);
   } catch {
     return DEFAULT_CUSTOM_SETTINGS;
   }

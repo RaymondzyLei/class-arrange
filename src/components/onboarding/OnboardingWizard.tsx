@@ -2,6 +2,7 @@ import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { OnboardingPreferences } from '@/onboarding/useOnboarding';
+import CalculationModePicker from '@/components/CalculationModePicker';
 import OnboardingConfirm from './OnboardingConfirm';
 import PreferenceSwitch from './PreferenceSwitch';
 import './onboarding.css';
@@ -14,7 +15,7 @@ interface Props {
 }
 
 interface PreferenceOption {
-  key: keyof OnboardingPreferences;
+  key: 'preferHalfDay' | 'preferFewerEarlyMornings';
   title: string;
 }
 
@@ -63,7 +64,7 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
 
   if (!open || typeof document === 'undefined') return null;
 
-  const updatePreference = (key: keyof OnboardingPreferences, checked: boolean) => {
+  const updatePreference = (key: PreferenceOption['key'], checked: boolean) => {
     setDraft((current) => ({ ...current, [key]: checked }));
   };
 
@@ -94,6 +95,17 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
             <div className="onboarding-wizard__step">
               <p className="onboarding-wizard__eyebrow">基础偏好</p>
               <h2 id="onboarding-wizard-title" className="onboarding-wizard__title">选择使用偏好</h2>
+              <p className="onboarding-wizard__setting-note">稍后可在“自定义”中修改设置</p>
+              <div className="onboarding-wizard__calculation-mode">
+                <p>排课计算方式</p>
+                <CalculationModePicker
+                  value={draft.calculationMode}
+                  onChange={(calculationMode) => setDraft((current) => ({
+                    ...current,
+                    calculationMode,
+                  }))}
+                />
+              </div>
               <div className="onboarding-wizard__preferences">
                 {PREFERENCE_OPTIONS.map((option) => (
                   <PreferenceSwitch

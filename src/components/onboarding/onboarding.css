@@ -51,6 +51,7 @@
 }
 
 .onboarding-wizard__body,
+.onboarding-wizard__setting-note,
 .tour-card__description,
 .tour-card__tip {
   margin: 0;
@@ -59,11 +60,28 @@
   line-height: 1.7;
 }
 
+.onboarding-wizard__setting-note {
+  margin-top: -6px;
+}
+
 .onboarding-wizard__preferences {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 0;
+}
+
+.onboarding-wizard__calculation-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.onboarding-wizard__calculation-mode > p {
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 650;
 }
 
 .onboarding-preference {
@@ -277,41 +295,18 @@
   position: fixed;
   z-index: 0;
   box-sizing: border-box;
-  margin-top: 0;
-  overflow: visible;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel-bg);
+  box-shadow: var(--shadow-sm);
   pointer-events: none;
 }
 
-.spotlight-tour__arrangement-preview .arrangement-panel__title {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.spotlight-tour__arrangement-preview .arrangement-panel__sub {
-  font-size: 15px;
-}
-
-.spotlight-tour__arrangement-preview .arrangement-panel__list {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-height: none;
-  overflow: visible;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-
-.spotlight-tour__arrangement-preview .arrangement-card {
-  cursor: default;
-}
-
-.spotlight-tour__arrangement-conflict {
-  padding: 3px 10px;
-  border-radius: 8px;
-  background: var(--course-2-bg);
-  color: var(--course-2-stripe);
-  font-size: 13px;
-  line-height: 1.4;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
+.spotlight-tour__arrangement-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .spotlight-tour__card-wrap {
@@ -570,9 +565,6 @@
     font-size: 19px;
   }
 
-  .spotlight-tour__arrangement-preview .arrangement-panel__list {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

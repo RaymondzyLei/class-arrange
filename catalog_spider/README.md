@@ -2,6 +2,8 @@
 
 USTC 教务系统培养方案爬虫 + 前端数据生成。
 
+同一 CLI 也负责从全校开课查询同步按学期课程列表与课堂详情。
+
 数据源：https://catalog.ustc.edu.cn/plan
 - `GET /api/teach/program/tree` — 全量目录（1184 个；本项目只取 grade≥2023 的 494 个）
 - `GET /api/teach/program/info/{id}` — 单个培养方案完整数据（递归 moduleTree，含课程清单）
@@ -42,6 +44,54 @@ uv run python -m catalog_spider build-by-term     # 生成按学期分组
 # 测试
 uv run pytest catalog_spider/tests -v
 ```
+
+### 同步学期开课与完整详情
+
+```powershell
+# 推荐：脚本会在成功后自动校验全部发布文件
+./scripts/sync_semester_courses.ps1 `
+  -Semester '2026年秋季学期','2026年夏季学期' `
+  -Activate '2026年秋季学期'
+
+# 等价的底层命令
+uv run --group spider python -m catalog_spider sync-lessons `
+  --semester '2026年秋季学期' `
+  --semester '2026年夏季学期' `
+  --activate '2026年秋季学期'
+
+uv run python -m catalog_spider validate-lessons --all
+```
+
+如果 raw 数据已经抓取完成，只修改了转换规则或学期日历，不需要再次登录或访问网站。直接从每学期独立保存的
+`catalog_spider/data/raw/lessons/<semester-key>/{semester,lessons,details}.json`
+重建发布文件：
+
+```powershell
+# 单学期重建，并将它设为网站默认学期
+uv run python -m catalog_spider build-lessons `
+  --semester-key 2026-fall `
+  --activate 2026-fall
+
+# 多学期一起重建；--semester-key 可重复
+uv run python -m catalog_spider build-lessons `
+  --semester-key 2026-fall `
+  --semester-key 2026-summer
+
+uv run python -m catalog_spider validate-lessons --all
+```
+
+`build-lessons` 是纯本地命令，不会打开浏览器或发送网络请求。它会先读取并转换所有指定学期，调用与在线同步相同的 catalog 校验，再一次性事务写入
+`public/data/semesters/<semester-key>/courses.json` 和 `index.json`；任一输入、转换、校验或写入失败时，现有发布文件保持不变。`--activate` 接受本次 `--semester-key` 中的一个 key；省略时保留 manifest 当前默认学期。
+
+流程会打开可见的持久浏览器，并通过与页面共享认证状态的请求上下文读取：
+
+- 学期目录；
+- 指定学期全量课堂；
+- 每个课堂的评分制、英文名、中英文简介、先修要求、教学大纲、教材、讲义和参考书等详情。
+
+详情每 50 个课堂写一次原始断点到 `data/raw/lessons/<semester-key>/`。所有请求学期都抓取、转换并校验成功后，才事务性发布 `public/data/semesters/<semester-key>/courses.json` 与 `index.json`；发布中途失败会恢复原文件，原始断点仍保留。
+
+`validate-lessons` 除评分制和教材覆盖率外，还输出 `raw_schedule_non_empty`、`scheduled_courses` 与 `clock_time_courses`，便于同步或本地重建后立即发现课堂时间大量解析为空的问题。
 
 **数据已入 git**（用户明确）：clone 后无需重新抓取，直接跑 `build-index` / `build-by-term` / `curricula_to_ts.py` 即可；只有数据过期需要刷新时才跑 `fetch-tree` / `fetch-details`。
 

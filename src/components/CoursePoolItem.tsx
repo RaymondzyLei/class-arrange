@@ -8,14 +8,25 @@ import { formatTeacherList } from '@/utils/teachers';
 
 interface Props {
   group: CourseGroup;
-  selected: boolean;
+  groupSelected: boolean;
+  courseSelected: boolean;
   conflicting: boolean;
   theme: 'light' | 'dark';
-  onToggle: () => void;
+  onToggleGroup: () => void;
+  onToggleCourse: () => void;
   onOpenDetail: () => void;
 }
 
-function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenDetail }: Props) {
+function CoursePoolItem({
+  group,
+  groupSelected,
+  courseSelected,
+  conflicting,
+  theme,
+  onToggleGroup,
+  onToggleCourse,
+  onOpenDetail,
+}: Props) {
   const rep = group.sections[0];
   const scheduleSummary = formatScheduleCompact(group.schedule);
 
@@ -23,7 +34,7 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
 
   const cls = ['pool-item'];
-  if (selected && !conflicting) cls.push('pool-item--selected');
+  if (groupSelected && !conflicting) cls.push('pool-item--selected');
   if (conflicting) cls.push('pool-item--conflict');
 
   const style = {
@@ -64,17 +75,32 @@ function CoursePoolItem({ group, selected, conflicting, theme, onToggle, onOpenD
           )}
           {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         </span>
-        <Button
-          size="small"
-          type={selected ? 'primary' : 'default'}
-          danger={selected}
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggle();
-          }}
-        >
-          {selected ? '移除' : '加入'}
-        </Button>
+        <div className="pool-item__actions">
+          <Button
+            size="small"
+            type={groupSelected ? 'default' : 'primary'}
+            danger={groupSelected}
+            aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${group.courseName}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleGroup();
+            }}
+          >
+            {groupSelected ? '移除此时间组' : '选择此时间组'}
+          </Button>
+          <Button
+            size="small"
+            type={courseSelected ? 'default' : 'primary'}
+            danger={courseSelected}
+            aria-label={`${courseSelected ? '移除全部时间组' : '选择全部时间组'}：${group.courseName}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleCourse();
+            }}
+          >
+            {courseSelected ? '移除全部时间组' : '选择全部时间组'}
+          </Button>
+        </div>
       </div>
       <div className="pool-item__code-row">
         <span className="pool-item__course-code">{courseCodeLabel}</span>

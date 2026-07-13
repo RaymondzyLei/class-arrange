@@ -13,6 +13,7 @@ dev = [
 ]
 # 给 icourse_spider/spider.py 用：sync 时 `uv sync --group spider`
 spider = [
+    "playwright>=1.52",
     "requests>=2.32",
     "tqdm>=4.66",
 ]

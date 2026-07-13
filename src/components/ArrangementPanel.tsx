@@ -9,7 +9,7 @@ interface Props {
 
 export default function ArrangementPanel({ arrangements, selectedId, onSelect }: Props) {
   return (
-    <div className="panel-inner arrangement-panel no-print">
+    <div className="arrangement-panel">
       <div className="arrangement-panel__head">
         <span className="arrangement-panel__title">排课方案</span>
         <span className="arrangement-panel__sub">
@@ -28,7 +28,7 @@ export default function ArrangementPanel({ arrangements, selectedId, onSelect }:
           const conflictFree = a.conflictCount === 0;
           return (
             <button
-              key={a.id}
+              key={index}
               type="button"
               className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
               onClick={() => onSelect(a.id)}

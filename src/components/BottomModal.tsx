@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from './icons';
 
@@ -9,8 +9,10 @@ interface Props {
   onClose: () => void;
   className?: string;
   width?: number;
+  titleExtra?: ReactNode;
   footer?: ReactNode;
   actions?: ReactNode;
+  bodyRef?: Ref<HTMLDivElement>;
 }
 
 export default function BottomModal({
@@ -20,8 +22,10 @@ export default function BottomModal({
   onClose,
   className,
   width = 720,
+  titleExtra,
   footer,
   actions,
+  bodyRef,
 }: Props) {
   const [present, setPresent] = useState(open);
   const pointerStartedOnMask = useRef(false);
@@ -65,13 +69,16 @@ export default function BottomModal({
         }}
       >
         <div className="bottom-modal__header">
-          <h2 className="bottom-modal__title">{title}</h2>
+          <div className="bottom-modal__heading">
+            <h2 className="bottom-modal__title">{title}</h2>
+            {titleExtra ? <div className="bottom-modal__title-extra">{titleExtra}</div> : null}
+          </div>
           {actions ? <div className="bottom-modal__actions">{actions}</div> : null}
           <button className="bottom-modal__close" type="button" onClick={onClose} aria-label="关闭">
             <CloseIcon />
           </button>
         </div>
-        <div className="bottom-modal__body">{children}</div>
+        <div className="bottom-modal__body" ref={bodyRef}>{children}</div>
         {footer ? <div className="bottom-modal__footer">{footer}</div> : null}
       </section>
     </div>,

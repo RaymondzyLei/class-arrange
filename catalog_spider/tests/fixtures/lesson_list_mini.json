@@ -1,0 +1,108 @@
+[
+  {
+    "code": "001108.01",
+    "course": {
+      "code": "001108",
+      "cn": "数学实验",
+      "en": "Mathematical Experiment"
+    },
+    "openDepartment": {
+      "code": "001",
+      "cn": "数学科学学院",
+      "en": "School of Mathematical Sciences"
+    },
+    "teacherAssignmentList": [
+      {
+        "id": 1001,
+        "cn": "张老师",
+        "en": "Teacher Zhang"
+      },
+      {
+        "id": 1002,
+        "cn": "李老师",
+        "en": "Teacher Li"
+      }
+    ],
+    "dateTimePlaceText": "1~16周 5201: 1(1,2); 5301: 3(3,4)",
+    "credits": 2.5,
+    "period": 40,
+    "education": {
+      "cn": "本科",
+      "en": "Undergraduate"
+    },
+    "classType": {
+      "cn": "教学班",
+      "en": "Class"
+    },
+    "courseClassify": {
+      "cn": "专业核心",
+      "en": "Core"
+    },
+    "courseType": {
+      "cn": "专业基础课",
+      "en": "Major Foundation"
+    },
+    "teachLang": {
+      "cn": "中文",
+      "en": "Chinese"
+    },
+    "examMode": {
+      "cn": "考试",
+      "en": "Examination"
+    },
+    "graduateAndPostgraduat": true,
+    "stdCount": 48,
+    "limitCount": 60,
+    "adminClasses": [
+      {
+        "cn": "数学23级",
+        "en": "Mathematics 2023"
+      }
+    ]
+  },
+  {
+    "code": "001109.02",
+    "course": {
+      "code": "001109",
+      "cn": "科学计算",
+      "en": "Scientific Computing"
+    },
+    "openDepartment": {
+      "code": "001",
+      "cn": "数学科学学院",
+      "en": "School of Mathematical Sciences"
+    },
+    "teacherAssignmentList": [],
+    "dateTimePlaceText": "2,4~10(双)周 5401: 5(6,7)",
+    "credits": 2,
+    "period": 32,
+    "education": {
+      "cn": "研究生",
+      "en": "Graduate"
+    },
+    "classType": {
+      "cn": "教学班",
+      "en": "Class"
+    },
+    "courseClassify": {
+      "cn": "专业方向",
+      "en": "Concentration"
+    },
+    "courseType": {
+      "cn": "专业课",
+      "en": "Major Course"
+    },
+    "teachLang": {
+      "cn": "全外文",
+      "en": "English"
+    },
+    "examMode": {
+      "cn": "考查",
+      "en": "Assessment"
+    },
+    "graduateAndPostgraduat": false,
+    "stdCount": 20,
+    "limitCount": 30,
+    "adminClasses": []
+  }
+]

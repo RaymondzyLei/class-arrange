@@ -1,7 +1,13 @@
 import type { PlansState } from '@/types';
 
-export const STORAGE_KEY = 'class-arrange:v1:plans';
+export const LEGACY_STORAGE_KEY = 'class-arrange:v1:plans';
+export const PLANS_MIGRATED_KEY = 'class-arrange:v2:plans-migrated';
 export const STORAGE_VERSION = 1;
+
+interface StorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
 
 interface StoredPayload {
   version: number;
@@ -40,11 +46,13 @@ export function initialPlansState(): PlansState {
   return { plans: [plan], activePlanId: plan.id };
 }
 
-/** 读取并校验 localStorage 中的方案数据，失败返回 null */
-export function loadPlansState(): PlansState | null {
+export function plansStorageKey(semesterKey: string): string {
+  return `class-arrange:v2:plans:${semesterKey}`;
+}
+
+function parsePlansState(raw: string | null): PlansState | null {
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
     const payload = JSON.parse(raw) as StoredPayload;
     if (!payload || typeof payload !== 'object') return null;
     if (payload.version !== STORAGE_VERSION) return null;
@@ -61,10 +69,45 @@ export function loadPlansState(): PlansState | null {
   }
 }
 
-export function savePlansState(state: PlansState): boolean {
+function browserStorage(): StorageLike | null {
+  return typeof localStorage === 'undefined' ? null : localStorage;
+}
+
+/** 读取当前学期方案；旧 v1 数据仅迁移一次且只进入默认学期。 */
+export function loadPlansState(
+  semesterKey: string,
+  options: { defaultSemester: string; storage?: StorageLike },
+): PlansState | null {
+  const storage = options.storage ?? browserStorage();
+  if (!storage) return null;
+  try {
+    const current = parsePlansState(storage.getItem(plansStorageKey(semesterKey)));
+    if (current) return current;
+    if (
+      semesterKey !== options.defaultSemester ||
+      storage.getItem(PLANS_MIGRATED_KEY) === '1'
+    ) {
+      return null;
+    }
+    const legacy = parsePlansState(storage.getItem(LEGACY_STORAGE_KEY));
+    if (legacy) savePlansState(semesterKey, legacy, storage);
+    storage.setItem(PLANS_MIGRATED_KEY, '1');
+    return legacy;
+  } catch {
+    return null;
+  }
+}
+
+export function savePlansState(
+  semesterKey: string,
+  state: PlansState,
+  suppliedStorage?: StorageLike,
+): boolean {
+  const storage = suppliedStorage ?? browserStorage();
+  if (!storage) return false;
   try {
     const payload: StoredPayload = { version: STORAGE_VERSION, state };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    storage.setItem(plansStorageKey(semesterKey), JSON.stringify(payload));
     return true;
   } catch {
     return false;

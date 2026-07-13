@@ -2,10 +2,13 @@ import { App, Empty } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { List, useDynamicRowHeight, useListRef, type RowComponentProps } from 'react-window';
 import { usePlans } from '@/store/plansContext';
-import { getCourseById } from '@/data';
 import { buildCourseGroups } from '@/utils/courseGroup';
-import { detectConflicts } from '@/utils/conflict';
-import type { CourseGroup } from '@/types';
+import {
+  conflictingCourseNamesForSelection,
+  idsForCourse,
+  idsForGroup,
+} from '@/utils/courseSelection';
+import type { CourseGroup, CourseSection } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
 
 interface Props {
@@ -14,6 +17,8 @@ interface Props {
   conflictGroupKeys: Set<string>;
   themeMode: 'light' | 'dark';
   onOpenDetail: (groupKey: string) => void;
+  courseMap: ReadonlyMap<string, CourseSection>;
+  groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
 /** react-window 2.x: List <RowProps> 的"单元格 props"。
@@ -21,9 +26,11 @@ interface Props {
 interface RowExtraProps {
   groups: CourseGroup[];
   selectedIds: Set<string>;
+  groupsByCode: ReadonlyMap<string, CourseGroup[]>;
   conflictGroupKeys: Set<string>;
   themeMode: 'light' | 'dark';
-  onToggleRow: (group: CourseGroup) => void;
+  onToggleGroupRow: (group: CourseGroup) => void;
+  onToggleCourseRow: (group: CourseGroup) => void;
   onOpenDetailRow: (groupKey: string) => void;
   observeRowElements: (elements: Element[] | NodeListOf<Element>) => () => void;
 }
@@ -34,9 +41,11 @@ function PoolRow({
   ariaAttributes,
   groups,
   selectedIds,
+  groupsByCode,
   conflictGroupKeys,
   themeMode,
-  onToggleRow,
+  onToggleGroupRow,
+  onToggleCourseRow,
   onOpenDetailRow,
   observeRowElements,
 }: RowComponentProps<RowExtraProps>) {
@@ -47,6 +56,8 @@ function PoolRow({
     boxSizing: 'border-box',
     display: 'flex',
   };
+  const groupIds = idsForGroup(g);
+  const courseIds = idsForCourse(g.courseCode, groupsByCode);
   return (
     <div
       style={rowStyle}
@@ -58,10 +69,12 @@ function PoolRow({
     >
       <CoursePoolItem
         group={g}
-        selected={g.sectionIds.every((id) => selectedIds.has(id))}
+        groupSelected={groupIds.length > 0 && groupIds.every((id) => selectedIds.has(id))}
+        courseSelected={courseIds.length > 0 && courseIds.every((id) => selectedIds.has(id))}
         conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
         theme={themeMode}
-        onToggle={() => onToggleRow(g)}
+        onToggleGroup={() => onToggleGroupRow(g)}
+        onToggleCourse={() => onToggleCourseRow(g)}
         onOpenDetail={() => onOpenDetailRow(g.key)}
       />
     </div>
@@ -71,7 +84,15 @@ function PoolRow({
 const DEFAULT_ROW_HEIGHT = 150;
 const ROW_GAP = 4;
 
-export default function CoursePool({ groups, selectedIds, conflictGroupKeys, themeMode, onOpenDetail }: Props) {
+export default function CoursePool({
+  groups,
+  selectedIds,
+  conflictGroupKeys,
+  themeMode,
+  onOpenDetail,
+  courseMap,
+  groupsByCode,
+}: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   const listRef = useListRef(null);
@@ -96,53 +117,65 @@ export default function CoursePool({ groups, selectedIds, conflictGroupKeys, the
     }
   }, [groups, activePlan?.id, listRef]);
 
-  const toggle = useCallback((group: CourseGroup) => {
+  const toggle = useCallback((group: CourseGroup, scope: 'group' | 'course') => {
     if (!activePlan) {
       message.warning('请先新建一个方案');
       return;
     }
-    const allSelected = group.sectionIds.every((id) => selectedIds.has(id));
+    const ids = scope === 'group'
+      ? idsForGroup(group)
+      : idsForCourse(group.courseCode, groupsByCode);
+    if (ids.length === 0) return;
+    const allSelected = ids.every((id) => selectedIds.has(id));
     if (allSelected) {
-      dispatch({ type: 'removeCourses', courseIds: group.sectionIds });
-      message.success(`已移除「${group.courseName}」`);
+      dispatch({ type: 'removeCourses', courseIds: ids });
+      message.success(scope === 'group'
+        ? `已移除「${group.courseName}」的此时间组`
+        : `已移除「${group.courseName}」的全部时间组`);
       return;
     }
-    // 冲突预检：把已选 sections + 本组 sections 聚合成 groups 再检测
     const existing = activePlan.courseIds
-      .map((cid) => getCourseById(cid))
+      .map((cid) => courseMap.get(cid))
       .filter((c): c is NonNullable<typeof c> => Boolean(c));
-    const previewSections = [...existing, ...group.sections];
-    const previewGroups = buildCourseGroups(previewSections);
-    const map = detectConflicts(previewGroups);
-    const conflictWithNew = new Set<string>();
-    for (const set of map.values()) {
-      if (set.has(group.key)) for (const x of set) conflictWithNew.add(x);
-    }
-    if (conflictWithNew.size > 0) {
-      const names = [...conflictWithNew]
-        .filter((x) => x !== group.key)
-        .map((x) => {
-          const g = previewGroups.find((gg) => gg.key === x);
-          return g?.courseName ?? x;
-        })
-        .slice(0, 3)
-        .join('、');
-      message.warning(`与已选课程存在时间冲突：${names}（仍已加入）`);
+    const targetGroups = scope === 'group'
+      ? [group]
+      : groupsByCode.get(group.courseCode) ?? [];
+    const conflictNames = conflictingCourseNamesForSelection(
+      targetGroups,
+      buildCourseGroups(existing),
+    );
+    if (conflictNames.length > 0) {
+      const summary = conflictNames.slice(0, 3).join('、');
+      const scopeLabel = scope === 'group' ? '此时间组' : '部分时间组';
+      message.warning(`「${group.courseName}」的${scopeLabel}与已选课程存在时间冲突：${summary}（仍已选择）`);
     } else {
-      message.success(`已加入「${group.courseName}」`);
+      message.success(scope === 'group'
+        ? `已选择「${group.courseName}」的此时间组`
+        : `已选择「${group.courseName}」的全部时间组`);
     }
-    dispatch({ type: 'addCourses', courseIds: group.sectionIds });
-  }, [activePlan, selectedIds, dispatch, message]);
+    dispatch({ type: 'addCourses', courseIds: ids });
+  }, [activePlan, courseMap, dispatch, groupsByCode, message, selectedIds]);
+
+  const toggleGroup = useCallback(
+    (group: CourseGroup) => toggle(group, 'group'),
+    [toggle],
+  );
+  const toggleCourse = useCallback(
+    (group: CourseGroup) => toggle(group, 'course'),
+    [toggle],
+  );
 
   const rowProps = useMemo<RowExtraProps>(() => ({
     groups,
     selectedIds,
+    groupsByCode,
     conflictGroupKeys,
     themeMode,
-    onToggleRow: toggle,
+    onToggleGroupRow: toggleGroup,
+    onToggleCourseRow: toggleCourse,
     onOpenDetailRow: onOpenDetail,
     observeRowElements: rowHeight.observeRowElements,
-  }), [groups, selectedIds, conflictGroupKeys, themeMode, toggle, onOpenDetail, rowHeight.observeRowElements]);
+  }), [groups, selectedIds, groupsByCode, conflictGroupKeys, themeMode, toggleGroup, toggleCourse, onOpenDetail, rowHeight.observeRowElements]);
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (

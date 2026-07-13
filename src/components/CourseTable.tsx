@@ -1,7 +1,7 @@
 import { Button, Slider } from 'antd';
 import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
-import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
+import { DAYS, PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
@@ -18,8 +18,8 @@ import {
   formatShortDate,
   getCalendarDatesForSelection,
   getWeekOptions,
-  TERM_CALENDAR,
   type CalendarDateInfo,
+  type TermCalendar,
   type WeekSelection,
 } from '@/config/termCalendar';
 import { DownloadIcon, MoonIcon, SunIcon, WarningIcon } from './icons';
@@ -29,6 +29,15 @@ import { blockedSlotKey } from '@/utils/customization';
 import { PROJECT_LINKS } from '@/content/projectCredits';
 import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
+import SemesterDropdown from './SemesterDropdown';
+import type { SemesterManifestEntry } from '@/types';
+import {
+  blockedMinuteIntervalsByDay,
+  exactScheduleInterval,
+  minuteIntervalsOverlap,
+  periodMinuteInterval,
+  type MinuteInterval,
+} from '@/utils/scheduleTime';
 
 interface Props {
   weekSelection: WeekSelection;
@@ -42,6 +51,11 @@ interface Props {
   exporting?: boolean;
   blockedSlots: string[];
   onOpenCustomization: () => void;
+  calendar: TermCalendar;
+  semesters: SemesterManifestEntry[];
+  semesterKey: string;
+  semesterSwitching: boolean;
+  onSemesterChange: (semesterKey: string) => void | Promise<void>;
 }
 
 interface TimetableViewProps {
@@ -51,6 +65,7 @@ interface TimetableViewProps {
   themeMode: 'light' | 'dark';
   onOpenDetail?: (id: string) => void;
   blockedSlots: string[];
+  calendar: TermCalendar;
 }
 
 interface TimetableEntry {
@@ -67,6 +82,7 @@ interface TimetableEntry {
   start: number;
   end: number;
   periods: number[];
+  timeIntervals: MinuteInterval[];
   span: number;
   activeDates: string[];
   specialLabels: string[];
@@ -78,22 +94,6 @@ interface MutableTimetableEntry extends TimetableEntry {
   activeDateSet: Set<string>;
   specialLabelSet: Set<string>;
 }
-
-const PERIOD_TIMES: Record<number, { start: string; end: string }> = {
-  1: { start: '07:50', end: '08:35' },
-  2: { start: '08:40', end: '09:25' },
-  3: { start: '09:45', end: '10:30' },
-  4: { start: '10:35', end: '11:20' },
-  5: { start: '11:25', end: '12:10' },
-  6: { start: '14:00', end: '14:45' },
-  7: { start: '14:50', end: '15:35' },
-  8: { start: '15:55', end: '16:40' },
-  9: { start: '16:45', end: '17:30' },
-  10: { start: '17:35', end: '18:20' },
-  11: { start: '19:30', end: '20:15' },
-  12: { start: '20:20', end: '21:05' },
-  13: { start: '21:10', end: '21:55' },
-};
 
 const BAND_STARTS: Record<number, { label: string; rowSpan: number }> = {
   1: { label: '上午', rowSpan: 5 },
@@ -124,8 +124,9 @@ function keyFor(day: number, period: number): string {
   return `${day}-${period}`;
 }
 
-function periodOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
-  return a.periods.some((period) => b.periods.includes(period));
+function timeOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
+  return a.timeIntervals.some((left) =>
+    b.timeIntervals.some((right) => minuteIntervalsOverlap(left, right)));
 }
 
 function dateOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
@@ -135,13 +136,14 @@ function dateOverlaps(a: TimetableEntry, b: TimetableEntry): boolean {
 
 function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): TimetableEntry[] {
   const conflictIds = new Set<string>();
+  const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
   for (let i = 0; i < entries.length; i += 1) {
     for (let j = i + 1; j < entries.length; j += 1) {
       const a = entries[i];
       const b = entries[j];
       if (a.groupKey === b.groupKey) continue;
       if (a.displayDay !== b.displayDay) continue;
-      if (!periodOverlaps(a, b)) continue;
+      if (!timeOverlaps(a, b)) continue;
       if (!dateOverlaps(a, b)) continue;
       conflictIds.add(a.id);
       conflictIds.add(b.id);
@@ -150,9 +152,9 @@ function markConflicts(entries: TimetableEntry[], blockedSlots: Set<string>): Ti
   return entries.map((entry) => ({
     ...entry,
     conflict: conflictIds.has(entry.id)
-      || entry.periods.some((period) =>
-        blockedSlots.has(blockedSlotKey(entry.displayDay, period)),
-      ),
+      || entry.timeIntervals.some((interval) =>
+        blockedByDay.get(entry.displayDay)?.some((blockedInterval) =>
+          minuteIntervalsOverlap(interval, blockedInterval))),
   }));
 }
 
@@ -172,8 +174,9 @@ function buildEntries(
   weekSelection: WeekSelection,
   themeMode: 'light' | 'dark',
   blockedSlots: Set<string>,
+  calendar: TermCalendar,
 ): TimetableEntry[] {
-  const dates = getCalendarDatesForSelection(weekSelection, TERM_CALENDAR, {
+  const dates = getCalendarDatesForSelection(weekSelection, calendar, {
     includeSpecialDates: weekSelection !== 'all',
   }).filter((date) => date.instructional);
   const entries = new Map<string, MutableTimetableEntry>();
@@ -183,6 +186,7 @@ function buildEntries(
     for (let slotIndex = 0; slotIndex < group.schedule.length; slotIndex += 1) {
       const slot = group.schedule[slotIndex];
       if (slot.day < 1 || slot.day > 7) continue;
+      const exactInterval = exactScheduleInterval(slot);
       const runs = splitConsecutivePeriods(slot.periods.filter((p) => p >= 1 && p <= 13));
       for (const date of dates) {
         if (date.effectiveWeekday !== slot.day) continue;
@@ -210,12 +214,20 @@ function buildEntries(
               teachers: formatTeacherList(group.teachers),
               credits: group.sections[0]?.credits ?? 0,
               weeksText: formatWeeks(slot.weeks),
-              periodsText: periods.join(','),
+              periodsText: slot.startTime && slot.endTime
+                ? `${slot.startTime}~${slot.endTime}`
+                : periods.join(','),
               room: group.sections.length > 1 ? '多班次' : slot.room,
               displayDay: date.weekday,
               start,
               end,
               periods,
+              timeIntervals: exactInterval
+                ? [exactInterval]
+                : periods.flatMap((period) => {
+                  const interval = periodMinuteInterval(period);
+                  return interval ? [interval] : [];
+                }),
               span: end - start + 1,
               activeDates: [],
               specialLabels: [],
@@ -537,17 +549,18 @@ function TimetableView({
   themeMode,
   onOpenDetail,
   blockedSlots,
+  calendar,
 }: TimetableViewProps) {
   const colorTheme = exportMode ? 'light' : themeMode;
   const blockedSlotSet = useMemo(() => new Set(blockedSlots), [blockedSlots]);
   const entries = useMemo(
-    () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet),
-    [blockedSlotSet, groups, weekSelection, colorTheme],
+    () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet, calendar),
+    [blockedSlotSet, calendar, groups, weekSelection, colorTheme],
   );
   const { starts, covers } = useMemo(() => buildEntryMaps(entries), [entries]);
   const selectedWeekDates = useMemo(
-    () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection)),
-    [weekSelection],
+    () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection, calendar)),
+    [calendar, weekSelection],
   );
   const dateByWeekday = new Map(selectedWeekDates.map((info) => [info.weekday, info]));
   const skipped = new Set<string>();
@@ -649,9 +662,14 @@ export default function CourseTable({
   exporting = false,
   blockedSlots,
   onOpenCustomization,
+  calendar,
+  semesters,
+  semesterKey,
+  semesterSwitching,
+  onSemesterChange,
 }: Props) {
   const toggleLabel = themeMode === 'dark' ? '切换到亮色模式' : '切换到暗色模式';
-  const weekOptions = useMemo(() => getWeekOptions(), []);
+  const weekOptions = useMemo(() => getWeekOptions(calendar), [calendar]);
   const sliderWeek = typeof weekSelection === 'number' ? weekSelection : 1;
   const [contributorsOpen, setContributorsOpen] = useState(false);
   const contributorsTriggerRef = useRef<HTMLButtonElement>(null);
@@ -669,7 +687,7 @@ export default function CourseTable({
           <Slider
             className="week-slider"
             min={1}
-            max={TERM_CALENDAR.weekCount}
+            max={calendar.weekCount}
             value={sliderWeek}
             included={false}
             tooltip={{ open: false }}
@@ -688,8 +706,16 @@ export default function CourseTable({
           />
         </div>
         <div className="course-table__term-date">
-          <span className="course-table__term-name">{TERM_CALENDAR.termName}</span>
-          <span className="course-table__date-range">{formatDateRange(weekSelection)}</span>
+          <span className="course-table__term-selector">
+            <span className="course-table__term-name">{calendar.termName}</span>
+            <SemesterDropdown
+              semesters={semesters}
+              semesterKey={semesterKey}
+              loading={semesterSwitching}
+              onSelect={onSemesterChange}
+            />
+          </span>
+          <span className="course-table__date-range">{formatDateRange(weekSelection, calendar)}</span>
         </div>
         <div className="course-table__actions no-print">
           <Button
@@ -732,6 +758,7 @@ export default function CourseTable({
           groups={groups}
           themeMode={themeMode}
           blockedSlots={blockedSlots}
+          calendar={calendar}
           onOpenDetail={onOpenDetail}
         />
       </div>
@@ -764,6 +791,7 @@ export default function CourseTable({
           exportMode
           themeMode="light"
           blockedSlots={blockedSlots}
+          calendar={calendar}
         />
       </div>
 

@@ -1,18 +1,32 @@
-import { useEffect, useState } from 'react';
-import { App, Button, Descriptions, Table, Tag, Typography } from 'antd';
-import type { CourseGroup } from '@/types';
+import { useEffect, useId, useRef, useState } from 'react';
+import { App, Button, Descriptions, Space, Table, Typography } from 'antd';
+import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
+import {
+  conflictingCourseNamesForSelection,
+  idsForCourse,
+  idsForGroup,
+} from '@/utils/courseSelection';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
-import { formatScheduleCompact } from '@/utils/scheduleFormat';
+import {
+  formatScheduleCompact,
+  formatScheduleSlotTime,
+} from '@/utils/scheduleFormat';
+import { hasExactScheduleTime } from '@/utils/scheduleTime';
 import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
+import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
+import CourseDescriptionPanel, { CourseDescriptionToggle } from './CourseDescriptionPanel';
 
 interface Props {
   group: CourseGroup | null;
+  detail?: CourseDetail;
   open: boolean;
   onClose: () => void;
+  allSelectedGroups: CourseGroup[];
+  groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
 interface ScheduleRow {
@@ -20,7 +34,8 @@ interface ScheduleRow {
   weeks: string;
   weeksExpanded: string;
   day: string | number;
-  periods: string;
+  time: string;
+  exactTime: boolean;
   room: string;
 }
 
@@ -72,21 +87,50 @@ function formatClassLabels(classes: string[]): string {
   return classes.map((label) => label.replace(/\*+$/, '')).join('，');
 }
 
-export default function CourseDetailModal({ group, open, onClose }: Props) {
+export default function CourseDetailModal({
+  group,
+  detail,
+  open,
+  onClose,
+  allSelectedGroups,
+  groupsByCode,
+}: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
+  const [cachedDetail, setCachedDetail] = useState<CourseDetail | undefined>(undefined);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const descriptionPanelId = useId();
+  const modalBodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (group) setCached(group);
-  }, [group]);
+    if (!group) return;
+    setCached(group);
+    setCachedDetail(detail);
+    setDescriptionOpen(false);
+  }, [group, detail]);
   const display = group ?? cached;
+  const displayDetail = group ? detail : cachedDetail;
+
+  const handleDescriptionOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      modalBodyRef.current?.scrollTo({ top: 0 });
+    }
+    setDescriptionOpen(nextOpen);
+  };
 
   if (!display) return null;
 
   const rep = display.sections[0];
+  const examType = displayDetail?.examType.trim() || rep?.examType.trim() || '—';
+  const grading = displayDetail?.grading.trim() || rep?.grading.trim() || '—';
+  const materialDisplay = formatCourseMaterialDisplay(displayDetail);
   const sectionLabel = sectionLabelForGroup(display);
-  const selected = display.sectionIds.every((id) => activePlan?.courseIds.includes(id));
+  const groupIds = idsForGroup(display);
+  const courseIds = idsForCourse(display.courseCode, groupsByCode);
+  const groupSelected = groupIds.every((id) => activePlan?.courseIds.includes(id));
+  const courseSelected = courseIds.length > 0
+    && courseIds.every((id) => activePlan?.courseIds.includes(id));
   const singleRating =
     display.sections.length === 1 ? getIcourseRatingInfo(display.sections[0].id) : undefined;
   const sortedSchedule = [...display.schedule].sort((a, b) =>
@@ -100,7 +144,8 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     weeks: formatWeeks(s.weeks),
     weeksExpanded: expandWeeks(s.weeks).join(', '),
     day: DAY_LABELS[s.day] ?? s.day,
-    periods: s.periods.join(', '),
+    time: formatScheduleSlotTime(s),
+    exactTime: hasExactScheduleTime(s),
     room: s.room || '—',
   } satisfies ScheduleRow));
 
@@ -127,50 +172,95 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
     rating: getIcourseRatingInfo(s.id),
   } satisfies SectionRow));
 
-  const toggleSelected = () => {
+  const toggleSelected = (scope: 'group' | 'course') => {
     if (!activePlan) {
       message.warning('请先新建一个方案');
       return;
     }
+    const ids = scope === 'group' ? groupIds : courseIds;
+    if (ids.length === 0) return;
+    const selected = ids.every((id) => activePlan.courseIds.includes(id));
     if (selected) {
-      dispatch({ type: 'removeCourses', courseIds: display.sectionIds });
-      message.success(`已移除「${display.courseName}」`);
+      dispatch({ type: 'removeCourses', courseIds: ids });
+      message.success(scope === 'group'
+        ? `已移除「${display.courseName}」的此时间组`
+        : `已移除「${display.courseName}」的全部时间组`);
       return;
     }
-    dispatch({ type: 'addCourses', courseIds: display.sectionIds });
-    message.success(`已加入「${display.courseName}」`);
+    const targetGroups = scope === 'group'
+      ? [display]
+      : groupsByCode.get(display.courseCode) ?? [];
+    const conflictNames = conflictingCourseNamesForSelection(targetGroups, allSelectedGroups);
+    dispatch({ type: 'addCourses', courseIds: ids });
+    if (conflictNames.length > 0) {
+      const scopeLabel = scope === 'group' ? '此时间组' : '部分时间组';
+      message.warning(
+        `「${display.courseName}」的${scopeLabel}与已选课程存在时间冲突：${conflictNames.slice(0, 3).join('、')}（仍已选择）`,
+      );
+      return;
+    }
+    message.success(scope === 'group'
+      ? `已选择「${display.courseName}」的此时间组`
+      : `已选择「${display.courseName}」的全部时间组`);
   };
 
   return (
     <BottomModal
+      className="course-detail-modal"
       title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
+      titleExtra={(
+        <CourseDescriptionToggle
+          panelId={descriptionPanelId}
+          open={descriptionOpen}
+          onOpenChange={handleDescriptionOpenChange}
+        />
+      )}
       open={open}
       onClose={onClose}
       width={1180}
+      bodyRef={modalBodyRef}
       actions={(
-        <Button
-          size="small"
-          type={selected ? 'primary' : 'default'}
-          danger={selected}
-          onClick={toggleSelected}
-        >
-          {selected ? '移除' : '加入'}
-        </Button>
+        <Space size={4} wrap className="course-selection-actions">
+          <Button
+            size="small"
+            type={groupSelected ? 'default' : 'primary'}
+            danger={groupSelected}
+            aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
+            onClick={() => toggleSelected('group')}
+          >
+            {groupSelected ? '移除此时间组' : '选择此时间组'}
+          </Button>
+          <Button
+            size="small"
+            type={courseSelected ? 'default' : 'primary'}
+            danger={courseSelected}
+            aria-label={`${courseSelected ? '移除全部时间组' : '选择全部时间组'}：${display.courseName}`}
+            onClick={() => toggleSelected('course')}
+          >
+            {courseSelected ? '移除全部时间组' : '选择全部时间组'}
+          </Button>
+        </Space>
       )}
     >
+      <CourseDescriptionPanel
+        detail={displayDetail}
+        panelId={descriptionPanelId}
+        open={descriptionOpen}
+      />
       <div className="course-detail-desktop">
-        <Descriptions size="small" column={2} bordered>
+        <Descriptions className="course-detail-overview" size="small" column={3} bordered>
           <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
-          <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
-          <Descriptions.Item label="授课教师" span={2}>
+          <Descriptions.Item label="开课单位" span={2}>{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
+          <Descriptions.Item label="授课教师" span={3}>
             {formatTeacherList(display.teachers, '—')}
           </Descriptions.Item>
           <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
-          <Descriptions.Item label="考核方式">{rep?.examType ?? '—'}</Descriptions.Item>
-          <Descriptions.Item label="课程类型">{rep?.courseType ?? '—'}</Descriptions.Item>
-          <Descriptions.Item label="授课语言">{rep?.language ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="课程类型">{rep?.courseType || '—'}</Descriptions.Item>
+          <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
+          <Descriptions.Item label="考核方式">{examType}</Descriptions.Item>
+          <Descriptions.Item label="评分制">{grading}</Descriptions.Item>
           {rep?.undergradShared ? (
-            <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
+            <Descriptions.Item label="本研同堂">是</Descriptions.Item>
           ) : null}
           {singleRating ? (
             <Descriptions.Item label="icourse 评分">
@@ -190,14 +280,18 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
             <span className="mobile-field__label">授课教师</span>
             <span className="mobile-field__value">{formatTeacherList(display.teachers, '—')}</span>
           </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">学分 / 学时</span>
+            <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+          </div>
           <div className="mobile-field mobile-field--pair">
             <span>
-              <span className="mobile-field__label">学分 / 学时</span>
-              <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+              <span className="mobile-field__label">考核方式</span>
+              <span className="mobile-field__value">{examType}</span>
             </span>
             <span>
-              <span className="mobile-field__label">考核方式</span>
-              <span className="mobile-field__value">{rep?.examType ?? '—'}</span>
+              <span className="mobile-field__label">评分制</span>
+              <span className="mobile-field__value">{grading}</span>
             </span>
           </div>
           <div className="mobile-field mobile-field--pair">
@@ -217,7 +311,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           {rep?.undergradShared ? (
             <div className="mobile-field">
               <span className="mobile-field__label">本研同堂</span>
-              <span className="mobile-field__value"><Tag color="blue">是</Tag></span>
+              <span className="mobile-field__value">是</span>
             </div>
           ) : null}
           {singleRating ? (
@@ -229,6 +323,22 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
         </section>
       </div>
 
+      <section className="course-material-groups" aria-label="教材与参考资料">
+        <Typography.Title level={5}>教材与参考资料</Typography.Title>
+        <div className="course-material-group">
+          <span className="course-material-group__label">参考书</span>
+          <div className="course-material-group__value">{materialDisplay.referenceBooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">教材</span>
+          <div className="course-material-group__value">{materialDisplay.textbooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">讲义</span>
+          <div className="course-material-group__value">{materialDisplay.materials}</div>
+        </div>
+      </section>
+
       {display.sections.length > 1 && (
         <>
           <Typography.Title level={5} style={{ marginTop: 16 }}>班次明细</Typography.Title>
@@ -237,14 +347,14 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
             size="small"
             dataSource={sectionRows}
             pagination={false}
-            tableLayout="auto"
+            tableLayout="fixed"
             columns={[
               { title: '课堂号', dataIndex: 'id', width: 110 },
               { title: '教师', dataIndex: 'teacher', width: 120 },
-              { title: '时间地点', dataIndex: 'time' },
+              { title: '时间地点', dataIndex: 'time', width: 360 },
               { title: '选课/限选', dataIndex: 'capacity', width: 96, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
               { title: '评分', dataIndex: 'rating', width: 110, render: (v: IcourseRatingInfo | undefined) => <RatingLink rating={v} /> },
-              { title: '上课班级', dataIndex: 'classes' },
+              { title: '上课班级', dataIndex: 'classes', width: 240 },
             ]}
           />
           <div className="mobile-card-list course-detail-mobile">
@@ -278,7 +388,7 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           { title: '周次', dataIndex: 'weeks', width: 120 },
           { title: '展开周', dataIndex: 'weeksExpanded', render: (v: string) => <Typography.Text type="secondary" style={{ fontSize: 12 }}>{v}</Typography.Text> },
           { title: '星期', dataIndex: 'day', width: 70 },
-          { title: '节次', dataIndex: 'periods', width: 90 },
+          { title: '时间 / 节次', dataIndex: 'time', width: 130 },
           { title: '教室', dataIndex: 'room' },
         ]}
       />
@@ -287,7 +397,9 @@ export default function CourseDetailModal({ group, open, onClose }: Props) {
           <article className="mobile-card course-detail-schedule-card" key={row.key}>
             <div className="mobile-card__head">
               <span className="mobile-card__title">{row.weeks}</span>
-              <span className="mobile-card__meta">{row.day} · {row.periods} 节</span>
+              <span className="mobile-card__meta">
+                {row.day} · {row.time}{row.exactTime ? '' : ' 节'}
+              </span>
             </div>
             <div className="mobile-card__line">{row.room}</div>
             <div className="mobile-card__subline">展开周：{row.weeksExpanded || '—'}</div>

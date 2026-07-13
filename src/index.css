@@ -428,7 +428,7 @@ html {
 
 .filter-bar__search {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) max-content;
   align-items: center;
   gap: 8px;
 }
@@ -440,17 +440,6 @@ html {
 
 .filter-bar__search .ant-input-affix-wrapper {
   min-width: 0;
-}
-
-.filter-bar__count {
-  color: var(--text-sub);
-  font-size: 12px;
-  line-height: 22px;
-  white-space: nowrap;
-  padding: 0 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--panel-bg-2);
 }
 
 .filter-bar__controls {
@@ -466,8 +455,7 @@ html {
 }
 
 .filter-bar__teacher-toggle {
-  /* Keep the teacher-search control centered beneath the third filter. */
-  justify-self: center;
+  justify-self: end;
   color: var(--text-sub);
   font-size: 12px;
   line-height: 18px;
@@ -554,8 +542,21 @@ html {
 .pool-item__head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 6px;
+}
+
+.pool-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.pool-item__actions .ant-btn {
+  padding-inline: 6px;
 }
 
 .pool-item__name {
@@ -983,8 +984,19 @@ html {
   --arrangement-list-gap: 8px;
   --arrangement-ring-space: 2px;
   --arrangement-scroll-space: 8px;
-  margin-top: 8px;
   padding: 10px 14px;
+}
+
+.calculation-results {
+  flex: 0 0 auto;
+}
+
+.calculation-results .calculation-status {
+  border: 0;
+}
+
+.calculation-results .arrangement-panel {
+  border-top: 1px solid var(--border);
 }
 
 .arrangement-panel__head {
@@ -1040,7 +1052,6 @@ html {
   cursor: pointer;
   font: inherit;
   color: inherit;
-  transition: border-color .15s, background-color .15s;
 }
 
 .arrangement-card:hover {
@@ -1487,14 +1498,6 @@ html {
   .course-table__export-label {
     display: none;
   }
-
-  .filter-bar__search {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-bar__count {
-    justify-self: start;
-  }
 }
 
 /* ============================================================
@@ -1557,9 +1560,17 @@ html {
   padding: 16px 18px 10px;
 }
 
+.bottom-modal__heading {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .bottom-modal__title {
   margin: 0;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   min-height: var(--bottom-modal-header-control-size);
   display: flex;
@@ -1567,6 +1578,13 @@ html {
   font-size: 18px;
   line-height: 1.3;
   color: var(--text);
+}
+
+.bottom-modal__title-extra {
+  flex: 0 0 auto;
+  min-height: var(--bottom-modal-header-control-size);
+  display: flex;
+  align-items: center;
 }
 
 .bottom-modal__actions {
@@ -2419,9 +2437,119 @@ html {
   border-color: var(--detail-grid-border) !important;
 }
 
+.course-detail-overview .ant-descriptions-item-label {
+  width: 112px;
+}
+
+.course-detail-overview .ant-descriptions-item-content {
+  min-width: 140px;
+  overflow-wrap: anywhere;
+}
+
+.course-description-toggle.ant-btn {
+  gap: 3px;
+  padding-inline: 4px;
+  color: var(--accent);
+}
+
+.course-description-toggle.ant-btn .select-chevron {
+  width: 14px;
+  height: 14px;
+}
+
+.course-description-region {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-bottom: 0;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.18s ease,
+    margin-bottom 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.course-description-region--open {
+  grid-template-rows: 1fr;
+  margin-bottom: 12px;
+  opacity: 1;
+}
+
+.course-description-region__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.course-description-panel {
+  padding-top: 8px;
+}
+
+.course-description-panel__section + .course-description-panel__section {
+  margin-top: 12px;
+}
+
+.course-description-panel__section .ant-typography {
+  color: var(--text);
+}
+
+.course-description-panel__section p.ant-typography {
+  margin: 4px 0 0;
+  color: var(--text-sub);
+  white-space: pre-wrap;
+}
+
+.course-description-panel .ant-empty {
+  margin-block: 8px;
+}
+
+.course-material-groups {
+  margin-top: 14px;
+}
+
+.course-material-groups > .ant-typography {
+  margin: 0 0 8px;
+}
+
+.course-material-group {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  border: 1px solid var(--detail-grid-border);
+  border-bottom: 0;
+}
+
+.course-material-group:first-of-type {
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.course-material-group:last-child {
+  border-bottom: 1px solid var(--detail-grid-border);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.course-material-group__label {
+  padding: 9px 12px;
+  background: var(--detail-label-bg);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.course-material-group__value {
+  min-width: 0;
+  padding: 9px 12px;
+  border-left: 1px solid var(--detail-grid-border);
+  color: var(--text);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
 .detail-table .ant-table {
   table-layout: auto !important;
   background: transparent !important;
+}
+
+.detail-section-table .ant-table {
+  table-layout: fixed !important;
 }
 
 .detail-table .ant-table-content {
@@ -2515,6 +2643,23 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 .course-detail-mobile,
 .selected-courses-mobile-list {
   display: none;
+}
+
+@media (max-width: 1080px) {
+  .course-detail-modal .course-detail-desktop,
+  .course-detail-modal .detail-section-table,
+  .course-detail-modal .detail-schedule-table {
+    display: none;
+  }
+
+  .course-detail-modal .course-detail-mobile {
+    display: block;
+  }
+
+  .course-detail-modal .mobile-card-list.course-detail-mobile {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .mobile-card-list {
@@ -2657,6 +2802,10 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   margin-top: 10px;
 }
 
+.selected-courses-card__actions > .course-selection-actions {
+  width: 100%;
+}
+
 @media (max-width: 640px) {
   .curriculum-select-dropdown {
     left: 50% !important;
@@ -2687,6 +2836,38 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
     align-items: center;
     gap: 8px;
     padding: 16px 14px 10px;
+    flex-wrap: wrap;
+  }
+
+  .course-detail-modal .bottom-modal__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .course-detail-modal .bottom-modal__heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px;
+  }
+
+  .course-detail-modal .bottom-modal__title-extra {
+    min-width: 0;
+  }
+
+  .course-detail-modal .course-description-toggle.ant-btn {
+    padding-inline: 0;
+    font-size: 13px;
+  }
+
+  .course-detail-modal .bottom-modal__close {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .course-detail-modal .bottom-modal__actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    order: initial;
   }
 
   .bottom-modal__title {
@@ -2696,7 +2877,23 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .bottom-modal__actions {
+    order: 3;
+    width: 100%;
     padding-top: 0;
+  }
+
+  .bottom-modal__actions .course-selection-actions {
+    width: 100%;
+  }
+
+  .bottom-modal__actions .course-selection-actions > .ant-space-item,
+  .selected-courses-card__actions .course-selection-actions > .ant-space-item {
+    flex: 1 1 120px;
+  }
+
+  .bottom-modal__actions .course-selection-actions .ant-btn,
+  .selected-courses-card__actions .course-selection-actions .ant-btn {
+    width: 100%;
   }
 
   .bottom-modal__body {
@@ -2727,6 +2924,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .course-detail-summary-card {
     margin-bottom: 12px;
+  }
+
+  .course-material-group {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .course-material-group__label,
+  .course-material-group__value {
+    padding: 9px 10px;
   }
 
   .selected-courses-switcher {
@@ -2810,12 +3016,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .filter-bar__search {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) max-content;
     gap: 8px;
-  }
-
-  .filter-bar__count {
-    justify-self: end;
   }
 
   .filter-bar__controls {
@@ -3191,6 +3393,120 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   outline-offset: 2px;
 }
 
+.calculation-status {
+  display: flex;
+  min-height: 38px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+
+.calculation-status__dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--text-sub);
+}
+
+.calculation-status--dirty .calculation-status__dot,
+.calculation-status--calculating .calculation-status__dot {
+  background: var(--accent);
+}
+
+.calculation-status--ready .calculation-status__dot {
+  background: var(--success, #3f9b68);
+}
+
+.calculation-status--error .calculation-status__dot {
+  background: var(--danger, #d94b55);
+}
+
+.calculation-status__message {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: var(--text-sub);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calculation-mode-picker {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.calculation-mode-picker__option {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-bg);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.calculation-mode-picker__option:hover,
+.calculation-mode-picker__option:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  outline: 0;
+}
+
+.calculation-mode-picker__option:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.calculation-mode-picker__option--selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--panel-bg));
+}
+
+.calculation-mode-picker__indicator {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  margin-top: 2px;
+  border: 4px solid var(--panel-bg);
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+.calculation-mode-picker__option--selected .calculation-mode-picker__indicator {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.calculation-mode-picker__copy,
+.calculation-mode-picker__label,
+.calculation-mode-picker__description {
+  display: block;
+}
+
+.calculation-mode-picker__label {
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.calculation-mode-picker__description {
+  margin-top: 4px;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .availability-grid-wrap {
   width: 100%;
   overflow-x: auto;
@@ -3498,12 +3814,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 :root[data-theme='dark'] .pool-item__conflict-tag {
   color: #1a0d10;
   font-weight: 700;
-}
-
-:root[data-theme='dark'] .filter-bar__count {
-  background: var(--dark-surface-recessed);
-  border-color: var(--border);
-  color: var(--text-sub);
 }
 
 :root[data-theme='dark'] .stats-bar__item--button:hover,
@@ -4026,6 +4336,33 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   white-space: nowrap;
 }
 
+.course-table__term-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+#root .course-table__semester-toggle.ant-btn {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  padding: 0;
+  color: var(--text-sub);
+}
+
+#root .course-table__semester-toggle.ant-btn:hover,
+#root .course-table__semester-toggle.ant-btn:focus-visible {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.course-table__semester-toggle .select-chevron {
+  width: 14px;
+  height: 14px;
+}
+
 .course-table__project-footer-link,
 .contributor-list__link {
   color: var(--accent);
@@ -4250,8 +4587,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
   border-radius: 50%;
-  background: linear-gradient(145deg, var(--accent-soft), var(--panel-bg-2));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--text) 9%, transparent);
+  background: var(--accent-soft);
 }
 
 .contributor-list__avatar img {
