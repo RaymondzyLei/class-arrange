@@ -51,6 +51,7 @@ describe('CalculationStatus', () => {
     const statusRule = stylesSource.match(/\n\.calculation-status\s*\{([\s\S]*?)\}/)?.[1] ?? '';
     expect(statusRule).toContain('min-height: 38px');
     expect(statusRule).toContain('box-sizing: border-box');
+    expect(statusRule).toContain('background: transparent');
   });
 
   it('applies the newly ranked first arrangement before the browser paints', () => {

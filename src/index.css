@@ -3402,7 +3402,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   padding: 6px 14px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+  background: transparent;
 }
 
 .calculation-status__dot {
