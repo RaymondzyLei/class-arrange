@@ -64,3 +64,11 @@ DONE
 ## Concerns
 
 - No blocking concerns. The pre-existing Vite warning for chunks over 500 kB remains non-failing and is outside this task's scope.
+
+## Review follow-up: multi-time-group chooser wording
+
+- Review confirmed that the desktop and mobile curriculum-row buttons open a chooser and do not yet represent a specific `CourseGroup`. Their unselected label is now `选择时间组`; the partial-selection label remains `修改所选时间组`, while candidate-row actions still use `选择此时间组`.
+- Added `src/components/SelectedCoursesModalActions.test.ts`, following the existing source-level component contract pattern, to lock both desktop and mobile chooser labels.
+- RED: `pnpm exec vitest run src/components/SelectedCoursesModalActions.test.ts` — 1 test failed because the expected chooser label occurred 0 times instead of 2.
+- GREEN: the same command — 1 file, 1 test passed.
+- Type check: `pnpm exec tsc -b --pretty false` — exit 0.

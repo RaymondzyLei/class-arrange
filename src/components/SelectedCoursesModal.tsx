@@ -596,7 +596,7 @@ export default function SelectedCoursesModal({
               size="small"
               onClick={() => setCandidateCourse(row.course)}
             >
-              {row.selected ? '修改所选时间组' : '选择此时间组'}
+              {row.selected ? '修改所选时间组' : '选择时间组'}
             </Button>
             {renderCourseScopeButton(row.course.code, row.course.name)}
           </Space>
@@ -733,7 +733,7 @@ export default function SelectedCoursesModal({
             ) : (
               <>
                 <Button size="small" onClick={() => setCandidateCourse(row.course)}>
-                  {row.selected ? '修改所选时间组' : '选择此时间组'}
+                  {row.selected ? '修改所选时间组' : '选择时间组'}
                 </Button>
                 {renderCourseScopeButton(row.course.code, row.course.name)}
               </>
