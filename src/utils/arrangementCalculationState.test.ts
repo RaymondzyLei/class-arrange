@@ -283,10 +283,10 @@ describe('arrangement calculation state', () => {
 });
 
 describe('arrangement selection across commits', () => {
-  it('preserves a still-valid selection and otherwise chooses the new default', () => {
+  it('selects the newly ranked first result after every successful recalculation', () => {
     const groups = [group('A', 'a')];
     const next = [arrangement('first', groups), arrangement('kept', groups)];
-    expect(resolveSelectedArrangementId('kept', next)).toBe('kept');
+    expect(resolveSelectedArrangementId('kept', next)).toBe('first');
     expect(resolveSelectedArrangementId('gone', next)).toBe('first');
     expect(resolveSelectedArrangementId(null, next)).toBe('first');
     expect(resolveSelectedArrangementId('gone', [])).toBeNull();

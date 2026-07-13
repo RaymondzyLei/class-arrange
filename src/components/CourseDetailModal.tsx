@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { App, Button, Descriptions, Space, Table, Typography } from 'antd';
 import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
@@ -102,6 +102,7 @@ export default function CourseDetailModal({
   const [cachedDetail, setCachedDetail] = useState<CourseDetail | undefined>(undefined);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const descriptionPanelId = useId();
+  const modalBodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!group) return;
     setCached(group);
@@ -110,6 +111,13 @@ export default function CourseDetailModal({
   }, [group, detail]);
   const display = group ?? cached;
   const displayDetail = group ? detail : cachedDetail;
+
+  const handleDescriptionOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
+      modalBodyRef.current?.scrollTo({ top: 0 });
+    }
+    setDescriptionOpen(nextOpen);
+  };
 
   if (!display) return null;
 
@@ -198,17 +206,19 @@ export default function CourseDetailModal({
 
   return (
     <BottomModal
+      className="course-detail-modal"
       title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
       titleExtra={(
         <CourseDescriptionToggle
           panelId={descriptionPanelId}
           open={descriptionOpen}
-          onOpenChange={setDescriptionOpen}
+          onOpenChange={handleDescriptionOpenChange}
         />
       )}
       open={open}
       onClose={onClose}
       width={1180}
+      bodyRef={modalBodyRef}
       actions={(
         <Space size={4} wrap className="course-selection-actions">
           <Button
@@ -337,14 +347,14 @@ export default function CourseDetailModal({
             size="small"
             dataSource={sectionRows}
             pagination={false}
-            tableLayout="auto"
+            tableLayout="fixed"
             columns={[
               { title: '课堂号', dataIndex: 'id', width: 110 },
               { title: '教师', dataIndex: 'teacher', width: 120 },
-              { title: '时间地点', dataIndex: 'time' },
+              { title: '时间地点', dataIndex: 'time', width: 360 },
               { title: '选课/限选', dataIndex: 'capacity', width: 96, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
               { title: '评分', dataIndex: 'rating', width: 110, render: (v: IcourseRatingInfo | undefined) => <RatingLink rating={v} /> },
-              { title: '上课班级', dataIndex: 'classes' },
+              { title: '上课班级', dataIndex: 'classes', width: 240 },
             ]}
           />
           <div className="mobile-card-list course-detail-mobile">

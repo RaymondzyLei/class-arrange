@@ -7,24 +7,23 @@ const source = readFileSync(
 );
 
 function expectReferenceBooksBeforeMaterials(fragment: string): void {
-  const referenceBooks = fragment.indexOf('参考书');
-  const materials = fragment.indexOf('教材');
+  const referenceBooks = fragment.indexOf('course-material-group__label">参考书');
+  const materials = fragment.indexOf('course-material-group__label">教材');
+  const handouts = fragment.indexOf('course-material-group__label">讲义');
   expect(referenceBooks).toBeGreaterThanOrEqual(0);
   expect(materials).toBeGreaterThanOrEqual(0);
+  expect(handouts).toBeGreaterThanOrEqual(0);
   expect(referenceBooks).toBeLessThan(materials);
+  expect(materials).toBeLessThan(handouts);
 }
 
 describe('CourseDetailModal information order', () => {
-  it('places reference books before textbook and handout content on desktop', () => {
-    const start = source.indexOf('<Descriptions size="small"');
-    const end = source.indexOf('</Descriptions>', start);
-    expectReferenceBooksBeforeMaterials(source.slice(start, end));
-  });
-
-  it('places reference books before textbook and handout content on mobile', () => {
-    const start = source.indexOf('course-detail-summary-card');
+  it('shares one material table across desktop and mobile in the requested order', () => {
+    const start = source.indexOf('className="course-material-groups"');
     const end = source.indexOf('</section>', start);
+    expect(start).toBeGreaterThanOrEqual(0);
     expectReferenceBooksBeforeMaterials(source.slice(start, end));
+    expect(source.match(/className="course-material-groups"/g)).toHaveLength(1);
   });
 
   it('uses the exact-time-aware formatter in the schedule detail table', () => {

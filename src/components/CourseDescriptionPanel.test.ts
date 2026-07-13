@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type { CourseDetail } from '@/types';
 import CourseDescriptionPanel from './CourseDescriptionPanel';
 
@@ -67,6 +67,19 @@ describe('CourseDescriptionPanel', () => {
     expect(detailModalSource).toContain('<CourseDescriptionToggle');
     expect(bottomModalSource).toContain('bottom-modal__title-extra');
     expect(stylesSource).toContain('.course-description-region--open');
+  });
+
+  it('keeps the title controls inside the mobile modal header', () => {
+    expect(detailModalSource).toContain('className="course-detail-modal"');
+    expect(stylesSource).toContain('.course-detail-modal .bottom-modal__header');
+    expect(stylesSource).toContain('grid-template-columns: minmax(0, 1fr) auto');
+  });
+
+  it('returns the modal body to the top when the description opens', () => {
+    expect(bottomModalSource).toContain('bodyRef?: Ref<HTMLDivElement>');
+    expect(detailModalSource).toContain('bodyRef={modalBodyRef}');
+    expect(detailModalSource).toContain('scrollTo({ top: 0 })');
+    expect(detailModalSource).not.toContain('window.requestAnimationFrame');
   });
 
   it('renders scraped HTML descriptions as safe readable text', () => {

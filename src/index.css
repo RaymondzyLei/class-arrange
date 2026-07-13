@@ -2549,6 +2549,10 @@ html {
   background: transparent !important;
 }
 
+.detail-section-table .ant-table {
+  table-layout: fixed !important;
+}
+
 .detail-table .ant-table-content {
   background: transparent !important;
 }
@@ -2640,6 +2644,23 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 .course-detail-mobile,
 .selected-courses-mobile-list {
   display: none;
+}
+
+@media (max-width: 1080px) {
+  .course-detail-modal .course-detail-desktop,
+  .course-detail-modal .detail-section-table,
+  .course-detail-modal .detail-schedule-table {
+    display: none;
+  }
+
+  .course-detail-modal .course-detail-mobile {
+    display: block;
+  }
+
+  .course-detail-modal .mobile-card-list.course-detail-mobile {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .mobile-card-list {
@@ -2817,6 +2838,37 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
     gap: 8px;
     padding: 16px 14px 10px;
     flex-wrap: wrap;
+  }
+
+  .course-detail-modal .bottom-modal__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .course-detail-modal .bottom-modal__heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px;
+  }
+
+  .course-detail-modal .bottom-modal__title-extra {
+    min-width: 0;
+  }
+
+  .course-detail-modal .course-description-toggle.ant-btn {
+    padding-inline: 0;
+    font-size: 13px;
+  }
+
+  .course-detail-modal .bottom-modal__close {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .course-detail-modal .bottom-modal__actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    order: initial;
   }
 
   .bottom-modal__title {
@@ -4534,8 +4586,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
   border-radius: 50%;
-  background: linear-gradient(145deg, var(--accent-soft), var(--panel-bg-2));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--text) 9%, transparent);
+  background: var(--accent-soft);
 }
 
 .contributor-list__avatar img {

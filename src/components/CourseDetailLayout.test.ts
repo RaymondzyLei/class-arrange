@@ -28,4 +28,13 @@ describe('course detail layout', () => {
     expect(occurrenceCount(source, 'materialDisplay.materials')).toBe(1);
     expect(styles).toContain('.course-material-group__value');
   });
+
+  it('keeps section detail columns readable without vertical text wrapping', () => {
+    expect(source).toContain('className="detail-table detail-section-table"');
+    expect(source).not.toContain('scroll={{ x: 1040 }}');
+    expect(source).toContain("{ title: '时间地点', dataIndex: 'time', width: 360 }");
+    expect(source).toContain("{ title: '上课班级', dataIndex: 'classes', width: 240 }");
+    expect(styles).toContain('@media (max-width: 1080px)');
+    expect(styles).toContain('.course-detail-modal .detail-section-table');
+  });
 });

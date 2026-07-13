@@ -190,11 +190,11 @@ export function recoverCancelledArrangementCalculation(
 }
 
 export function resolveSelectedArrangementId(
-  selectedId: string | null,
+  _selectedId: string | null,
   arrangements: Arrangement[],
 ): string | null {
-  if (selectedId && arrangements.some((arrangement) => arrangement.id === selectedId)) {
-    return selectedId;
-  }
+  // A committed result list has already been ranked with the latest preferences.
+  // Always apply its new best result instead of following the previous timetable
+  // to a different visible index (for example, #0 becoming #2).
   return arrangements[0]?.id ?? null;
 }
