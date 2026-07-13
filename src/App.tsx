@@ -49,6 +49,7 @@ const EMPTY_FILTER: FilterState = {
   courseType: '',
   sectionType: '',
   examType: '',
+  grading: '',
   language: '',
 };
 

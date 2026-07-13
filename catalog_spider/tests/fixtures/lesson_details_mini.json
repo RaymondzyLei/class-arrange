@@ -1,0 +1,81 @@
+[
+  {
+    "code": "001108.01",
+    "name": {
+      "cn": "数学实验",
+      "en": "Mathematical Experiment"
+    },
+    "dept": "数学科学学院",
+    "credit": 2.5,
+    "hour": 40,
+    "sem": "2026年秋季学期",
+    "grading": "百分制",
+    "examType": "考试",
+    "discipline": "数学",
+    "lang": "中文",
+    "preq": "Linear algebra",
+    "textbook": "Legacy textbook text",
+    "textbooks": [
+      {
+        "nameZh": "数学实验教程",
+        "edition": "第3版",
+        "author": "示例作者",
+        "publishingHouse": "示例出版社",
+        "dates": "2025年8月",
+        "isbn": "9780000000001",
+        "publish": true
+      },
+      {
+        "nameZh": "课程讲义",
+        "edition": null,
+        "author": "课程组",
+        "publishingHouse": null,
+        "dates": null,
+        "isbn": null,
+        "publish": false
+      }
+    ],
+    "ref": "Reference text",
+    "desc": {
+      "cn": "中文简介",
+      "en": "English description"
+    },
+    "syllabus": {
+      "periods": 40,
+      "documents": {
+        "language-zh": {
+          "paragraphs": [
+            {
+              "indexNo": 1,
+              "content": "教学大纲"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "code": "001109.02",
+    "name": {
+      "cn": "科学计算",
+      "en": "1"
+    },
+    "dept": "数学科学学院",
+    "credit": 2,
+    "hour": 32,
+    "sem": "2026年秋季学期",
+    "grading": null,
+    "examType": null,
+    "discipline": null,
+    "lang": null,
+    "preq": null,
+    "textbook": null,
+    "textbooks": [],
+    "ref": null,
+    "desc": {
+      "cn": null,
+      "en": null
+    },
+    "syllabus": null
+  }
+]

@@ -1,5 +1,7 @@
 // 课程数据类型定义（由 scripts/excel_to_ts.py 生成的结构契约）
 
+import type { TermCalendar } from '@/config/termCalendar';
+
 export interface Department {
   code: string;
   name: string;
@@ -34,6 +36,7 @@ export interface CourseSection {
   courseType: string;
   language: string;
   examType: string;
+  grading: string;
   /** 本研同堂 */
   undergradShared: boolean;
   enrolled: number;
@@ -93,7 +96,74 @@ export interface FilterState {
   courseType: string;
   sectionType: string;
   examType: string;
+  grading: string;
   language: string;
+}
+
+export interface CourseTextbook {
+  nameZh: string;
+  edition: string;
+  author: string;
+  publishingHouse: string;
+  dates: string;
+  isbn: string;
+  publish: boolean;
+}
+
+export interface CourseDetail {
+  code: string;
+  name: {
+    cn: string;
+    en: string;
+  };
+  dept: string;
+  credit: number;
+  hour: number;
+  sem: string;
+  grading: string;
+  examType: string;
+  discipline: string;
+  lang: string;
+  prerequisite: string;
+  legacyTextbook: string;
+  textbooks: CourseTextbook[];
+  materials: CourseTextbook[];
+  referenceBooks: string;
+  description: {
+    cn: string;
+    en: string;
+  };
+  syllabus: unknown;
+}
+
+export interface SemesterManifestEntry {
+  key: string;
+  name: string;
+  file: string;
+}
+
+export interface SemesterManifest {
+  schemaVersion: 1;
+  defaultSemester: string;
+  semesters: SemesterManifestEntry[];
+}
+
+export interface SemesterCatalog {
+  schemaVersion: 1;
+  generatedAt: string;
+  source: {
+    url: string;
+    semesterId: number;
+  };
+  semester: {
+    key: string;
+    name: string;
+    startDate: string;
+    endDate: string;
+    calendar: TermCalendar;
+  };
+  courses: CourseSection[];
+  detailsBySection: Record<string, CourseDetail>;
 }
 
 /** 排课方案：用户已选 groups 的一个具体"每个 courseCode 取一个 group"的组合 */
