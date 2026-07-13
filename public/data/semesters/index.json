@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "defaultSemester": "2026-fall",
+  "semesters": [
+    {
+      "key": "2026-fall",
+      "name": "2026年秋季学期",
+      "file": "2026-fall/courses.json"
+    },
+    {
+      "key": "2026-summer",
+      "name": "2026年夏季学期",
+      "file": "2026-summer/courses.json"
+    }
+  ]
+}
