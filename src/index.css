@@ -1561,9 +1561,17 @@ html {
   padding: 16px 18px 10px;
 }
 
+.bottom-modal__heading {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .bottom-modal__title {
   margin: 0;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   min-height: var(--bottom-modal-header-control-size);
   display: flex;
@@ -1571,6 +1579,13 @@ html {
   font-size: 18px;
   line-height: 1.3;
   color: var(--text);
+}
+
+.bottom-modal__title-extra {
+  flex: 0 0 auto;
+  min-height: var(--bottom-modal-header-control-size);
+  display: flex;
+  align-items: center;
 }
 
 .bottom-modal__actions {
@@ -2423,16 +2438,41 @@ html {
   border-color: var(--detail-grid-border) !important;
 }
 
-.course-description-disclosure {
+.course-description-toggle.ant-btn {
+  gap: 3px;
+  padding-inline: 4px;
+  color: var(--accent);
+}
+
+.course-description-toggle.ant-btn .select-chevron {
+  width: 14px;
+  height: 14px;
+}
+
+.course-description-region {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-bottom: 0;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.18s ease,
+    margin-bottom 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.course-description-region--open {
+  grid-template-rows: 1fr;
   margin-bottom: 12px;
+  opacity: 1;
+}
+
+.course-description-region__clip {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .course-description-panel {
-  margin-top: 8px;
-  padding: 12px 14px;
-  border: 1px solid var(--detail-grid-border);
-  border-radius: 8px;
-  background: var(--detail-label-bg);
+  padding-top: 8px;
 }
 
 .course-description-panel__section + .course-description-panel__section {

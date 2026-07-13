@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { App, Button, Descriptions, Space, Table, Tag, Typography } from 'antd';
 import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
@@ -18,7 +18,7 @@ import { hasExactScheduleTime } from '@/utils/scheduleTime';
 import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
 import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
-import CourseDescriptionPanel from './CourseDescriptionPanel';
+import CourseDescriptionPanel, { CourseDescriptionToggle } from './CourseDescriptionPanel';
 
 interface Props {
   group: CourseGroup | null;
@@ -101,6 +101,7 @@ export default function CourseDetailModal({
   const [cached, setCached] = useState<CourseGroup | null>(null);
   const [cachedDetail, setCachedDetail] = useState<CourseDetail | undefined>(undefined);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const descriptionPanelId = useId();
   useEffect(() => {
     if (!group) return;
     setCached(group);
@@ -198,6 +199,13 @@ export default function CourseDetailModal({
   return (
     <BottomModal
       title={`${display.courseName}${display.sections.length > 1 ? `（${display.sections.length} 个班次）` : ''}`}
+      titleExtra={(
+        <CourseDescriptionToggle
+          panelId={descriptionPanelId}
+          open={descriptionOpen}
+          onOpenChange={setDescriptionOpen}
+        />
+      )}
       open={open}
       onClose={onClose}
       width={1180}
@@ -226,8 +234,8 @@ export default function CourseDetailModal({
     >
       <CourseDescriptionPanel
         detail={displayDetail}
+        panelId={descriptionPanelId}
         open={descriptionOpen}
-        onOpenChange={setDescriptionOpen}
       />
       <div className="course-detail-desktop">
         <Descriptions size="small" column={2} bordered>

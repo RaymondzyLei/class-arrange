@@ -1,8 +1,14 @@
 import { createElement } from 'react';
+import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import type { CourseDetail } from '@/types';
 import CourseDescriptionPanel from './CourseDescriptionPanel';
+
+const panelSource = readFileSync(new URL('./CourseDescriptionPanel.tsx', import.meta.url), 'utf8');
+const detailModalSource = readFileSync(new URL('./CourseDetailModal.tsx', import.meta.url), 'utf8');
+const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
+const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 
 function makeDetail(description: CourseDetail['description']): CourseDetail {
   return {
@@ -29,24 +35,38 @@ function makeDetail(description: CourseDetail['description']): CourseDetail {
 function renderPanel(detail: CourseDetail | undefined, open: boolean): string {
   return renderToStaticMarkup(createElement(CourseDescriptionPanel, {
     detail,
+    panelId: 'description-panel',
     open,
-    onOpenChange: vi.fn(),
   }));
 }
 
 describe('CourseDescriptionPanel', () => {
-  it('offers the description action while collapsed', () => {
+  it('keeps the animated description region mounted while collapsed', () => {
     const html = renderPanel(makeDetail({ cn: '中文简介', en: 'English description' }), false);
-    expect(html).toContain('查看课程简介');
-    expect(html).toContain('aria-expanded="false"');
-    expect(html).not.toContain('English description');
+
+    expect(html).not.toContain('查看课程简介');
+    expect(html).toContain('aria-hidden="true"');
+    expect(html).toContain('course-description-region');
+    expect(html).toContain('English description');
   });
 
   it('shows every available scraped description without another request', () => {
     const html = renderPanel(makeDetail({ cn: ' 中文简介 ', en: ' English description ' }), true);
     expect(html).toContain('中文简介');
     expect(html).toContain('English description');
-    expect(html).toContain('aria-expanded="true"');
+    expect(html).toContain('course-description-region--open');
+    expect(html).toContain('aria-hidden="false"');
+  });
+
+  it('places a borderless chevron toggle beside the modal title', () => {
+    expect(panelSource).toContain('export function CourseDescriptionToggle');
+    expect(panelSource).toContain('type="text"');
+    expect(panelSource).toContain('course-description-toggle');
+    expect(panelSource).toContain('ChevronIcon');
+    expect(detailModalSource).toContain('titleExtra={');
+    expect(detailModalSource).toContain('<CourseDescriptionToggle');
+    expect(bottomModalSource).toContain('bottom-modal__title-extra');
+    expect(stylesSource).toContain('.course-description-region--open');
   });
 
   it('renders scraped HTML descriptions as safe readable text', () => {

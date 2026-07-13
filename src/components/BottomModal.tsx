@@ -9,6 +9,7 @@ interface Props {
   onClose: () => void;
   className?: string;
   width?: number;
+  titleExtra?: ReactNode;
   footer?: ReactNode;
   actions?: ReactNode;
 }
@@ -20,6 +21,7 @@ export default function BottomModal({
   onClose,
   className,
   width = 720,
+  titleExtra,
   footer,
   actions,
 }: Props) {
@@ -65,7 +67,10 @@ export default function BottomModal({
         }}
       >
         <div className="bottom-modal__header">
-          <h2 className="bottom-modal__title">{title}</h2>
+          <div className="bottom-modal__heading">
+            <h2 className="bottom-modal__title">{title}</h2>
+            {titleExtra ? <div className="bottom-modal__title-extra">{titleExtra}</div> : null}
+          </div>
           {actions ? <div className="bottom-modal__actions">{actions}</div> : null}
           <button className="bottom-modal__close" type="button" onClick={onClose} aria-label="关闭">
             <CloseIcon />

@@ -1,9 +1,15 @@
-import { useId } from 'react';
 import { Button, Empty, Typography } from 'antd';
 import type { CourseDetail } from '@/types';
+import { ChevronIcon } from './icons';
 
 interface Props {
   detail?: CourseDetail;
+  panelId: string;
+  open: boolean;
+}
+
+interface ToggleProps {
+  panelId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -55,30 +61,42 @@ function readableDescription(value: string | undefined): string {
     .join('\n');
 }
 
-export default function CourseDescriptionPanel({ detail, open, onOpenChange }: Props) {
-  const panelId = useId();
+export function CourseDescriptionToggle({ panelId, open, onOpenChange }: ToggleProps) {
+  return (
+    <Button
+      size="small"
+      type="text"
+      className="course-description-toggle"
+      aria-controls={panelId}
+      aria-expanded={open}
+      icon={(
+        <ChevronIcon
+          className={`select-chevron${open ? ' select-chevron--open' : ''}`}
+        />
+      )}
+      iconPosition="end"
+      onClick={() => onOpenChange(!open)}
+    >
+      查看课程简介
+    </Button>
+  );
+}
+
+export default function CourseDescriptionPanel({ detail, panelId, open }: Props) {
   const chineseDescription = readableDescription(detail?.description.cn);
   const englishDescription = readableDescription(detail?.description.en);
   const hasDescription = Boolean(chineseDescription || englishDescription);
 
   return (
-    <section className="course-description-disclosure">
-      <Button
-        size="small"
-        type="default"
-        aria-controls={panelId}
-        aria-expanded={open}
-        onClick={() => onOpenChange(!open)}
-      >
-        查看课程简介
-      </Button>
-      {open ? (
-        <div
-          id={panelId}
-          className="course-description-panel"
-          role="region"
-          aria-label="课程简介"
-        >
+    <section
+      id={panelId}
+      className={`course-description-region${open ? ' course-description-region--open' : ''}`}
+      role="region"
+      aria-label="课程简介"
+      aria-hidden={!open}
+    >
+      <div className="course-description-region__clip">
+        <div className="course-description-panel">
           {chineseDescription ? (
             <div className="course-description-panel__section">
               <Typography.Text strong>中文简介</Typography.Text>
@@ -95,7 +113,7 @@ export default function CourseDescriptionPanel({ detail, open, onOpenChange }: P
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无课程简介" />
           ) : null}
         </div>
-      ) : null}
+      </div>
     </section>
   );
 }
