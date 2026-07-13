@@ -12,6 +12,15 @@ function text(value: string): string {
   return value.trim();
 }
 
+export function stripWrappingDoubleQuotes(value: string): string {
+  const normalized = text(value);
+  return normalized.length >= 2
+    && normalized.startsWith('"')
+    && normalized.endsWith('"')
+    ? normalized.slice(1, -1).trim()
+    : normalized;
+}
+
 function labeledText(label: string, value: string): string {
   const normalized = text(value);
   return normalized ? `${label}：${normalized}` : '';
@@ -58,6 +67,6 @@ export function formatCourseMaterialDisplay(
       ? formatEntries(detail.textbooks)
       : legacyTextbook || EMPTY_VALUE,
     materials: formatEntries(detail.materials),
-    referenceBooks: text(detail.referenceBooks) || EMPTY_VALUE,
+    referenceBooks: stripWrappingDoubleQuotes(detail.referenceBooks) || EMPTY_VALUE,
   };
 }

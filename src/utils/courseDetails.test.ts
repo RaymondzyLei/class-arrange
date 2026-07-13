@@ -104,4 +104,22 @@ describe('course detail material formatting', () => {
       referenceBooks: '—',
     });
   });
+
+  it('removes one paired outer double quote from reference books', () => {
+    const detail = makeDetail({ referenceBooks: '  "《复变函数》，科学出版社"  ' });
+
+    expect(formatCourseMaterialDisplay(detail).referenceBooks).toBe(
+      '《复变函数》，科学出版社',
+    );
+  });
+
+  it('preserves internal and one-sided reference-book quotes', () => {
+    const detail = makeDetail({
+      referenceBooks: '《“复变函数”导读》，科学出版社"',
+    });
+
+    expect(formatCourseMaterialDisplay(detail).referenceBooks).toBe(
+      '《“复变函数”导读》，科学出版社"',
+    );
+  });
 });
