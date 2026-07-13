@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { App, Button, Descriptions, Space, Table, Tag, Typography } from 'antd';
+import { App, Button, Descriptions, Space, Table, Typography } from 'antd';
 import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
 import {
@@ -238,38 +238,25 @@ export default function CourseDetailModal({
         open={descriptionOpen}
       />
       <div className="course-detail-desktop">
-        <Descriptions size="small" column={2} bordered>
+        <Descriptions className="course-detail-overview" size="small" column={3} bordered>
           <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
-          <Descriptions.Item label="开课单位">{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
-          <Descriptions.Item label="授课教师" span={2}>
+          <Descriptions.Item label="开课单位" span={2}>{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
+          <Descriptions.Item label="授课教师" span={3}>
             {formatTeacherList(display.teachers, '—')}
           </Descriptions.Item>
           <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
           <Descriptions.Item label="课程类型">{rep?.courseType || '—'}</Descriptions.Item>
+          <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
           <Descriptions.Item label="考核方式">{examType}</Descriptions.Item>
           <Descriptions.Item label="评分制">{grading}</Descriptions.Item>
-          <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
           {rep?.undergradShared ? (
-            <Descriptions.Item label="本研同堂"><Tag color="blue">是</Tag></Descriptions.Item>
+            <Descriptions.Item label="本研同堂">是</Descriptions.Item>
           ) : null}
           {singleRating ? (
             <Descriptions.Item label="icourse 评分">
               <RatingLink rating={singleRating} />
             </Descriptions.Item>
           ) : null}
-          <Descriptions.Item label="参考书" span={2}>
-            {materialDisplay.referenceBooks}
-          </Descriptions.Item>
-          <Descriptions.Item label="教材 / 讲义" span={2}>
-            <div>
-              <Typography.Text type="secondary">教材：</Typography.Text>
-              {materialDisplay.textbooks}
-            </div>
-            <div>
-              <Typography.Text type="secondary">讲义：</Typography.Text>
-              {materialDisplay.materials}
-            </div>
-          </Descriptions.Item>
         </Descriptions>
       </div>
 
@@ -314,7 +301,7 @@ export default function CourseDetailModal({
           {rep?.undergradShared ? (
             <div className="mobile-field">
               <span className="mobile-field__label">本研同堂</span>
-              <span className="mobile-field__value"><Tag color="blue">是</Tag></span>
+              <span className="mobile-field__value">是</span>
             </div>
           ) : null}
           {singleRating ? (
@@ -323,20 +310,24 @@ export default function CourseDetailModal({
               <span className="mobile-field__value"><RatingLink rating={singleRating} /></span>
             </div>
           ) : null}
-          <div className="mobile-field">
-            <span className="mobile-field__label">参考书</span>
-            <span className="mobile-field__value">{materialDisplay.referenceBooks}</span>
-          </div>
-          <div className="mobile-field">
-            <span className="mobile-field__label">教材</span>
-            <span className="mobile-field__value">{materialDisplay.textbooks}</span>
-          </div>
-          <div className="mobile-field">
-            <span className="mobile-field__label">讲义</span>
-            <span className="mobile-field__value">{materialDisplay.materials}</span>
-          </div>
         </section>
       </div>
+
+      <section className="course-material-groups" aria-label="教材与参考资料">
+        <Typography.Title level={5}>教材与参考资料</Typography.Title>
+        <div className="course-material-group">
+          <span className="course-material-group__label">参考书</span>
+          <div className="course-material-group__value">{materialDisplay.referenceBooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">教材</span>
+          <div className="course-material-group__value">{materialDisplay.textbooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">讲义</span>
+          <div className="course-material-group__value">{materialDisplay.materials}</div>
+        </div>
+      </section>
 
       {display.sections.length > 1 && (
         <>

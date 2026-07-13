@@ -2438,6 +2438,15 @@ html {
   border-color: var(--detail-grid-border) !important;
 }
 
+.course-detail-overview .ant-descriptions-item-label {
+  width: 112px;
+}
+
+.course-detail-overview .ant-descriptions-item-content {
+  min-width: 140px;
+  overflow-wrap: anywhere;
+}
+
 .course-description-toggle.ant-btn {
   gap: 3px;
   padding-inline: 4px;
@@ -2491,6 +2500,48 @@ html {
 
 .course-description-panel .ant-empty {
   margin-block: 8px;
+}
+
+.course-material-groups {
+  margin-top: 14px;
+}
+
+.course-material-groups > .ant-typography {
+  margin: 0 0 8px;
+}
+
+.course-material-group {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  border: 1px solid var(--detail-grid-border);
+  border-bottom: 0;
+}
+
+.course-material-group:first-of-type {
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.course-material-group:last-child {
+  border-bottom: 1px solid var(--detail-grid-border);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.course-material-group__label {
+  padding: 9px 12px;
+  background: var(--detail-label-bg);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.course-material-group__value {
+  min-width: 0;
+  padding: 9px 12px;
+  border-left: 1px solid var(--detail-grid-border);
+  color: var(--text);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .detail-table .ant-table {
@@ -2822,6 +2873,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .course-detail-summary-card {
     margin-bottom: 12px;
+  }
+
+  .course-material-group {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .course-material-group__label,
+  .course-material-group__value {
+    padding: 9px 10px;
   }
 
   .selected-courses-switcher {
