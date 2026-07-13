@@ -19,6 +19,7 @@ from catalog_spider.lesson_sync import (
     api_post_json,
     authenticated_request_context,
     batch_codes,
+    build_requested_semesters,
     build_manifest,
     catalog_statistics,
     merge_detail_batch,
@@ -820,12 +821,167 @@ def test_catalog_statistics_reports_requested_detail_coverage(
     assert catalog_statistics(catalog) == {
         "semesterKey": "2026-fall",
         "courseCount": 2,
+        "rawScheduleNonEmptyCount": 2,
+        "scheduledCourseCount": 2,
+        "clockTimeCourseCount": 0,
         "gradingNonEmptyCount": 1,
         "gradingLabels": ["百分制"],
         "structuredTextbookCount": 1,
         "structuredMaterialCount": 1,
         "referenceBookNonEmptyCount": 1,
     }
+
+
+def test_catalog_statistics_counts_courses_with_precise_clock_times():
+    catalog = {
+        "semester": {"key": "2026-fall"},
+        "courses": [
+            {
+                "rawSchedule": "5301: 1(1,2)",
+                "schedule": [{"day": 1, "periods": [1, 2], "weeks": [1]}],
+            },
+            {
+                "rawSchedule": "周一 19:00-19:30",
+                "schedule": [
+                    {
+                        "day": 1,
+                        "periods": [11],
+                        "weeks": [1],
+                        "startTime": "19:00",
+                        "endTime": "19:30",
+                    }
+                ],
+            },
+            {"rawSchedule": "", "schedule": []},
+        ],
+        "detailsBySection": {},
+    }
+
+    stats = catalog_statistics(catalog)
+
+    assert stats["rawScheduleNonEmptyCount"] == 2
+    assert stats["scheduledCourseCount"] == 2
+    assert stats["clockTimeCourseCount"] == 1
+
+
+def _write_raw_semester(root, semester, lessons, details):
+    key = "2026-fall" if "秋季" in semester["nameZh"] else "2026-summer"
+    raw_dir = root / key
+    write_json_atomic(raw_dir / "semester.json", semester)
+    write_json_atomic(raw_dir / "lessons.json", lessons)
+    write_json_atomic(
+        raw_dir / "details.json",
+        {detail["code"]: detail for detail in details},
+    )
+
+
+def test_build_requested_semesters_rebuilds_local_raw_data_in_one_publication(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    fall, lessons, details = lesson_api_fixtures
+    summer = {
+        **fall,
+        "id": 462,
+        "nameZh": "2026年夏季学期",
+        "start": "2026-06-29",
+        "end": "2026-08-23",
+    }
+    raw_root = tmp_path / "raw"
+    public_root = tmp_path / "public"
+    _write_raw_semester(raw_root, fall, lessons, details)
+    _write_raw_semester(raw_root, summer, lessons, details)
+    before_raw = snapshot_files(raw_root)
+
+    catalogs = build_requested_semesters(
+        ["2026-fall", "2026-summer", "2026-fall"],
+        activate="2026-summer",
+        raw_lessons_dir=raw_root,
+        public_semesters_dir=public_root,
+        calendar_overrides={},
+    )
+
+    assert [catalog["semester"]["key"] for catalog in catalogs] == [
+        "2026-fall",
+        "2026-summer",
+    ]
+    assert snapshot_files(raw_root) == before_raw
+    manifest = json.loads((public_root / "index.json").read_text(encoding="utf-8"))
+    assert manifest["defaultSemester"] == "2026-summer"
+    assert {entry["key"] for entry in manifest["semesters"]} == {
+        "2026-fall",
+        "2026-summer",
+    }
+    for key in ("2026-fall", "2026-summer"):
+        catalog = json.loads(
+            (public_root / key / "courses.json").read_text(encoding="utf-8")
+        )
+        assert catalog["semester"]["key"] == key
+
+
+def test_build_requested_semesters_leaves_public_tree_unchanged_when_raw_is_invalid(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    fall, lessons, details = lesson_api_fixtures
+    raw_root = tmp_path / "raw"
+    public_root = tmp_path / "public"
+    _write_raw_semester(raw_root, fall, lessons, details[:-1])
+    write_json_atomic(public_root / "2025-spring" / "courses.json", {"old": True})
+    write_json_atomic(
+        public_root / "index.json",
+        {
+            "schemaVersion": 1,
+            "defaultSemester": "2025-spring",
+            "semesters": [],
+        },
+    )
+    before = snapshot_files(public_root)
+
+    with pytest.raises(SyncError, match="missing details"):
+        build_requested_semesters(
+            ["2026-fall"],
+            raw_lessons_dir=raw_root,
+            public_semesters_dir=public_root,
+            calendar_overrides={},
+        )
+
+    assert snapshot_files(public_root) == before
+
+
+def test_build_requested_semesters_rejects_raw_directory_key_mismatch(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    semester, lessons, details = lesson_api_fixtures
+    wrong = {**semester, "nameZh": "2026年夏季学期"}
+    raw_dir = tmp_path / "raw" / "2026-fall"
+    write_json_atomic(raw_dir / "semester.json", wrong)
+    write_json_atomic(raw_dir / "lessons.json", lessons)
+    write_json_atomic(
+        raw_dir / "details.json",
+        {detail["code"]: detail for detail in details},
+    )
+
+    with pytest.raises(SyncError, match="does not match raw semester"):
+        build_requested_semesters(
+            ["2026-fall"],
+            raw_lessons_dir=tmp_path / "raw",
+            public_semesters_dir=tmp_path / "public",
+            calendar_overrides={},
+        )
+
+
+def test_build_requested_semesters_rejects_noncanonical_key_before_reading_paths(
+    tmp_path,
+):
+    with pytest.raises(SyncError, match="invalid semester key"):
+        build_requested_semesters(
+            ["../2026-fall"],
+            raw_lessons_dir=tmp_path / "raw",
+            public_semesters_dir=tmp_path / "public",
+            calendar_overrides={},
+        )
 
 
 def test_validate_published_catalogs_all_uses_manifest_files(
@@ -979,10 +1135,69 @@ def test_validate_cli_prints_course_and_detail_statistics(
 
     assert result == 0
     assert capsys.readouterr().out.strip() == (
-        "semester=2026-fall courses=2 grading_non_empty=1 "
+        "semester=2026-fall courses=2 raw_schedule_non_empty=2 "
+        "scheduled_courses=2 clock_time_courses=0 grading_non_empty=1 "
         "grading_labels=百分制 textbooks=1 materials=1 "
         "reference_books_non_empty=1"
     )
+
+
+def test_build_lessons_cli_rebuilds_from_local_files_without_browser_or_network(
+    monkeypatch,
+    tmp_path,
+    capsys,
+    lesson_api_fixtures,
+):
+    import catalog_spider.__main__ as cli
+
+    semester, lessons, details = lesson_api_fixtures
+    raw_root = tmp_path / "raw"
+    public_root = tmp_path / "public"
+    _write_raw_semester(raw_root, semester, lessons, details)
+
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("local build must not open a browser or access the network")
+
+    monkeypatch.setattr(cli, "RAW_LESSONS_DIR", raw_root, raising=False)
+    monkeypatch.setattr(cli, "PUBLIC_SEMESTERS_DIR", public_root, raising=False)
+    monkeypatch.setattr(cli, "authenticated_request_context", forbidden, raising=False)
+    monkeypatch.setattr(cli, "api_get", forbidden, raising=False)
+    monkeypatch.setattr(cli, "api_post_json", forbidden, raising=False)
+
+    result = cli.main(
+        [
+            "build-lessons",
+            "--semester-key",
+            "2026-fall",
+            "--activate",
+            "2026-fall",
+        ]
+    )
+
+    assert result == 0
+    assert (public_root / "2026-fall" / "courses.json").exists()
+    assert json.loads((public_root / "index.json").read_text(encoding="utf-8"))[
+        "defaultSemester"
+    ] == "2026-fall"
+    assert capsys.readouterr().out.strip() == "built 2026-fall: courses=2"
+
+
+def test_build_lessons_cli_requires_activate_to_be_requested(capsys):
+    import catalog_spider.__main__ as cli
+
+    with pytest.raises(SystemExit) as caught:
+        cli.main(
+            [
+                "build-lessons",
+                "--semester-key",
+                "2026-fall",
+                "--activate",
+                "2026-summer",
+            ]
+        )
+
+    assert caught.value.code == 2
+    assert "--activate must exactly match one of --semester-key" in capsys.readouterr().err
 
 
 def test_validate_cli_requires_exactly_one_target():

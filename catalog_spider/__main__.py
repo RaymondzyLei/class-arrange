@@ -6,6 +6,7 @@
   build-index    从 raw 生成 index/programs.json
   build-by-term  从 raw 生成 index/by_program_term.json
   sync-lessons   在可见浏览器登录后同步指定学期开课
+  build-lessons  从本地 raw JSON 重建指定学期开课
   validate-lessons 校验可部署的学期开课 JSON
   all            按顺序跑完上面 4 个
 """
@@ -17,6 +18,7 @@ from .details import fetch_all
 from .lesson_sync import (
     SyncError,
     authenticated_request_context,
+    build_requested_semesters,
     sync_requested_semesters,
     validate_published_catalogs,
 )
@@ -25,6 +27,7 @@ from .paths import (
     INDEX_DIR,
     PUBLIC_SEMESTERS_DIR,
     RAW_DIR,
+    RAW_LESSONS_DIR,
     RAW_PROGRAMS_DIR,
     ensure_dirs,
 )
@@ -125,12 +128,37 @@ def cmd_validate_lessons(args) -> int:
         print(
             f"semester={stats['semesterKey']} "
             f"courses={stats['courseCount']} "
+            f"raw_schedule_non_empty={stats['rawScheduleNonEmptyCount']} "
+            f"scheduled_courses={stats['scheduledCourseCount']} "
+            f"clock_time_courses={stats['clockTimeCourseCount']} "
             f"grading_non_empty={stats['gradingNonEmptyCount']} "
             f"grading_labels={labels} "
             f"textbooks={stats['structuredTextbookCount']} "
             f"materials={stats['structuredMaterialCount']} "
             "reference_books_non_empty="
             f"{stats['referenceBookNonEmptyCount']}"
+        )
+    return 0
+
+
+def cmd_build_lessons(args) -> int:
+    """Rebuild deployable semester catalogs from saved raw JSON only."""
+
+    try:
+        catalogs = build_requested_semesters(
+            args.semester_keys,
+            activate=args.activate,
+            raw_lessons_dir=RAW_LESSONS_DIR,
+            public_semesters_dir=PUBLIC_SEMESTERS_DIR,
+        )
+    except (SyncError, ValueError, OSError) as error:
+        print(f"failed: {error}")
+        return 1
+
+    for catalog in catalogs:
+        print(
+            f"built {catalog['semester']['key']}: "
+            f"courses={len(catalog['courses'])}"
         )
     return 0
 
@@ -149,6 +177,18 @@ def main(argv: list[str] | None = None) -> int:
     sync.add_argument("--activate")
     sync.add_argument("--profile-dir", type=Path)
 
+    build_lessons = cmds.add_parser(
+        "build-lessons",
+        help="从已保存的 raw JSON 重建指定学期开课（不访问网络）",
+    )
+    build_lessons.add_argument(
+        "--semester-key",
+        action="append",
+        required=True,
+        dest="semester_keys",
+    )
+    build_lessons.add_argument("--activate")
+
     validate = cmds.add_parser("validate-lessons", help="校验已生成的学期开课文件")
     target = validate.add_mutually_exclusive_group(required=True)
     target.add_argument("--all", action="store_true")
@@ -161,6 +201,12 @@ def main(argv: list[str] | None = None) -> int:
         and args.activate not in args.semesters
     ):
         p.error("--activate must exactly match one of --semester")
+    if (
+        args.cmd == "build-lessons"
+        and args.activate is not None
+        and args.activate not in args.semester_keys
+    ):
+        p.error("--activate must exactly match one of --semester-key")
 
     dispatch = {
         "fetch-tree": cmd_fetch_tree,
@@ -169,6 +215,7 @@ def main(argv: list[str] | None = None) -> int:
         "build-by-term": cmd_build_by_term,
         "all": cmd_all,
         "sync-lessons": cmd_sync_lessons,
+        "build-lessons": cmd_build_lessons,
         "validate-lessons": cmd_validate_lessons,
     }
     return dispatch[args.cmd](args)

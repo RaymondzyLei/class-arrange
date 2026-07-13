@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 import json
 from pathlib import Path
+import re
 import time
 from typing import Callable
 
@@ -23,6 +24,7 @@ _TERM_ORDER = {"fall": 3, "summer": 2, "spring": 1}
 _DETAIL_RETRY_DELAYS = (1, 2, 4)
 _AUTH_TIMEOUT_SECONDS = 10 * 60
 _AUTH_POLL_SECONDS = 2
+_SEMESTER_KEY_PATTERN = re.compile(r"^[0-9]{4}-(?:fall|summer|spring)$")
 
 
 class SyncError(RuntimeError):
@@ -415,6 +417,87 @@ def sync_requested_semesters(
     return catalogs
 
 
+def build_requested_semesters(
+    semester_keys: list[str],
+    *,
+    activate: str | None = None,
+    raw_lessons_dir: Path = RAW_LESSONS_DIR,
+    public_semesters_dir: Path = PUBLIC_SEMESTERS_DIR,
+    calendar_overrides: dict[str, dict] | None = None,
+) -> list[dict]:
+    """Build and publish semester catalogs exclusively from saved raw JSON."""
+
+    unique_keys = list(dict.fromkeys(semester_keys))
+    if activate is not None and activate not in unique_keys:
+        raise SyncError("--activate must exactly match one requested semester key")
+    for key in unique_keys:
+        if not _SEMESTER_KEY_PATTERN.fullmatch(key):
+            raise SyncError(f"invalid semester key: {key}")
+
+    overrides = CALENDAR_OVERRIDES if calendar_overrides is None else calendar_overrides
+    catalogs: list[dict] = []
+    for key in unique_keys:
+        raw_dir = raw_lessons_dir / key
+        semester_payload = _read_json(raw_dir / "semester.json", default=None)
+        if not isinstance(semester_payload, dict):
+            raise SyncError(f"semester raw data must be an object: {key}")
+        for field in ("id", "nameZh", "start", "end"):
+            if field not in semester_payload:
+                raise SyncError(f"semester raw data missing {field}: {key}")
+        raw_key = semester_key(semester_payload["nameZh"])
+        if raw_key != key:
+            raise SyncError(
+                f"requested key {key} does not match raw semester {raw_key}"
+            )
+
+        lessons, codes = _validated_lessons(
+            _read_json(raw_dir / "lessons.json", default=None)
+        )
+        details = _validated_checkpoint(
+            _read_json(raw_dir / "details.json", default=None)
+        )
+        expected_codes = set(codes)
+        detail_codes = set(details)
+        absent = sorted(expected_codes - detail_codes)
+        if absent:
+            raise SyncError(f"missing details: {', '.join(absent)}")
+        unexpected = sorted(detail_codes - expected_codes)
+        if unexpected:
+            raise SyncError(f"extra details: {', '.join(unexpected)}")
+
+        catalog = build_semester_catalog(
+            semester_payload,
+            lessons,
+            details,
+            overrides,
+        )
+        validate_semester_catalog(catalog)
+        catalogs.append(catalog)
+
+    if not catalogs:
+        return catalogs
+
+    manifest_path = public_semesters_dir / "index.json"
+    current_manifest = _read_json(manifest_path, default=None)
+    if current_manifest is not None and not isinstance(current_manifest, dict):
+        raise SyncError("semester manifest must be an object")
+
+    manifest = current_manifest
+    outputs: dict[Path, object] = {}
+    for catalog in catalogs:
+        key = catalog["semester"]["key"]
+        manifest = build_manifest(
+            manifest,
+            key,
+            catalog["semester"]["name"],
+            activate=activate == key,
+        )
+        outputs[public_semesters_dir / key / "courses.json"] = catalog
+    outputs[manifest_path] = manifest
+    _publish_json_transaction(public_semesters_dir, outputs)
+    return catalogs
+
+
 def catalog_statistics(catalog: dict) -> dict:
     """Summarize the completeness fields printed by ``validate-lessons``."""
 
@@ -429,6 +512,25 @@ def catalog_statistics(catalog: dict) -> dict:
     return {
         "semesterKey": catalog.get("semester", {}).get("key", ""),
         "courseCount": len(courses),
+        "rawScheduleNonEmptyCount": sum(
+            1
+            for course in courses
+            if isinstance(course.get("rawSchedule"), str)
+            and course["rawSchedule"].strip()
+        ),
+        "scheduledCourseCount": sum(1 for course in courses if course.get("schedule")),
+        "clockTimeCourseCount": sum(
+            1
+            for course in courses
+            if any(
+                isinstance(slot, dict)
+                and isinstance(slot.get("startTime"), str)
+                and slot["startTime"].strip()
+                and isinstance(slot.get("endTime"), str)
+                and slot["endTime"].strip()
+                for slot in (course.get("schedule") or [])
+            )
+        ),
         "gradingNonEmptyCount": len(grading_values),
         "gradingLabels": sorted(set(grading_values)),
         "structuredTextbookCount": sum(
