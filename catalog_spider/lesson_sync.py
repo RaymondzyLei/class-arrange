@@ -22,6 +22,7 @@ BASE_URL = "https://catalog.ustc.edu.cn"
 DETAIL_BATCH_SIZE = 50
 _TERM_ORDER = {"fall": 3, "summer": 2, "spring": 1}
 _DETAIL_RETRY_DELAYS = (1, 2, 4)
+_REPLACE_RETRY_DELAYS = (0.05, 0.1, 0.2, 0.4, 0.8, 1.6)
 _AUTH_TIMEOUT_SECONDS = 10 * 60
 _AUTH_POLL_SECONDS = 2
 _SEMESTER_KEY_PATTERN = re.compile(r"^[0-9]{4}-(?:fall|summer|spring)$")
@@ -33,6 +34,18 @@ class SyncError(RuntimeError):
     def __init__(self, message: str, *, status: int | None = None) -> None:
         super().__init__(message)
         self.status = status
+
+
+def _replace_with_retry(source: Path, destination: Path) -> None:
+    for attempt, delay in enumerate((0, *_REPLACE_RETRY_DELAYS)):
+        if delay:
+            time.sleep(delay)
+        try:
+            source.replace(destination)
+            return
+        except PermissionError:
+            if attempt == len(_REPLACE_RETRY_DELAYS):
+                raise
 
 
 @contextmanager
@@ -177,7 +190,7 @@ def write_json_atomic(path: Path, payload: object) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    temporary.replace(path)
+    _replace_with_retry(temporary, path)
 
 
 def _read_json(path: Path, *, default: object) -> object:
@@ -200,7 +213,7 @@ def _write_bytes_atomic(path: Path, payload: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".rollback.tmp")
     temporary.write_bytes(payload)
-    temporary.replace(path)
+    _replace_with_retry(temporary, path)
 
 
 def _restore_file_snapshot(root: Path, snapshot: dict[Path, bytes]) -> None:

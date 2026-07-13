@@ -294,6 +294,27 @@ def test_write_json_atomic_replaces_existing_file_with_deterministic_json(tmp_pa
     assert not target.with_suffix(".json.tmp").exists()
 
 
+def test_write_json_atomic_retries_transient_windows_file_lock(tmp_path, monkeypatch):
+    target = tmp_path / "payload.json"
+    target.write_text('{"stale": true}\n', encoding="utf-8")
+    original_replace = Path.replace
+    attempts = 0
+
+    def flaky_replace(source, destination):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("simulated Vite watcher lock")
+        return original_replace(source, destination)
+
+    monkeypatch.setattr(Path, "replace", flaky_replace)
+
+    write_json_atomic(target, {"fresh": True})
+
+    assert attempts == 2
+    assert json.loads(target.read_text(encoding="utf-8")) == {"fresh": True}
+
+
 def test_api_get_uses_authenticated_request_context():
     request = RecordingRequest([FakeResponse([{"id": 461}])])
 
