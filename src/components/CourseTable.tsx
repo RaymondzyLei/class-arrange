@@ -214,7 +214,9 @@ function buildEntries(
               teachers: formatTeacherList(group.teachers),
               credits: group.sections[0]?.credits ?? 0,
               weeksText: formatWeeks(slot.weeks),
-              periodsText: periods.join(','),
+              periodsText: slot.startTime && slot.endTime
+                ? `${slot.startTime}~${slot.endTime}`
+                : periods.join(','),
               room: group.sections.length > 1 ? '多班次' : slot.room,
               displayDay: date.weekday,
               start,

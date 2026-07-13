@@ -9,4 +9,8 @@ describe('CourseTable precise conflict marking', () => {
     expect(source).toContain('minuteIntervalsOverlap');
     expect(source).not.toContain('function periodOverlaps');
   });
+
+  it('shows exact clock times instead of the approximate grid period', () => {
+    expect(source).toContain("`${slot.startTime}~${slot.endTime}`");
+  });
 });
