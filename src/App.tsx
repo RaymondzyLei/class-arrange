@@ -379,6 +379,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               themeMode={themeMode}
               onOpenDetail={setDetailGroupKey}
               courseMap={courseMap}
+              groupsByCode={groupsByCode}
             />
           </div>
         </div>
@@ -439,6 +440,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         }
         open={!!detailGroup}
         onClose={() => setDetailGroupKey(null)}
+        allSelectedGroups={allSelectedGroups}
+        groupsByCode={groupsByCode}
       />
       <OnboardingWizard
         open={onboarding.stage === 'wizard'}

@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
-import { App, Button, Descriptions, Table, Tag, Typography } from 'antd';
+import { App, Button, Descriptions, Space, Table, Tag, Typography } from 'antd';
 import type { CourseDetail, CourseGroup } from '@/types';
 import { usePlans } from '@/store/plansContext';
+import {
+  conflictingCourseNamesForSelection,
+  idsForCourse,
+  idsForGroup,
+} from '@/utils/courseSelection';
 import { formatWeeks, expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
@@ -16,6 +21,8 @@ interface Props {
   detail?: CourseDetail;
   open: boolean;
   onClose: () => void;
+  allSelectedGroups: CourseGroup[];
+  groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
 interface ScheduleRow {
@@ -75,7 +82,14 @@ function formatClassLabels(classes: string[]): string {
   return classes.map((label) => label.replace(/\*+$/, '')).join('，');
 }
 
-export default function CourseDetailModal({ group, detail, open, onClose }: Props) {
+export default function CourseDetailModal({
+  group,
+  detail,
+  open,
+  onClose,
+  allSelectedGroups,
+  groupsByCode,
+}: Props) {
   const { activePlan, dispatch } = usePlans();
   const { message } = App.useApp();
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
@@ -98,7 +112,11 @@ export default function CourseDetailModal({ group, detail, open, onClose }: Prop
   const grading = displayDetail?.grading.trim() || rep?.grading.trim() || '—';
   const materialDisplay = formatCourseMaterialDisplay(displayDetail);
   const sectionLabel = sectionLabelForGroup(display);
-  const selected = display.sectionIds.every((id) => activePlan?.courseIds.includes(id));
+  const groupIds = idsForGroup(display);
+  const courseIds = idsForCourse(display.courseCode, groupsByCode);
+  const groupSelected = groupIds.every((id) => activePlan?.courseIds.includes(id));
+  const courseSelected = courseIds.length > 0
+    && courseIds.every((id) => activePlan?.courseIds.includes(id));
   const singleRating =
     display.sections.length === 1 ? getIcourseRatingInfo(display.sections[0].id) : undefined;
   const sortedSchedule = [...display.schedule].sort((a, b) =>
@@ -139,18 +157,36 @@ export default function CourseDetailModal({ group, detail, open, onClose }: Prop
     rating: getIcourseRatingInfo(s.id),
   } satisfies SectionRow));
 
-  const toggleSelected = () => {
+  const toggleSelected = (scope: 'group' | 'course') => {
     if (!activePlan) {
       message.warning('请先新建一个方案');
       return;
     }
+    const ids = scope === 'group' ? groupIds : courseIds;
+    if (ids.length === 0) return;
+    const selected = ids.every((id) => activePlan.courseIds.includes(id));
     if (selected) {
-      dispatch({ type: 'removeCourses', courseIds: display.sectionIds });
-      message.success(`已移除「${display.courseName}」`);
+      dispatch({ type: 'removeCourses', courseIds: ids });
+      message.success(scope === 'group'
+        ? `已移除「${display.courseName}」的此时间组`
+        : `已移除「${display.courseName}」的全部时间组`);
       return;
     }
-    dispatch({ type: 'addCourses', courseIds: display.sectionIds });
-    message.success(`已加入「${display.courseName}」`);
+    const targetGroups = scope === 'group'
+      ? [display]
+      : groupsByCode.get(display.courseCode) ?? [];
+    const conflictNames = conflictingCourseNamesForSelection(targetGroups, allSelectedGroups);
+    dispatch({ type: 'addCourses', courseIds: ids });
+    if (conflictNames.length > 0) {
+      const scopeLabel = scope === 'group' ? '此时间组' : '部分时间组';
+      message.warning(
+        `「${display.courseName}」的${scopeLabel}与已选课程存在时间冲突：${conflictNames.slice(0, 3).join('、')}（仍已选择）`,
+      );
+      return;
+    }
+    message.success(scope === 'group'
+      ? `已选择「${display.courseName}」的此时间组`
+      : `已选择「${display.courseName}」的全部时间组`);
   };
 
   return (
@@ -160,14 +196,26 @@ export default function CourseDetailModal({ group, detail, open, onClose }: Prop
       onClose={onClose}
       width={1180}
       actions={(
-        <Button
-          size="small"
-          type={selected ? 'primary' : 'default'}
-          danger={selected}
-          onClick={toggleSelected}
-        >
-          {selected ? '移除' : '加入'}
-        </Button>
+        <Space size={4} wrap className="course-selection-actions">
+          <Button
+            size="small"
+            type={groupSelected ? 'default' : 'primary'}
+            danger={groupSelected}
+            aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
+            onClick={() => toggleSelected('group')}
+          >
+            {groupSelected ? '移除此时间组' : '选择此时间组'}
+          </Button>
+          <Button
+            size="small"
+            type={courseSelected ? 'default' : 'primary'}
+            danger={courseSelected}
+            aria-label={`${courseSelected ? '移除全部时间组' : '选择全部时间组'}：${display.courseName}`}
+            onClick={() => toggleSelected('course')}
+          >
+            {courseSelected ? '移除全部时间组' : '选择全部时间组'}
+          </Button>
+        </Space>
       )}
     >
       <CourseDescriptionPanel

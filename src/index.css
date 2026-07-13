@@ -554,8 +554,21 @@ html {
 .pool-item__head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 6px;
+}
+
+.pool-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.pool-item__actions .ant-btn {
+  padding-inline: 6px;
 }
 
 .pool-item__name {
@@ -2687,6 +2700,10 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   margin-top: 10px;
 }
 
+.selected-courses-card__actions > .course-selection-actions {
+  width: 100%;
+}
+
 @media (max-width: 640px) {
   .curriculum-select-dropdown {
     left: 50% !important;
@@ -2717,6 +2734,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
     align-items: center;
     gap: 8px;
     padding: 16px 14px 10px;
+    flex-wrap: wrap;
   }
 
   .bottom-modal__title {
@@ -2726,7 +2744,23 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .bottom-modal__actions {
+    order: 3;
+    width: 100%;
     padding-top: 0;
+  }
+
+  .bottom-modal__actions .course-selection-actions {
+    width: 100%;
+  }
+
+  .bottom-modal__actions .course-selection-actions > .ant-space-item,
+  .selected-courses-card__actions .course-selection-actions > .ant-space-item {
+    flex: 1 1 120px;
+  }
+
+  .bottom-modal__actions .course-selection-actions .ant-btn,
+  .selected-courses-card__actions .course-selection-actions .ant-btn {
+    width: 100%;
   }
 
   .bottom-modal__body {
