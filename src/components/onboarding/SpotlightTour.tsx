@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import arrangementPreviewImage from '@/assets/onboarding/arrangement-preview.png';
 import { tourSteps, type TourPlacement, type TourStep } from '@/onboarding/tourSteps';
 import OnboardingConfirm from './OnboardingConfirm';
 import TourCard from './TourCard';
@@ -43,7 +44,6 @@ const CARD_GAP = 16;
 const DESKTOP_CARD_WIDTH = 360;
 const DEFAULT_CARD_HEIGHT = 220;
 const SIDE_PLACEMENTS: SidePlacement[] = ['right', 'bottom', 'left', 'top'];
-const ARRANGEMENT_PREVIEW_CONFLICTS = [4, 4, 4, 4, 6, 6];
 const ARRANGEMENT_PREVIEW_HEIGHT = 260;
 const FIRST_FLOAT_STEP_ID = tourSteps[0]?.entryAnimation === 'float' ? tourSteps[0].id : '';
 
@@ -216,7 +216,7 @@ function getArrangementPreviewRect(): SpotlightRect {
 function ArrangementPanelPreview({ rect }: { rect: SpotlightRect }) {
   return (
     <div
-      className="panel-inner arrangement-panel spotlight-tour__arrangement-preview"
+      className="spotlight-tour__arrangement-preview"
       data-tour="arrangement-preview"
       style={{
         top: rect.top,
@@ -225,24 +225,7 @@ function ArrangementPanelPreview({ rect }: { rect: SpotlightRect }) {
       }}
       aria-hidden="true"
     >
-      <div className="arrangement-panel__head">
-        <span className="arrangement-panel__title">排课方案</span>
-        <span className="arrangement-panel__sub">共 6 种方案</span>
-      </div>
-      <div className="arrangement-panel__list">
-        {ARRANGEMENT_PREVIEW_CONFLICTS.map((conflictCount, index) => (
-          <div
-            key={index}
-            className={`arrangement-card${index === 0 ? ' arrangement-card--applied' : ''}`}
-          >
-            <div className="arrangement-card__row">
-              <span className="arrangement-card__idx">#{index}</span>
-              <span className="arrangement-card__meta">6 门 · 16 学分</span>
-              <span className="spotlight-tour__arrangement-conflict">{conflictCount} 冲突</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <img src={arrangementPreviewImage} alt="" />
     </div>
   );
 }

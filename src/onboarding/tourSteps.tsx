@@ -33,7 +33,7 @@ export const tourSteps: TourStep[] = [
     id: 'arrangement-preview',
     target: '[data-tour="arrangement-preview"]',
     title: '了解排课方案',
-    description: '排课方案是基于当前“我的方案”自动生成的课表安排，会按冲突课程数从少到多排序，最多展示 8 种可选方案。“我的方案”是你保存的一组选课清单；“排课方案”是在这组选课里生成的不同时间组组合。',
+    description: '这里展示同一个“我的方案”生成的多种排课结果。系统会为已选课程尝试不同时间组组合，按冲突数和偏好排序，最多展示 8 种；点击任一方案即可切换右侧课表。',
     placement: 'right',
     preview: 'arrangementPanel',
   },

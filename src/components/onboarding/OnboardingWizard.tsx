@@ -95,6 +95,7 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
             <div className="onboarding-wizard__step">
               <p className="onboarding-wizard__eyebrow">基础偏好</p>
               <h2 id="onboarding-wizard-title" className="onboarding-wizard__title">选择使用偏好</h2>
+              <p className="onboarding-wizard__setting-note">稍后可在“自定义”中修改设置</p>
               <div className="onboarding-wizard__calculation-mode">
                 <p>排课计算方式</p>
                 <CalculationModePicker
