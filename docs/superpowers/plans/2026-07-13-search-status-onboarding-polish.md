@@ -13,7 +13,6 @@
 - Dirty and ready states must display exactly `课程或偏好已变更。` and `当前课表来自最近一次成功计算。`.
 - The semester chevron must remain visible while a semester is loading.
 - Remove all result-count UI and its `resultCount` prop; place `查询任课老师` to the right of the search input.
-- Render `CalculationStatus` and `FilterBar` inside one `course-search-controls` panel with a single divider.
 - Add `稍后可在“自定义”中修改设置` below the onboarding preference title.
 - Tour step 2/11 must use a real PNG with multiple arrangement cards.
 - Preserve `.codex-temp/` without modification.
@@ -119,8 +118,6 @@ Expected: FAIL because the count renders and the checkbox is in the controls gri
 - [ ] **Step 3: Move the checkbox and remove the count chain**
 
 Move the existing checkbox immediately after `<Input />`, delete the count span and prop, and remove `resultCount={filteredGroups.length}` from `App.tsx`.
-
-Move `CalculationStatus` into the same `panel-inner course-search-controls` wrapper as `FilterBar`; remove `panel-inner` from the FilterBar root and keep only the status bottom border as the internal divider.
 
 Use:
 

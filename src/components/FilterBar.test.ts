@@ -29,13 +29,6 @@ const options = {
 };
 
 describe('FilterBar search row', () => {
-  it('shares one panel with the calculation status', () => {
-    expect(appSource).toMatch(
-      /className="panel-inner course-search-controls no-print"[\s\S]*<CalculationStatus[\s\S]*<FilterBar/,
-    );
-    expect(filterBarSource).not.toContain('panel-inner filter-bar');
-  });
-
   it('places teacher search beside the input and removes result counts', () => {
     const html = renderToStaticMarkup(createElement(FilterBar, {
       filter,

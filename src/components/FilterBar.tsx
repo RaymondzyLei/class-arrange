@@ -13,7 +13,7 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
 
   return (
-    <div className="filter-bar" data-tour="filters">
+    <div className="panel-inner filter-bar no-print" data-tour="filters">
       <div className="filter-bar__search" data-tour="course-search">
         <Input
           placeholder={filter.includeTeacher ? '搜索课程名 / 课堂号 / 教师' : '搜索课程名 / 课堂号'}

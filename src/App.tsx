@@ -350,6 +350,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             />
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
+          <CalculationStatus
+            phase={calculation.phase}
+            mode={calculation.draft.settings.calculationMode}
+            hasSnapshot={calculation.hasSnapshot}
+            actionLabel={calculation.actionLabel}
+            error={calculation.error}
+            onCalculate={calculation.startCalculation}
+          />
           {arrangements.length > 1 && (
             <ArrangementPanel
               arrangements={arrangements}
@@ -358,21 +366,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             />
           )}
           <div className="course-search-tour-target" data-tour="course-search-area">
-            <div className="panel-inner course-search-controls no-print">
-              <CalculationStatus
-                phase={calculation.phase}
-                mode={calculation.draft.settings.calculationMode}
-                hasSnapshot={calculation.hasSnapshot}
-                actionLabel={calculation.actionLabel}
-                error={calculation.error}
-                onCalculate={calculation.startCalculation}
-              />
-              <FilterBar
-                filter={filter}
-                setFilter={setFilter}
-                options={filterOptions}
-              />
-            </div>
+            <FilterBar
+              filter={filter}
+              setFilter={setFilter}
+              options={filterOptions}
+            />
             <CoursePool
               groups={filteredGroups}
               selectedIds={selectedIds}

@@ -433,10 +433,6 @@ html {
   gap: 8px;
 }
 
-.course-search-controls {
-  flex: 0 0 auto;
-}
-
 .filter-bar__search:focus-within {
   box-shadow: 0 0 0 3px var(--accent-soft);
   border-radius: var(--radius-md);
@@ -3240,6 +3236,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   align-items: center;
   gap: 10px;
   padding: 10px 18px;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
 }
