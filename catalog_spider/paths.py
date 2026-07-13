@@ -7,10 +7,15 @@
 """
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = Path(__file__).parent / "data"
 RAW_DIR = DATA_ROOT / "raw"
 RAW_PROGRAMS_DIR = RAW_DIR / "programs"
+RAW_LESSONS_DIR = RAW_DIR / "lessons"
+BROWSER_PROFILE_DIR = DATA_ROOT / "browser-profile"
 INDEX_DIR = DATA_ROOT / "index"
+PUBLIC_SEMESTERS_DIR = PROJECT_ROOT / "public" / "data" / "semesters"
+SEMESTER_MANIFEST_PATH = PUBLIC_SEMESTERS_DIR / "index.json"
 
 
 def ensure_dirs() -> None:

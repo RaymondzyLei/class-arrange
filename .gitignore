@@ -29,3 +29,7 @@ initial.png
 # Logs
 *.log
 .claude/
+
+# Catalog login profile and resumable raw lesson responses
+catalog_spider/data/browser-profile/
+catalog_spider/data/raw/lessons/
