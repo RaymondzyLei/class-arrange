@@ -38,10 +38,9 @@ export default function SemesterDropdown({
         className="course-table__semester-toggle"
         aria-label="选择学期"
         aria-expanded={open}
-        loading={loading}
-        icon={!loading ? (
-          <ChevronIcon className={`select-chevron${open ? ' select-chevron--open' : ''}`} />
-        ) : undefined}
+        aria-busy={loading}
+        disabled={loading}
+        icon={<ChevronIcon className={`select-chevron${open ? ' select-chevron--open' : ''}`} />}
       />
     </Dropdown>
   );
