@@ -8,7 +8,12 @@ USTC 教务系统培养方案爬虫 + 前端数据生成。
 - `GET /api/teach/program/tree` — 全量目录（1184 个；本项目只取 grade≥2023 的 494 个）
 - `GET /api/teach/program/info/{id}` — 单个培养方案完整数据（递归 moduleTree，含课程清单）
 
-无鉴权；服务器对默认 `python-requests` UA 返回 502，已在 client 内置浏览器 UA。
+> **鉴权说明（2026-07 校验）**：早期 `program/tree` / `program/info` 确实可匿名访问，但当前教务系统已收紧——
+> 从校园网外用零 cookie 的裸请求探测，`program/tree`、`semester/list` 等接口一律返回 **401**（空响应体、无重定向），
+> 排除了 UA / `Referer` / `Accept` 等因素。`catalog.ustc.edu.cn` 走 USTC 统一身份认证（CAS/SSO）：
+> 在浏览器里"不用登录就能查信息"，是因为浏览器带着尚未过期的 SSO cookie；脱离会话的请求必须先取得登录态。
+> 因此 `lesson_sync.py` 用 Playwright 启动持久化浏览器完成一次登录，后续 API 调用复用同一 profile 的 cookie。
+> 仅 `client.py`（培养方案裸爬）仍保留浏览器 UA，规避历史 502，但它不再保证匿名可访问——需登录或校内网络环境。
 
 ---
 
