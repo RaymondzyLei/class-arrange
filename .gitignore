@@ -33,3 +33,7 @@ initial.png
 # Catalog login profile and resumable raw lesson responses
 catalog_spider/data/browser-profile/
 catalog_spider/data/raw/lessons/
+
+# AI 工作流产物（superpowers 技能生成的 plans / specs / SDD 报告），不入 git
+.superpowers/
+docs/superpowers/
