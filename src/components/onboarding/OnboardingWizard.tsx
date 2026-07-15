@@ -21,7 +21,7 @@ interface PreferenceOption {
   title: string;
 }
 
-const PREFERENCE_OPTIONS: PreferenceOption[] = [
+const ARRANGEMENT_PREFERENCE_OPTIONS: PreferenceOption[] = [
   {
     key: 'preferAvoidCampusTransfers',
     title: '优先避免跨校区',
@@ -70,7 +70,10 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
 
   if (!open || typeof document === 'undefined') return null;
 
-  const updatePreference = (key: PreferenceOption['key'], checked: boolean) => {
+  const updatePreference = (
+    key: PreferenceOption['key'] | 'showUpdatePopup',
+    checked: boolean,
+  ) => {
     setDraft((current) => ({ ...current, [key]: checked }));
   };
 
@@ -102,37 +105,53 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
               <p className="onboarding-wizard__eyebrow">基础偏好</p>
               <h2 id="onboarding-wizard-title" className="onboarding-wizard__title">选择使用偏好</h2>
               <p className="onboarding-wizard__setting-note">稍后可在“自定义”中修改设置</p>
-              <div className="onboarding-wizard__calculation-mode">
-                <p>排课计算方式</p>
-                <CalculationModePicker
-                  value={draft.calculationMode}
-                  onChange={(calculationMode) => setDraft((current) => ({
-                    ...current,
-                    calculationMode,
-                  }))}
-                />
-              </div>
-              <div className="onboarding-wizard__preferences">
-                {PREFERENCE_OPTIONS.map((option) => (
-                  <PreferenceSwitch
-                    key={option.key}
-                    checked={draft[option.key]}
-                    title={option.title}
-                    onChange={(checked) => updatePreference(option.key, checked)}
-                  />
-                ))}
-                <div className="onboarding-wizard__resident-campus">
-                  <span>常驻地点</span>
-                  <SelectWithChevron
-                    aria-label="常驻地点"
-                    className="onboarding-wizard__resident-select"
-                    value={draft.residentCampus}
-                    options={RESIDENT_CAMPUS_OPTIONS.map((option) => ({ ...option }))}
-                    disabled={!draft.preferAvoidCampusTransfers}
-                    onChange={(residentCampus) => setDraft((current) => ({
+              <div className="onboarding-wizard__preference-group">
+                <p className="onboarding-wizard__group-label">排课偏好设置</p>
+                <div className="onboarding-wizard__calculation-mode">
+                  <p>排课计算方式</p>
+                  <CalculationModePicker
+                    value={draft.calculationMode}
+                    onChange={(calculationMode) => setDraft((current) => ({
                       ...current,
-                      residentCampus,
+                      calculationMode,
                     }))}
+                  />
+                </div>
+                <div className="onboarding-wizard__preferences">
+                  {ARRANGEMENT_PREFERENCE_OPTIONS.map((option) => (
+                    <div className="onboarding-wizard__preference-item" key={option.key}>
+                      <PreferenceSwitch
+                        checked={draft[option.key]}
+                        title={option.title}
+                        onChange={(checked) => updatePreference(option.key, checked)}
+                      />
+                      {option.key === 'preferAvoidCampusTransfers' ? (
+                        <div className="onboarding-wizard__resident-campus">
+                          <span>常驻地点</span>
+                          <SelectWithChevron
+                            aria-label="常驻地点"
+                            className="onboarding-wizard__resident-select"
+                            value={draft.residentCampus}
+                            options={RESIDENT_CAMPUS_OPTIONS.map((campusOption) => ({ ...campusOption }))}
+                            disabled={!draft.preferAvoidCampusTransfers}
+                            onChange={(residentCampus) => setDraft((current) => ({
+                              ...current,
+                              residentCampus,
+                            }))}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="onboarding-wizard__preference-group">
+                <p className="onboarding-wizard__group-label">更新设置</p>
+                <div className="onboarding-wizard__preferences">
+                  <PreferenceSwitch
+                    checked={draft.showUpdatePopup}
+                    title="有网站或课程更新时显示更新内容"
+                    onChange={(checked) => updatePreference('showUpdatePopup', checked)}
                   />
                 </div>
               </div>

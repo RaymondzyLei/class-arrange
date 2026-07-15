@@ -7,6 +7,7 @@ interface Props {
   title: ReactNode;
   children: ReactNode;
   onClose: () => void;
+  afterClose?: () => void;
   className?: string;
   width?: number;
   titleExtra?: ReactNode;
@@ -20,6 +21,7 @@ export default function BottomModal({
   title,
   children,
   onClose,
+  afterClose,
   className,
   width = 720,
   titleExtra,
@@ -64,8 +66,10 @@ export default function BottomModal({
         role="dialog"
         aria-modal="true"
         aria-label={typeof title === 'string' ? title : undefined}
-        onAnimationEnd={() => {
-          if (!open) setPresent(false);
+        onAnimationEnd={(event) => {
+          if (open || event.target !== event.currentTarget) return;
+          setPresent(false);
+          afterClose?.();
         }}
       >
         <div className="bottom-modal__header">

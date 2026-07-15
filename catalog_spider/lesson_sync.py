@@ -9,6 +9,7 @@ import re
 import time
 from typing import Callable
 
+from .course_updates import build_catalog_publication, catalog_revision
 from .lesson_transform import (
     build_semester_catalog,
     semester_key,
@@ -278,6 +279,21 @@ def _publish_json_transaction(root: Path, outputs: dict[Path, object]) -> None:
         raise
 
 
+def _prepare_catalog_publication(
+    public_semesters_dir: Path,
+    catalog: dict,
+) -> tuple[dict, dict]:
+    key = catalog["semester"]["key"]
+    semester_dir = public_semesters_dir / key
+    previous_catalog = _read_json(semester_dir / "courses.json", default=None)
+    if previous_catalog is not None and not isinstance(previous_catalog, dict):
+        raise SyncError(f"published catalog must be an object: {key}")
+    existing_feed = _read_json(semester_dir / "updates.json", default=None)
+    if existing_feed is not None and not isinstance(existing_feed, dict):
+        raise SyncError(f"course update feed must be an object: {key}")
+    return build_catalog_publication(previous_catalog, catalog, existing_feed)
+
+
 def _detail_batch_with_retry(
     request,
     codes: list[str],
@@ -440,20 +456,26 @@ def sync_requested_semesters(
 
     manifest = current_manifest
     outputs: dict[Path, object] = {}
+    published_catalogs = []
     for catalog in catalogs:
-        key = catalog["semester"]["key"]
-        name = catalog["semester"]["name"]
+        published, feed = _prepare_catalog_publication(public_semesters_dir, catalog)
+        key = published["semester"]["key"]
+        name = published["semester"]["name"]
         manifest = build_manifest(
             manifest,
             key,
             name,
             activate=activate == name,
+            revision=published["revision"],
+            updates_file=f"{key}/updates.json",
         )
-        outputs[public_semesters_dir / key / "courses.json"] = catalog
+        outputs[public_semesters_dir / key / "courses.json"] = published
+        outputs[public_semesters_dir / key / "updates.json"] = feed
+        published_catalogs.append(published)
     outputs[manifest_path] = manifest
     _publish_json_transaction(public_semesters_dir, outputs)
 
-    return catalogs
+    return published_catalogs
 
 
 def build_requested_semesters(
@@ -523,18 +545,24 @@ def build_requested_semesters(
 
     manifest = current_manifest
     outputs: dict[Path, object] = {}
+    published_catalogs = []
     for catalog in catalogs:
-        key = catalog["semester"]["key"]
+        published, feed = _prepare_catalog_publication(public_semesters_dir, catalog)
+        key = published["semester"]["key"]
         manifest = build_manifest(
             manifest,
             key,
-            catalog["semester"]["name"],
+            published["semester"]["name"],
             activate=activate == key,
+            revision=published["revision"],
+            updates_file=f"{key}/updates.json",
         )
-        outputs[public_semesters_dir / key / "courses.json"] = catalog
+        outputs[public_semesters_dir / key / "courses.json"] = published
+        outputs[public_semesters_dir / key / "updates.json"] = feed
+        published_catalogs.append(published)
     outputs[manifest_path] = manifest
     _publish_json_transaction(public_semesters_dir, outputs)
-    return catalogs
+    return published_catalogs
 
 
 def catalog_statistics(catalog: dict) -> dict:
@@ -604,17 +632,24 @@ def validate_published_catalogs(
             manifest.get("semesters"), list
         ):
             raise SyncError("semester manifest must contain a semesters array")
-        relative_files: list[str] = []
+        manifest_entries: list[dict] = []
         for entry in manifest["semesters"]:
-            if not isinstance(entry, dict) or not isinstance(entry.get("file"), str):
+            if (
+                not isinstance(entry, dict)
+                or not isinstance(entry.get("key"), str)
+                or not isinstance(entry.get("file"), str)
+                or not isinstance(entry.get("revision"), str)
+                or not isinstance(entry.get("updatesFile"), str)
+            ):
                 raise SyncError("semester manifest contains an invalid entry")
-            relative_files.append(entry["file"])
+            manifest_entries.append(entry)
     else:
-        relative_files = [f"{semester_key_value}/courses.json"]
+        manifest_entries = [{"file": f"{semester_key_value}/courses.json"}]
 
     root = public_semesters_dir.resolve()
     statistics: list[dict] = []
-    for relative_file in relative_files:
+    for manifest_entry in manifest_entries:
+        relative_file = manifest_entry["file"]
         catalog_path = (public_semesters_dir / relative_file).resolve()
         if not catalog_path.is_relative_to(root):
             raise SyncError(f"catalog file escapes semester directory: {relative_file}")
@@ -622,6 +657,48 @@ def validate_published_catalogs(
         if not isinstance(catalog, dict):
             raise SyncError(f"catalog must be an object: {relative_file}")
         validate_semester_catalog(catalog)
+        if all_semesters:
+            expected_revision = manifest_entry["revision"]
+            if (
+                catalog.get("revision") != expected_revision
+                or catalog_revision(catalog) != expected_revision
+            ):
+                raise SyncError(
+                    f"catalog revision does not match manifest: {relative_file}"
+                )
+            updates_file = manifest_entry["updatesFile"]
+            updates_path = (public_semesters_dir / updates_file).resolve()
+            if not updates_path.is_relative_to(root):
+                raise SyncError(
+                    f"update feed escapes semester directory: {updates_file}"
+                )
+            feed = _read_json(updates_path, default=None)
+            if (
+                not isinstance(feed, dict)
+                or feed.get("schemaVersion") != 1
+                or feed.get("semesterKey") != manifest_entry["key"]
+                or not isinstance(feed.get("entries"), list)
+            ):
+                raise SyncError(f"course update feed is invalid: {updates_file}")
+            if feed.get("currentRevision") != expected_revision:
+                raise SyncError(
+                    f"update feed revision does not match manifest: {updates_file}"
+                )
+            entry_ids = [
+                entry.get("id")
+                for entry in feed["entries"]
+                if isinstance(entry, dict)
+            ]
+            if (
+                len(entry_ids) != len(feed["entries"])
+                or any(not isinstance(entry_id, str) or not entry_id for entry_id in entry_ids)
+                or len(entry_ids) != len(set(entry_ids))
+            ):
+                raise SyncError(f"course update feed entries are invalid: {updates_file}")
+            if feed["entries"] and feed["entries"][-1].get("revision") != expected_revision:
+                raise SyncError(
+                    f"update feed latest entry does not match manifest: {updates_file}"
+                )
         statistics.append(catalog_statistics(catalog))
     return statistics
 
@@ -637,6 +714,8 @@ def build_manifest(
     name: str,
     *,
     activate: bool,
+    revision: str | None = None,
+    updates_file: str | None = None,
 ) -> dict:
     """Return a manifest containing an updated semester entry."""
 
@@ -645,7 +724,12 @@ def build_manifest(
         entry["key"]: dict(entry)
         for entry in current.get("semesters", [])
     }
-    entries[key] = {"key": key, "name": name, "file": f"{key}/courses.json"}
+    entry = {"key": key, "name": name, "file": f"{key}/courses.json"}
+    if revision is not None:
+        entry["revision"] = revision
+    if updates_file is not None:
+        entry["updatesFile"] = updates_file
+    entries[key] = entry
     default_semester = key if activate else current.get("defaultSemester", key)
     return {
         "schemaVersion": 1,

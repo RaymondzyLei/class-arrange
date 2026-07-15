@@ -7,7 +7,13 @@ import { computeStats } from '@/utils/stats';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
 import { pickDefaultArrangement } from '@/utils/arrangement';
-import type { Arrangement, CourseGroup, FilterState } from '@/types';
+import type {
+  Arrangement,
+  CourseGroup,
+  CourseImpactEvent,
+  FilterState,
+  SelectedCourseSnapshot,
+} from '@/types';
 import PlanSwitcher from '@/components/PlanSwitcher';
 import FilterBar from '@/components/FilterBar';
 import CoursePool from '@/components/CoursePool';
@@ -44,6 +50,10 @@ import {
   type CustomScheduleSettings,
 } from '@/utils/customization';
 import { resolveSelectedArrangementId } from '@/utils/arrangementCalculationState';
+import { useUpdateAwareness } from '@/updates/UpdateAwarenessContext';
+import UpdateNoticeModal from '@/components/UpdateNoticeModal';
+import UpdateHistoryModal from '@/components/UpdateHistoryModal';
+import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -132,7 +142,8 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 }
 
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
-  const { activePlan } = usePlans();
+  const { state: plansState, activePlan, dispatch } = usePlans();
+  const updateAwareness = useUpdateAwareness();
   const {
     manifest,
     catalog,
@@ -156,14 +167,25 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [updateHistoryOpen, setUpdateHistoryOpen] = useState(false);
   const [customSettings, setCustomSettings] = useState<CustomScheduleSettings>(
     readCustomScheduleSettings,
   );
   const onboarding = useOnboarding();
+  const [automaticNoticeOpen, setAutomaticNoticeOpen] = useState(false);
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
   const filteredGroups = useFilteredCourses(courses, groups, filter);
+
+  useEffect(() => {
+    if (!updateAwareness.automaticNotice || onboarding.stage !== 'hidden') {
+      setAutomaticNoticeOpen(false);
+      return undefined;
+    }
+    const frame = window.requestAnimationFrame(() => setAutomaticNoticeOpen(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, [onboarding.stage, updateAwareness.automaticNotice]);
 
   // 已选 sections → CourseGroup[]（按 groupKey 聚合）
   const allSelectedGroups = useMemo<CourseGroup[]>(() => {
@@ -303,6 +325,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       preferAvoidCampusTransfers: preferences.preferAvoidCampusTransfers,
       residentCampus: preferences.residentCampus,
     }));
+    updateAwareness.setShowUpdatePopup(preferences.showUpdatePopup);
     message.success('排课倾向已同步到自定义设置');
     onboarding.finishWizard(preferences, startTour);
   };
@@ -311,6 +334,57 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(null);
     setCustomizationOpen(false);
     window.setTimeout(() => onboarding.startTour(), 220);
+  };
+
+  const handleOpenUpdateHistory = () => {
+    setUpdateHistoryOpen(true);
+    void updateAwareness.loadFullHistory();
+  };
+
+  const handleSelectReplacement = (
+    event: CourseImpactEvent,
+    candidate: SelectedCourseSnapshot,
+  ) => {
+    const affectedPlanIds = new Set(event.affectedPlans.map((plan) => plan.planId));
+    const applyToPlans = (state: typeof plansState) => ({
+      ...state,
+      plans: state.plans.map((plan) => {
+        if (!affectedPlanIds.has(plan.id) || plan.courseIds.includes(candidate.id)) return plan;
+        return {
+          ...plan,
+          updatedAt: Date.now(),
+          courseIds: [...plan.courseIds, candidate.id],
+        };
+      }),
+    });
+
+    if (event.semesterKey === catalog.semester.key) {
+      if (!courseMap.has(candidate.id)) {
+        message.warning('该候选课堂已不在当前课程目录中');
+        return;
+      }
+      dispatch({ type: 'init', payload: applyToPlans(plansState) });
+      message.success(`已将 ${candidate.id} 加入受影响方案`);
+      return;
+    }
+
+    const stored = loadPlansPayload(event.semesterKey, {
+      defaultSemester: manifest.defaultSemester,
+    });
+    if (!stored) {
+      message.warning('未找到该学期的本地方案');
+      return;
+    }
+    const nextState = applyToPlans(stored.state);
+    savePlansPayload(event.semesterKey, {
+      ...stored,
+      state: nextState,
+      selectedSnapshots: {
+        ...stored.selectedSnapshots,
+        [candidate.id]: candidate,
+      },
+    });
+    message.success(`已将 ${candidate.id} 加入该学期的受影响方案`);
   };
 
   const handleTourStepAction = useCallback((action: NonNullable<TourStep['action']>) => {
@@ -444,6 +518,27 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onChange={setCustomSettings}
         onClose={() => setCustomizationOpen(false)}
         onRestartOnboarding={handleRestartOnboarding}
+        showUpdatePopup={updateAwareness.preferences.showUpdatePopup}
+        onShowUpdatePopupChange={updateAwareness.setShowUpdatePopup}
+        onOpenUpdateHistory={handleOpenUpdateHistory}
+      />
+      {updateAwareness.automaticNotice ? (
+        <UpdateNoticeModal
+          open={automaticNoticeOpen}
+          notice={updateAwareness.automaticNotice}
+          onClose={() => setAutomaticNoticeOpen(false)}
+          afterClose={updateAwareness.acknowledgeAutomaticNotice}
+          onSelectReplacement={handleSelectReplacement}
+        />
+      ) : null}
+      <UpdateHistoryModal
+        open={updateHistoryOpen}
+        loading={updateAwareness.history.loading}
+        failedSemesterKeys={updateAwareness.history.failedSemesterKeys}
+        appReleases={updateAwareness.history.appReleases}
+        impacts={updateAwareness.history.impacts}
+        semesters={updateAwareness.history.semesters}
+        onClose={() => setUpdateHistoryOpen(false)}
       />
       <CourseDetailModal
         group={detailGroup}
@@ -476,7 +571,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
 export default function App() {
   const { catalog, courseMap, manifest } = useSemesterCatalog();
-  const validCourseIds = useMemo(() => new Set(courseMap.keys()), [courseMap]);
   const [themeMode, setThemeMode] = useState<Theme>(readInitialTheme);
   const activeThemeTransitionRef = useRef<ReturnType<Document['startViewTransition']> | null>(null);
 
@@ -571,7 +665,8 @@ export default function App() {
           key={catalog.semester.key}
           semesterKey={catalog.semester.key}
           defaultSemesterKey={manifest.defaultSemester}
-          validCourseIds={validCourseIds}
+          courseMap={courseMap}
+          catalogRevision={catalog.revision}
         >
           <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
         </PlansProvider>

@@ -149,6 +149,8 @@ export interface SemesterManifestEntry {
   key: string;
   name: string;
   file: string;
+  revision: string;
+  updatesFile: string;
 }
 
 export interface SemesterManifest {
@@ -159,6 +161,7 @@ export interface SemesterManifest {
 
 export interface SemesterCatalog {
   schemaVersion: 1;
+  revision: string;
   generatedAt: string;
   source: {
     url: string;
@@ -173,6 +176,79 @@ export interface SemesterCatalog {
   };
   courses: CourseSection[];
   detailsBySection: Record<string, CourseDetail>;
+}
+
+export interface SelectedCourseSnapshot {
+  id: string;
+  courseCode: string;
+  courseName: string;
+  teacher: string;
+  schedule: ScheduleSlot[];
+}
+
+export interface CourseChangeIdentity {
+  id: string;
+  courseCode: string;
+  courseName: string;
+  teacher: string;
+}
+
+export interface CourseFieldChange {
+  field: string;
+  label: string;
+  before?: unknown;
+  after?: unknown;
+}
+
+export interface RemovedCourseChange {
+  course: SelectedCourseSnapshot;
+  replacementCandidates: SelectedCourseSnapshot[];
+}
+
+export interface ModifiedCourseChange {
+  course: CourseChangeIdentity;
+  previous: SelectedCourseSnapshot;
+  current: SelectedCourseSnapshot;
+  changes: CourseFieldChange[];
+}
+
+export interface SemesterUpdateBatch {
+  id: string;
+  revision: string;
+  previousRevision: string;
+  publishedAt: string;
+  summary: { added: number; removed: number; modified: number };
+  added: SelectedCourseSnapshot[];
+  removed: RemovedCourseChange[];
+  modified: ModifiedCourseChange[];
+}
+
+export interface SemesterUpdateFeed {
+  schemaVersion: 1;
+  semesterKey: string;
+  currentRevision: string;
+  entries: SemesterUpdateBatch[];
+}
+
+export interface AffectedPlanImpact {
+  planId: string;
+  planName: string;
+  wasActive: boolean;
+}
+
+export interface CourseImpactEvent {
+  id: string;
+  semesterKey: string;
+  revision: string;
+  kind: 'removed' | 'modified';
+  courseId: string;
+  courseName: string;
+  occurredAt: string;
+  affectedPlans: AffectedPlanImpact[];
+  previous: SelectedCourseSnapshot;
+  current?: SelectedCourseSnapshot;
+  changes: CourseFieldChange[];
+  replacementCandidates: SelectedCourseSnapshot[];
 }
 
 /** 排课方案：用户已选 groups 的一个具体"每个 courseCode 取一个 group"的组合 */

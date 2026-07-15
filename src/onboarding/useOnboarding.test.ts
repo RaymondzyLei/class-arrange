@@ -23,10 +23,12 @@ describe('onboarding calculation-mode persistence', () => {
     expect(DEFAULT_ONBOARDING_PREFERENCES).toMatchObject({
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
+      showUpdatePopup: true,
     });
     expect(preferences).toMatchObject({
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
+      showUpdatePopup: true,
     });
   });
 
@@ -66,6 +68,13 @@ describe('onboarding calculation-mode persistence', () => {
       preferFewerEarlyMornings: false,
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
+      showUpdatePopup: true,
     });
+  });
+
+  it('preserves the update-popup preference when explicitly disabled', () => {
+    expect(parseOnboardingStorage(JSON.stringify({
+      preferences: { showUpdatePopup: false },
+    })).preferences.showUpdatePopup).toBe(false);
   });
 });

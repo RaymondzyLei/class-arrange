@@ -432,6 +432,37 @@ def test_sync_requested_semesters_publishes_complete_valid_catalog(
     assert result == [catalog]
 
 
+def test_sync_publishes_matching_catalog_revision_manifest_and_update_feed(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    semester, lessons, details = lesson_api_fixtures
+    request = LessonRequest([semester], lessons, [FakeResponse(details)])
+    public_root = tmp_path / "public" / "data" / "semesters"
+
+    sync_requested_semesters(
+        request,
+        [semester["nameZh"]],
+        activate=semester["nameZh"],
+        raw_lessons_dir=tmp_path / "raw",
+        public_semesters_dir=public_root,
+        calendar_overrides={},
+    )
+
+    catalog = json.loads(
+        (public_root / "2026-fall" / "courses.json").read_text(encoding="utf-8")
+    )
+    feed = json.loads(
+        (public_root / "2026-fall" / "updates.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads((public_root / "index.json").read_text(encoding="utf-8"))
+    entry = manifest["semesters"][0]
+
+    assert entry["revision"] == catalog["revision"] == feed["currentRevision"]
+    assert entry["updatesFile"] == "2026-fall/updates.json"
+    assert feed["entries"] == []
+
+
 def test_sync_retries_slow_lesson_list_once_with_extended_timeout(
     tmp_path,
     lesson_api_fixtures,
@@ -1092,7 +1123,10 @@ def test_validate_published_catalogs_all_uses_manifest_files(
         {detail["code"]: detail for detail in details},
         {},
     )
+    from catalog_spider.course_updates import build_catalog_publication
+    catalog, feed = build_catalog_publication(None, catalog, None)
     write_json_atomic(tmp_path / "2026-fall" / "courses.json", catalog)
+    write_json_atomic(tmp_path / "2026-fall" / "updates.json", feed)
     write_json_atomic(
         tmp_path / "index.json",
         {
@@ -1103,6 +1137,8 @@ def test_validate_published_catalogs_all_uses_manifest_files(
                     "key": "2026-fall",
                     "name": "2026年秋季学期",
                     "file": "2026-fall/courses.json",
+                    "revision": catalog["revision"],
+                    "updatesFile": "2026-fall/updates.json",
                 }
             ],
         },
@@ -1112,6 +1148,46 @@ def test_validate_published_catalogs_all_uses_manifest_files(
 
     assert stats[0]["semesterKey"] == "2026-fall"
     assert stats[0]["courseCount"] == 2
+
+
+def test_validate_published_catalogs_rejects_mismatched_update_revision(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    semester, lessons, details = lesson_api_fixtures
+    from catalog_spider.course_updates import build_catalog_publication
+    from catalog_spider.lesson_transform import build_semester_catalog
+
+    catalog, feed = build_catalog_publication(
+        None,
+        build_semester_catalog(
+            semester,
+            lessons,
+            {detail["code"]: detail for detail in details},
+            {},
+        ),
+        None,
+    )
+    feed["currentRevision"] = "wrong"
+    write_json_atomic(tmp_path / "2026-fall" / "courses.json", catalog)
+    write_json_atomic(tmp_path / "2026-fall" / "updates.json", feed)
+    write_json_atomic(
+        tmp_path / "index.json",
+        {
+            "schemaVersion": 1,
+            "defaultSemester": "2026-fall",
+            "semesters": [{
+                "key": "2026-fall",
+                "name": "2026年秋季学期",
+                "file": "2026-fall/courses.json",
+                "revision": catalog["revision"],
+                "updatesFile": "2026-fall/updates.json",
+            }],
+        },
+    )
+
+    with pytest.raises(SyncError, match="update feed revision"):
+        validate_published_catalogs(tmp_path, all_semesters=True)
 
 
 def test_validate_published_catalogs_by_key_calls_catalog_validator(

@@ -6,6 +6,7 @@ const customizationSource = readFileSync(new URL('../CustomizationModal.tsx', im
 const spotlightSource = readFileSync(new URL('./SpotlightTour.tsx', import.meta.url), 'utf8');
 const tourStepsSource = readFileSync(new URL('../../onboarding/tourSteps.tsx', import.meta.url), 'utf8');
 const selectSource = readFileSync(new URL('../SelectWithChevron.tsx', import.meta.url), 'utf8');
+const onboardingStylesSource = readFileSync(new URL('./onboarding.css', import.meta.url), 'utf8');
 
 describe('onboarding content', () => {
   it('explains where preferences can be changed later', () => {
@@ -21,6 +22,40 @@ describe('onboarding content', () => {
     }
     expect(wizardSource).toContain('disabled={!draft.preferAvoidCampusTransfers}');
     expect(customizationSource).toContain('disabled={!settings.preferAvoidCampusTransfers}');
+  });
+
+  it('separates arrangement preferences from the update preference in the first-run wizard', () => {
+    expect(wizardSource).toContain('排课偏好设置');
+    expect(wizardSource).toContain('更新设置');
+    expect(wizardSource.match(/onboarding-wizard__preference-group/g)).toHaveLength(2);
+
+    const arrangementHeading = wizardSource.indexOf('排课偏好设置');
+    const updateHeading = wizardSource.indexOf('更新设置');
+    const updateSwitch = wizardSource.indexOf('checked={draft.showUpdatePopup}');
+    expect(arrangementHeading).toBeGreaterThan(-1);
+    expect(updateHeading).toBeGreaterThan(arrangementHeading);
+    expect(updateSwitch).toBeGreaterThan(updateHeading);
+  });
+
+  it('visually distinguishes preference group headings from the calculation-mode label', () => {
+    const groupHeadingStyles = onboardingStylesSource.match(/\.onboarding-wizard__group-label\s*\{([^}]*)\}/)?.[1] ?? '';
+    const calculationLabelStyles = onboardingStylesSource.match(/\.onboarding-wizard__calculation-mode > p\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(groupHeadingStyles).toContain('color: var(--text)');
+    expect(groupHeadingStyles).toContain('font-size: 15px');
+    expect(groupHeadingStyles).toContain('font-weight: 700');
+    expect(calculationLabelStyles).toContain('color: var(--text-sub)');
+    expect(calculationLabelStyles).toContain('font-size: 12px');
+    expect(calculationLabelStyles).toContain('font-weight: 500');
+  });
+
+  it('keeps preference groups separated by whitespace without a horizontal rule', () => {
+    const groupSeparationStyles = onboardingStylesSource.match(
+      /\.onboarding-wizard__preference-group \+ \.onboarding-wizard__preference-group\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+
+    expect(groupSeparationStyles).toContain('padding-top: 12px');
+    expect(groupSeparationStyles).not.toContain('border-top');
   });
 
   it('keeps select popups inside the onboarding stacking context', () => {

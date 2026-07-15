@@ -3384,6 +3384,430 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   line-height: 1.4;
 }
 
+.customization__settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.customization__update-preference {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+}
+
+.customization__preference-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.customization__preference-copy small {
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.update-modal__content {
+  display: grid;
+  gap: 14px;
+}
+
+.update-section {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+.update-section--danger {
+  position: relative;
+  padding-left: 30px;
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+.update-section--danger::before {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 13px;
+  width: 3px;
+  background: var(--conflict);
+  content: '';
+}
+
+.update-section h3,
+.update-card h4,
+.update-release strong {
+  margin: 0;
+  color: var(--text);
+}
+
+.update-section h3 {
+  font-size: 16px;
+}
+
+.update-section--danger h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--conflict-strong);
+}
+
+.update-section__danger-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: var(--conflict);
+}
+
+.update-section p,
+.update-section ul {
+  margin: 0;
+}
+
+.update-section__lead,
+.update-card p,
+.update-release p,
+.update-release li,
+.update-history__status {
+  color: var(--text-sub);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.update-card-list {
+  display: grid;
+  gap: 8px;
+}
+
+.update-card,
+.update-release {
+  display: grid;
+  gap: 7px;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-bg);
+}
+
+.update-card--danger {
+  border-color: var(--border);
+}
+
+.update-card h4 {
+  font-size: 14px;
+}
+
+.update-card h4 span {
+  margin-left: 6px;
+  color: var(--text-faint);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.update-card__heading {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.update-card__heading > span {
+  margin-left: 0;
+}
+
+.update-card__name {
+  min-width: 0;
+  flex: 0 1 auto;
+  overflow: hidden;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.update-card__code {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+}
+
+.update-card__teacher {
+  min-width: 0;
+  flex: 1 1 120px;
+  overflow: hidden;
+  color: var(--text-sub) !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.update-candidates {
+  display: grid;
+  gap: 5px;
+  padding-top: 3px;
+}
+
+.update-candidates strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.update-candidates ul,
+.update-change-list,
+.update-release ul {
+  display: grid;
+  gap: 5px;
+  padding-left: 18px;
+}
+
+.update-candidates li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.update-candidates__identity {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.update-candidates__name {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.update-candidates__meta {
+  display: flex;
+  gap: 10px;
+}
+
+.update-candidates button {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--accent-strong);
+  font: inherit;
+  font-size: 10px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.update-candidates small {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.update-change-row {
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.update-change-row__label {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.update-change-row__value {
+  display: block;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.update-release__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.update-release time {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.update-history__semester-list,
+.update-history__semester,
+.update-history__group,
+.update-history__entry {
+  display: grid;
+}
+
+.update-history__semester-list {
+  gap: 16px;
+}
+
+.update-history__semester {
+  gap: 10px;
+}
+
+.update-history__semester + .update-history__semester {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.update-history__semester h4,
+.update-history__group h5,
+.update-history__entry strong {
+  margin: 0;
+  color: var(--text);
+}
+
+.update-history__semester h4 {
+  font-size: 14px;
+}
+
+.update-history__group {
+  gap: 8px;
+}
+
+.update-history__group h5 {
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.update-history__entry {
+  gap: 7px;
+  padding: 1px 0;
+}
+
+.update-history__entry + .update-history__entry {
+  padding-top: 10px;
+}
+
+.update-history__entry > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.update-history__entry p,
+.update-history__entry li {
+  color: var(--text-sub);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.update-history__entry p,
+.update-history__entry ul {
+  margin: 0;
+}
+
+.update-history__entry ul {
+  display: grid;
+  gap: 5px;
+  padding-left: 18px;
+}
+
+.update-history__entry time {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.update-history__status--error {
+  color: var(--conflict-strong);
+}
+
+.update-modal__confirm {
+  min-width: 88px;
+  min-height: 34px;
+  padding: 6px 18px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.course-update-details {
+  border-top: 1px solid var(--border);
+  padding-top: 7px;
+}
+
+#root .course-update-details__toggle.ant-btn {
+  gap: 3px;
+  min-height: 20px;
+  padding-inline: 2px;
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 18px;
+}
+
+#root .course-update-details__toggle.ant-btn .select-chevron {
+  width: 12px;
+  height: 12px;
+}
+
+.course-update-details__region {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.course-update-details__region--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.course-update-details__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.course-update-details__groups {
+  display: grid;
+  gap: 9px;
+  padding-top: 9px;
+}
+
+.course-update-details__groups section {
+  display: grid;
+  gap: 5px;
+}
+
+.course-update-details__groups h5 {
+  margin: 0;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.course-update-details__groups ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 17px;
+}
+
+.course-update-details__groups li {
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.course-update-details__groups li small {
+  display: block;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
 .customization__resident-select {
   width: 124px;
 }
@@ -3697,6 +4121,51 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   .customization__section-head--inline .ant-btn {
     padding-inline: 8px;
     flex: 0 0 auto;
+  }
+
+  .customization__settings-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .customization__section--settings .customization__section-head--inline {
+    flex-direction: column;
+  }
+
+  .update-section {
+    padding: 12px;
+  }
+
+  .update-section--danger {
+    padding-left: 28px;
+  }
+
+  .update-section--danger::before {
+    top: 12px;
+    bottom: 12px;
+    left: 11px;
+  }
+
+  .update-card__heading {
+    flex-wrap: wrap;
+  }
+
+  .update-card__name {
+    width: 100%;
+    flex-basis: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .update-card__teacher {
+    flex-basis: 0;
+  }
+
+  .update-release__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .availability-grid-wrap {

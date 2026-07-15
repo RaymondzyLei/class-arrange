@@ -18,6 +18,9 @@ interface Props {
   onChange: (settings: CustomScheduleSettings) => void;
   onClose: () => void;
   onRestartOnboarding: () => void;
+  showUpdatePopup: boolean;
+  onShowUpdatePopupChange: (show: boolean) => void;
+  onOpenUpdateHistory: () => void;
 }
 
 function PreferenceToggle({
@@ -49,6 +52,9 @@ export default function CustomizationModal({
   onChange,
   onClose,
   onRestartOnboarding,
+  showUpdatePopup,
+  onShowUpdatePopupChange,
+  onOpenUpdateHistory,
 }: Props) {
   const { message } = App.useApp();
   const [draftBlockedSlots, setDraftBlockedSlots] = useState(settings.blockedSlots);
@@ -263,9 +269,23 @@ export default function CustomizationModal({
               <h3>设置</h3>
               <p>选择修改课程或排课偏好后的计算方式。</p>
             </div>
-            <Button onClick={onRestartOnboarding}>重新查看新手引导</Button>
+            <div className="customization__settings-actions">
+              <Button onClick={onOpenUpdateHistory}>更新记录</Button>
+              <Button onClick={onRestartOnboarding}>重新查看新手引导</Button>
+            </div>
           </div>
           <CalculationModePicker value={settings.calculationMode} onChange={setCalculationMode} />
+          <div className="customization__preference-row customization__update-preference">
+            <span className="customization__preference-copy">
+              <span className="customization__preference-label">显示更新内容弹窗</span>
+              <small>关闭后仍保留更新记录；课程被删除并移出方案时仍会强制提醒。</small>
+            </span>
+            <PreferenceToggle
+              checked={showUpdatePopup}
+              label="显示更新内容弹窗"
+              onChange={onShowUpdatePopupChange}
+            />
+          </div>
         </section>
       </div>
     </BottomModal>

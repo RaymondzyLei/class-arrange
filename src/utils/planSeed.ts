@@ -1,17 +1,26 @@
-import type { PlansState } from '@/types';
+import type { CourseImpactEvent, PlansState, SelectedCourseSnapshot } from '@/types';
 
 export const LEGACY_STORAGE_KEY = 'class-arrange:v1:plans';
 export const PLANS_MIGRATED_KEY = 'class-arrange:v2:plans-migrated';
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 2;
 
 interface StorageLike {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
 }
 
-interface StoredPayload {
-  version: number;
+interface StoredPayloadV1 {
+  version: 1;
   state: PlansState;
+}
+
+export interface StoredPlansPayloadV2 {
+  version: 2;
+  state: PlansState;
+  selectedSnapshots: Record<string, SelectedCourseSnapshot>;
+  impactHistory: CourseImpactEvent[];
+  pendingImpacts: CourseImpactEvent[];
+  catalogRevision: string | null;
 }
 
 export function genId(): string {
@@ -50,20 +59,54 @@ export function plansStorageKey(semesterKey: string): string {
   return `class-arrange:v2:plans:${semesterKey}`;
 }
 
-function parsePlansState(raw: string | null): PlansState | null {
+function emptyMetadata(state: PlansState): StoredPlansPayloadV2 {
+  return {
+    version: STORAGE_VERSION,
+    state,
+    selectedSnapshots: {},
+    impactHistory: [],
+    pendingImpacts: [],
+    catalogRevision: null,
+  };
+}
+
+function normalizePlansState(value: unknown): PlansState | null {
+  if (!value || typeof value !== 'object') return null;
+  const s = value as PlansState;
+  if (!Array.isArray(s.plans)) return null;
+  const state: PlansState = {
+    plans: s.plans,
+    activePlanId: s.activePlanId,
+  };
+  if (state.plans.length === 0) return { plans: [], activePlanId: null };
+  if (state.activePlanId && !state.plans.some((p) => p.id === state.activePlanId)) {
+    state.activePlanId = state.plans[0].id;
+  }
+  if (!state.activePlanId) state.activePlanId = state.plans[0].id;
+  return state;
+}
+
+function parsePlansPayload(raw: string | null): StoredPlansPayloadV2 | null {
   if (!raw) return null;
   try {
-    const payload = JSON.parse(raw) as StoredPayload;
+    const payload = JSON.parse(raw) as StoredPayloadV1 | StoredPlansPayloadV2;
     if (!payload || typeof payload !== 'object') return null;
+    const state = normalizePlansState(payload.state);
+    if (!state) return null;
+    if (payload.version === 1) return emptyMetadata(state);
     if (payload.version !== STORAGE_VERSION) return null;
-    const s = payload.state;
-    if (!s || !Array.isArray(s.plans)) return null;
-    if (s.plans.length === 0) return { plans: [], activePlanId: null };
-    if (s.activePlanId && !s.plans.some((p) => p.id === s.activePlanId)) {
-      s.activePlanId = s.plans[0].id;
-    }
-    if (!s.activePlanId) s.activePlanId = s.plans[0].id;
-    return s;
+    return {
+      version: STORAGE_VERSION,
+      state,
+      selectedSnapshots: payload.selectedSnapshots && typeof payload.selectedSnapshots === 'object'
+        ? payload.selectedSnapshots
+        : {},
+      impactHistory: Array.isArray(payload.impactHistory) ? payload.impactHistory : [],
+      pendingImpacts: Array.isArray(payload.pendingImpacts) ? payload.pendingImpacts : [],
+      catalogRevision: typeof payload.catalogRevision === 'string'
+        ? payload.catalogRevision
+        : null,
+    };
   } catch {
     return null;
   }
@@ -78,19 +121,32 @@ export function loadPlansState(
   semesterKey: string,
   options: { defaultSemester: string; storage?: StorageLike },
 ): PlansState | null {
+  return loadPlansPayload(semesterKey, options)?.state ?? null;
+}
+
+export function loadPlansPayload(
+  semesterKey: string,
+  options: { defaultSemester: string; storage?: StorageLike },
+): StoredPlansPayloadV2 | null {
   const storage = options.storage ?? browserStorage();
   if (!storage) return null;
   try {
-    const current = parsePlansState(storage.getItem(plansStorageKey(semesterKey)));
-    if (current) return current;
+    const currentRaw = storage.getItem(plansStorageKey(semesterKey));
+    const current = parsePlansPayload(currentRaw);
+    if (current) {
+      if (currentRaw && (JSON.parse(currentRaw) as { version?: number }).version !== STORAGE_VERSION) {
+        savePlansPayload(semesterKey, current, storage);
+      }
+      return current;
+    }
     if (
       semesterKey !== options.defaultSemester ||
       storage.getItem(PLANS_MIGRATED_KEY) === '1'
     ) {
       return null;
     }
-    const legacy = parsePlansState(storage.getItem(LEGACY_STORAGE_KEY));
-    if (legacy) savePlansState(semesterKey, legacy, storage);
+    const legacy = parsePlansPayload(storage.getItem(LEGACY_STORAGE_KEY));
+    if (legacy) savePlansPayload(semesterKey, legacy, storage);
     storage.setItem(PLANS_MIGRATED_KEY, '1');
     return legacy;
   } catch {
@@ -106,8 +162,29 @@ export function savePlansState(
   const storage = suppliedStorage ?? browserStorage();
   if (!storage) return false;
   try {
-    const payload: StoredPayload = { version: STORAGE_VERSION, state };
-    storage.setItem(plansStorageKey(semesterKey), JSON.stringify(payload));
+    const existing = parsePlansPayload(storage.getItem(plansStorageKey(semesterKey)));
+    return savePlansPayload(
+      semesterKey,
+      existing ? { ...existing, state } : emptyMetadata(state),
+      storage,
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function savePlansPayload(
+  semesterKey: string,
+  payload: StoredPlansPayloadV2,
+  suppliedStorage?: StorageLike,
+): boolean {
+  const storage = suppliedStorage ?? browserStorage();
+  if (!storage) return false;
+  try {
+    storage.setItem(
+      plansStorageKey(semesterKey),
+      JSON.stringify({ ...payload, version: STORAGE_VERSION }),
+    );
     return true;
   } catch {
     return false;
