@@ -332,6 +332,22 @@ def test_write_json_atomic_retries_transient_windows_file_lock(tmp_path, monkeyp
     assert json.loads(target.read_text(encoding="utf-8")) == {"fresh": True}
 
 
+def test_write_json_atomic_skips_replacing_identical_content(tmp_path, monkeypatch):
+    target = tmp_path / "payload.json"
+    payload = {"unchanged": True}
+    write_json_atomic(target, payload)
+
+    def locked_replace(_source, _destination):
+        raise PermissionError("simulated persistent Vite file lock")
+
+    monkeypatch.setattr(Path, "replace", locked_replace)
+
+    write_json_atomic(target, payload)
+
+    assert json.loads(target.read_text(encoding="utf-8")) == payload
+    assert not target.with_suffix(".json.tmp").exists()
+
+
 def test_api_get_uses_authenticated_request_context():
     request = RecordingRequest([FakeResponse([{"id": 461}])])
 

@@ -1,6 +1,5 @@
 export const DAYS = [1, 2, 3, 4, 5, 6, 7] as const;
 export const PERIODS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] as const;
-export const WEEKS = Array.from({ length: 20 }, (_, i) => i + 1);
 
 export const PERIOD_TIMES: Readonly<Record<number, { start: string; end: string }>> = {
   1: { start: '07:50', end: '08:35' },

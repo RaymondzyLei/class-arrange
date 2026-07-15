@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formatDateRange,
+  formatTermDateRange,
   getCalendarDatesForSelection,
   getSpecialDateSummaries,
+  getVisibleWeekdays,
   getWeekLabel,
   getWeekRange,
   TERM_CALENDAR,
@@ -11,16 +12,44 @@ import {
 describe('TERM_CALENDAR', () => {
   it('keeps 2026 fall term-specific data centralized', () => {
     expect(TERM_CALENDAR.termId).toBe('2026-fall');
+    expect(TERM_CALENDAR.termStartDate).toBe('2026-08-30');
+    expect(TERM_CALENDAR.termEndDate).toBe('2027-01-15');
     expect(TERM_CALENDAR.weekStartDate).toBe('2026-08-31');
     expect(TERM_CALENDAR.weekCount).toBe(20);
   });
 
-  it('computes Monday-to-Sunday week ranges', () => {
+  it('keeps the displayed range fixed to the API bounds for every week selection', () => {
+    expect(formatTermDateRange()).toBe('2026.08.30 - 2027.01.15');
+  });
+
+  it('clips the final teaching week to the API end date', () => {
     expect(getWeekRange(1)).toEqual(['2026-08-31', '2026-09-06']);
-    expect(getWeekRange(20)).toEqual(['2027-01-11', '2027-01-17']);
-    expect(formatDateRange('all')).toBe('2026.08.31 - 2027.01.17');
+    expect(getWeekRange(20)).toEqual(['2027-01-11', '2027-01-15']);
+    expect(getCalendarDatesForSelection(20).map((info) => info.iso)).toEqual([
+      '2027-01-11',
+      '2027-01-12',
+      '2027-01-13',
+      '2027-01-14',
+      '2027-01-15',
+    ]);
     expect(getWeekLabel('all')).toBe('全部周次');
     expect(getWeekLabel(4)).toBe('第4周');
+  });
+
+  it('keeps all weekday columns while clipping dates in a partial final week', () => {
+    const thursdayEnd = {
+      ...TERM_CALENDAR,
+      termEndDate: '2027-01-14',
+    };
+
+    expect(getVisibleWeekdays('all', thursdayEnd)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(getVisibleWeekdays(20, thursdayEnd)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(getCalendarDatesForSelection(20, thursdayEnd).map((info) => info.iso)).toEqual([
+      '2027-01-11',
+      '2027-01-12',
+      '2027-01-13',
+      '2027-01-14',
+    ]);
   });
 
   it('marks holidays as non-instructional days', () => {

@@ -1,7 +1,7 @@
 import { Button, Slider } from 'antd';
 import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
-import { DAYS, PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
+import { PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
@@ -14,9 +14,10 @@ import {
   type TimetableRangeEntry,
 } from '@/utils/timetableLayout';
 import {
-  formatDateRange,
+  formatTermDateRange,
   formatShortDate,
   getCalendarDatesForSelection,
+  getVisibleWeekdays,
   getWeekOptions,
   type CalendarDateInfo,
   type TermCalendar,
@@ -565,6 +566,10 @@ function TimetableView({
     () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection, calendar)),
     [calendar, weekSelection],
   );
+  const visibleDays = useMemo(
+    () => getVisibleWeekdays(weekSelection, calendar),
+    [calendar, weekSelection],
+  );
   const dateByWeekday = new Map(selectedWeekDates.map((info) => [info.weekday, info]));
   const skipped = new Set<string>();
 
@@ -574,7 +579,7 @@ function TimetableView({
         <thead>
           <tr>
             <th className="timetable__head-spacer" colSpan={2} />
-            {DAYS.map((day) => (
+            {visibleDays.map((day) => (
               <DayHead key={day} day={day} info={dateByWeekday.get(day)} />
             ))}
           </tr>
@@ -602,7 +607,7 @@ function TimetableView({
                   {PERIOD_TIMES[period].end}
                 </span>
               </th>
-              {DAYS.map((day) => {
+              {visibleDays.map((day) => {
                 const cellKey = keyFor(day, period);
                 if (skipped.has(cellKey)) return null;
 
@@ -711,7 +716,6 @@ export default function CourseTable({
         </div>
         <div className="course-table__term-date">
           <span className="course-table__term-selector">
-            <span className="course-table__term-name">{calendar.termName}</span>
             <SemesterDropdown
               semesters={semesters}
               semesterKey={semesterKey}
@@ -719,7 +723,7 @@ export default function CourseTable({
               onSelect={onSemesterChange}
             />
           </span>
-          <span className="course-table__date-range">{formatDateRange(weekSelection, calendar)}</span>
+          <span className="course-table__date-range">{formatTermDateRange(calendar)}</span>
         </div>
         <div className="course-table__actions no-print">
           <Button

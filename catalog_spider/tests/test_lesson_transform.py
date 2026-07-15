@@ -652,3 +652,20 @@ def test_build_term_calendar_counts_partial_final_week():
     )
 
     assert calendar["weekCount"] == 2
+
+
+def test_build_term_calendar_preserves_api_bounds_and_starts_weeks_on_monday():
+    calendar = build_term_calendar(
+        {
+            "nameZh": "2026年秋季学期",
+            "start": "2026-08-30",
+            "end": "2027-01-15",
+        },
+        "2026-fall",
+        None,
+    )
+
+    assert calendar["termStartDate"] == "2026-08-30"
+    assert calendar["termEndDate"] == "2027-01-15"
+    assert calendar["weekStartDate"] == "2026-08-31"
+    assert calendar["weekCount"] == 20

@@ -11,4 +11,11 @@ describe('ContributorList', () => {
     expect(avatarRule).not.toContain('linear-gradient');
     expect(avatarRule).not.toContain('box-shadow');
   });
+
+  it('keeps contributor card backgrounds unchanged on hover', () => {
+    const hoverRule = stylesSource.match(/\.contributor-list__item:hover\s*\{([\s\S]*?)\}/)?.[1] ?? '';
+
+    expect(hoverRule).toContain('border-color');
+    expect(hoverRule).not.toContain('background:');
+  });
 });

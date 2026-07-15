@@ -210,11 +210,11 @@ def write_json_atomic(path: Path, payload: object) -> None:
     """Write UTF-8 JSON through a sibling temporary file and atomically replace."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
+    serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    if path.exists() and path.read_text(encoding="utf-8") == serialized:
+        return
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    temporary.write_text(serialized, encoding="utf-8")
     _replace_with_retry(temporary, path)
 
 

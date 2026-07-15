@@ -16,6 +16,8 @@ export interface MakeupDayInfo {
 export interface TermCalendar {
   termId: string;
   termName: string;
+  termStartDate: ISODate;
+  termEndDate: ISODate;
   weekStartDate: ISODate;
   weekCount: number;
   sourceUrl: string;
@@ -43,6 +45,8 @@ interface CalendarDateOptions {
 export const TERM_CALENDAR: TermCalendar = {
   termId: '2026-fall',
   termName: '2026年秋季学期',
+  termStartDate: '2026-08-30',
+  termEndDate: '2027-01-15',
   weekStartDate: '2026-08-31',
   weekCount: 20,
   sourceUrl: 'https://www.teach.ustc.edu.cn/calendar/20135.html',
@@ -85,12 +89,13 @@ export function addDays(iso: ISODate, days: number): ISODate {
 }
 
 export function getTermEndDate(calendar = TERM_CALENDAR): ISODate {
-  return addDays(calendar.weekStartDate, calendar.weekCount * 7 - 1);
+  return calendar.termEndDate;
 }
 
 export function getWeekRange(week: number, calendar = TERM_CALENDAR): [ISODate, ISODate] {
   const start = addDays(calendar.weekStartDate, (week - 1) * 7);
-  return [start, addDays(start, 6)];
+  const fullWeekEnd = addDays(start, 6);
+  return [start, fullWeekEnd < calendar.termEndDate ? fullWeekEnd : calendar.termEndDate];
 }
 
 export function formatISODate(iso: ISODate): string {
@@ -103,12 +108,8 @@ export function formatShortDate(iso: ISODate): string {
   return `${month}.${day}`;
 }
 
-export function formatDateRange(selection: WeekSelection, calendar = TERM_CALENDAR): string {
-  if (selection === 'all') {
-    return `${formatISODate(calendar.weekStartDate)} - ${formatISODate(getTermEndDate(calendar))}`;
-  }
-  const [start, end] = getWeekRange(selection, calendar);
-  return `${formatISODate(start)} - ${formatISODate(end)}`;
+export function formatTermDateRange(calendar = TERM_CALENDAR): string {
+  return `${formatISODate(calendar.termStartDate)} - ${formatISODate(calendar.termEndDate)}`;
 }
 
 export function getWeekdayForISO(iso: ISODate): Weekday {
@@ -145,9 +146,21 @@ export function getCalendarDatesForSelection(
   calendar = TERM_CALENDAR,
   options: CalendarDateOptions = {},
 ): CalendarDateInfo[] {
-  const start = selection === 'all' ? calendar.weekStartDate : getWeekRange(selection, calendar)[0];
-  const days = selection === 'all' ? calendar.weekCount * 7 : 7;
+  const [start, end] = selection === 'all'
+    ? [calendar.termStartDate, calendar.termEndDate]
+    : getWeekRange(selection, calendar);
+  const days = Math.max(
+    0,
+    Math.floor((parseISODate(end).getTime() - parseISODate(start).getTime()) / MS_PER_DAY) + 1,
+  );
   return Array.from({ length: days }, (_, index) => buildDateInfo(addDays(start, index), calendar, options));
+}
+
+export function getVisibleWeekdays(
+  _selection: WeekSelection,
+  _calendar = TERM_CALENDAR,
+): Weekday[] {
+  return [1, 2, 3, 4, 5, 6, 7];
 }
 
 export function getWeekOptions(calendar = TERM_CALENDAR): Array<{ label: string; value: WeekSelection }> {

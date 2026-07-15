@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-15T09:41:07Z",
+  "generatedAt": "2026-07-15T12:25:05Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -13,6 +13,8 @@
     "calendar": {
       "termId": "2026-summer",
       "termName": "2026年夏季学期",
+      "termStartDate": "2026-07-06",
+      "termEndDate": "2026-07-31",
       "weekStartDate": "2026-07-06",
       "weekCount": 4,
       "sourceUrl": "https://catalog.ustc.edu.cn/query/lesson",
