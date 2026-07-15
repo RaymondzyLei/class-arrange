@@ -526,6 +526,7 @@ function DayHead({ day, info }: { day: number; info?: CalendarDateInfo }) {
       scope="col"
       className={[
         'timetable__day-head',
+        info ? '' : 'timetable__day-head--without-date',
         day === 1 ? 'timetable__day-head--first' : '',
         day >= 6 ? 'timetable__day-head--weekend' : '',
         info?.holiday ? 'timetable__day-head--holiday' : '',

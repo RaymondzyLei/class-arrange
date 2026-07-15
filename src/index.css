@@ -2132,10 +2132,14 @@ html {
 
 .timetable__day-head {
   position: relative;
-  height: 36px;
+  height: 46px;
   padding: 3px 4px;
   font-size: 14px;
   text-align: center;
+}
+
+.timetable__day-head--without-date {
+  vertical-align: middle;
 }
 
 .timetable__day-title,
