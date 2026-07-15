@@ -300,6 +300,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       calculationMode: preferences.calculationMode,
       preferHalfDay: preferences.preferHalfDay,
       preferFewerEarlyMornings: preferences.preferFewerEarlyMornings,
+      preferAvoidCampusTransfers: preferences.preferAvoidCampusTransfers,
+      residentCampus: preferences.residentCampus,
     }));
     message.success('排课倾向已同步到自定义设置');
     onboarding.finishWizard(preferences, startTour);
@@ -408,6 +410,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             blockedSlots={committedBlockedSlots}
             onOpenCustomization={() => setCustomizationOpen(true)}
             calendar={catalog.semester.calendar}
+            catalogGeneratedAt={catalog.generatedAt}
             semesters={manifest.semesters}
             semesterKey={catalog.semester.key}
             semesterSwitching={catalogStatus.phase === 'switching'}

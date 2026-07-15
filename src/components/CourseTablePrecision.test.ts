@@ -22,4 +22,14 @@ describe('CourseTable precise conflict marking', () => {
       /\.timetable__day-head--without-date\s*\{[^}]*vertical-align:\s*middle;/s,
     );
   });
+
+  it('shows the catalog-generated update date while preserving both project links', () => {
+    expect(source).toContain('catalogGeneratedAt: string');
+    expect(source).toContain('课程信息最后更新于 {formatCatalogUpdatedDate(catalogGeneratedAt)}. 访问');
+    expect(source).toMatch(/>\s*GitHub\s*<\/a>/);
+    expect(source).toContain('或查看');
+    expect(source).toContain('onClick={() => setContributorsOpen(true)}');
+    expect(source).toContain('贡献列表');
+    expect(source).toContain('title="贡献详情"');
+  });
 });

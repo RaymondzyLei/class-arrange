@@ -87,9 +87,9 @@ describe('enumerateArrangements', () => {
   it('安排按冲突数升序', () => {
     // m1 与 p1 时间重叠，m2 不冲突
     const groups: CourseGroup[] = [
-      { ...mkGroup('M', 'm1'), schedule: [{ weeks: [1], day: 1, periods: [1, 2], room: '' }], fingerprint: 'm1' },
-      { ...mkGroup('M', 'm2'), schedule: [{ weeks: [1], day: 3, periods: [5, 6], room: '' }], fingerprint: 'm2' },
-      { ...mkGroup('P', 'p1'), schedule: [{ weeks: [1], day: 1, periods: [2, 3], room: '' }], fingerprint: 'p1' },
+      { ...mkGroup('M', 'm1'), schedule: [{ weeks: [1], day: 1, periods: [1, 2], room: '', campus: '本部' }], fingerprint: 'm1' },
+      { ...mkGroup('M', 'm2'), schedule: [{ weeks: [1], day: 3, periods: [5, 6], room: '', campus: '本部' }], fingerprint: 'm2' },
+      { ...mkGroup('P', 'p1'), schedule: [{ weeks: [1], day: 1, periods: [2, 3], room: '', campus: '本部' }], fingerprint: 'p1' },
     ];
     const arrs = enumerateArrangements(groups);
     // (m1, p1) 冲突 → 排在后；(m2, p1) 不冲突 → 排在前

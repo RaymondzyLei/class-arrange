@@ -3,11 +3,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
 import {
   blockedSlotKey,
+  RESIDENT_CAMPUS_OPTIONS,
   type CustomScheduleSettings,
 } from '@/utils/customization';
+import type { ResidentCampus } from '@/types';
 import BottomModal from './BottomModal';
 import CalculationModePicker from './CalculationModePicker';
 import { PreferenceSwitchVisual } from './onboarding/PreferenceSwitch';
+import SelectWithChevron from './SelectWithChevron';
 
 interface Props {
   open: boolean;
@@ -80,6 +83,17 @@ export default function CustomizationModal({
     message.success('排课倾向已更新');
   };
 
+  const setPreferAvoidCampusTransfers = (preferAvoidCampusTransfers: boolean) => {
+    onChange({ ...settings, preferAvoidCampusTransfers });
+    message.success('排课倾向已更新');
+  };
+
+  const setResidentCampus = (residentCampus: ResidentCampus) => {
+    if (residentCampus === settings.residentCampus) return;
+    onChange({ ...settings, residentCampus });
+    message.success('常驻地点已更新');
+  };
+
   const setCalculationMode = (calculationMode: CustomScheduleSettings['calculationMode']) => {
     if (calculationMode === settings.calculationMode) return;
     onChange({ ...settings, calculationMode });
@@ -129,6 +143,25 @@ export default function CustomizationModal({
             </div>
           </div>
           <div className="customization__preference-list">
+            <div className="customization__preference-row">
+              <span className="customization__preference-label">优先避免跨校区</span>
+              <PreferenceToggle
+                checked={settings.preferAvoidCampusTransfers}
+                label="优先避免跨校区"
+                onChange={setPreferAvoidCampusTransfers}
+              />
+            </div>
+            <div className="customization__preference-row">
+              <span className="customization__preference-label">常驻地点</span>
+              <SelectWithChevron
+                aria-label="常驻地点"
+                className="customization__resident-select"
+                value={settings.residentCampus}
+                options={RESIDENT_CAMPUS_OPTIONS.map((option) => ({ ...option }))}
+                disabled={!settings.preferAvoidCampusTransfers}
+                onChange={(residentCampus) => setResidentCampus(residentCampus as ResidentCampus)}
+              />
+            </div>
             <div className="customization__preference-row">
               <span className="customization__preference-label">优先空出半天</span>
               <PreferenceToggle

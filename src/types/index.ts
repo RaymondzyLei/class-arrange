@@ -7,11 +7,16 @@ export interface Department {
   name: string;
 }
 
+export type Campus = '本部' | '高新区' | '其他';
+export type ResidentCampus = Exclude<Campus, '其他'>;
+
 export interface ScheduleSlot {
   /** 上课周次。length===2 时为闭区间 [start, end]；length>2 时为显式枚举（单/双周展开） */
   weeks: number[];
   /** 教室 */
   room: string;
+  /** 标准化地区，用于跨校区排课偏好 */
+  campus: Campus;
   /** 星期几，1=周一 ... 7=周日 */
   day: number;
   /** 节次列表，如 [8, 9] 或 [3, 4, 5] */

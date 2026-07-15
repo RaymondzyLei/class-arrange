@@ -14,9 +14,9 @@ export function getCourseCode(id: string): string {
 }
 
 /**
- * 把单个 ScheduleSlot 归一化为可比较字符串：`周次列表:星期:节次列表`。
+ * 把单个 ScheduleSlot 归一化为可比较字符串：`周次列表:星期:节次列表:校区`。
  * 周次用 expandWeeks 展开为完整集合，消除 [1,9] 与 [1,2,...,9] 的编码差异。
- * 节次排序后连接。忽略教室（教室不影响"时间相同"判定）。
+ * 节次排序后连接。忽略具体教室，但保留校区，避免把跨校区班次合并。
  */
 function slotFingerprint(slot: ScheduleSlot): string {
   const weeks = expandWeeks(slot.weeks).sort((a, b) => a - b);
@@ -27,7 +27,7 @@ function slotFingerprint(slot: ScheduleSlot): string {
     : slot.startTime || slot.endTime
       ? `:raw-${slot.startTime?.trim() ?? ''}-${slot.endTime?.trim() ?? ''}`
       : '';
-  return `${weeks.join(',')}:${slot.day}:${periods.join(',')}${clock}`;
+  return `${weeks.join(',')}:${slot.day}:${periods.join(',')}${clock}:${slot.campus}`;
 }
 
 /**

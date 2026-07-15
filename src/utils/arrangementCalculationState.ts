@@ -55,6 +55,8 @@ export function calculationInputKey(
     groups: groups.map((group) => [group.courseCode, group.key, group.sectionIds]),
     preferHalfDay: settings.preferHalfDay,
     preferFewerEarlyMornings: settings.preferFewerEarlyMornings,
+    preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
+    residentCampus: settings.residentCampus,
     blockedSlots: [...settings.blockedSlots].sort(),
   });
 }

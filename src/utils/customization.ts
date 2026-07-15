@@ -1,3 +1,5 @@
+import type { ResidentCampus } from '@/types';
+
 export type CalculationMode = 'auto' | 'manual';
 
 export const CALCULATION_MODE_OPTIONS = [
@@ -21,8 +23,15 @@ export interface CustomScheduleSettings {
   calculationMode: CalculationMode;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
+  preferAvoidCampusTransfers: boolean;
+  residentCampus: ResidentCampus;
   blockedSlots: string[];
 }
+
+export const RESIDENT_CAMPUS_OPTIONS = [
+  { value: '本部', label: '本部' },
+  { value: '高新区', label: '高新' },
+] as const;
 
 export const CUSTOM_SETTINGS_KEY = 'class-arrange:v1:custom-settings';
 
@@ -30,6 +39,8 @@ export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
+  preferAvoidCampusTransfers: true,
+  residentCampus: '本部',
   blockedSlots: [],
 };
 
@@ -55,6 +66,10 @@ export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleS
     preferFewerEarlyMornings: typeof source.preferFewerEarlyMornings === 'boolean'
       ? source.preferFewerEarlyMornings
       : DEFAULT_CUSTOM_SETTINGS.preferFewerEarlyMornings,
+    preferAvoidCampusTransfers: typeof source.preferAvoidCampusTransfers === 'boolean'
+      ? source.preferAvoidCampusTransfers
+      : DEFAULT_CUSTOM_SETTINGS.preferAvoidCampusTransfers,
+    residentCampus: source.residentCampus === '高新区' ? '高新区' : '本部',
     blockedSlots: Array.isArray(source.blockedSlots)
       ? [...new Set(source.blockedSlots.filter(isBlockedSlot))].sort()
       : [],

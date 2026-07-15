@@ -18,6 +18,21 @@ _CLOCK_SLOT_RE = re.compile(
     r"(\d+)\s*\((\d{1,2}:\d{2})\s*~\s*(\d{1,2}:\d{2})\)"
 )
 _WEEK_HEAD_RE = re.compile(r"^([0-9~,()单双]+周)")
+_WEEK_SPECIFIC_ROOM_RE = re.compile(
+    r"(\d+)\s*[-~]\s*(\d+)\s*周\s*在\s*([^,;]+)"
+)
+_MAIN_CAMPUS_CODE_RE = re.compile(r"^(?:[125]\d{3}|3[ABC]\d{3})$", re.IGNORECASE)
+_HIGH_TECH_CODE_RE = re.compile(
+    r"^(?:G2|G3|GH|GT|GX|TH)(?:[-_A-Z0-9]|$)",
+    re.IGNORECASE,
+)
+_MAIN_CAMPUS_TEXT_RE = re.compile(
+    r"第[一二五]教学楼|[一二五]教|教[一二五]楼|3[ABC]教学楼|"
+    r"5教|东区|西区|中区|地空楼|管理科研楼|管科楼|力.楼|电.楼|"
+    r"生物楼|附楼|中体|^ARTS",
+    re.IGNORECASE,
+)
+_HIGH_TECH_TEXT_RE = re.compile(r"高新区|信智(?:大)?楼")
 _PERIOD_CLOCKS = (
     (1, "07:50", "08:35"),
     (2, "08:40", "09:25"),
@@ -82,6 +97,63 @@ def _boolean(value: Any) -> bool:
     if isinstance(value, str):
         return value.strip().lower() in {"1", "true", "yes"}
     return bool(value)
+
+
+def _campus_for_room(room: str) -> str:
+    """Classify one normalized room label into the published campus vocabulary."""
+
+    room = room.strip()
+    if "附一院" in room:
+        return "其他"
+
+    high_tech = bool(
+        _HIGH_TECH_CODE_RE.search(room)
+        or _HIGH_TECH_TEXT_RE.search(room)
+    )
+    main = bool(
+        _MAIN_CAMPUS_CODE_RE.fullmatch(room)
+        or _MAIN_CAMPUS_TEXT_RE.search(room)
+    )
+    if high_tech and main:
+        return "其他"
+    if high_tech:
+        return "高新区"
+    if main:
+        return "本部"
+    return "其他"
+
+
+def _expanded_week_set(weeks: list[int]) -> set[int]:
+    if len(weeks) == 2:
+        return set(range(weeks[0], weeks[1] + 1))
+    return set(weeks)
+
+
+def _split_week_specific_rooms(slot: dict) -> list[dict]:
+    """Split the one known room label that changes campus by teaching week."""
+
+    matches = list(_WEEK_SPECIFIC_ROOM_RE.finditer(slot["room"]))
+    if len(matches) < 2:
+        return [slot]
+
+    split_slots: list[dict] = []
+    covered_weeks: set[int] = set()
+    for match in matches:
+        start, end = int(match.group(1)), int(match.group(2))
+        if start > end:
+            return [slot]
+        covered_weeks.update(range(start, end + 1))
+        split_slots.append(
+            {
+                **slot,
+                "weeks": [start, end],
+                "room": match.group(3).strip(),
+            }
+        )
+
+    if covered_weeks != _expanded_week_set(slot["weeks"]):
+        return [slot]
+    return split_slots
 
 
 def _parse_week_ranges(value: str) -> list[list[int]]:
@@ -274,12 +346,19 @@ def _schedule_slots(raw: Any, *, person_text: bool = False) -> list[dict]:
                                 "periods": periods,
                             }
                         )
+    classified_slots: list[dict] = []
+    for slot in slots:
+        for classified in _split_week_specific_rooms(slot):
+            classified["campus"] = _campus_for_room(classified["room"])
+            classified_slots.append(classified)
+
     unique_slots: list[dict] = []
     seen: set[tuple] = set()
-    for slot in slots:
+    for slot in classified_slots:
         key = (
             tuple(slot["weeks"]),
             slot["room"],
+            slot["campus"],
             slot["day"],
             tuple(slot["periods"]),
             slot.get("startTime", ""),

@@ -487,6 +487,13 @@ html {
   gap: 6px;
 }
 
+@media (max-width: 900px) {
+  .course-pool__list {
+    flex: 0 0 auto;
+    height: clamp(360px, 68dvh, 640px);
+  }
+}
+
 .pool-item {
   --pool-item-stripe: var(--border);
   border: 1px solid var(--border);
@@ -3377,6 +3384,10 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   line-height: 1.4;
 }
 
+.customization__resident-select {
+  width: 124px;
+}
+
 .customization__preference-toggle {
   display: inline-flex;
   align-items: center;
@@ -3636,17 +3647,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .customization__preference-row {
     min-height: 60px;
-  }
-
-  .customization-modal {
-    --bottom-modal-mobile-inset: 12px;
-    padding: var(--bottom-modal-mobile-inset);
-  }
-
-  .customization-modal .bottom-modal__panel {
-    width: 100% !important;
-    max-height: calc(100dvh - (var(--bottom-modal-mobile-inset) * 2));
-    border-radius: 16px;
   }
 
   .customization-modal .bottom-modal__header {

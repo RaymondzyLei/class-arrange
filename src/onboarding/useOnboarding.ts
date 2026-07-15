@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import type { ResidentCampus } from '@/types';
 import type { CalculationMode } from '@/utils/customization';
 
 const ONBOARDING_STORAGE_KEY = 'class-arrange:v1:onboarding';
@@ -8,6 +9,8 @@ export interface OnboardingPreferences {
   calculationMode: CalculationMode;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
+  preferAvoidCampusTransfers: boolean;
+  residentCampus: ResidentCampus;
 }
 
 export interface OnboardingState {
@@ -24,6 +27,8 @@ export const DEFAULT_ONBOARDING_PREFERENCES: OnboardingPreferences = {
   calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
+  preferAvoidCampusTransfers: true,
+  residentCampus: '本部',
 };
 
 const DEFAULT_ONBOARDING_STATE: OnboardingState = {
@@ -52,6 +57,11 @@ function normalizePreferences(value: unknown): OnboardingPreferences {
       source.preferFewerEarlyMornings ?? source.avoidEarlyMorning,
       DEFAULT_ONBOARDING_PREFERENCES.preferFewerEarlyMornings,
     ),
+    preferAvoidCampusTransfers: booleanFrom(
+      source.preferAvoidCampusTransfers,
+      DEFAULT_ONBOARDING_PREFERENCES.preferAvoidCampusTransfers,
+    ),
+    residentCampus: source.residentCampus === '高新区' ? '高新区' : '本部',
   };
 }
 

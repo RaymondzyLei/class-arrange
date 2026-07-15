@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { OnboardingPreferences } from '@/onboarding/useOnboarding';
 import CalculationModePicker from '@/components/CalculationModePicker';
+import SelectWithChevron from '@/components/SelectWithChevron';
+import { RESIDENT_CAMPUS_OPTIONS } from '@/utils/customization';
 import OnboardingConfirm from './OnboardingConfirm';
 import PreferenceSwitch from './PreferenceSwitch';
 import './onboarding.css';
@@ -15,11 +17,15 @@ interface Props {
 }
 
 interface PreferenceOption {
-  key: 'preferHalfDay' | 'preferFewerEarlyMornings';
+  key: 'preferHalfDay' | 'preferFewerEarlyMornings' | 'preferAvoidCampusTransfers';
   title: string;
 }
 
 const PREFERENCE_OPTIONS: PreferenceOption[] = [
+  {
+    key: 'preferAvoidCampusTransfers',
+    title: '优先避免跨校区',
+  },
   {
     key: 'preferHalfDay',
     title: '优先空出半天',
@@ -115,6 +121,20 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
                     onChange={(checked) => updatePreference(option.key, checked)}
                   />
                 ))}
+                <div className="onboarding-wizard__resident-campus">
+                  <span>常驻地点</span>
+                  <SelectWithChevron
+                    aria-label="常驻地点"
+                    className="onboarding-wizard__resident-select"
+                    value={draft.residentCampus}
+                    options={RESIDENT_CAMPUS_OPTIONS.map((option) => ({ ...option }))}
+                    disabled={!draft.preferAvoidCampusTransfers}
+                    onChange={(residentCampus) => setDraft((current) => ({
+                      ...current,
+                      residentCampus,
+                    }))}
+                  />
+                </div>
               </div>
             </div>
           ) : null}

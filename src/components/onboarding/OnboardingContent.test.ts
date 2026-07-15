@@ -2,12 +2,29 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const wizardSource = readFileSync(new URL('./OnboardingWizard.tsx', import.meta.url), 'utf8');
+const customizationSource = readFileSync(new URL('../CustomizationModal.tsx', import.meta.url), 'utf8');
 const spotlightSource = readFileSync(new URL('./SpotlightTour.tsx', import.meta.url), 'utf8');
 const tourStepsSource = readFileSync(new URL('../../onboarding/tourSteps.tsx', import.meta.url), 'utf8');
+const selectSource = readFileSync(new URL('../SelectWithChevron.tsx', import.meta.url), 'utf8');
 
 describe('onboarding content', () => {
   it('explains where preferences can be changed later', () => {
     expect(wizardSource).toContain('稍后可在“自定义”中修改设置');
+  });
+
+  it('offers campus transfer avoidance and a dependent residence selector in both settings surfaces', () => {
+    for (const source of [wizardSource, customizationSource]) {
+      expect(source).toContain('优先避免跨校区');
+      expect(source).toContain('常驻地点');
+      expect(source).toContain('preferAvoidCampusTransfers');
+      expect(source).toContain('residentCampus');
+    }
+    expect(wizardSource).toContain('disabled={!draft.preferAvoidCampusTransfers}');
+    expect(customizationSource).toContain('disabled={!settings.preferAvoidCampusTransfers}');
+  });
+
+  it('keeps select popups inside the onboarding stacking context', () => {
+    expect(selectSource).toContain("closest('.bottom-modal, .onboarding-wizard')");
   });
 
   it('uses a real arrangement screenshot for step 2/11', () => {

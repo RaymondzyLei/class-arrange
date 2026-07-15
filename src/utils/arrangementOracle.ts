@@ -15,6 +15,7 @@ import {
   scheduleSlotMinuteIntervals,
   scheduleSlotOverlapsBlocked,
 } from './scheduleTime';
+import { countCampusTransfers } from './campusTransfers';
 
 function weeksOverlap(left: number[], right: number[]): boolean {
   const leftWeeks = new Set(expandWeeks(left));
@@ -183,6 +184,11 @@ export function enumerateArrangementsOracle(
 
   arrs.sort((a, b) => {
     if (a.conflictCount !== b.conflictCount) return a.conflictCount - b.conflictCount;
+    if (settings.preferAvoidCampusTransfers) {
+      const campusDelta = countCampusTransfers(a.groups, settings.residentCampus)
+        - countCampusTransfers(b.groups, settings.residentCampus);
+      if (campusDelta !== 0) return campusDelta;
+    }
     if (settings.preferHalfDay) {
       const scoreDelta = halfDayScore(b.groups, blockedSlots) - halfDayScore(a.groups, blockedSlots);
       if (scoreDelta !== 0) return scoreDelta;

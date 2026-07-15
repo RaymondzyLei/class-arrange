@@ -22,6 +22,8 @@ BASE_URL = "https://catalog.ustc.edu.cn"
 DETAIL_BATCH_SIZE = 50
 _TERM_ORDER = {"fall": 3, "summer": 2, "spring": 1}
 _DETAIL_RETRY_DELAYS = (1, 2, 4)
+_LESSON_LIST_TIMEOUT_MS = 180_000
+_LESSON_LIST_RETRY_DELAY_SECONDS = 5
 _REPLACE_RETRY_DELAYS = (0.05, 0.1, 0.2, 0.4, 0.8, 1.6)
 _AUTH_TIMEOUT_SECONDS = 10 * 60
 _AUTH_POLL_SECONDS = 2
@@ -102,16 +104,39 @@ def authenticated_request_context(
             context.close()
 
 
-def api_get(request, path: str) -> object:
+def api_get(request, path: str, *, timeout_ms: int = 30_000) -> object:
     """Issue one authenticated GET without exposing session state."""
 
-    response = request.get(BASE_URL + path, timeout=30_000)
+    response = request.get(BASE_URL + path, timeout=timeout_ms)
     if not response.ok:
         raise SyncError(
             f"GET {path} returned {response.status}",
             status=response.status,
         )
     return response.json()
+
+
+def _lesson_list_with_retry(
+    request,
+    semester_id: int,
+    *,
+    sleep: Callable[[float], None],
+) -> object:
+    path = f"/api/teach/lesson/list-for-teach/{semester_id}"
+    for attempt in range(2):
+        try:
+            return api_get(request, path, timeout_ms=_LESSON_LIST_TIMEOUT_MS)
+        except SyncError as error:
+            retryable = error.status == 429 or (
+                error.status is not None and 500 <= error.status < 600
+            )
+            if not retryable or attempt == 1:
+                raise
+        except Exception:
+            if attempt == 1:
+                raise
+        sleep(_LESSON_LIST_RETRY_DELAY_SECONDS)
+    raise AssertionError("unreachable lesson-list retry state")
 
 
 def api_post_json(request, path: str, payload: dict) -> object:
@@ -349,9 +374,10 @@ def sync_requested_semesters(
 
         key = semester_key(name)
         raw_dir = raw_lessons_dir / key
-        lesson_payload = api_get(
+        lesson_payload = _lesson_list_with_retry(
             request,
-            f"/api/teach/lesson/list-for-teach/{semester['id']}",
+            semester["id"],
+            sleep=sleep,
         )
         lessons, codes = _validated_lessons(lesson_payload)
         write_json_atomic(raw_dir / "semester.json", semester)

@@ -28,6 +28,27 @@ describe('custom schedule settings persistence', () => {
     expect(normalizeCustomScheduleSettings(null).calculationMode).toBe('auto');
   });
 
+  it('defaults campus transfer avoidance to enabled with main campus residency', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.preferAvoidCampusTransfers).toBe(true);
+    expect(DEFAULT_CUSTOM_SETTINGS.residentCampus).toBe('本部');
+    expect(normalizeCustomScheduleSettings({})).toMatchObject({
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
+    });
+  });
+
+  it('preserves valid campus preferences and normalizes an invalid residence', () => {
+    expect(normalizeCustomScheduleSettings({
+      preferAvoidCampusTransfers: false,
+      residentCampus: '高新区',
+    })).toMatchObject({
+      preferAvoidCampusTransfers: false,
+      residentCampus: '高新区',
+    });
+    expect(normalizeCustomScheduleSettings({ residentCampus: '其他' }).residentCampus)
+      .toBe('本部');
+  });
+
   it('preserves manual and normalizes invalid persisted modes to auto', () => {
     expect(normalizeCustomScheduleSettings({ calculationMode: 'manual' }).calculationMode)
       .toBe('manual');
@@ -45,6 +66,8 @@ describe('custom schedule settings persistence', () => {
       calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
       blockedSlots: ['1-1', '2-6'],
     });
   });

@@ -3,7 +3,8 @@ import { Select, type SelectProps } from 'antd';
 import { ChevronIcon } from './icons';
 
 function getDefaultPopupContainer(triggerNode: HTMLElement): HTMLElement {
-  return triggerNode.closest('.bottom-modal') as HTMLElement ?? document.body;
+  return triggerNode.closest('.bottom-modal, .onboarding-wizard') as HTMLElement
+    ?? document.body;
 }
 
 export default function SelectWithChevron(props: SelectProps) {

@@ -71,6 +71,25 @@
   margin-top: 0;
 }
 
+.onboarding-wizard__resident-campus {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.onboarding-wizard__resident-select {
+  width: 124px;
+}
+
 .onboarding-wizard__calculation-mode {
   display: flex;
   flex-direction: column;

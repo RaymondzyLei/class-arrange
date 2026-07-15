@@ -31,6 +31,7 @@ import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
 import SemesterDropdown from './SemesterDropdown';
 import type { SemesterManifestEntry } from '@/types';
+import { formatCatalogUpdatedDate } from '@/utils/catalogDate';
 import {
   blockedMinuteIntervalsByDay,
   exactScheduleInterval,
@@ -52,6 +53,7 @@ interface Props {
   blockedSlots: string[];
   onOpenCustomization: () => void;
   calendar: TermCalendar;
+  catalogGeneratedAt: string;
   semesters: SemesterManifestEntry[];
   semesterKey: string;
   semesterSwitching: boolean;
@@ -664,6 +666,7 @@ export default function CourseTable({
   blockedSlots,
   onOpenCustomization,
   calendar,
+  catalogGeneratedAt,
   semesters,
   semesterKey,
   semesterSwitching,
@@ -765,16 +768,16 @@ export default function CourseTable({
       </div>
 
       <div className="course-table__project-footer no-print">
-        <span>点击访问</span>
+        <span>课程信息最后更新于 {formatCatalogUpdatedDate(catalogGeneratedAt)}. 访问</span>
         <a
           className="course-table__project-footer-link"
           href={PROJECT_LINKS.repository}
           target="_blank"
           rel="noreferrer"
         >
-          GitHub 页面
+          GitHub
         </a>
-        <span>或点击查看</span>
+        <span>或查看</span>
         <button
           ref={contributorsTriggerRef}
           className="course-table__project-footer-link course-table__contributors-button"
@@ -783,6 +786,7 @@ export default function CourseTable({
         >
           贡献列表
         </button>
+        <span>。</span>
       </div>
 
       <div className="timetable-export-stage" ref={exportRef}>
