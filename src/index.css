@@ -487,6 +487,13 @@ html {
   gap: 6px;
 }
 
+@media (max-width: 900px) {
+  .course-pool__list {
+    flex: 0 0 auto;
+    height: clamp(360px, 68dvh, 640px);
+  }
+}
+
 .pool-item {
   --pool-item-stripe: var(--border);
   border: 1px solid var(--border);
@@ -3377,6 +3384,10 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   line-height: 1.4;
 }
 
+.customization__resident-select {
+  width: 124px;
+}
+
 .customization__preference-toggle {
   display: inline-flex;
   align-items: center;
@@ -3423,7 +3434,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 }
 
 .calculation-status--ready .calculation-status__dot {
-  background: var(--success, #3f9b68);
+  background: var(--contributor-additions);
 }
 
 .calculation-status--error .calculation-status__dot {
@@ -3636,17 +3647,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .customization__preference-row {
     min-height: 60px;
-  }
-
-  .customization-modal {
-    --bottom-modal-mobile-inset: 12px;
-    padding: var(--bottom-modal-mobile-inset);
-  }
-
-  .customization-modal .bottom-modal__panel {
-    width: 100% !important;
-    max-height: calc(100dvh - (var(--bottom-modal-mobile-inset) * 2));
-    border-radius: 16px;
   }
 
   .customization-modal .bottom-modal__header {
@@ -4342,27 +4342,51 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
 .course-table__term-selector {
   display: inline-flex;
+  width: 100%;
   align-items: center;
-  gap: 2px;
   white-space: nowrap;
 }
 
 #root .course-table__semester-toggle.ant-btn {
-  width: 20px;
-  min-width: 20px;
-  height: 20px;
-  min-height: 20px;
-  padding: 0;
-  color: var(--text-sub);
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  min-height: 24px;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 0 6px;
+  color: var(--text);
+  text-align: left;
 }
 
 #root .course-table__semester-toggle.ant-btn:hover,
-#root .course-table__semester-toggle.ant-btn:focus-visible {
+#root .course-table__semester-toggle.ant-btn:focus-visible,
+#root .course-table__semester-toggle.ant-btn[aria-expanded='true'] {
   color: var(--accent);
   background: color-mix(in srgb, var(--text) 10%, transparent);
 }
 
+.course-table__semester-toggle .course-table__term-name {
+  min-width: 0;
+  flex: 1;
+  margin-bottom: 0;
+  color: inherit;
+  text-align: left;
+  transform: translateY(-1px);
+}
+
+.course-table__semester-toggle .ant-btn-icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: 0;
+}
+
 .course-table__semester-toggle .select-chevron {
+  display: block;
   width: 14px;
   height: 14px;
 }
@@ -4407,13 +4431,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 }
 
 .contributor-list-wrap {
-  --contributor-additions: #16a34a;
   margin-top: 8px;
   container-type: inline-size;
-}
-
-:root[data-theme='dark'] .contributor-list-wrap {
-  --contributor-additions: #4ade80;
 }
 
 .contributors-modal .contributor-list-wrap {
@@ -4572,12 +4591,11 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   border: 1px solid var(--border);
   border-radius: 10px;
   background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
-  transition: border-color 0.16s ease, background-color 0.16s ease;
+  transition: border-color 0.16s ease;
 }
 
 .contributor-list__item:hover {
   border-color: color-mix(in srgb, var(--accent) 22%, var(--border));
-  background: color-mix(in srgb, var(--accent) 3%, var(--panel-bg));
 }
 
 .contributor-list__avatar {

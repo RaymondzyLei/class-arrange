@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 import math
 
 
@@ -41,11 +41,15 @@ def build_term_calendar(semester: dict, key: str, override: dict | None) -> dict
 
     start = date.fromisoformat(semester["start"])
     end = date.fromisoformat(semester["end"])
+    week_start = start + timedelta(days=(-start.weekday()) % 7)
+    week_count = max(0, math.ceil(((end - week_start).days + 1) / 7))
     return {
         "termId": key,
         "termName": semester["nameZh"],
-        "weekStartDate": start.isoformat(),
-        "weekCount": math.ceil(((end - start).days + 1) / 7),
+        "termStartDate": start.isoformat(),
+        "termEndDate": end.isoformat(),
+        "weekStartDate": week_start.isoformat(),
+        "weekCount": week_count,
         "sourceUrl": (override or {}).get("sourceUrl", DEFAULT_SOURCE_URL),
         "holidays": (override or {}).get("holidays", {}),
         "makeupDays": (override or {}).get("makeupDays", {}),

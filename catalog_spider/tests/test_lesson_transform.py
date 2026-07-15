@@ -133,14 +133,144 @@ def test_build_catalog_normalizes_course_fields_and_schedule(fixtures):
         "classes": ["数学23级"],
         "rawSchedule": "1~16周 5201: 1(1,2); 5301: 3(3,4)",
         "schedule": [
-            {"weeks": [1, 16], "room": "5201", "day": 1, "periods": [1, 2]},
-            {"weeks": [1, 16], "room": "5301", "day": 3, "periods": [3, 4]},
+            {
+                "weeks": [1, 16],
+                "room": "5201",
+                "campus": "本部",
+                "day": 1,
+                "periods": [1, 2],
+            },
+            {
+                "weeks": [1, 16],
+                "room": "5301",
+                "campus": "本部",
+                "day": 3,
+                "periods": [3, 4],
+            },
         ],
     }
     assert catalog["courses"][1]["undergradShared"] is False
     assert catalog["courses"][1]["schedule"] == [
-        {"weeks": [2, 2], "room": "5401", "day": 5, "periods": [6, 7]},
-        {"weeks": [4, 6, 8, 10], "room": "5401", "day": 5, "periods": [6, 7]},
+        {
+            "weeks": [2, 2],
+            "room": "5401",
+            "campus": "本部",
+            "day": 5,
+            "periods": [6, 7],
+        },
+        {
+            "weeks": [4, 6, 8, 10],
+            "room": "5401",
+            "campus": "本部",
+            "day": 5,
+            "periods": [6, 7],
+        },
+    ]
+
+
+@pytest.mark.parametrize(
+    ("room", "campus"),
+    [
+        ("1101", "本部"),
+        ("2204", "本部"),
+        ("5401", "本部"),
+        ("3A102", "本部"),
+        ("3B201", "本部"),
+        ("3C304", "本部"),
+        ("第一教学楼", "本部"),
+        ("每周在第一教学楼1418实验室", "本部"),
+        ("第二教学楼", "本部"),
+        ("第五教学楼", "本部"),
+        ("一教或量子信息实验室", "本部"),
+        ("教一楼物理实验中心", "本部"),
+        ("3A教学楼", "本部"),
+        ("5教104", "本部"),
+        ("东区环资楼301", "本部"),
+        ("西区电四楼308", "本部"),
+        ("中区综合馆", "本部"),
+        ("地空楼1004会议室", "本部"),
+        ("管理科研楼1208", "本部"),
+        ("管科楼会议室", "本部"),
+        ("力四楼505", "本部"),
+        ("电三楼406", "本部"),
+        ("生物楼附楼K211", "本部"),
+        ("附楼K104", "本部"),
+        ("中体Z101", "本部"),
+        ("ARTS305", "本部"),
+        ("G2-B302", "高新区"),
+        ("G3-107", "高新区"),
+        ("GH-206", "高新区"),
+        ("GT-C102", "高新区"),
+        ("GX-C1001", "高新区"),
+        ("TH-A101", "高新区"),
+        ("信智大楼B807会议室", "高新区"),
+        ("高新区1号学科楼G1_A104", "高新区"),
+        ("【见习】附一院中区(总院)主体大楼9楼", "其他"),
+        ("国金院5号楼101室", "其他"),
+    ],
+)
+def test_schedule_classifies_every_room_by_campus(fixtures, room, campus):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": f"1~2周 {room}: 1(1,2)",
+        "dateTimePlacePersonText": None,
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["schedule"] == [
+        {
+            "weeks": [1, 2],
+            "room": room,
+            "campus": campus,
+            "day": 1,
+            "periods": [1, 2],
+        }
+    ]
+
+
+def test_schedule_splits_week_specific_mixed_campus_room(fixtures):
+    lesson = {
+        **fixtures.lessons[0],
+        "dateTimePlaceText": (
+            "2-12周在高新区1号学科楼G1_A104,"
+            "13-17周在西区电四楼308: 5(6,7,8,9)"
+        ),
+        "dateTimePlacePersonText": {
+            "cn": (
+                "2~17周 2-12周在高新区1号学科楼G1_A104,"
+                "13-17周在西区电四楼308 :5(6,7,8,9) 王老师"
+            )
+        },
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["schedule"] == [
+        {
+            "weeks": [2, 12],
+            "room": "高新区1号学科楼G1_A104",
+            "campus": "高新区",
+            "day": 5,
+            "periods": [6, 7, 8, 9],
+        },
+        {
+            "weeks": [13, 17],
+            "room": "西区电四楼308",
+            "campus": "本部",
+            "day": 5,
+            "periods": [6, 7, 8, 9],
+        },
     ]
 
 
@@ -168,9 +298,27 @@ def test_schedule_uses_person_text_when_compact_text_omits_weeks(fixtures):
 
     assert catalog["courses"][0]["rawSchedule"] == lesson["dateTimePlaceText"]
     assert catalog["courses"][0]["schedule"] == [
-        {"weeks": [1, 9], "room": "5401", "day": 1, "periods": [8, 9]},
-        {"weeks": [1, 9], "room": "5401", "day": 3, "periods": [6, 7]},
-        {"weeks": [1, 9], "room": "5401", "day": 5, "periods": [3, 4]},
+        {
+            "weeks": [1, 9],
+            "room": "5401",
+            "campus": "本部",
+            "day": 1,
+            "periods": [8, 9],
+        },
+        {
+            "weeks": [1, 9],
+            "room": "5401",
+            "campus": "本部",
+            "day": 3,
+            "periods": [6, 7],
+        },
+        {
+            "weeks": [1, 9],
+            "room": "5401",
+            "campus": "本部",
+            "day": 5,
+            "periods": [3, 4],
+        },
     ]
 
 
@@ -191,7 +339,13 @@ def test_schedule_deduplicates_person_lines_for_multiple_teachers(fixtures):
     )
 
     assert catalog["courses"][0]["schedule"] == [
-        {"weeks": [1, 4], "room": "5201", "day": 1, "periods": [1, 2]},
+        {
+            "weeks": [1, 4],
+            "room": "5201",
+            "campus": "本部",
+            "day": 1,
+            "periods": [1, 2],
+        },
     ]
 
 
@@ -248,6 +402,7 @@ def test_schedule_preserves_clock_time_and_maps_it_to_grid_periods(fixtures):
         {
             "weeks": [2, 5],
             "room": "国金院5号楼101室",
+            "campus": "其他",
             "day": 2,
             "periods": [6, 7, 8, 9],
             "startTime": "14:00",
@@ -256,6 +411,7 @@ def test_schedule_preserves_clock_time_and_maps_it_to_grid_periods(fixtures):
         {
             "weeks": [7, 9],
             "room": "国金院5号楼101室",
+            "campus": "其他",
             "day": 2,
             "periods": [6, 7, 8, 9],
             "startTime": "14:00",
@@ -299,10 +455,34 @@ def test_schedule_splits_two_noncontiguous_parity_weeks(fixtures):
     )
 
     assert catalog["courses"][0]["schedule"] == [
-        {"weeks": [1, 1], "room": "5201", "day": 1, "periods": [1, 2]},
-        {"weeks": [3, 3], "room": "5201", "day": 1, "periods": [1, 2]},
-        {"weeks": [2, 2], "room": "5301", "day": 2, "periods": [3, 4]},
-        {"weeks": [4, 4], "room": "5301", "day": 2, "periods": [3, 4]},
+        {
+            "weeks": [1, 1],
+            "room": "5201",
+            "campus": "本部",
+            "day": 1,
+            "periods": [1, 2],
+        },
+        {
+            "weeks": [3, 3],
+            "room": "5201",
+            "campus": "本部",
+            "day": 1,
+            "periods": [1, 2],
+        },
+        {
+            "weeks": [2, 2],
+            "room": "5301",
+            "campus": "本部",
+            "day": 2,
+            "periods": [3, 4],
+        },
+        {
+            "weeks": [4, 4],
+            "room": "5301",
+            "campus": "本部",
+            "day": 2,
+            "periods": [3, 4],
+        },
     ]
 
 
@@ -472,3 +652,20 @@ def test_build_term_calendar_counts_partial_final_week():
     )
 
     assert calendar["weekCount"] == 2
+
+
+def test_build_term_calendar_preserves_api_bounds_and_starts_weeks_on_monday():
+    calendar = build_term_calendar(
+        {
+            "nameZh": "2026年秋季学期",
+            "start": "2026-08-30",
+            "end": "2027-01-15",
+        },
+        "2026-fall",
+        None,
+    )
+
+    assert calendar["termStartDate"] == "2026-08-30"
+    assert calendar["termEndDate"] == "2027-01-15"
+    assert calendar["weekStartDate"] == "2026-08-31"
+    assert calendar["weekCount"] == 20

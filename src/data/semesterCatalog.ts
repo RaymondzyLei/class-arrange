@@ -90,11 +90,25 @@ export function validateSemesterCatalog(value: unknown): SemesterCatalog {
     !isRecord(value.semester) ||
     typeof value.semester.key !== 'string' ||
     typeof value.semester.name !== 'string' ||
+    typeof value.semester.startDate !== 'string' ||
+    typeof value.semester.endDate !== 'string' ||
     !isRecord(value.semester.calendar) ||
     !Array.isArray(value.courses) ||
     !isRecord(value.detailsBySection)
   ) {
     throw new SemesterCatalogError('课程数据结构无效');
+  }
+
+  const calendar = value.semester.calendar;
+  if (
+    typeof calendar.termStartDate !== 'string' ||
+    typeof calendar.termEndDate !== 'string' ||
+    typeof calendar.weekStartDate !== 'string' ||
+    typeof calendar.weekCount !== 'number' ||
+    calendar.termStartDate !== value.semester.startDate ||
+    calendar.termEndDate !== value.semester.endDate
+  ) {
+    throw new SemesterCatalogError('课程数据中的学期日期无效');
   }
 
   const ids: string[] = [];

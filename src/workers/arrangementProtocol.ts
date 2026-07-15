@@ -1,4 +1,4 @@
-import type { CourseGroup } from '../types';
+import type { Campus, CourseGroup, ResidentCampus } from '../types';
 import { enumerateArrangementsExact } from '../utils/arrangementEngine';
 import type { CustomScheduleSettings } from '../utils/customization';
 
@@ -6,6 +6,7 @@ export interface ArrangementWorkerScheduleDto {
   weeks: number[];
   day: number;
   periods: number[];
+  campus: Campus;
   startTime?: string;
   endTime?: string;
 }
@@ -21,6 +22,8 @@ export interface ArrangementWorkerGroupDto {
 export interface ArrangementWorkerSettingsDto {
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
+  preferAvoidCampusTransfers: boolean;
+  residentCampus: ResidentCampus;
   blockedSlots: string[];
 }
 
@@ -69,6 +72,7 @@ export function createArrangementWorkerRequest(
         weeks: [...slot.weeks],
         day: slot.day,
         periods: [...slot.periods],
+        campus: slot.campus,
         ...(slot.startTime ? { startTime: slot.startTime } : {}),
         ...(slot.endTime ? { endTime: slot.endTime } : {}),
       })),
@@ -78,6 +82,8 @@ export function createArrangementWorkerRequest(
     settings: {
       preferHalfDay: settings.preferHalfDay,
       preferFewerEarlyMornings: settings.preferFewerEarlyMornings,
+      preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
+      residentCampus: settings.residentCampus,
       blockedSlots: [...settings.blockedSlots],
     },
   };
@@ -90,6 +96,7 @@ function rehydrateWorkerInputGroup(dto: ArrangementWorkerGroupDto): CourseGroup 
     schedule: dto.schedule.map((slot) => ({
       weeks: slot.weeks,
       room: '',
+      campus: slot.campus,
       day: slot.day,
       periods: slot.periods,
       ...(slot.startTime ? { startTime: slot.startTime } : {}),
@@ -110,6 +117,8 @@ export function executeArrangementWorkerRequest(
     calculationMode: 'auto',
     preferHalfDay: request.settings.preferHalfDay,
     preferFewerEarlyMornings: request.settings.preferFewerEarlyMornings,
+    preferAvoidCampusTransfers: request.settings.preferAvoidCampusTransfers,
+    residentCampus: request.settings.residentCampus,
     blockedSlots: request.settings.blockedSlots,
   };
   const arrangements = enumerateArrangementsExact(

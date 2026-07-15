@@ -15,6 +15,36 @@ describe('onboarding calculation-mode persistence', () => {
     })).preferences.calculationMode).toBe('auto');
   });
 
+  it('defaults campus transfer avoidance to enabled with main campus residency', () => {
+    const preferences = parseOnboardingStorage(JSON.stringify({
+      onboarding: { preferences: {} },
+    })).preferences;
+
+    expect(DEFAULT_ONBOARDING_PREFERENCES).toMatchObject({
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
+    });
+    expect(preferences).toMatchObject({
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
+    });
+  });
+
+  it('preserves valid campus preferences and rejects other as a residence', () => {
+    expect(parseOnboardingStorage(JSON.stringify({
+      preferences: {
+        preferAvoidCampusTransfers: false,
+        residentCampus: '高新区',
+      },
+    })).preferences).toMatchObject({
+      preferAvoidCampusTransfers: false,
+      residentCampus: '高新区',
+    });
+    expect(parseOnboardingStorage(JSON.stringify({
+      preferences: { residentCampus: '其他' },
+    })).preferences.residentCampus).toBe('本部');
+  });
+
   it('preserves manual and rejects invalid persisted modes', () => {
     expect(parseOnboardingStorage(JSON.stringify({
       preferences: { calculationMode: 'manual' },
@@ -34,6 +64,8 @@ describe('onboarding calculation-mode persistence', () => {
       calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: false,
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
     });
   });
 });

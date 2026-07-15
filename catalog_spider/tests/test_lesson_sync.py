@@ -74,6 +74,23 @@ class LessonRequest:
         return next(self.detail_responses)
 
 
+class FlakyLessonListRequest(LessonRequest):
+    def __init__(self, semesters, lessons, detail_responses):
+        super().__init__(semesters, lessons, detail_responses)
+        self.lesson_list_attempts = 0
+
+    def get(self, url, **kwargs):
+        self.calls.append(("GET", url, kwargs))
+        if url.endswith("/api/teach/semester/list"):
+            return FakeResponse(self.semesters)
+        if "/api/teach/lesson/list-for-teach/" in url:
+            self.lesson_list_attempts += 1
+            if self.lesson_list_attempts == 1:
+                raise TimeoutError("simulated slow catalog transfer")
+            return FakeResponse(self.lessons)
+        raise AssertionError(f"unexpected GET {url}")
+
+
 class FakePage:
     def __init__(self):
         self.visited = []
@@ -315,6 +332,22 @@ def test_write_json_atomic_retries_transient_windows_file_lock(tmp_path, monkeyp
     assert json.loads(target.read_text(encoding="utf-8")) == {"fresh": True}
 
 
+def test_write_json_atomic_skips_replacing_identical_content(tmp_path, monkeypatch):
+    target = tmp_path / "payload.json"
+    payload = {"unchanged": True}
+    write_json_atomic(target, payload)
+
+    def locked_replace(_source, _destination):
+        raise PermissionError("simulated persistent Vite file lock")
+
+    monkeypatch.setattr(Path, "replace", locked_replace)
+
+    write_json_atomic(target, payload)
+
+    assert json.loads(target.read_text(encoding="utf-8")) == payload
+    assert not target.with_suffix(".json.tmp").exists()
+
+
 def test_api_get_uses_authenticated_request_context():
     request = RecordingRequest([FakeResponse([{"id": 461}])])
 
@@ -397,6 +430,47 @@ def test_sync_requested_semesters_publishes_complete_valid_catalog(
     assert manifest["defaultSemester"] == "2026-fall"
     assert manifest["semesters"][0]["file"] == "2026-fall/courses.json"
     assert result == [catalog]
+
+
+def test_sync_retries_slow_lesson_list_once_with_extended_timeout(
+    tmp_path,
+    lesson_api_fixtures,
+):
+    semester, lessons, details = lesson_api_fixtures
+    request = FlakyLessonListRequest(
+        [semester],
+        lessons,
+        [FakeResponse(details)],
+    )
+    delays = []
+
+    sync_requested_semesters(
+        request,
+        [semester["nameZh"]],
+        raw_lessons_dir=tmp_path / "raw",
+        public_semesters_dir=tmp_path / "public",
+        calendar_overrides={},
+        sleep=delays.append,
+    )
+
+    lesson_list_calls = [
+        call
+        for call in request.calls
+        if "/api/teach/lesson/list-for-teach/" in call[1]
+    ]
+    assert lesson_list_calls == [
+        (
+            "GET",
+            BASE_URL + f"/api/teach/lesson/list-for-teach/{semester['id']}",
+            {"timeout": 180_000},
+        ),
+        (
+            "GET",
+            BASE_URL + f"/api/teach/lesson/list-for-teach/{semester['id']}",
+            {"timeout": 180_000},
+        ),
+    ]
+    assert delays == [5]
 
 
 def test_sync_resumes_by_requesting_only_details_missing_from_checkpoint(

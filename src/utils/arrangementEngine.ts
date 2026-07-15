@@ -1,10 +1,15 @@
-import type { Arrangement, CourseGroup } from '@/types';
+import type { Arrangement, CourseGroup, ResidentCampus } from '@/types';
 import {
   blockedSlotKey,
   DEFAULT_CUSTOM_SETTINGS,
   type CustomScheduleSettings,
 } from './customization';
 import { expandWeeks } from './weeks';
+import {
+  campusVisitsForGroup,
+  scoreCampusVisits,
+  type CampusVisit,
+} from './campusTransfers';
 import {
   blockedMinuteIntervalsByDay,
   minuteIntervalsOverlap,
@@ -16,6 +21,7 @@ const RESULT_LIMIT = 8;
 
 export interface ArrangementRank {
   conflictCount: number;
+  campusTransitionCount: number;
   halfDayScore: number;
   earlyMorningDayCount: number;
   keyString: string;
@@ -35,6 +41,7 @@ interface PrecomputedGroup {
   expandedIntervals: ExpandedInterval[];
   occupiedDayPeriods: string[];
   earlyMorningDays: number[];
+  campusVisits: CampusVisit[];
   blockedSlotHit: boolean;
   credits: number;
   hours: number;
@@ -72,6 +79,10 @@ export function compareArrangementRanks(
 ): number {
   if (left.conflictCount !== right.conflictCount) {
     return left.conflictCount - right.conflictCount;
+  }
+  if (settings.preferAvoidCampusTransfers) {
+    const campusDelta = left.campusTransitionCount - right.campusTransitionCount;
+    if (campusDelta !== 0) return campusDelta;
   }
   if (settings.preferHalfDay) {
     const halfDayDelta = right.halfDayScore - left.halfDayScore;
@@ -212,6 +223,7 @@ function precomputeGroups(
       expandedIntervals: [...expandedIntervals.values()],
       occupiedDayPeriods: [...occupiedDayPeriods],
       earlyMorningDays: [...earlyMorningDays],
+      campusVisits: campusVisitsForGroup(group),
       blockedSlotHit,
       credits: representative ? representative.credits : 0,
       hours: representative ? representative.hours : 0,
@@ -258,14 +270,25 @@ class IncrementalSearchState {
   private readonly overlapConflictRefs: number[];
   private readonly occupiedDayPeriodRefs = new Map<string, number>();
   private readonly earlyMorningDayRefs = new Map<number, number>();
+  private readonly campusVisitsByBucket = new Map<string, CampusVisit[]>();
+  private readonly residentCampus: ResidentCampus;
+  private readonly trackCampusTransfers: boolean;
 
   conflictCount = 0;
+  campusTransitionCount = 0;
   earlyMorningDayCount = 0;
   totalCredits = 0;
   totalHours = 0;
 
-  constructor(records: PrecomputedGroup[], blockedSlots: Set<string>) {
+  constructor(
+    records: PrecomputedGroup[],
+    blockedSlots: Set<string>,
+    residentCampus: ResidentCampus,
+    trackCampusTransfers: boolean,
+  ) {
     this.records = records;
+    this.residentCampus = residentCampus;
+    this.trackCampusTransfers = trackCampusTransfers;
     this.selected = Array.from({ length: records.length }, () => false);
     const keyCount = records.reduce((highest, record) => Math.max(highest, record.keyId + 1), 0);
     this.blockedConflictRefs = Array.from({ length: keyCount }, () => 0);
@@ -299,6 +322,9 @@ class IncrementalSearchState {
       this.earlyMorningDayRefs.set(day, previous + 1);
       if (previous === 0) this.earlyMorningDayCount += 1;
     }
+    if (this.trackCampusTransfers) {
+      for (const visit of record.campusVisits) this.addCampusVisit(visit);
+    }
     this.totalCredits += record.credits;
     this.totalHours += record.hours;
     return snapshot;
@@ -326,6 +352,9 @@ class IncrementalSearchState {
       } else {
         this.earlyMorningDayRefs.set(day, previous - 1);
       }
+    }
+    if (this.trackCampusTransfers) {
+      for (const visit of record.campusVisits) this.removeCampusVisit(visit);
     }
     this.totalCredits = snapshot.totalCredits;
     this.totalHours = snapshot.totalHours;
@@ -375,6 +404,25 @@ class IncrementalSearchState {
     if (previous <= 1) map.delete(key);
     else map.set(key, previous - 1);
   }
+
+  private addCampusVisit(visit: CampusVisit): void {
+    const bucket = this.campusVisitsByBucket.get(visit.bucketKey) ?? [];
+    const previous = scoreCampusVisits(bucket, this.residentCampus);
+    bucket.push(visit);
+    this.campusVisitsByBucket.set(visit.bucketKey, bucket);
+    this.campusTransitionCount += scoreCampusVisits(bucket, this.residentCampus) - previous;
+  }
+
+  private removeCampusVisit(visit: CampusVisit): void {
+    const bucket = this.campusVisitsByBucket.get(visit.bucketKey);
+    if (!bucket) return;
+    const previous = scoreCampusVisits(bucket, this.residentCampus);
+    const index = bucket.indexOf(visit);
+    if (index === -1) return;
+    bucket.splice(index, 1);
+    if (bucket.length === 0) this.campusVisitsByBucket.delete(visit.bucketKey);
+    this.campusTransitionCount += scoreCampusVisits(bucket, this.residentCampus) - previous;
+  }
 }
 
 function resetDiagnostics(diagnostics: ArrangementSearchDiagnostics | undefined): void {
@@ -417,7 +465,12 @@ export function enumerateArrangementsExact(
     else ambiguousBuckets.push(bucket);
   }
 
-  const state = new IncrementalSearchState(records, blockedSlots);
+  const state = new IncrementalSearchState(
+    records,
+    blockedSlots,
+    settings.residentCampus,
+    settings.preferAvoidCampusTransfers,
+  );
   for (const groupIndex of lockedIndices) state.add(groupIndex);
 
   const pickedIndices: number[] = [];
@@ -435,6 +488,9 @@ export function enumerateArrangementsExact(
         id: sortedKeys.join('||'),
         rank: {
           conflictCount: state.conflictCount,
+          campusTransitionCount: settings.preferAvoidCampusTransfers
+            ? state.campusTransitionCount
+            : 0,
           halfDayScore: settings.preferHalfDay ? state.halfDayScore() : 0,
           earlyMorningDayCount: settings.preferFewerEarlyMornings
             ? state.earlyMorningDayCount

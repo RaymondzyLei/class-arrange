@@ -23,6 +23,8 @@ function settings(
     calculationMode: 'manual',
     preferHalfDay: false,
     preferFewerEarlyMornings: true,
+    preferAvoidCampusTransfers: true,
+    residentCampus: '本部',
     blockedSlots: [],
     ...overrides,
   };
@@ -65,6 +67,14 @@ describe('arrangement calculation input identity', () => {
     expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
       groups,
       settings({ calculationMode: 'auto', blockedSlots: ['1-1'] }),
+    ));
+    expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
+      groups,
+      settings({ preferAvoidCampusTransfers: false }),
+    ));
+    expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
+      groups,
+      settings({ residentCampus: '高新区' }),
     ));
     expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
       [group('A', 'a', ['A.02'])],

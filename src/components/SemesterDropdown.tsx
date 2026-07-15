@@ -17,6 +17,8 @@ export default function SemesterDropdown({
   onSelect,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const currentSemesterName = semesters.find((semester) => semester.key === semesterKey)?.name
+    ?? semesterKey;
 
   return (
     <Dropdown
@@ -40,8 +42,11 @@ export default function SemesterDropdown({
         aria-expanded={open}
         aria-busy={loading}
         disabled={loading}
+        iconPlacement="end"
         icon={<ChevronIcon className={`select-chevron${open ? ' select-chevron--open' : ''}`} />}
-      />
+      >
+        <span className="course-table__term-name">{currentSemesterName}</span>
+      </Button>
     </Dropdown>
   );
 }

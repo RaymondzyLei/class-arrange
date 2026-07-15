@@ -7,6 +7,7 @@ import CalculationStatus from './CalculationStatus';
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const arrangementPanelSource = readFileSync(new URL('./ArrangementPanel.tsx', import.meta.url), 'utf8');
 const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
+const tokensSource = readFileSync(new URL('../styles/tokens.css', import.meta.url), 'utf8');
 
 function renderStatus(
   phase: 'dirty' | 'ready',
@@ -52,6 +53,16 @@ describe('CalculationStatus', () => {
     expect(statusRule).toContain('min-height: 38px');
     expect(statusRule).toContain('box-sizing: border-box');
     expect(statusRule).toContain('background: transparent');
+  });
+
+  it('shares the contributor additions color with the ready status dot', () => {
+    const readyDotRule = stylesSource.match(
+      /\.calculation-status--ready \.calculation-status__dot\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
+
+    expect(tokensSource).toContain('--contributor-additions: #16a34a');
+    expect(tokensSource).toContain('--contributor-additions: #4ade80');
+    expect(readyDotRule).toContain('background: var(--contributor-additions)');
   });
 
   it('applies the newly ranked first arrangement before the browser paints', () => {

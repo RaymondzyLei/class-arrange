@@ -38,6 +38,7 @@ const slot = (day: number, period: number): ScheduleSlot => ({
   day,
   periods: [period],
   room: '',
+  campus: '本部',
 });
 
 describe('course selection ID scopes', () => {

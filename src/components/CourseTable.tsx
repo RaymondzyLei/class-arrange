@@ -1,7 +1,7 @@
 import { Button, Slider } from 'antd';
 import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
-import { DAYS, PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
+import { PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
@@ -14,9 +14,10 @@ import {
   type TimetableRangeEntry,
 } from '@/utils/timetableLayout';
 import {
-  formatDateRange,
+  formatTermDateRange,
   formatShortDate,
   getCalendarDatesForSelection,
+  getVisibleWeekdays,
   getWeekOptions,
   type CalendarDateInfo,
   type TermCalendar,
@@ -31,6 +32,7 @@ import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
 import SemesterDropdown from './SemesterDropdown';
 import type { SemesterManifestEntry } from '@/types';
+import { formatCatalogUpdatedDate } from '@/utils/catalogDate';
 import {
   blockedMinuteIntervalsByDay,
   exactScheduleInterval,
@@ -52,6 +54,7 @@ interface Props {
   blockedSlots: string[];
   onOpenCustomization: () => void;
   calendar: TermCalendar;
+  catalogGeneratedAt: string;
   semesters: SemesterManifestEntry[];
   semesterKey: string;
   semesterSwitching: boolean;
@@ -563,6 +566,10 @@ function TimetableView({
     () => (weekSelection === 'all' ? [] : getCalendarDatesForSelection(weekSelection, calendar)),
     [calendar, weekSelection],
   );
+  const visibleDays = useMemo(
+    () => getVisibleWeekdays(weekSelection, calendar),
+    [calendar, weekSelection],
+  );
   const dateByWeekday = new Map(selectedWeekDates.map((info) => [info.weekday, info]));
   const skipped = new Set<string>();
 
@@ -572,7 +579,7 @@ function TimetableView({
         <thead>
           <tr>
             <th className="timetable__head-spacer" colSpan={2} />
-            {DAYS.map((day) => (
+            {visibleDays.map((day) => (
               <DayHead key={day} day={day} info={dateByWeekday.get(day)} />
             ))}
           </tr>
@@ -600,7 +607,7 @@ function TimetableView({
                   {PERIOD_TIMES[period].end}
                 </span>
               </th>
-              {DAYS.map((day) => {
+              {visibleDays.map((day) => {
                 const cellKey = keyFor(day, period);
                 if (skipped.has(cellKey)) return null;
 
@@ -664,6 +671,7 @@ export default function CourseTable({
   blockedSlots,
   onOpenCustomization,
   calendar,
+  catalogGeneratedAt,
   semesters,
   semesterKey,
   semesterSwitching,
@@ -708,7 +716,6 @@ export default function CourseTable({
         </div>
         <div className="course-table__term-date">
           <span className="course-table__term-selector">
-            <span className="course-table__term-name">{calendar.termName}</span>
             <SemesterDropdown
               semesters={semesters}
               semesterKey={semesterKey}
@@ -716,7 +723,7 @@ export default function CourseTable({
               onSelect={onSemesterChange}
             />
           </span>
-          <span className="course-table__date-range">{formatDateRange(weekSelection, calendar)}</span>
+          <span className="course-table__date-range">{formatTermDateRange(calendar)}</span>
         </div>
         <div className="course-table__actions no-print">
           <Button
@@ -765,16 +772,16 @@ export default function CourseTable({
       </div>
 
       <div className="course-table__project-footer no-print">
-        <span>点击访问</span>
+        <span>课程信息最后更新于 {formatCatalogUpdatedDate(catalogGeneratedAt)}. 访问</span>
         <a
           className="course-table__project-footer-link"
           href={PROJECT_LINKS.repository}
           target="_blank"
           rel="noreferrer"
         >
-          GitHub 页面
+          GitHub
         </a>
-        <span>或点击查看</span>
+        <span>或查看</span>
         <button
           ref={contributorsTriggerRef}
           className="course-table__project-footer-link course-table__contributors-button"
@@ -783,6 +790,7 @@ export default function CourseTable({
         >
           贡献列表
         </button>
+        <span>。</span>
       </div>
 
       <div className="timetable-export-stage" ref={exportRef}>

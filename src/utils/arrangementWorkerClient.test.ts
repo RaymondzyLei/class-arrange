@@ -15,6 +15,8 @@ const SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
+  preferAvoidCampusTransfers: true,
+  residentCampus: '本部',
   blockedSlots: [],
 };
 
@@ -80,6 +82,8 @@ describe('arrangement Worker client', () => {
       settings: {
         preferHalfDay: false,
         preferFewerEarlyMornings: true,
+        preferAvoidCampusTransfers: true,
+        residentCampus: '本部',
         blockedSlots: [],
       },
     }]);

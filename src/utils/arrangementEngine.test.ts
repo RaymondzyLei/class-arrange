@@ -14,6 +14,8 @@ const NO_PREFERENCES: CustomScheduleSettings = {
   calculationMode: 'auto',
   preferHalfDay: false,
   preferFewerEarlyMornings: false,
+  preferAvoidCampusTransfers: false,
+  residentCampus: '本部',
   blockedSlots: [],
 };
 
@@ -68,6 +70,7 @@ function makeGroup(
 function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
   return {
     conflictCount: 0,
+    campusTransitionCount: 0,
     halfDayScore: 0,
     earlyMorningDayCount: 0,
     keyString: 'same',
@@ -82,12 +85,19 @@ describe('compareArrangementRanks', () => {
       calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
+      preferAvoidCampusTransfers: true,
+      residentCampus: '本部',
       blockedSlots: [],
     };
 
     expect(compareArrangementRanks(
       makeRank({ conflictCount: 0, keyString: 'z' }),
       makeRank({ conflictCount: 1, keyString: 'a' }),
+      allPreferences,
+    )).toBeLessThan(0);
+    expect(compareArrangementRanks(
+      makeRank({ campusTransitionCount: 0, halfDayScore: 0, keyString: 'z' }),
+      makeRank({ campusTransitionCount: 1, halfDayScore: 2, keyString: 'a' }),
       allPreferences,
     )).toBeLessThan(0);
     expect(compareArrangementRanks(
@@ -114,8 +124,8 @@ describe('compareArrangementRanks', () => {
 
   it('skips disabled preference keys', () => {
     expect(compareArrangementRanks(
-      makeRank({ halfDayScore: 0, earlyMorningDayCount: 7, keyString: 'a' }),
-      makeRank({ halfDayScore: 2, earlyMorningDayCount: 0, keyString: 'b' }),
+      makeRank({ campusTransitionCount: 9, halfDayScore: 0, earlyMorningDayCount: 7, keyString: 'a' }),
+      makeRank({ campusTransitionCount: 0, halfDayScore: 2, earlyMorningDayCount: 0, keyString: 'b' }),
       NO_PREFERENCES,
     )).toBeLessThan(0);
   });
@@ -155,6 +165,7 @@ function randomGroups(seed: number): CourseGroup[] {
             ? [firstPeriod, firstPeriod + 1]
             : [firstPeriod],
           room: '',
+          campus: random() < 0.5 ? '本部' : '高新区',
         });
       }
       const key = `${courseCode}::candidate-${candidateIndex}-seed-${seed}`;
@@ -186,18 +197,22 @@ describe('exact Top-8 differential contract', () => {
       const groups = randomGroups(seed);
       for (const preferHalfDay of [false, true]) {
         for (const preferFewerEarlyMornings of [false, true]) {
+          for (const preferAvoidCampusTransfers of [false, true]) {
           const settings: CustomScheduleSettings = {
             calculationMode: 'auto',
             preferHalfDay,
             preferFewerEarlyMornings,
+            preferAvoidCampusTransfers,
+            residentCampus: seed % 2 === 0 ? '本部' : '高新区',
             blockedSlots: blockedSlotsForSeed(seed),
           };
           const expected = enumerateArrangementsOracle(groups, settings);
           const actual = enumerateArrangements(groups, settings);
           expect(
             actual,
-            `seed=${seed}, halfDay=${preferHalfDay}, early=${preferFewerEarlyMornings}`,
+            `seed=${seed}, halfDay=${preferHalfDay}, early=${preferFewerEarlyMornings}, campus=${preferAvoidCampusTransfers}`,
           ).toEqual(expected);
+          }
         }
       }
     }
@@ -205,9 +220,9 @@ describe('exact Top-8 differential contract', () => {
 
   it('counts blocked-slot hits without conflating them with timetable overlaps', () => {
     const groups = [
-      makeGroup('A', 'a-blocked', [{ weeks: [1, 2], day: 1, periods: [1], room: '' }]),
-      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '' }]),
-      makeGroup('B', 'b-locked', [{ weeks: [1, 2], day: 4, periods: [4], room: '' }]),
+      makeGroup('A', 'a-blocked', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
+      makeGroup('B', 'b-locked', [{ weeks: [1, 2], day: 4, periods: [4], room: '', campus: '本部' }]),
     ];
     const settings: CustomScheduleSettings = {
       ...NO_PREFERENCES,
@@ -229,6 +244,7 @@ describe('exact Top-8 differential contract', () => {
         day: 1,
         periods: [11],
         room: '',
+        campus: '本部',
         startTime: '19:00',
         endTime: '19:30',
       } as ScheduleSlot]),
@@ -237,6 +253,7 @@ describe('exact Top-8 differential contract', () => {
         day: 1,
         periods: [10],
         room: '',
+        campus: '本部',
         startTime: '19:15',
         endTime: '19:45',
       } as ScheduleSlot]),
@@ -245,6 +262,7 @@ describe('exact Top-8 differential contract', () => {
         day: 1,
         periods: [11],
         room: '',
+        campus: '本部',
       }]),
     ];
     const settings: CustomScheduleSettings = {
@@ -265,10 +283,10 @@ describe('exact Top-8 differential contract', () => {
   it('computes preference metrics before applying their comparator keys', () => {
     const halfDayGroups = [
       makeGroup('A', 'a-busy-afternoon', [
-        { weeks: [1, 2], day: 1, periods: [6], room: '' },
+        { weeks: [1, 2], day: 1, periods: [6], room: '', campus: '本部' },
       ]),
       makeGroup('A', 'z-free-afternoon', [
-        { weeks: [1, 2], day: 1, periods: [3], room: '' },
+        { weeks: [1, 2], day: 1, periods: [3], room: '', campus: '本部' },
       ]),
     ];
     const afternoonBlocks: string[] = [];
@@ -281,6 +299,8 @@ describe('exact Top-8 differential contract', () => {
       calculationMode: 'auto',
       preferHalfDay: true,
       preferFewerEarlyMornings: false,
+      preferAvoidCampusTransfers: false,
+      residentCampus: '本部',
       blockedSlots: afternoonBlocks,
     }).map((result) => result.id)).toEqual([
       'z-free-afternoon',
@@ -288,15 +308,34 @@ describe('exact Top-8 differential contract', () => {
     ]);
 
     const earlyGroups = [
-      makeGroup('A', 'a-early', [{ weeks: [1, 2], day: 1, periods: [1], room: '' }]),
-      makeGroup('A', 'z-late', [{ weeks: [1, 2], day: 2, periods: [3], room: '' }]),
+      makeGroup('A', 'a-early', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-late', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
     ];
     expect(enumerateArrangements(earlyGroups, {
       calculationMode: 'auto',
       preferHalfDay: false,
       preferFewerEarlyMornings: true,
+      preferAvoidCampusTransfers: false,
+      residentCampus: '本部',
       blockedSlots: [],
     }).map((result) => result.id)).toEqual(['z-late', 'a-early']);
+  });
+
+  it('ranks fewer campus transfers ahead of existing preferences when enabled', () => {
+    const groups = [
+      makeGroup('A', 'a-high-tech', [{
+        weeks: [1], day: 1, periods: [1, 2], room: 'GT-A101', campus: '高新区',
+      }]),
+      makeGroup('A', 'z-main-campus', [{
+        weeks: [1], day: 1, periods: [6, 7], room: '1101', campus: '本部',
+      }]),
+    ];
+
+    expect(enumerateArrangements(groups, {
+      ...NO_PREFERENCES,
+      preferHalfDay: true,
+      preferAvoidCampusTransfers: true,
+    }).map((result) => result.id)).toEqual(['z-main-campus', 'a-high-tech']);
   });
 });
 

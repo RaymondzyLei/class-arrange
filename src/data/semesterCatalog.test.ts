@@ -30,6 +30,8 @@ const catalog: SemesterCatalog = {
     calendar: {
       termId: '2026-summer',
       termName: '2026年夏季学期',
+      termStartDate: '2026-06-29',
+      termEndDate: '2026-08-02',
       weekStartDate: '2026-06-29',
       weekCount: 5,
       sourceUrl: 'https://catalog.ustc.edu.cn/query/lesson',
@@ -109,6 +111,16 @@ describe('semester catalog loader', () => {
       validateSemesterCatalog({ ...catalog, courses: [...catalog.courses, catalog.courses[0]] }),
     ).toThrow(/重复/);
     expect(() => validateSemesterCatalog({ ...catalog, detailsBySection: {} })).toThrow(/详情/);
+  });
+
+  test('requires calendar bounds to match the semester API bounds', () => {
+    const missingEnd = structuredClone(catalog) as unknown as Record<string, unknown>;
+    delete ((missingEnd.semester as Record<string, unknown>).calendar as Record<string, unknown>).termEndDate;
+    expect(() => validateSemesterCatalog(missingEnd)).toThrow(/日期/);
+
+    const mismatchedEnd = structuredClone(catalog);
+    mismatchedEnd.semester.calendar.termEndDate = '2026-08-03';
+    expect(() => validateSemesterCatalog(mismatchedEnd)).toThrow(/日期/);
   });
 
   test('rejects a catalog whose semester does not match the manifest entry', async () => {
