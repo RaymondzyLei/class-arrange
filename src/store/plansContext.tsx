@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useReducer, useRef, type ReactNode } from 'react';
-import type { Plan, PlansState } from '@/types';
+import type { CourseSection, Plan, PlansState } from '@/types';
 import { plansReducer, type PlansAction } from './plansReducer';
 import {
   initialPlansState,
-  loadPlansState,
-  savePlansState,
+  loadPlansPayload,
+  savePlansPayload,
+  type StoredPlansPayloadV2,
 } from '@/utils/planSeed';
+import { reconcilePlansWithCatalog } from '@/updates/planReconciliation';
 
 interface PlansContextValue {
   state: PlansState;
@@ -19,38 +21,51 @@ interface PlansProviderProps {
   children: ReactNode;
   semesterKey: string;
   defaultSemesterKey: string;
-  validCourseIds: ReadonlySet<string>;
+  courseMap: ReadonlyMap<string, CourseSection>;
+  catalogRevision: string;
 }
 
-function sanitizeState(state: PlansState, validCourseIds: ReadonlySet<string>): PlansState {
+function freshPayload(state: PlansState): StoredPlansPayloadV2 {
   return {
-    ...state,
-    plans: state.plans.map((plan) => ({
-      ...plan,
-      courseIds: [...new Set(plan.courseIds.filter((id) => validCourseIds.has(id)))],
-    })),
+    version: 2,
+    state,
+    selectedSnapshots: {},
+    impactHistory: [],
+    pendingImpacts: [],
+    catalogRevision: null,
   };
 }
 
 function getInitialState({
   semesterKey,
   defaultSemesterKey,
-  validCourseIds,
+  courseMap,
+  catalogRevision,
 }: Omit<PlansProviderProps, 'children'>): PlansState {
-  const loaded = loadPlansState(semesterKey, { defaultSemester: defaultSemesterKey });
-  if (loaded && loaded.plans.length > 0) return sanitizeState(loaded, validCourseIds);
-  return sanitizeState(initialPlansState(), validCourseIds);
+  const loaded = loadPlansPayload(semesterKey, { defaultSemester: defaultSemesterKey });
+  const payload = loaded && loaded.state.plans.length > 0
+    ? loaded
+    : freshPayload(initialPlansState());
+  const reconciled = reconcilePlansWithCatalog(
+    payload,
+    semesterKey,
+    catalogRevision,
+    courseMap,
+  );
+  savePlansPayload(semesterKey, reconciled);
+  return reconciled.state;
 }
 
 export function PlansProvider({
   children,
   semesterKey,
   defaultSemesterKey,
-  validCourseIds,
+  courseMap,
+  catalogRevision,
 }: PlansProviderProps) {
   const [state, dispatch] = useReducer(
     plansReducer,
-    { semesterKey, defaultSemesterKey, validCourseIds },
+    { semesterKey, defaultSemesterKey, courseMap, catalogRevision },
     getInitialState,
   );
   const latestStateRef = useRef(state);
@@ -58,16 +73,29 @@ export function PlansProvider({
 
   // debounce 写回 localStorage
   useEffect(() => {
-    const t = setTimeout(() => savePlansState(semesterKey, state), 200);
+    const t = setTimeout(() => {
+      const stored = loadPlansPayload(semesterKey, { defaultSemester: defaultSemesterKey });
+      const payload = stored ? { ...stored, state } : freshPayload(state);
+      savePlansPayload(
+        semesterKey,
+        reconcilePlansWithCatalog(payload, semesterKey, catalogRevision, courseMap),
+      );
+    }, 200);
     return () => clearTimeout(t);
-  }, [semesterKey, state]);
+  }, [catalogRevision, courseMap, defaultSemesterKey, semesterKey, state]);
 
   // 学期切换会卸载 Provider；同步刷新最后一次变更，避免 200ms 窗口内丢课。
   useEffect(
     () => () => {
-      savePlansState(semesterKey, latestStateRef.current);
+      const stored = loadPlansPayload(semesterKey, { defaultSemester: defaultSemesterKey });
+      const state = latestStateRef.current;
+      const payload = stored ? { ...stored, state } : freshPayload(state);
+      savePlansPayload(
+        semesterKey,
+        reconcilePlansWithCatalog(payload, semesterKey, catalogRevision, courseMap),
+      );
     },
-    [semesterKey],
+    [catalogRevision, courseMap, defaultSemesterKey, semesterKey],
   );
 
   const activePlan = state.plans.find((p) => p.id === state.activePlanId) ?? null;

@@ -2,6 +2,8 @@ import { describe, expect, test } from 'vitest';
 import type { PlansState } from '@/types';
 import {
   LEGACY_STORAGE_KEY,
+  STORAGE_VERSION,
+  loadPlansPayload,
   loadPlansState,
   plansStorageKey,
   savePlansState,
@@ -47,5 +49,25 @@ describe('semester-scoped plans', () => {
     expect(loadPlansState('2026-summer', { defaultSemester: '2026-fall', storage })).toBeNull();
     expect(loadPlansState('2026-fall', { defaultSemester: '2026-fall', storage })).toEqual(state);
     expect(loadPlansState('2026-summer', { defaultSemester: '2026-fall', storage })).toBeNull();
+  });
+
+  test('migrates a semester payload from version 1 without losing plans', () => {
+    const storage = new MemoryStorage();
+    storage.setItem(plansStorageKey('2026-fall'), JSON.stringify({ version: 1, state }));
+
+    const payload = loadPlansPayload('2026-fall', {
+      defaultSemester: '2026-fall',
+      storage,
+    });
+
+    expect(STORAGE_VERSION).toBe(2);
+    expect(payload).toEqual({
+      version: 2,
+      state,
+      selectedSnapshots: {},
+      impactHistory: [],
+      pendingImpacts: [],
+      catalogRevision: null,
+    });
   });
 });

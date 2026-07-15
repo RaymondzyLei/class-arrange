@@ -11,6 +11,7 @@ export interface OnboardingPreferences {
   preferFewerEarlyMornings: boolean;
   preferAvoidCampusTransfers: boolean;
   residentCampus: ResidentCampus;
+  showUpdatePopup: boolean;
 }
 
 export interface OnboardingState {
@@ -29,6 +30,7 @@ export const DEFAULT_ONBOARDING_PREFERENCES: OnboardingPreferences = {
   preferFewerEarlyMornings: true,
   preferAvoidCampusTransfers: true,
   residentCampus: '本部',
+  showUpdatePopup: true,
 };
 
 const DEFAULT_ONBOARDING_STATE: OnboardingState = {
@@ -62,6 +64,10 @@ function normalizePreferences(value: unknown): OnboardingPreferences {
       DEFAULT_ONBOARDING_PREFERENCES.preferAvoidCampusTransfers,
     ),
     residentCampus: source.residentCampus === '高新区' ? '高新区' : '本部',
+    showUpdatePopup: booleanFrom(
+      source.showUpdatePopup,
+      DEFAULT_ONBOARDING_PREFERENCES.showUpdatePopup,
+    ),
   };
 }
 

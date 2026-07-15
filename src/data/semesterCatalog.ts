@@ -1,4 +1,9 @@
-import type { SemesterCatalog, SemesterManifest, SemesterManifestEntry } from '@/types';
+import type {
+  SemesterCatalog,
+  SemesterManifest,
+  SemesterManifestEntry,
+  SemesterUpdateFeed,
+} from '@/types';
 
 export const SEMESTER_SELECTION_KEY = 'class-arrange:v1:selected-semester';
 
@@ -47,6 +52,14 @@ export function getSemesterCatalogUrl(
   return `${normalizedBase(baseUrl)}data/semesters/${entry.file.replaceAll('\\', '/')}`;
 }
 
+export function getSemesterUpdatesUrl(
+  baseUrl: string,
+  entry: SemesterManifestEntry,
+): string {
+  assertRelativeCatalogFile(entry.updatesFile);
+  return `${normalizedBase(baseUrl)}data/semesters/${entry.updatesFile.replaceAll('\\', '/')}`;
+}
+
 export function validateSemesterManifest(value: unknown): SemesterManifest {
   if (!isRecord(value) || value.schemaVersion !== 1) {
     throw new SemesterCatalogError('学期索引版本不受支持');
@@ -63,7 +76,10 @@ export function validateSemesterManifest(value: unknown): SemesterManifest {
       !rawEntry.key ||
       typeof rawEntry.name !== 'string' ||
       !rawEntry.name ||
-      typeof rawEntry.file !== 'string'
+      typeof rawEntry.file !== 'string' ||
+      typeof rawEntry.revision !== 'string' ||
+      !rawEntry.revision ||
+      typeof rawEntry.updatesFile !== 'string'
     ) {
       throw new SemesterCatalogError('学期索引包含无效条目');
     }
@@ -71,6 +87,7 @@ export function validateSemesterManifest(value: unknown): SemesterManifest {
       throw new SemesterCatalogError(`学期索引包含重复学期：${rawEntry.key}`);
     }
     assertRelativeCatalogFile(rawEntry.file);
+    assertRelativeCatalogFile(rawEntry.updatesFile);
     seen.add(rawEntry.key);
   }
   if (seen.size === 0) throw new SemesterCatalogError('学期索引为空');
@@ -85,6 +102,8 @@ export function validateSemesterCatalog(value: unknown): SemesterCatalog {
     throw new SemesterCatalogError('课程数据版本不受支持');
   }
   if (
+    typeof value.revision !== 'string' ||
+    !value.revision ||
     typeof value.generatedAt !== 'string' ||
     !isRecord(value.source) ||
     !isRecord(value.semester) ||
@@ -142,6 +161,73 @@ export function validateSemesterCatalog(value: unknown): SemesterCatalog {
   return value as unknown as SemesterCatalog;
 }
 
+function isCourseIdentity(value: unknown): boolean {
+  return isRecord(value)
+    && typeof value.id === 'string'
+    && typeof value.courseCode === 'string'
+    && typeof value.courseName === 'string'
+    && typeof value.teacher === 'string';
+}
+
+function isSelectedSnapshot(value: unknown): boolean {
+  return isCourseIdentity(value) && isRecord(value) && Array.isArray(value.schedule);
+}
+
+export function validateSemesterUpdateFeed(value: unknown): SemesterUpdateFeed {
+  if (
+    !isRecord(value)
+    || value.schemaVersion !== 1
+    || typeof value.semesterKey !== 'string'
+    || !value.semesterKey
+    || typeof value.currentRevision !== 'string'
+    || !value.currentRevision
+    || !Array.isArray(value.entries)
+  ) {
+    throw new SemesterCatalogError('课程更新记录结构无效');
+  }
+  const ids = new Set<string>();
+  for (const entry of value.entries) {
+    if (
+      !isRecord(entry)
+      || typeof entry.id !== 'string'
+      || !entry.id
+      || ids.has(entry.id)
+      || typeof entry.revision !== 'string'
+      || typeof entry.previousRevision !== 'string'
+      || typeof entry.publishedAt !== 'string'
+      || !isRecord(entry.summary)
+      || !Array.isArray(entry.added)
+      || !entry.added.every(isSelectedSnapshot)
+      || !Array.isArray(entry.removed)
+      || !entry.removed.every((item) => isRecord(item)
+        && isSelectedSnapshot(item.course)
+        && Array.isArray(item.replacementCandidates)
+        && item.replacementCandidates.every(isSelectedSnapshot))
+      || !Array.isArray(entry.modified)
+      || !entry.modified.every((item) => isRecord(item)
+        && isCourseIdentity(item.course)
+        && isSelectedSnapshot(item.previous)
+        && isSelectedSnapshot(item.current)
+        && Array.isArray(item.changes)
+        && item.changes.every((change) => isRecord(change)
+          && typeof change.field === 'string'
+          && typeof change.label === 'string'))
+    ) {
+      throw new SemesterCatalogError('课程更新记录包含无效条目');
+    }
+    const summary = entry.summary;
+    if (
+      typeof summary.added !== 'number'
+      || typeof summary.removed !== 'number'
+      || typeof summary.modified !== 'number'
+    ) {
+      throw new SemesterCatalogError('课程更新记录统计无效');
+    }
+    ids.add(entry.id);
+  }
+  return value as unknown as SemesterUpdateFeed;
+}
+
 export function selectInitialSemester(
   manifest: SemesterManifest,
   storedKey: string | null,
@@ -189,5 +275,24 @@ export async function loadSemesterCatalog(
       `课程数据学期不匹配：期望 ${entry.key}，实际 ${catalog.semester.key}`,
     );
   }
+  if (catalog.revision !== entry.revision) {
+    throw new SemesterCatalogError('课程数据版本与学期索引不匹配');
+  }
   return catalog;
+}
+
+export async function loadSemesterUpdates(
+  entry: SemesterManifestEntry,
+  fetcher: CatalogFetcher = fetch,
+  signal?: AbortSignal,
+): Promise<SemesterUpdateFeed> {
+  const response = await fetcher(getSemesterUpdatesUrl(import.meta.env.BASE_URL, entry), {
+    signal,
+    cache: 'no-cache',
+  });
+  const feed = validateSemesterUpdateFeed(await readJson(response, '课程更新记录'));
+  if (feed.semesterKey !== entry.key || feed.currentRevision !== entry.revision) {
+    throw new SemesterCatalogError('课程更新记录与学期索引不匹配');
+  }
+  return feed;
 }

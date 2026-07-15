@@ -3,23 +3,39 @@ import type { SemesterCatalog, SemesterManifest } from '@/types';
 import {
   SemesterCatalogError,
   getSemesterCatalogUrl,
+  getSemesterUpdatesUrl,
   loadSemesterCatalog,
+  loadSemesterUpdates,
   selectInitialSemester,
   validateSemesterCatalog,
   validateSemesterManifest,
+  validateSemesterUpdateFeed,
 } from './semesterCatalog';
 
 const manifest: SemesterManifest = {
   schemaVersion: 1,
   defaultSemester: '2026-fall',
   semesters: [
-    { key: '2026-fall', name: '2026年秋季学期', file: '2026-fall/courses.json' },
-    { key: '2026-summer', name: '2026年夏季学期', file: '2026-summer/courses.json' },
+    {
+      key: '2026-fall',
+      name: '2026年秋季学期',
+      file: '2026-fall/courses.json',
+      revision: 'fall-r1',
+      updatesFile: '2026-fall/updates.json',
+    },
+    {
+      key: '2026-summer',
+      name: '2026年夏季学期',
+      file: '2026-summer/courses.json',
+      revision: 'summer-r1',
+      updatesFile: '2026-summer/updates.json',
+    },
   ],
 };
 
 const catalog: SemesterCatalog = {
   schemaVersion: 1,
+  revision: 'summer-r1',
   generatedAt: '2026-07-13T00:00:00Z',
   source: { url: 'https://catalog.ustc.edu.cn/query/lesson', semesterId: 1 },
   semester: {
@@ -95,6 +111,60 @@ describe('semester catalog loader', () => {
     expect(getSemesterCatalogUrl('/class-arrange/', manifest.semesters[1])).toBe(
       '/class-arrange/data/semesters/2026-summer/courses.json',
     );
+  });
+
+  test('builds and validates a public-base-aware update feed URL', () => {
+    expect(getSemesterUpdatesUrl('/class-arrange/', manifest.semesters[1])).toBe(
+      '/class-arrange/data/semesters/2026-summer/updates.json',
+    );
+    expect(() =>
+      getSemesterUpdatesUrl('/class-arrange/', {
+        ...manifest.semesters[1],
+        updatesFile: '../private.json',
+      }),
+    ).toThrow(/路径/);
+  });
+
+  test('validates and loads a matching course update feed', async () => {
+    const feed = {
+      schemaVersion: 1,
+      semesterKey: '2026-summer',
+      currentRevision: 'summer-r1',
+      entries: [],
+    };
+    expect(validateSemesterUpdateFeed(feed)).toEqual(feed);
+
+    const fetcher = vi.fn(async () => new Response(JSON.stringify(feed), { status: 200 }));
+    await expect(loadSemesterUpdates(manifest.semesters[1], fetcher)).resolves.toEqual(feed);
+  });
+
+  test('does not accept a feed from another semester or revision', async () => {
+    const wrongFeed = {
+      schemaVersion: 1,
+      semesterKey: '2026-fall',
+      currentRevision: 'old',
+      entries: [],
+    };
+    const fetcher = vi.fn(async () => new Response(JSON.stringify(wrongFeed), { status: 200 }));
+    await expect(loadSemesterUpdates(manifest.semesters[1], fetcher)).rejects.toThrow(/更新记录/);
+  });
+
+  test('requires added classrooms to include a selected-course snapshot', () => {
+    expect(() => validateSemesterUpdateFeed({
+      schemaVersion: 1,
+      semesterKey: '2026-summer',
+      currentRevision: 'summer-r2',
+      entries: [{
+        id: 'r2',
+        revision: 'summer-r2',
+        previousRevision: 'summer-r1',
+        publishedAt: '2026-07-15',
+        summary: { added: 1, removed: 0, modified: 0 },
+        added: [{ id: 'A.01', courseCode: 'A', courseName: '课程', teacher: '教师' }],
+        removed: [],
+        modified: [],
+      }],
+    })).toThrow(/无效条目/);
   });
 
   test('rejects duplicate semester keys and a missing default', () => {

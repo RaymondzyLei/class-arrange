@@ -8,8 +8,20 @@ const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf
 
 describe('SemesterDropdown', () => {
   const semesters = [
-    { key: '2026-fall', name: '2026年秋季学期', file: '2026-fall/courses.json' },
-    { key: '2026-summer', name: '2026年夏季学期', file: '2026-summer/courses.json' },
+    {
+      key: '2026-fall',
+      name: '2026年秋季学期',
+      file: '2026-fall/courses.json',
+      revision: 'fall-r1',
+      updatesFile: '2026-fall/updates.json',
+    },
+    {
+      key: '2026-summer',
+      name: '2026年夏季学期',
+      file: '2026-summer/courses.json',
+      revision: 'summer-r1',
+      updatesFile: '2026-summer/updates.json',
+    },
   ];
 
   it('uses one complete button for the current semester label and chevron', () => {

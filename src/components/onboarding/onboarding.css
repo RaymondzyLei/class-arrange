@@ -71,6 +71,28 @@
   margin-top: 0;
 }
 
+.onboarding-wizard__preference-group {
+  display: grid;
+  gap: 8px;
+}
+
+.onboarding-wizard__preference-group + .onboarding-wizard__preference-group {
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.onboarding-wizard__group-label {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.onboarding-wizard__preference-item {
+  display: grid;
+  gap: 6px;
+}
+
 .onboarding-wizard__resident-campus {
   min-height: 48px;
   display: flex;
@@ -99,8 +121,8 @@
 .onboarding-wizard__calculation-mode > p {
   margin: 0;
   color: var(--text-sub);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .onboarding-preference {
