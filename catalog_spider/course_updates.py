@@ -27,6 +27,12 @@ _COURSE_FIELD_LABELS = (
 )
 
 
+def _normalized_teacher(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return ",".join(sorted(part.strip() for part in value.split(",") if part.strip()))
+
+
 def _course_code(classroom_id: str) -> str:
     return classroom_id.rsplit(".", maxsplit=1)[0]
 
@@ -40,6 +46,7 @@ def _canonical_catalog(catalog: dict) -> dict:
         course = dict(raw_course)
         course.pop("enrolled", None)
         course.pop("rawSchedule", None)
+        course["teacher"] = _normalized_teacher(course.get("teacher"))
         courses.append(course)
     canonical["courses"] = sorted(courses, key=lambda course: course.get("id", ""))
     details = canonical.get("detailsBySection", {})
@@ -123,9 +130,15 @@ def _course_changes(
 ) -> list[dict]:
     changes = []
     for field, label in _COURSE_FIELD_LABELS:
-        if old_course.get(field) != new_course.get(field):
+        before = old_course.get(field)
+        after = new_course.get(field)
+        if field == "teacher":
+            values_match = _normalized_teacher(before) == _normalized_teacher(after)
+        else:
+            values_match = before == after
+        if not values_match:
             changes.append(
-                _value_change(field, label, old_course.get(field), new_course.get(field))
+                _value_change(field, label, before, after)
             )
 
     old_schedule = old_course.get("schedule", [])

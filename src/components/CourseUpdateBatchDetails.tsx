@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { Button } from 'antd';
 import type { SemesterUpdateBatch } from '@/types';
+import { formatCourseChangeSide } from '../utils/courseUpdateFormat';
 import { ChevronIcon } from './icons';
 
 export default function CourseUpdateBatchDetails({ batch }: { batch: SemesterUpdateBatch }) {
@@ -57,10 +58,28 @@ export default function CourseUpdateBatchDetails({ batch }: { batch: SemesterUpd
             {batch.modified.length > 0 ? (
               <section>
                 <h5>修改课堂</h5>
-                <ul>{batch.modified.map(({ course, changes }) => (
-                  <li key={course.id}>
-                    <span>{course.courseName}</span>
-                    <small>{course.id} {course.teacher || '待定'} · {changes.map((change) => change.label).join('、')}</small>
+                <ul className="course-update-details__modified-list">{batch.modified.map(({ course, changes }) => (
+                  <li className="course-update-details__modified-item" key={course.id}>
+                    <span className="course-update-details__course-name">{course.courseName}</span>
+                    <small>{course.id} {course.teacher || '待定'}</small>
+                    <dl className="course-update-changes">{changes.map((change) => {
+                      const before = formatCourseChangeSide(change, 'before');
+                      const after = formatCourseChangeSide(change, 'after');
+                      return (
+                        <div className="course-update-change" key={change.field}>
+                          <dt>{change.label}</dt>
+                          {before === null && after === null ? (
+                            <dd>内容已更新</dd>
+                          ) : (
+                            <dd>
+                              <span>{before ?? '未填写'}</span>
+                              <span className="course-update-change__arrow" aria-hidden="true">→</span>
+                              <span>{after ?? '未填写'}</span>
+                            </dd>
+                          )}
+                        </div>
+                      );
+                    })}</dl>
                   </li>
                 ))}</ul>
               </section>

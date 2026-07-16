@@ -56,6 +56,39 @@ const twoPlans: PlansState = {
 };
 
 describe('selected-course update reconciliation', () => {
+  test('does not notify when a selected course only reorders the same teachers', () => {
+    const previous = snapshot('MATH100.01', '张老师,李老师');
+    const current = {
+      ...snapshot('MATH100.01', '李老师,张老师'),
+      department: { code: 'MATH', name: '数学学院' },
+      credits: 4,
+      hours: 64,
+      level: '本科',
+      sectionType: '计划内',
+      category: '',
+      courseType: '理论课',
+      language: '中文',
+      examType: '闭卷',
+      grading: '百分制',
+      undergradShared: false,
+      enrolled: 1,
+      capacity: 30,
+      classes: [],
+      rawSchedule: '',
+    } satisfies CourseSection;
+
+    const result = reconcilePlansWithCatalog(
+      payload(twoPlans, previous),
+      '2026-fall',
+      'r2',
+      new Map([[current.id, current]]),
+      100,
+    );
+
+    expect(result.pendingImpacts).toEqual([]);
+    expect(result.selectedSnapshots['MATH100.01'].teacher).toBe('李老师,张老师');
+  });
+
   test('removes a deleted classroom from every plan and records all affected plans', () => {
     const removed = snapshot('MATH100.01');
     const result = reconcilePlansWithUpdates(

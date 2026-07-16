@@ -1,6 +1,4378 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-fall",
-  "currentRevision": "46596858c048ab8993c33f4db7295729afc44298aed466b87fa661ae1eff729a",
-  "entries": []
+  "currentRevision": "c0cbaf189652cc279558921aae98c00ce89ccfb2a4d6deb0021ba9f0045f7116",
+  "entries": [
+    {
+      "id": "2026-fall:c0cbaf189652cc27",
+      "revision": "c0cbaf189652cc279558921aae98c00ce89ccfb2a4d6deb0021ba9f0045f7116",
+      "previousRevision": "e872f773e6f6bc688544bd727dacf526c31f8d70dc2521cc759df9b59d448d1b",
+      "publishedAt": "2026-07-16T14:38:25Z",
+      "summary": {
+        "added": 1,
+        "removed": 1,
+        "modified": 37
+      },
+      "added": [
+        {
+          "id": "EIEN7403P.05",
+          "courseCode": "EIEN7403P",
+          "courseName": "电子信息类前沿课程",
+          "teacher": "唐颂颂",
+          "schedule": [
+            {
+              "weeks": [
+                3,
+                5,
+                7,
+                9,
+                11,
+                13,
+                15,
+                17
+              ],
+              "room": "若水路D106",
+              "day": 5,
+              "periods": [
+                6,
+                7,
+                8,
+                9
+              ],
+              "campus": "其他"
+            }
+          ]
+        }
+      ],
+      "removed": [
+        {
+          "course": {
+            "id": "EIEN7402.03",
+            "courseCode": "EIEN7402",
+            "courseName": "电子信息类前沿课程",
+            "teacher": "唐颂颂",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  5,
+                  7,
+                  9,
+                  11,
+                  13,
+                  15,
+                  17
+                ],
+                "room": "若水路D106",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "replacementCandidates": [
+            {
+              "id": "EIEN7402.01",
+              "courseCode": "EIEN7402",
+              "courseName": "电子信息类前沿课程",
+              "teacher": "王永",
+              "schedule": [
+                {
+                  "weeks": [
+                    5,
+                    17
+                  ],
+                  "room": "地点待定",
+                  "day": 5,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "campus": "其他"
+                },
+                {
+                  "weeks": [
+                    5,
+                    17
+                  ],
+                  "room": "地点待定",
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "campus": "其他"
+                }
+              ]
+            },
+            {
+              "id": "EIEN7402.02",
+              "courseCode": "EIEN7402",
+              "courseName": "电子信息类前沿课程",
+              "teacher": "张驰",
+              "schedule": [
+                {
+                  "weeks": [
+                    5,
+                    17
+                  ],
+                  "room": "地点待定",
+                  "day": 5,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "campus": "其他"
+                },
+                {
+                  "weeks": [
+                    5,
+                    17
+                  ],
+                  "room": "地点待定",
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "campus": "其他"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "modified": [
+        {
+          "course": {
+            "id": "009103.01",
+            "courseCode": "009103",
+            "courseName": "自动控制原理",
+            "teacher": "金一"
+          },
+          "previous": {
+            "id": "009103.01",
+            "courseCode": "009103",
+            "courseName": "自动控制原理",
+            "teacher": "金一",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "3C302",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "3C302",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "009103.01",
+            "courseCode": "009103",
+            "courseName": "自动控制原理",
+            "teacher": "金一",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "3C304",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "3C304",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    16
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    1,
+                    16
+                  ],
+                  "day": 2,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3C302",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3C302",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3C304",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3C304",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BIOL7171P.03",
+            "courseCode": "BIOL7171P",
+            "courseName": "结构生物学文献阅读与分析",
+            "teacher": "李珊珊,张凯铭"
+          },
+          "previous": {
+            "id": "BIOL7171P.03",
+            "courseCode": "BIOL7171P",
+            "courseName": "结构生物学文献阅读与分析",
+            "teacher": "张凯铭",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "3A302",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "BIOL7171P.03",
+            "courseCode": "BIOL7171P",
+            "courseName": "结构生物学文献阅读与分析",
+            "teacher": "李珊珊,张凯铭",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "3A302",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "张凯铭",
+              "after": "李珊珊,张凯铭"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BMED6407P.01",
+            "courseCode": "BMED6407P",
+            "courseName": "实验室安全与防护",
+            "teacher": "柳后起"
+          },
+          "previous": {
+            "id": "BMED6407P.01",
+            "courseCode": "BMED6407P",
+            "courseName": "实验室安全与防护",
+            "teacher": "",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "若水路D102",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "BMED6407P.01",
+            "courseCode": "BMED6407P",
+            "courseName": "实验室安全与防护",
+            "teacher": "柳后起",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "若水路D102",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "柳后起"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM5001P.01",
+            "courseCode": "CHEM5001P",
+            "courseName": "分子光谱学I",
+            "teacher": "刘安雯,胡水明,谈艳"
+          },
+          "previous": {
+            "id": "CHEM5001P.01",
+            "courseCode": "CHEM5001P",
+            "courseName": "分子光谱学I",
+            "teacher": "刘安雯,胡水明,谈艳",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  9
+                ],
+                "room": "TH-A101",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  9
+                ],
+                "room": "TH-A101",
+                "day": 5,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM5001P.01",
+            "courseCode": "CHEM5001P",
+            "courseName": "分子光谱学I",
+            "teacher": "刘安雯,胡水明,谈艳",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  9
+                ],
+                "room": "TH-A201",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  9
+                ],
+                "room": "TH-A201",
+                "day": 4,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    9
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    9
+                  ],
+                  "day": 5,
+                  "periods": [
+                    11,
+                    12
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    9
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    9
+                  ],
+                  "day": 4,
+                  "periods": [
+                    11,
+                    12
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                }
+              ],
+              "after": [
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM5002P.01",
+            "courseCode": "CHEM5002P",
+            "courseName": "分子光谱学II",
+            "teacher": "刘安雯,胡水明"
+          },
+          "previous": {
+            "id": "CHEM5002P.01",
+            "courseCode": "CHEM5002P",
+            "courseName": "分子光谱学II",
+            "teacher": "刘安雯,胡水明",
+            "schedule": [
+              {
+                "weeks": [
+                  10,
+                  17
+                ],
+                "room": "TH-A101",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  10,
+                  17
+                ],
+                "room": "TH-A101",
+                "day": 4,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM5002P.01",
+            "courseCode": "CHEM5002P",
+            "courseName": "分子光谱学II",
+            "teacher": "刘安雯,胡水明",
+            "schedule": [
+              {
+                "weeks": [
+                  10,
+                  17
+                ],
+                "room": "TH-A201",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  10,
+                  17
+                ],
+                "room": "TH-A201",
+                "day": 4,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                }
+              ],
+              "after": [
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM5012P.01",
+            "courseCode": "CHEM5012P",
+            "courseName": "电化学研究方法",
+            "teacher": "孔爽,李少锋"
+          },
+          "previous": {
+            "id": "CHEM5012P.01",
+            "courseCode": "CHEM5012P",
+            "courseName": "电化学研究方法",
+            "teacher": "李少锋,孔爽",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A201",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A201",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM5012P.01",
+            "courseCode": "CHEM5012P",
+            "courseName": "电化学研究方法",
+            "teacher": "孔爽,李少锋",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A101",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A101",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    17
+                  ],
+                  "day": 2,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    17
+                  ],
+                  "day": 2,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    17
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                }
+              ],
+              "after": [
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM6007P.01",
+            "courseCode": "CHEM6007P",
+            "courseName": "有机合成化学A",
+            "teacher": "张清伟,孙尚政,刘建忠"
+          },
+          "previous": {
+            "id": "CHEM6007P.01",
+            "courseCode": "CHEM6007P",
+            "courseName": "有机合成化学A",
+            "teacher": "孙尚政,张清伟",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A501",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A501",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM6007P.01",
+            "courseCode": "CHEM6007P",
+            "courseName": "有机合成化学A",
+            "teacher": "张清伟,孙尚政,刘建忠",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A501",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "TH-A501",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "孙尚政,张清伟",
+              "after": "张清伟,孙尚政,刘建忠"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM6114P.01",
+            "courseCode": "CHEM6114P",
+            "courseName": "聚合物结构与性能",
+            "teacher": "苏永亮"
+          },
+          "previous": {
+            "id": "CHEM6114P.01",
+            "courseCode": "CHEM6114P",
+            "courseName": "聚合物结构与性能",
+            "teacher": "苏永亮",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "地点待定",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "地点待定",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM6114P.01",
+            "courseCode": "CHEM6114P",
+            "courseName": "聚合物结构与性能",
+            "teacher": "苏永亮",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": []
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "地点待定",
+                  "campus": "其他"
+                },
+                {
+                  "room": "地点待定",
+                  "campus": "其他"
+                }
+              ],
+              "after": []
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM6428P.01",
+            "courseCode": "CHEM6428P",
+            "courseName": "固体化学原理",
+            "teacher": "周建斌,卫涛,汪冬冬"
+          },
+          "previous": {
+            "id": "CHEM6428P.01",
+            "courseCode": "CHEM6428P",
+            "courseName": "固体化学原理",
+            "teacher": "周建斌",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "TH-A301",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM6428P.01",
+            "courseCode": "CHEM6428P",
+            "courseName": "固体化学原理",
+            "teacher": "周建斌,卫涛,汪冬冬",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "TH-A301",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "周建斌",
+              "after": "周建斌,卫涛,汪冬冬"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM6437P.01",
+            "courseCode": "CHEM6437P",
+            "courseName": "数据智能与物质科学",
+            "teacher": "江俊,王嵩"
+          },
+          "previous": {
+            "id": "CHEM6437P.01",
+            "courseCode": "CHEM6437P",
+            "courseName": "数据智能与物质科学",
+            "teacher": "江俊,王嵩",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "TH-A101",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM6437P.01",
+            "courseCode": "CHEM6437P",
+            "courseName": "数据智能与物质科学",
+            "teacher": "江俊,王嵩",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "TH-A201",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "TH-A101",
+                  "campus": "高新区"
+                }
+              ],
+              "after": [
+                {
+                  "room": "TH-A201",
+                  "campus": "高新区"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEM6900P.02",
+            "courseCode": "CHEM6900P",
+            "courseName": "X射线衍射",
+            "teacher": "韩国鹏"
+          },
+          "previous": {
+            "id": "CHEM6900P.02",
+            "courseCode": "CHEM6900P",
+            "courseName": "X射线衍射",
+            "teacher": "韩国鹏",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "地点待定",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "地点待定",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEM6900P.02",
+            "courseCode": "CHEM6900P",
+            "courseName": "X射线衍射",
+            "teacher": "韩国鹏",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    14
+                  ],
+                  "day": 1,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    14
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ],
+              "after": []
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "地点待定",
+                  "campus": "其他"
+                },
+                {
+                  "room": "地点待定",
+                  "campus": "其他"
+                }
+              ],
+              "after": []
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEN7102P.01",
+            "courseCode": "CHEN7102P",
+            "courseName": "新型光电材料",
+            "teacher": "赖敏良"
+          },
+          "previous": {
+            "id": "CHEN7102P.01",
+            "courseCode": "CHEN7102P",
+            "courseName": "新型光电材料",
+            "teacher": "赖敏良",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "地点待定",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEN7102P.01",
+            "courseCode": "CHEN7102P",
+            "courseName": "新型光电材料",
+            "teacher": "赖敏良",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 1,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": []
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "地点待定",
+                  "campus": "其他"
+                }
+              ],
+              "after": []
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EIEN7403P.04",
+            "courseCode": "EIEN7403P",
+            "courseName": "电子信息类前沿课程",
+            "teacher": "汪炀"
+          },
+          "previous": {
+            "id": "EIEN7403P.04",
+            "courseCode": "EIEN7403P",
+            "courseName": "电子信息类前沿课程",
+            "teacher": "",
+            "schedule": []
+          },
+          "current": {
+            "id": "EIEN7403P.04",
+            "courseCode": "EIEN7403P",
+            "courseName": "电子信息类前沿课程",
+            "teacher": "汪炀",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  5
+                ],
+                "room": "苏州唯真楼500会议室",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  7,
+                  12
+                ],
+                "room": "苏州唯真楼500会议室",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "汪炀"
+            },
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    5
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    7,
+                    12
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [],
+              "after": [
+                {
+                  "room": "苏州唯真楼500会议室",
+                  "campus": "其他"
+                },
+                {
+                  "room": "苏州唯真楼500会议室",
+                  "campus": "其他"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ME2017.01",
+            "courseCode": "ME2017",
+            "courseName": "机器人学基础",
+            "teacher": "董二宝"
+          },
+          "previous": {
+            "id": "ME2017.01",
+            "courseCode": "ME2017",
+            "courseName": "机器人学基础",
+            "teacher": "董二宝",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "3A211",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ME2017.01",
+            "courseCode": "ME2017",
+            "courseName": "机器人学基础",
+            "teacher": "董二宝",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "3C302",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    1,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A211",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3C302",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MORA6401Q.01",
+            "courseCode": "MORA6401Q",
+            "courseName": "管理心理学",
+            "teacher": "张旭"
+          },
+          "previous": {
+            "id": "MORA6401Q.01",
+            "courseCode": "MORA6401Q",
+            "courseName": "管理心理学",
+            "teacher": "张旭",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "2304",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MORA6401Q.01",
+            "courseCode": "MORA6401Q",
+            "courseName": "管理心理学",
+            "teacher": "张旭",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "2304",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "department",
+              "label": "开课单位",
+              "before": {
+                "code": "055",
+                "name": "科技哲学系"
+              },
+              "after": {
+                "code": "056",
+                "name": "心理学系"
+              }
+            },
+            {
+              "field": "examType",
+              "label": "考试方式",
+              "before": "其他",
+              "after": ""
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MSEN6001P.02",
+            "courseCode": "MSEN6001P",
+            "courseName": "固体物理",
+            "teacher": "张树辰,张文华,朱彦武,潘飞"
+          },
+          "previous": {
+            "id": "MSEN6001P.02",
+            "courseCode": "MSEN6001P",
+            "courseName": "固体物理",
+            "teacher": "张树辰,张文华,朱彦武",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  5,
+                  10
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  5,
+                  10
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "MSEN6001P.02",
+            "courseCode": "MSEN6001P",
+            "courseName": "固体物理",
+            "teacher": "张树辰,张文华,朱彦武,潘飞",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  5,
+                  10
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "TH-B201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  5,
+                  10
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "TH-B201",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "张树辰,张文华,朱彦武",
+              "after": "张树辰,张文华,朱彦武,潘飞"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PADM6421P.01",
+            "courseCode": "PADM6421P",
+            "courseName": "科技创新管理",
+            "teacher": "刘洋"
+          },
+          "previous": {
+            "id": "PADM6421P.01",
+            "courseCode": "PADM6421P",
+            "courseName": "科技创新管理",
+            "teacher": "刘洋",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2402",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2402",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PADM6421P.01",
+            "courseCode": "PADM6421P",
+            "courseName": "科技创新管理",
+            "teacher": "刘洋",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2402",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2402",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2402",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "2402",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯"
+          },
+          "previous": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A306",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3A306",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3A306",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6101P.01",
+            "courseCode": "PEET6101P",
+            "courseName": "高等工程热力学",
+            "teacher": "胡芃"
+          },
+          "previous": {
+            "id": "PEET6101P.01",
+            "courseCode": "PEET6101P",
+            "courseName": "高等工程热力学",
+            "teacher": "胡芃",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3C104",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3C104",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6101P.01",
+            "courseCode": "PEET6101P",
+            "courseName": "高等工程热力学",
+            "teacher": "胡芃",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3C104",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "3C104",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 2,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 2,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    14
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6106P.01",
+            "courseCode": "PEET6106P",
+            "courseName": "计算热物理(2)",
+            "teacher": "潘治良,胡茂彬"
+          },
+          "previous": {
+            "id": "PEET6106P.01",
+            "courseCode": "PEET6106P",
+            "courseName": "计算热物理(2)",
+            "teacher": "潘治良,胡茂彬",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6106P.01",
+            "courseCode": "PEET6106P",
+            "courseName": "计算热物理(2)",
+            "teacher": "潘治良,胡茂彬",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 1,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志"
+          },
+          "previous": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3C204",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3B101",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3B201",
+                "day": 1,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    11,
+                    12,
+                    13
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A306",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3B101",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3C204",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3B201",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6508P.01",
+            "courseCode": "PEET6508P",
+            "courseName": "生物质热解与气固两相流",
+            "teacher": "朱锡锋"
+          },
+          "previous": {
+            "id": "PEET6508P.01",
+            "courseCode": "PEET6508P",
+            "courseName": "生物质热解与气固两相流",
+            "teacher": "朱锡锋",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A402",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3B201",
+                "day": 3,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A402",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6508P.01",
+            "courseCode": "PEET6508P",
+            "courseName": "生物质热解与气固两相流",
+            "teacher": "朱锡锋",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A402",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 3,
+                  "periods": [
+                    11,
+                    12
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A402",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3A402",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3B201",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3A402",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6511P.01",
+            "courseCode": "PEET6511P",
+            "courseName": "利用Matlab建筑传热建模",
+            "teacher": "何立群"
+          },
+          "previous": {
+            "id": "PEET6511P.01",
+            "courseCode": "PEET6511P",
+            "courseName": "利用Matlab建筑传热建模",
+            "teacher": "何立群",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B202",
+                "day": 2,
+                "periods": [
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6511P.01",
+            "courseCode": "PEET6511P",
+            "courseName": "利用Matlab建筑传热建模",
+            "teacher": "何立群",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3A306",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 2,
+                  "periods": [
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3B202",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3A306",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "李满"
+          },
+          "previous": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "赵旸",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "3A109",
+                "day": 5,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "李满",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3A109",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "赵旸",
+              "after": "李满"
+            },
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    18
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7111P.01",
+            "courseCode": "PEET7111P",
+            "courseName": "多能互补能源系统导论",
+            "teacher": "郝勇"
+          },
+          "previous": {
+            "id": "PEET7111P.01",
+            "courseCode": "PEET7111P",
+            "courseName": "多能互补能源系统导论",
+            "teacher": "郝勇",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  6
+                ],
+                "room": "3A313",
+                "day": 1,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  18
+                ],
+                "room": "3C104",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET7111P.01",
+            "courseCode": "PEET7111P",
+            "courseName": "多能互补能源系统导论",
+            "teacher": "郝勇",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  6
+                ],
+                "room": "3A409",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  6
+                ],
+                "room": "3A409",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    3,
+                    6
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    3,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    3,
+                    6
+                  ],
+                  "day": 5,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "weeks": [
+                    3,
+                    6
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A313",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3C104",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3A409",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3A409",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7310P.02",
+            "courseCode": "PEET7310P",
+            "courseName": "新能源技术和政策",
+            "teacher": "漆小玲,王文秀,谢鹏程,黄玉萍"
+          },
+          "previous": {
+            "id": "PEET7310P.02",
+            "courseCode": "PEET7310P",
+            "courseName": "新能源技术和政策",
+            "teacher": "漆小玲,王文秀",
+            "schedule": []
+          },
+          "current": {
+            "id": "PEET7310P.02",
+            "courseCode": "PEET7310P",
+            "courseName": "新能源技术和政策",
+            "teacher": "漆小玲,王文秀,谢鹏程,黄玉萍",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "漆小玲,王文秀",
+              "after": "漆小玲,王文秀,谢鹏程,黄玉萍"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏"
+          },
+          "previous": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B102",
+                "day": 1,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B102",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B102",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3B102",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3B102",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3B102",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHIL6101U.12",
+            "courseCode": "PHIL6101U",
+            "courseName": "自然辩证法概论",
+            "teacher": "王晓燕,李文忠"
+          },
+          "previous": {
+            "id": "PHIL6101U.12",
+            "courseCode": "PHIL6101U",
+            "courseName": "自然辩证法概论",
+            "teacher": "王晓燕,李文忠",
+            "schedule": [
+              {
+                "weeks": [
+                  8,
+                  13
+                ],
+                "room": "3B201",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHIL6101U.12",
+            "courseCode": "PHIL6101U",
+            "courseName": "自然辩证法概论",
+            "teacher": "王晓燕,李文忠",
+            "schedule": [
+              {
+                "weeks": [
+                  8,
+                  9
+                ],
+                "room": "3B201",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  13
+                ],
+                "room": "3B201",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    8,
+                    13
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    8,
+                    9
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    10,
+                    13
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3B201",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3B201",
+                  "campus": "本部"
+                },
+                {
+                  "room": "3B201",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波"
+          },
+          "previous": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波,刘慧",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2509",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2509",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2303",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "1115",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "杨益东,唐泽波,刘慧",
+              "after": "杨益东,唐泽波"
+            },
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 40,
+              "after": 20
+            },
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2509",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2509",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "1115",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2303",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS6003P.01",
+            "courseCode": "PHYS6003P",
+            "courseName": "现代数学物理方法",
+            "teacher": "杨焕雄"
+          },
+          "previous": {
+            "id": "PHYS6003P.01",
+            "courseCode": "PHYS6003P",
+            "courseName": "现代数学物理方法",
+            "teacher": "杨焕雄",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 4,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS6003P.01",
+            "courseCode": "PHYS6003P",
+            "courseName": "现代数学物理方法",
+            "teacher": "杨焕雄",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    11,
+                    12
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 5,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PLNT4003.01",
+            "courseCode": "PLNT4003",
+            "courseName": "行星科学研讨课",
+            "teacher": "庞冠宁,胡敬雅,方子遥"
+          },
+          "previous": {
+            "id": "PLNT4003.01",
+            "courseCode": "PLNT4003",
+            "courseName": "行星科学研讨课",
+            "teacher": "秦礼萍,庞冠宁,方子遥",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  14
+                ],
+                "room": "1115",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PLNT4003.01",
+            "courseCode": "PLNT4003",
+            "courseName": "行星科学研讨课",
+            "teacher": "庞冠宁,胡敬雅,方子遥",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  14
+                ],
+                "room": "1115",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "秦礼萍,庞冠宁,方子遥",
+              "after": "庞冠宁,胡敬雅,方子遥"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PLNT6401P.01",
+            "courseCode": "PLNT6401P",
+            "courseName": "行星粘土矿物科学",
+            "teacher": "李亚梅"
+          },
+          "previous": {
+            "id": "PLNT6401P.01",
+            "courseCode": "PLNT6401P",
+            "courseName": "行星粘土矿物科学",
+            "teacher": "李亚梅",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2602",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PLNT6401P.01",
+            "courseCode": "PLNT6401P",
+            "courseName": "行星粘土矿物科学",
+            "teacher": "李亚梅",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2602",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "examType",
+              "label": "考试方式",
+              "before": "笔试（闭卷）",
+              "after": "大作业（论文、报告、项目或作品等）"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PLNT7901P.01",
+            "courseCode": "PLNT7901P",
+            "courseName": "行星科学基础讲座",
+            "teacher": "秦礼萍,胡敬雅,李云国,李亚梅,方子遥,严飞"
+          },
+          "previous": {
+            "id": "PLNT7901P.01",
+            "courseCode": "PLNT7901P",
+            "courseName": "行星科学基础讲座",
+            "teacher": "方子遥,胡敬雅",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2606",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PLNT7901P.01",
+            "courseCode": "PLNT7901P",
+            "courseName": "行星科学基础讲座",
+            "teacher": "秦礼萍,胡敬雅,李云国,李亚梅,方子遥,严飞",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2606",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "方子遥,胡敬雅",
+              "after": "秦礼萍,胡敬雅,李云国,李亚梅,方子遥,严飞"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "WZ003001.01",
+            "courseCode": "WZ003001",
+            "courseName": "密度泛函理论与实践",
+            "teacher": "吴红,胡伟"
+          },
+          "previous": {
+            "id": "WZ003001.01",
+            "courseCode": "WZ003001",
+            "courseName": "密度泛函理论与实践",
+            "teacher": "吴红,胡伟",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "线上授课",
+                "day": 2,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "线上授课",
+                "day": 4,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "WZ003001.01",
+            "courseCode": "WZ003001",
+            "courseName": "密度泛函理论与实践",
+            "teacher": "吴红,胡伟",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "线上授课",
+                "day": 2,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  16
+                ],
+                "room": "线上授课",
+                "day": 4,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 10,
+              "after": 30
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "WZ014001.01",
+            "courseCode": "WZ014001",
+            "courseName": "基于同步辐射的材料表界面分析",
+            "teacher": "姚涛"
+          },
+          "previous": {
+            "id": "WZ014001.01",
+            "courseCode": "WZ014001",
+            "courseName": "基于同步辐射的材料表界面分析",
+            "teacher": "姚涛",
+            "schedule": [
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2203",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  7
+                ],
+                "room": "2203",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  7
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "WZ014001.01",
+            "courseCode": "WZ014001",
+            "courseName": "基于同步辐射的材料表界面分析",
+            "teacher": "姚涛",
+            "schedule": [
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2203",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  7
+                ],
+                "room": "2203",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  7
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 10,
+              "after": 20
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "WZ206001M.01",
+            "courseCode": "WZ206001M",
+            "courseName": "人工智能原理与算法",
+            "teacher": "汪炀,周正阳,王鹏焜,王旭"
+          },
+          "previous": {
+            "id": "WZ206001M.01",
+            "courseCode": "WZ206001M",
+            "courseName": "人工智能原理与算法",
+            "teacher": "汪炀,周正阳,王鹏焜,王旭",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  7,
+                  12
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  13,
+                  16
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  7,
+                  12
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  13,
+                  16
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "WZ206001M.01",
+            "courseCode": "WZ206001M",
+            "courseName": "人工智能原理与算法",
+            "teacher": "汪炀,周正阳,王鹏焜,王旭",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  7,
+                  12
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  13,
+                  16
+                ],
+                "room": "院系安排线上授课",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  7,
+                  12
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  13,
+                  16
+                ],
+                "room": "院系安排线上授课",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 10,
+              "after": 30
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "WZ206002.01",
+            "courseCode": "WZ206002",
+            "courseName": "数据智能驱动的机器化学家探索",
+            "teacher": "朱濯缨,陈林江,李小波"
+          },
+          "previous": {
+            "id": "WZ206002.01",
+            "courseCode": "WZ206002",
+            "courseName": "数据智能驱动的机器化学家探索",
+            "teacher": "朱濯缨,陈林江",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2203",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  15
+                ],
+                "room": "G3-115",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "WZ206002.01",
+            "courseCode": "WZ206002",
+            "courseName": "数据智能驱动的机器化学家探索",
+            "teacher": "朱濯缨,陈林江,李小波",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2203",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2203",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  15
+                ],
+                "room": "G3-115",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "朱濯缨,陈林江",
+              "after": "朱濯缨,陈林江,李小波"
+            },
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 20,
+              "after": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

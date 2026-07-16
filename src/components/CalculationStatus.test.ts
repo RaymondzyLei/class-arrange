@@ -12,6 +12,7 @@ const tokensSource = readFileSync(new URL('../styles/tokens.css', import.meta.ur
 function renderStatus(
   phase: 'dirty' | 'ready',
   hasSnapshot: boolean,
+  compact = false,
 ) {
   return renderToStaticMarkup(createElement(CalculationStatus, {
     phase,
@@ -20,14 +21,16 @@ function renderStatus(
     actionLabel: '重新计算',
     error: null,
     onCalculate: vi.fn(),
+    compact,
   }));
 }
 
 describe('CalculationStatus', () => {
-  it('shares one panel with the arrangement list', () => {
+  it('renders the calculation status inside the arrangement header when multiple arrangements exist', () => {
     expect(appSource).toMatch(
-      /className="panel-inner calculation-results no-print"[\s\S]*<CalculationStatus[\s\S]*<ArrangementPanel/,
+      /const calculationStatus = \([\s\S]*<CalculationStatus[\s\S]*compact[\s\S]*\);/,
     );
+    expect(appSource).toMatch(/<ArrangementPanel[\s\S]*status=\{calculationStatus\}/);
     expect(arrangementPanelSource).not.toContain('panel-inner arrangement-panel');
   });
 
@@ -48,11 +51,41 @@ describe('CalculationStatus', () => {
     expect(html).toContain('calculation-status__message');
   });
 
+  it('uses a separate text viewport for compact status without moving its dot or action', () => {
+    const html = renderStatus('dirty', true, true);
+
+    expect(html).toContain('calculation-status--compact');
+    expect(html).toContain('calculation-status__message-content');
+    expect(html).toContain('title="课程或偏好已变更。"');
+  });
+
   it('keeps every calculation state row at the same height', () => {
     const statusRule = stylesSource.match(/\n\.calculation-status\s*\{([\s\S]*?)\}/)?.[1] ?? '';
     expect(statusRule).toContain('min-height: 38px');
     expect(statusRule).toContain('box-sizing: border-box');
     expect(statusRule).toContain('background: transparent');
+  });
+
+  it('only animates a measured compact text viewport', () => {
+    expect(stylesSource).toContain('.calculation-status--compact');
+    expect(stylesSource).toContain('.calculation-status__message--scrolling');
+    expect(stylesSource).toContain('@keyframes calculation-status-marquee');
+    expect(stylesSource).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+
+  it('keeps the compact header status at action-chip height without vertical padding', () => {
+    const compactRule = stylesSource.match(
+      /\.calculation-status\.calculation-status--compact\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
+
+    expect(compactRule).toContain('min-height: var(--action-chip-height)');
+    expect(compactRule).toContain('padding: 0');
+    expect(compactRule).toContain('border: 0');
+  });
+
+  it('restarts overflowing text from the beginning instead of reversing it', () => {
+    expect(stylesSource).toContain('linear 1.2s infinite');
+    expect(stylesSource).not.toContain('infinite alternate');
   });
 
   it('shares the contributor additions color with the ready status dot', () => {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-15T12:25:05Z",
+  "generatedAt": "2026-07-16T14:38:26Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -528,7 +528,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 31,
+      "enrolled": 28,
       "capacity": 45,
       "classes": [
         "23能源与动力工程"
@@ -780,7 +780,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 99,
+      "enrolled": 97,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A112: 1(6,7,8,9);3A112: 2(6,7,8,9);3A112: 4(6,7,8,9);3A112: 5(6,7,8,9);3A112: 6(6,7,8,9)",
@@ -880,7 +880,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 88,
+      "enrolled": 85,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A112: 1(2,3,4,5);3A112: 2(2,3,4,5);西区电一楼机房1厅: 3(1,2,3,4,5);西区电一楼机房1厅: 3(6,7,8,9,10);3A112: 4(2,3,4,5);3A112: 5(2,3,4,5);3A112: 6(2,3,4,5)",
@@ -2347,7 +2347,7 @@
       "examType": "笔试（开卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 34,
+      "enrolled": 32,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A211: 1(2,3,4,5);西区电三楼计院机房516 519: 1(6,7,8,9,10);3A211: 2(2,3,4,5);西区电三楼计院机房516 519: 2(6,7,8,9,10);3A211: 3(2,3,4,5);西区电三楼计院机房516 519: 3(6,7,8,9,10);3A211: 4(2,3,4,5);西区电三楼计院机房516 519: 4(6,7,8,9,10);3A211: 5(2,3,4,5);西区电三楼计院机房516 519: 5(6,7,8,9,10)",
@@ -2527,7 +2527,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 65,
+      "enrolled": 62,
       "capacity": 233,
       "classes": [
         "24计算机科学与技术",
@@ -2630,7 +2630,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "五分制",
       "undergradShared": false,
-      "enrolled": 60,
+      "enrolled": 59,
       "capacity": 99,
       "classes": [
         "23电子科学与技术*"
@@ -4646,7 +4646,7 @@
       "examType": "口试",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 19,
+      "enrolled": 18,
       "capacity": 20,
       "classes": [],
       "rawSchedule": "2205: 1(6,7);东区二教2-421教室: 1(8,9);2205: 2(6,7);东区二教2-421教室: 2(8,9);2205: 3(6,7);东区二教2-421教室: 3(8,9);2205: 4(6,7);东区二教2-421教室: 4(8,9);2205: 5(6,7);东区二教2-421教室: 5(8,9)",
@@ -6648,7 +6648,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "五分制",
       "undergradShared": false,
-      "enrolled": 106,
+      "enrolled": 105,
       "capacity": 300,
       "classes": [],
       "rawSchedule": "具体上课安排咨询任课教师，不满足任课教师教学要求的学生请在7月20日前直接联系教学秘书张老师退课63603257 ztt615@ustc.edu.cn: 1(11,12)",
@@ -6738,7 +6738,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 24,
+      "enrolled": 25,
       "capacity": 30,
       "classes": [
         "24能源与动力工程"
@@ -7036,7 +7036,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 62,
+      "enrolled": 61,
       "capacity": 65,
       "classes": [],
       "rawSchedule": "2210: 6(08:30~12:00);2210: 6(14:00~17:45);2210: 7(08:30~12:00);2210: 7(14:00~17:45)",
@@ -7133,7 +7133,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 42,
+      "enrolled": 38,
       "capacity": 50,
       "classes": [],
       "rawSchedule": "5207: 6(08:30~12:00);5207: 6(14:00~17:45);5207: 7(08:30~12:00);5207: 7(14:00~17:45)",
@@ -7230,7 +7230,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 42,
+      "enrolled": 47,
       "capacity": 50,
       "classes": [],
       "rawSchedule": "5307: 6(08:30~12:00);5307: 6(14:00~17:45);5307: 7(08:30~12:00);5307: 7(14:00~17:45)",
@@ -11703,5 +11703,5 @@
       }
     }
   },
-  "revision": "71563774566e6f7fb0319db94652aba963c0119d5eed9a52e2f73682ebee1906"
+  "revision": "361155916d8e58461ad5b324445611b08d2eaece78f8fe24437db47cfea52f4e"
 }

@@ -83,6 +83,21 @@ def test_revision_ignores_generated_time_and_enrolled_count():
     assert catalog_revision(first) == catalog_revision(second)
 
 
+def test_teacher_order_does_not_create_a_catalog_update():
+    previous = _catalog(
+        _course("BIOL5042P.01", teacher="周荣斌,江维,王夏琼,符传孩,马洪第")
+    )
+    current = _catalog(
+        _course("BIOL5042P.01", teacher="江维,周荣斌,符传孩,王夏琼,马洪第"),
+        generated_at="2026-07-16T00:00:00Z",
+    )
+
+    published, feed = build_catalog_publication(previous, current, None)
+
+    assert catalog_revision(previous) == published["revision"]
+    assert feed["entries"] == []
+
+
 def test_publication_records_meaningful_changes_and_keeps_feed_idempotent():
     previous = _catalog(_course("MATH100.01", capacity=30))
     current = _catalog(_course("MATH100.01", teacher="李老师", capacity=40))

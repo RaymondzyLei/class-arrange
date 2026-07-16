@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Button } from 'antd';
 import type { ArrangementCalculationPhase } from '@/utils/arrangementCalculationState';
 import type { CalculationMode } from '@/utils/customization';
@@ -9,6 +10,7 @@ interface Props {
   actionLabel: '开始排课' | '重新计算';
   error: string | null;
   onCalculate: () => void;
+  compact?: boolean;
 }
 
 function statusCopy({ phase, mode, hasSnapshot, error }: Props) {
@@ -35,18 +37,51 @@ function statusCopy({ phase, mode, hasSnapshot, error }: Props) {
 export default function CalculationStatus(props: Props) {
   const message = statusCopy(props);
   const calculating = props.phase === 'calculating';
+  const messageViewportRef = useRef<HTMLSpanElement>(null);
+  const messageContentRef = useRef<HTMLSpanElement>(null);
+  const [scrollDistance, setScrollDistance] = useState(0);
   const showAction = calculating
     || props.phase === 'error'
     || (props.phase === 'dirty' && props.mode === 'manual');
+  const messageStyle = scrollDistance > 0 ? {
+    '--calculation-status-scroll-offset': `-${scrollDistance}px`,
+    '--calculation-status-scroll-duration': `${Math.max(4, scrollDistance / 24)}s`,
+  } as CSSProperties : undefined;
+
+  useEffect(() => {
+    const viewport = messageViewportRef.current;
+    const content = messageContentRef.current;
+    if (!viewport || !content) return undefined;
+
+    const measure = () => {
+      const distance = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      setScrollDistance((current) => current === distance ? current : distance);
+    };
+
+    measure();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(viewport);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [message, props.compact]);
 
   return (
     <section
-      className={`calculation-status calculation-status--${props.phase}`}
+      className={`calculation-status calculation-status--${props.phase}${props.compact ? ' calculation-status--compact' : ''}`}
       role={props.phase === 'error' ? 'alert' : 'status'}
       aria-live="polite"
     >
       <span className="calculation-status__dot" aria-hidden="true" />
-      <span className="calculation-status__message">{message}</span>
+      <span
+        ref={messageViewportRef}
+        className={`calculation-status__message${scrollDistance > 0 ? ' calculation-status__message--scrolling' : ''}`}
+        style={messageStyle}
+        title={message}
+      >
+        <span ref={messageContentRef} className="calculation-status__message-content">{message}</span>
+      </span>
       {showAction ? (
         <Button
           size="small"

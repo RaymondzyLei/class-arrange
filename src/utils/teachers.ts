@@ -9,3 +9,12 @@ export function formatTeacherList(teachers: string[], fallback = '教师未定')
     .filter(Boolean);
   return formatted.length ? formatted.join(' / ') : fallback;
 }
+
+export function sameTeacherSet(left: string, right: string): boolean {
+  const normalized = (value: string) => value
+    .split(',')
+    .map((teacher) => teacher.trim())
+    .filter(Boolean)
+    .sort((first, second) => first.localeCompare(second, 'zh-Hans-CN'));
+  return JSON.stringify(normalized(left)) === JSON.stringify(normalized(right));
+}

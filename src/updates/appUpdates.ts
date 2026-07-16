@@ -17,6 +17,17 @@ export const APP_RELEASES: AppRelease[] = [
       '已选课堂的教师、上课时间或地点变化时会单独提示。',
     ],
   },
+  {
+    version: '2026.07.16.1',
+    publishedAt: '2026-07-16',
+    title: '排课方案与界面优化',
+    items: [
+      '排课方案标题整合计算状态，移除方案数量提示。',
+      '方案列表缩短为约 1.5 行可视高度，减少页面占用。',
+      '优化课程更新信息展示。',
+      '其他UI改进。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

@@ -1002,26 +1002,29 @@ html {
   border: 0;
 }
 
-.calculation-results .arrangement-panel {
-  border-top: 1px solid var(--border);
-}
-
 .arrangement-panel__head {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
 .arrangement-panel__title {
+  white-space: nowrap;
   font-weight: 600;
   color: var(--text);
 }
 
-.arrangement-panel__sub {
-  font-size: 12px;
-  color: var(--text);
-  font-weight: 500;
+.arrangement-panel__head .calculation-status {
+  min-width: 0;
+}
+
+.calculation-status.calculation-status--compact {
+  min-height: var(--action-chip-height);
+  padding: 0;
+  gap: 8px;
+  border: 0;
 }
 
 .arrangement-panel__list {
@@ -1042,8 +1045,8 @@ html {
 
 .arrangement-panel__list--scroll {
   max-height: calc(
-    var(--arrangement-card-height) * 2.5
-    + var(--arrangement-list-gap) * 2
+    var(--arrangement-card-height) * 1.5
+    + var(--arrangement-list-gap) * 1
     + var(--arrangement-ring-space) * 2
   );
   padding-bottom: var(--arrangement-ring-space);
@@ -3108,8 +3111,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .arrangement-panel__list--mobile-scroll {
     max-height: calc(
-      var(--arrangement-card-height) * 2.5
-      + var(--arrangement-list-gap) * 2
+      var(--arrangement-card-height) * 1.5
+      + var(--arrangement-list-gap) * 1
       + var(--arrangement-ring-space) * 2
     );
     overflow-y: auto;
@@ -3808,6 +3811,70 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   font-size: 11px;
 }
 
+.course-update-details__modified-list {
+  gap: 9px !important;
+}
+
+.course-update-details__modified-item {
+  min-width: 0;
+}
+
+.course-update-details__course-name {
+  color: var(--text-sub);
+}
+
+.course-update-changes {
+  display: grid;
+  gap: 5px;
+  margin: 5px 0 0;
+}
+
+.course-update-change {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.28fr) minmax(0, 1fr);
+  gap: 8px;
+  padding-left: 9px;
+  border-left: 2px solid var(--border);
+}
+
+.course-update-change dt {
+  color: var(--text-sub);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.course-update-change dd {
+  display: flex;
+  min-width: 0;
+  gap: 6px;
+  margin: 0;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.course-update-change dd > span:not(.course-update-change__arrow) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.course-update-change__arrow {
+  flex: 0 0 auto;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .course-update-change {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .course-update-change dd {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+}
+
 .customization__resident-select {
   width: 124px;
 }
@@ -3871,8 +3938,35 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   overflow: hidden;
   color: var(--text-sub);
   font-size: 13px;
-  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.calculation-status__message-content {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.calculation-status__message--scrolling .calculation-status__message-content {
+  animation: calculation-status-marquee var(--calculation-status-scroll-duration) linear 1.2s infinite;
+}
+
+.calculation-status__message--scrolling:hover .calculation-status__message-content {
+  animation-play-state: paused;
+}
+
+.calculation-status > .ant-btn {
+  flex: 0 0 auto;
+}
+
+@keyframes calculation-status-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--calculation-status-scroll-offset)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calculation-status__message--scrolling .calculation-status__message-content {
+    animation: none;
+  }
 }
 
 .calculation-mode-picker {
@@ -4836,12 +4930,14 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 }
 
 .course-table__semester-toggle .course-table__term-name {
+  display: inline-flex;
   min-width: 0;
   flex: 1;
+  align-self: stretch;
+  align-items: center;
   margin-bottom: 0;
   color: inherit;
   text-align: left;
-  transform: translateY(-1px);
 }
 
 .course-table__semester-toggle .ant-btn-icon {

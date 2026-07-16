@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
-import type { CourseImpactEvent, SemesterManifestEntry } from '@/types';
+import type { CourseImpactEvent, SemesterManifestEntry, SemesterUpdateBatch } from '@/types';
 import type { AutomaticNoticeSelection } from '@/updates/updateAwareness';
 
 vi.mock('./BottomModal', () => ({
@@ -12,6 +12,7 @@ vi.mock('./BottomModal', () => ({
 
 import UpdateHistoryModal from './UpdateHistoryModal';
 import UpdateNoticeModal from './UpdateNoticeModal';
+import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
@@ -112,6 +113,68 @@ const notice: AutomaticNoticeSelection = {
 };
 
 describe('update modals', () => {
+  test('shows the before and after values for every modified course field', () => {
+    const batch: SemesterUpdateBatch = {
+      id: 'schedule-change',
+      revision: 'r2',
+      previousRevision: 'r1',
+      publishedAt: '2026-07-16',
+      summary: { added: 0, removed: 0, modified: 1 },
+      added: [],
+      removed: [],
+      modified: [{
+        course: {
+          id: '009103.01',
+          courseCode: '009103',
+          courseName: '自动控制原理',
+          teacher: '金一',
+        },
+        previous: {
+          id: '009103.01',
+          courseCode: '009103',
+          courseName: '自动控制原理',
+          teacher: '金一',
+          schedule: [],
+        },
+        current: {
+          id: '009103.01',
+          courseCode: '009103',
+          courseName: '自动控制原理',
+          teacher: '金一',
+          schedule: [],
+        },
+        changes: [{
+          field: 'schedule',
+          label: '上课时间与周次',
+          before: [
+            { weeks: [1, 16], day: 2, periods: [3, 4] },
+            { weeks: [1, 16], day: 4, periods: [1, 2] },
+          ],
+          after: [
+            { weeks: [1, 16], day: 2, periods: [8, 9] },
+            { weeks: [1, 16], day: 4, periods: [8, 9] },
+          ],
+        }, {
+          field: 'location',
+          label: '上课地点或校区',
+          before: [{ room: '3C302', campus: '本部' }, { room: '3C302', campus: '本部' }],
+          after: [{ room: '3C304', campus: '本部' }, { room: '3C304', campus: '本部' }],
+        }],
+      }],
+    };
+
+    const html = renderToStaticMarkup(createElement(CourseUpdateBatchDetails, { batch }));
+
+    expect(html).toContain('009103.01 金一');
+    expect(html).toContain('上课时间与周次');
+    expect(html).toContain('1~16周 周二 3–4节；1~16周 周四 1–2节');
+    expect(html).toContain('1~16周 周二 8–9节；1~16周 周四 8–9节');
+    expect(html).toContain('上课地点或校区');
+    expect(html).toContain('3C302（本部）');
+    expect(html).toContain('3C304（本部）');
+    expect(html).toContain('course-update-change__arrow');
+  });
+
   test('puts destructive plan changes before personalized and global updates', () => {
     const html = renderToStaticMarkup(
       createElement(UpdateNoticeModal, {
@@ -142,7 +205,9 @@ describe('update modals', () => {
     expect(html).toContain('课容量');
     expect(html).toContain('CS100.01 陈老师');
     expect(html).toContain('MATH100.01 张老师');
-    expect(html).toContain('PHYS100.01 赵老师 · 课容量');
+    expect(html).toContain('PHYS100.01 赵老师');
+    expect(html).toContain('<dt>课容量</dt>');
+    expect(html).toContain('<span>30</span><span class="course-update-change__arrow" aria-hidden="true">→</span><span>40</span>');
     expect(html).not.toContain('CS100.01 · 陈老师');
     expect(html).not.toContain('MATH100.01 · 张老师');
     expect(html).not.toContain('PHYS100.01 · 赵老师');

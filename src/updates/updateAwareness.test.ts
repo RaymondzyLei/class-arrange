@@ -77,6 +77,20 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
+  test('publishes the July 16 schedule and UI release as the latest app update', () => {
+    expect(APP_RELEASES.at(-1)).toEqual({
+      version: '2026.07.16.1',
+      publishedAt: '2026-07-16',
+      title: '排课方案与界面优化',
+      items: [
+        '排课方案标题整合计算状态，移除方案数量提示。',
+        '方案列表缩短为约 1.5 行可视高度，减少页面占用。',
+        '优化课程更新信息展示。',
+        '其他UI改进。',
+      ],
+    });
+  });
+
   test('does not treat the catalog provider persisted semester as prior use', () => {
     const values = new Map([['class-arrange:v1:selected-semester', '2026-fall']]);
     const storage = {

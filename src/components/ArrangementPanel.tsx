@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Tag } from 'antd';
 import type { Arrangement } from '@/types';
 
@@ -5,16 +6,15 @@ interface Props {
   arrangements: Arrangement[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  status: ReactNode;
 }
 
-export default function ArrangementPanel({ arrangements, selectedId, onSelect }: Props) {
+export default function ArrangementPanel({ arrangements, selectedId, onSelect, status }: Props) {
   return (
     <div className="arrangement-panel">
       <div className="arrangement-panel__head">
         <span className="arrangement-panel__title">排课方案</span>
-        <span className="arrangement-panel__sub">
-          共 {arrangements.length} 种方案
-        </span>
+        {status}
       </div>
       <div
         className={`arrangement-panel__list${

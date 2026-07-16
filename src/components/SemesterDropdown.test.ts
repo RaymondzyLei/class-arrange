@@ -68,7 +68,10 @@ describe('SemesterDropdown', () => {
 
     expect(triggerRule).toContain('justify-content: space-between');
     expect(triggerRule).toContain('text-align: left');
-    expect(labelRule).toContain('transform: translateY(-1px)');
+    expect(labelRule).not.toContain('transform:');
+    expect(labelRule).toContain('display: inline-flex');
+    expect(labelRule).toContain('align-items: center');
+    expect(labelRule).toContain('align-self: stretch');
     expect(iconRule).toContain('align-items: center');
     expect(iconRule).toContain('justify-content: center');
   });

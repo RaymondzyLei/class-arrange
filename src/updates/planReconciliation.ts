@@ -8,6 +8,7 @@ import type {
   SemesterUpdateBatch,
 } from '@/types';
 import type { StoredPlansPayloadV2 } from '@/utils/planSeed';
+import { sameTeacherSet } from '../utils/teachers';
 
 interface FinalCourseState {
   exists: boolean;
@@ -67,7 +68,7 @@ function selectedChanges(
   current: SelectedCourseSnapshot,
 ): CourseFieldChange[] {
   const changes: CourseFieldChange[] = [];
-  if (previous.teacher !== current.teacher) {
+  if (!sameTeacherSet(previous.teacher, current.teacher)) {
     changes.push({
       field: 'teacher',
       label: '授课教师',
