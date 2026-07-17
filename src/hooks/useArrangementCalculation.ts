@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CourseGroup } from '@/types';
+import type { Arrangement, CourseGroup } from '@/types';
 import {
   calculationActionLabel,
   calculationInputKey,
@@ -26,6 +26,22 @@ interface Options {
   settings: CustomScheduleSettings;
 }
 
+type AllConflictFreePhase = 'idle' | 'loading' | 'ready' | 'error';
+
+interface AllConflictFreeState {
+  phase: AllConflictFreePhase;
+  inputKey: string | null;
+  arrangements: Arrangement[];
+  error: string | null;
+}
+
+const EMPTY_ALL_CONFLICT_FREE: AllConflictFreeState = {
+  phase: 'idle',
+  inputKey: null,
+  arrangements: [],
+  error: null,
+};
+
 function errorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
   return '排课计算失败，请稍后重试。';
@@ -41,6 +57,11 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
   ));
   const stateRef = useRef(state);
   const clientRef = useRef<ArrangementWorkerClient | null>(null);
+  const allConflictFreeClientRef = useRef<ArrangementWorkerClient | null>(null);
+  const [allConflictFree, setAllConflictFree] = useState<AllConflictFreeState>(
+    EMPTY_ALL_CONFLICT_FREE,
+  );
+  const allConflictFreeRef = useRef(allConflictFree);
   const generationRef = useRef(0);
   const mountedRef = useRef(false);
   const inputKey = useMemo(
@@ -66,6 +87,18 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     return clientRef.current;
   }, []);
 
+  const setCurrentAllConflictFree = useCallback((next: AllConflictFreeState) => {
+    allConflictFreeRef.current = next;
+    setAllConflictFree(next);
+  }, []);
+
+  const getAllConflictFreeClient = useCallback(() => {
+    if (!allConflictFreeClientRef.current) {
+      allConflictFreeClientRef.current = createArrangementWorkerClient();
+    }
+    return allConflictFreeClientRef.current;
+  }, []);
+
   const startCalculation = useCallback(() => {
     const current = stateRef.current;
     if (!canStartArrangementCalculation(current)) return;
@@ -75,12 +108,12 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     const draft = calculating.draft;
     setCurrentState(calculating);
 
-    void getClient().calculate(draft.groups, draft.settings).then(
-      (arrangements) => {
+    void getClient().calculateResults(draft.groups, draft.settings).then(
+      (result) => {
         const next = completeArrangementCalculation(
           stateRef.current,
           generation,
-          arrangements,
+          result,
         );
         if (next !== stateRef.current) setCurrentState(next);
       },
@@ -104,6 +137,48 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     );
   }, [getClient, setCurrentState]);
 
+  const loadAllConflictFree = useCallback(() => {
+    const committed = stateRef.current.committed;
+    if (!committed || allConflictFreeRef.current.phase === 'loading') return;
+    const requestInputKey = committed.inputKey;
+    setCurrentAllConflictFree({
+      phase: 'loading',
+      inputKey: requestInputKey,
+      arrangements: allConflictFreeRef.current.inputKey === requestInputKey
+        ? allConflictFreeRef.current.arrangements
+        : [],
+      error: null,
+    });
+
+    void getAllConflictFreeClient().calculateResults(
+      committed.groups,
+      committed.settings,
+      'all-conflict-free',
+    ).then(
+      (result) => {
+        if (!mountedRef.current || stateRef.current.committed?.inputKey !== requestInputKey) return;
+        setCurrentAllConflictFree({
+          phase: 'ready',
+          inputKey: requestInputKey,
+          arrangements: result.arrangements,
+          error: null,
+        });
+      },
+      (error: unknown) => {
+        if (isAbortError(error) || !mountedRef.current) return;
+        if (stateRef.current.committed?.inputKey !== requestInputKey) return;
+        setCurrentAllConflictFree({
+          phase: 'error',
+          inputKey: requestInputKey,
+          arrangements: allConflictFreeRef.current.inputKey === requestInputKey
+            ? allConflictFreeRef.current.arrangements
+            : [],
+          error: errorMessage(error),
+        });
+      },
+    );
+  }, [getAllConflictFreeClient, setCurrentAllConflictFree]);
+
   useEffect(() => {
     const inputsChanged = state.draft.scopeKey !== scopeKey
       || state.draft.inputKey !== inputKey;
@@ -120,6 +195,11 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
   }, [inputKey, projectedState, scopeKey, setCurrentState, state]);
 
   useEffect(() => {
+    allConflictFreeClientRef.current?.cancel();
+    setCurrentAllConflictFree(EMPTY_ALL_CONFLICT_FREE);
+  }, [inputKey, scopeKey, setCurrentAllConflictFree]);
+
+  useEffect(() => {
     if (
       shouldAutomaticallyCalculate(projectedState)
       && shouldAutomaticallyCalculate(stateRef.current)
@@ -134,6 +214,8 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
       mountedRef.current = false;
       clientRef.current?.dispose();
       clientRef.current = null;
+      allConflictFreeClientRef.current?.dispose();
+      allConflictFreeClientRef.current = null;
     };
   }, []);
 
@@ -143,5 +225,9 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     actionLabel: calculationActionLabel(projectedState),
     canStart: canStartArrangementCalculation(projectedState),
     startCalculation,
+    allConflictFreePhase: allConflictFree.phase,
+    allConflictFreeArrangements: allConflictFree.arrangements,
+    allConflictFreeError: allConflictFree.error,
+    loadAllConflictFree,
   };
 }

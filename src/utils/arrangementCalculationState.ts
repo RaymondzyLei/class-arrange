@@ -1,5 +1,6 @@
 import type { Arrangement, CourseGroup } from '@/types';
 import type { CustomScheduleSettings } from './customization';
+import type { ArrangementEnumerationResult } from './arrangementEngine';
 
 export type ArrangementCalculationPhase =
   | 'empty'
@@ -17,6 +18,8 @@ export interface ArrangementCalculationDraft {
 
 export interface CommittedArrangementCalculation extends ArrangementCalculationDraft {
   arrangements: Arrangement[];
+  conflictFreePreview: Arrangement[];
+  totalConflictFreeCount: number;
 }
 
 export interface ArrangementCalculationState {
@@ -53,6 +56,7 @@ export function calculationInputKey(
 ): string {
   return JSON.stringify({
     groups: groups.map((group) => [group.courseCode, group.key, group.sectionIds]),
+    arrangementDisplayCount: settings.arrangementDisplayCount,
     preferHalfDay: settings.preferHalfDay,
     preferFewerEarlyMornings: settings.preferFewerEarlyMornings,
     preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
@@ -147,9 +151,16 @@ export function startArrangementCalculation(
 export function completeArrangementCalculation(
   state: ArrangementCalculationState,
   generation: number,
-  arrangements: Arrangement[],
+  value: Arrangement[] | ArrangementEnumerationResult,
 ): ArrangementCalculationState {
   if (state.activeGeneration !== generation) return state;
+  const result = Array.isArray(value)
+    ? {
+        arrangements: value,
+        conflictFreePreview: value.filter(({ conflictCount }) => conflictCount === 0).slice(0, 100),
+        totalConflictFreeCount: value.filter(({ conflictCount }) => conflictCount === 0).length,
+      }
+    : value;
   return {
     ...state,
     phase: 'ready',
@@ -157,7 +168,9 @@ export function completeArrangementCalculation(
       ...state.draft,
       groups: [...state.draft.groups],
       settings: copySettings(state.draft.settings),
-      arrangements,
+      arrangements: result.arrangements,
+      conflictFreePreview: result.conflictFreePreview,
+      totalConflictFreeCount: result.totalConflictFreeCount,
     },
     activeGeneration: null,
     error: null,

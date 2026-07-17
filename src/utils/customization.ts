@@ -1,6 +1,18 @@
 import type { ResidentCampus } from '@/types';
 
 export type CalculationMode = 'auto' | 'manual';
+export type ArrangementDisplayCount = 2 | 4 | 8 | 12 | 16;
+
+export const ARRANGEMENT_DISPLAY_COUNT_OPTIONS = [
+  { value: 2, label: '2 个' },
+  { value: 4, label: '4 个' },
+  { value: 8, label: '8 个' },
+  { value: 12, label: '12 个' },
+  { value: 16, label: '16 个' },
+] as const satisfies ReadonlyArray<{
+  value: ArrangementDisplayCount;
+  label: string;
+}>;
 
 export const CALCULATION_MODE_OPTIONS = [
   {
@@ -21,6 +33,7 @@ export const CALCULATION_MODE_OPTIONS = [
 
 export interface CustomScheduleSettings {
   calculationMode: CalculationMode;
+  arrangementDisplayCount: ArrangementDisplayCount;
   mergeAllTimeGroups: boolean;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
@@ -38,6 +51,7 @@ export const CUSTOM_SETTINGS_KEY = 'class-arrange:v1:custom-settings';
 
 export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
+  arrangementDisplayCount: 8,
   mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
@@ -56,12 +70,19 @@ function isBlockedSlot(value: unknown): value is string {
   return Boolean(match);
 }
 
+function isArrangementDisplayCount(value: unknown): value is ArrangementDisplayCount {
+  return ARRANGEMENT_DISPLAY_COUNT_OPTIONS.some((option) => option.value === value);
+}
+
 export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleSettings {
   const source = value && typeof value === 'object'
     ? value as Record<string, unknown>
     : {};
   return {
     calculationMode: source.calculationMode === 'manual' ? 'manual' : 'auto',
+    arrangementDisplayCount: isArrangementDisplayCount(source.arrangementDisplayCount)
+      ? source.arrangementDisplayCount
+      : DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
     mergeAllTimeGroups: source.mergeAllTimeGroups === true,
     preferHalfDay: typeof source.preferHalfDay === 'boolean'
       ? source.preferHalfDay

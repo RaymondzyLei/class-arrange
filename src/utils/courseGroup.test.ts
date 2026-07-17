@@ -21,6 +21,37 @@ describe('course schedule grouping fingerprint', () => {
     expect(scheduleFingerprint([slot('第一教学楼101', '本部')]))
       .not.toBe(scheduleFingerprint([slot('GT-B102', '高新区')]));
   });
+
+  it('treats contiguous source ranges as the same weekly occupancy', () => {
+    const split = [
+      { weeks: [1, 9], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] },
+      { weeks: [10, 18], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] },
+    ] satisfies ScheduleSlot[];
+    const continuous = [
+      { weeks: [1, 18], room: '5104', campus: '本部', day: 4, periods: [3, 4, 5] },
+    ] satisfies ScheduleSlot[];
+
+    expect(scheduleFingerprint(split)).toBe(scheduleFingerprint(continuous));
+
+    const splitSection = { ...section('STAT2002.01', '陈昱,张伟平', 4), schedule: split };
+    const continuousSection = { ...section('STAT2002.02', '王占锋', 4), schedule: continuous };
+    const groups = buildCourseGroups([splitSection, continuousSection]);
+
+    expect(groups).toHaveLength(1);
+    expect(groups[0].sectionIds).toEqual(['STAT2002.01', 'STAT2002.02']);
+  });
+
+  it('does not merge schedules when a source range leaves a week unoccupied', () => {
+    const withGap = [
+      { weeks: [1, 9], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] },
+      { weeks: [11, 18], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] },
+    ] satisfies ScheduleSlot[];
+    const continuous = [
+      { weeks: [1, 18], room: '5104', campus: '本部', day: 4, periods: [3, 4, 5] },
+    ] satisfies ScheduleSlot[];
+
+    expect(scheduleFingerprint(withGap)).not.toBe(scheduleFingerprint(continuous));
+  });
 });
 
 function section(id: string, teacher: string, day: number): CourseSection {

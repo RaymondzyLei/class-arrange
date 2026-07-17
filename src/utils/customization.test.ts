@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ARRANGEMENT_DISPLAY_COUNT_OPTIONS,
   CALCULATION_MODE_OPTIONS,
   DEFAULT_CUSTOM_SETTINGS,
   normalizeCustomScheduleSettings,
@@ -35,6 +36,21 @@ describe('custom schedule settings persistence', () => {
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
     });
+  });
+
+  it('uses eight displayed arrangements by default and accepts only supported counts', () => {
+    expect(ARRANGEMENT_DISPLAY_COUNT_OPTIONS.map(({ value }) => value))
+      .toEqual([2, 4, 8, 12, 16]);
+    expect(DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount).toBe(8);
+    expect(normalizeCustomScheduleSettings({}).arrangementDisplayCount).toBe(8);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 2 }).arrangementDisplayCount)
+      .toBe(2);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 16 }).arrangementDisplayCount)
+      .toBe(16);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 100 }).arrangementDisplayCount)
+      .toBe(8);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: '12' }).arrangementDisplayCount)
+      .toBe(8);
   });
 
   it('defaults time-group merging to disabled and preserves an explicit opt-in', () => {
@@ -73,6 +89,7 @@ describe('custom schedule settings persistence', () => {
       blockedSlots: ['2-6', 'bad', '2-6', '1-1'],
     }))).toEqual({
       calculationMode: 'auto',
+      arrangementDisplayCount: 8,
       mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,

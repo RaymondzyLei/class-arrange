@@ -1004,7 +1004,7 @@ html {
 
 .arrangement-panel__head {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
@@ -2519,6 +2519,27 @@ html {
   margin-top: 14px;
 }
 
+.arrangement-panel__mode-action {
+  min-height: var(--action-chip-height);
+  padding: 0 var(--action-chip-padding-inline);
+  border: var(--action-chip-border-width) solid var(--border);
+  border-radius: var(--action-chip-radius);
+  background: var(--panel-bg);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--action-chip-font-size);
+  line-height: var(--action-chip-line-height);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.arrangement-panel__mode-action:hover,
+.arrangement-panel__mode-action:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  outline: 0;
+}
+
 .course-time-groups {
   margin-top: 14px;
 }
@@ -3110,7 +3131,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .arrangement-panel__list,
-  .arrangement-panel__list--scroll {
+.arrangement-panel__list--scroll {
     max-height: none;
     overflow-y: auto;
     -webkit-mask-image: none;
@@ -3333,6 +3354,45 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 .customization-modal .bottom-modal__header {
   padding-bottom: 6px;
 }
+
+.arrangement-panel__empty {
+  min-height: var(--arrangement-card-height);
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+.arrangement-panel__footer {
+  margin-top: 8px;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.arrangement-panel__load-all {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.arrangement-panel__load-all:hover,
+.arrangement-panel__load-all:focus-visible {
+  text-decoration: underline;
+  outline: 0;
+}
+
+.arrangement-panel__load-error {
+  display: block;
+  color: var(--danger);
+}
+
 
 .customization-modal .bottom-modal__panel {
   height: min(88vh, 776px);
@@ -4047,7 +4107,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 }
 
-.customization__resident-select {
+.customization__resident-select,
+.customization__arrangement-count-select {
   width: 124px;
 }
 

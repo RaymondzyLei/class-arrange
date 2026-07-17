@@ -13,13 +13,7 @@ export function getCourseCode(id: string): string {
   return dot === -1 ? id : id.slice(0, dot);
 }
 
-/**
- * 把单个 ScheduleSlot 归一化为可比较字符串：`周次列表:星期:节次列表:校区`。
- * 周次用 expandWeeks 展开为完整集合，消除 [1,9] 与 [1,2,...,9] 的编码差异。
- * 节次排序后连接。忽略具体教室，但保留校区，避免把跨校区班次合并。
- */
-function slotFingerprint(slot: ScheduleSlot): string {
-  const weeks = expandWeeks(slot.weeks).sort((a, b) => a - b);
+function slotTimeFingerprint(slot: ScheduleSlot): string {
   const periods = [...slot.periods].sort((a, b) => a - b);
   const exact = exactScheduleInterval(slot);
   const clock = exact
@@ -27,20 +21,28 @@ function slotFingerprint(slot: ScheduleSlot): string {
     : slot.startTime || slot.endTime
       ? `:raw-${slot.startTime?.trim() ?? ''}-${slot.endTime?.trim() ?? ''}`
       : '';
-  return `${weeks.join(',')}:${slot.day}:${periods.join(',')}${clock}:${slot.campus}`;
+  return `${slot.day}:${periods.join(',')}${clock}:${slot.campus}`;
 }
 
 /**
- * 把整个 schedule 数组归一化为时间指纹。
- * 多个 slot 按指纹字典序排序后用 "|" 连接，保证顺序无关。
+ * 把整个 schedule 数组展开为逐周占用指纹。
+ * 相同星期、节次和校区的 1~9 周 + 10~18 周与 1~18 周得到相同结果。
+ * 忽略具体教室，但保留未指定周次的独立标记，避免与明确周次误合并。
  * 空 schedule → 空字符串（"时间未定"，同课程号下所有未定班次合并为一组）。
  */
 export function scheduleFingerprint(schedule: ScheduleSlot[]): string {
   if (schedule.length === 0) return '';
-  return schedule
-    .map(slotFingerprint)
-    .sort()
-    .join('|');
+  const occupied = new Set<string>();
+  for (const slot of schedule) {
+    const time = slotTimeFingerprint(slot);
+    const weeks = expandWeeks(slot.weeks);
+    if (weeks.length === 0) {
+      occupied.add(`week-unspecified:${time}`);
+      continue;
+    }
+    for (const week of weeks) occupied.add(`week-${week}:${time}`);
+  }
+  return [...occupied].sort().join('|');
 }
 
 /** 单个 section 的组键：`${courseCode}::${fingerprint}` */

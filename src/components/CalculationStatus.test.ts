@@ -5,6 +5,10 @@ import { describe, expect, it, vi } from 'vitest';
 import CalculationStatus from './CalculationStatus';
 
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
+const arrangementCalculationHookSource = readFileSync(
+  new URL('../hooks/useArrangementCalculation.ts', import.meta.url),
+  'utf8',
+);
 const arrangementPanelSource = readFileSync(new URL('./ArrangementPanel.tsx', import.meta.url), 'utf8');
 const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 const tokensSource = readFileSync(new URL('../styles/tokens.css', import.meta.url), 'utf8');
@@ -26,6 +30,21 @@ function renderStatus(
 }
 
 describe('CalculationStatus', () => {
+  it('uses a separate Worker client for loading every conflict-free result', () => {
+    expect(arrangementCalculationHookSource).toContain('allConflictFreeClientRef');
+    expect(arrangementCalculationHookSource).toContain("calculateResults(draft.groups, draft.settings)");
+    expect(arrangementCalculationHookSource).toContain("'all-conflict-free'");
+    expect(arrangementCalculationHookSource).toContain('loadAllConflictFree');
+  });
+
+  it('switches arrangement views without overwriting the recommended selection', () => {
+    expect(appSource).toContain("useState<'recommended' | 'conflict-free'>('recommended')");
+    expect(appSource).toContain('recommendedArrangementSelection');
+    expect(appSource).toContain('conflictFreeArrangementSelection');
+    expect(appSource).toContain('calculation.committed?.conflictFreePreview');
+    expect(appSource).toContain('onLoadAllConflictFree={calculation.loadAllConflictFree}');
+  });
+
   it('renders the calculation status inside the arrangement header when multiple arrangements exist', () => {
     expect(appSource).toMatch(
       /const calculationStatus = \([\s\S]*<CalculationStatus[\s\S]*compact[\s\S]*\);/,
@@ -100,8 +119,8 @@ describe('CalculationStatus', () => {
 
   it('applies the newly ranked first arrangement before the browser paints', () => {
     expect(appSource).toContain('useLayoutEffect');
-    expect(appSource).toContain('arrangementSelection.inputKey === committedArrangementInputKey');
-    expect(appSource).toContain('setArrangementSelection((current) => ({');
+    expect(appSource).toContain('activeArrangementSelection.inputKey === committedArrangementInputKey');
+    expect(appSource).toContain('setRecommendedArrangementSelection((current) => ({');
     expect(arrangementPanelSource).toContain('key={index}');
     const cardRule = stylesSource.match(/\.arrangement-card\s*\{([\s\S]*?)\}/)?.[1] ?? '';
     expect(cardRule).not.toContain('transition:');

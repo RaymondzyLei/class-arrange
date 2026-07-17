@@ -4,6 +4,7 @@ import type { CustomScheduleSettings } from './customization';
 import { enumerateArrangements } from './arrangement';
 import {
   compareArrangementRanks,
+  enumerateArrangementResultsExact,
   enumerateArrangementsExact,
   type ArrangementRank,
   type ArrangementSearchDiagnostics,
@@ -12,6 +13,7 @@ import { enumerateArrangementsOracle } from './arrangementOracle';
 
 const NO_PREFERENCES: CustomScheduleSettings = {
   calculationMode: 'auto',
+  arrangementDisplayCount: 8,
   mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: false,
@@ -19,6 +21,30 @@ const NO_PREFERENCES: CustomScheduleSettings = {
   residentCampus: '本部',
   blockedSlots: [],
 };
+
+describe('exact conflict-free result policy', () => {
+  it('keeps a 100-result preview, reports the exact total, and can load every result', () => {
+    const groups = Array.from({ length: 105 }, (_, index) => makeGroup(
+      'C',
+      `C::candidate-${index.toString().padStart(3, '0')}`,
+    ));
+    const result = enumerateArrangementResultsExact(groups, {
+      ...NO_PREFERENCES,
+      arrangementDisplayCount: 2,
+    });
+
+    expect(result.arrangements).toHaveLength(2);
+    expect(result.conflictFreePreview).toHaveLength(100);
+    expect(result.totalConflictFreeCount).toBe(105);
+    expect(enumerateArrangementsExact(groups, {
+      ...NO_PREFERENCES,
+      arrangementDisplayCount: 2,
+    })).toEqual(result.arrangements);
+    expect(enumerateArrangementResultsExact(groups, NO_PREFERENCES, {
+      mode: 'all-conflict-free',
+    }).arrangements).toHaveLength(105);
+  });
+});
 
 function makeSection(
   id: string,
@@ -84,6 +110,7 @@ describe('compareArrangementRanks', () => {
   it('applies the exact conflict, half-day, early-morning, key, and credit ordering', () => {
     const allPreferences: CustomScheduleSettings = {
       calculationMode: 'auto',
+      arrangementDisplayCount: 8,
       mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
@@ -202,6 +229,7 @@ describe('exact Top-8 differential contract', () => {
           for (const preferAvoidCampusTransfers of [false, true]) {
           const settings: CustomScheduleSettings = {
             calculationMode: 'auto',
+            arrangementDisplayCount: 8,
             mergeAllTimeGroups: false,
             preferHalfDay,
             preferFewerEarlyMornings,
@@ -300,6 +328,7 @@ describe('exact Top-8 differential contract', () => {
     }
     expect(enumerateArrangements(halfDayGroups, {
       calculationMode: 'auto',
+      arrangementDisplayCount: 8,
       mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: false,
@@ -317,6 +346,7 @@ describe('exact Top-8 differential contract', () => {
     ];
     expect(enumerateArrangements(earlyGroups, {
       calculationMode: 'auto',
+      arrangementDisplayCount: 8,
       mergeAllTimeGroups: false,
       preferHalfDay: false,
       preferFewerEarlyMornings: true,
@@ -344,8 +374,8 @@ describe('exact Top-8 differential contract', () => {
   });
 });
 
-describe('exact Top-8 bounded search', () => {
-  it('visits a deterministic 4^8 search without retaining the Cartesian product', () => {
+describe('exact Top-100 conflict-free preview search', () => {
+  it('visits the deterministic 4^8 search without retaining the Cartesian product', () => {
     const groups: CourseGroup[] = [];
     for (let courseIndex = 0; courseIndex < 8; courseIndex += 1) {
       for (let candidateIndex = 0; candidateIndex < 4; candidateIndex += 1) {
@@ -368,7 +398,7 @@ describe('exact Top-8 bounded search', () => {
     expect(diagnostics.precomputedGroupCount).toBe(32);
     expect(diagnostics.visitedLeaves).toBe(4 ** 8);
     expect(diagnostics.maxDepth).toBe(8);
-    expect(diagnostics.maxRetainedCandidates).toBe(8);
+    expect(diagnostics.maxRetainedCandidates).toBe(100);
     expect(diagnostics.maxRetainedCandidates).toBeLessThan(diagnostics.visitedLeaves);
   });
 });

@@ -56,4 +56,12 @@ describe('CustomizationModal grouped settings navigation', () => {
     expect(styles).toContain('.customization__group');
     expect(styles).toContain('.customization__subpage-header');
   });
+
+  it('adds only the arrangement-count dropdown to the custom schedule-generation group', () => {
+    expect(source).toContain('展示排课方案数量');
+    expect(source).toContain('ARRANGEMENT_DISPLAY_COUNT_OPTIONS');
+    expect(source).toContain('settings.arrangementDisplayCount');
+    expect(source).toContain('<SelectWithChevron');
+    expect(onboarding).not.toContain('arrangementDisplayCount');
+  });
 });

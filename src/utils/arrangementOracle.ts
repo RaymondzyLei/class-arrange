@@ -203,5 +203,8 @@ export function enumerateArrangementsOracle(
     return b.totalCredits - a.totalCredits;
   });
 
-  return arrs.slice(0, 8);
+  return arrs.slice(
+    0,
+    settings.arrangementDisplayCount ?? DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
+  );
 }

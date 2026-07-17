@@ -2,9 +2,11 @@ import { App, Button } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
 import {
+  ARRANGEMENT_DISPLAY_COUNT_OPTIONS,
   blockedSlotKey,
   CALCULATION_MODE_OPTIONS,
   RESIDENT_CAMPUS_OPTIONS,
+  type ArrangementDisplayCount,
   type CustomScheduleSettings,
 } from '@/utils/customization';
 import type { ResidentCampus } from '@/types';
@@ -150,6 +152,12 @@ export default function CustomizationModal({
     message.success('课程时间组显示已更新');
   };
 
+  const setArrangementDisplayCount = (arrangementDisplayCount: ArrangementDisplayCount) => {
+    if (arrangementDisplayCount === settings.arrangementDisplayCount) return;
+    onChange({ ...settings, arrangementDisplayCount });
+    message.success('排课方案展示数量已更新');
+  };
+
   const toggleBlockedSlot = (day: number, period: number) => {
     const key = blockedSlotKey(day, period);
     setDraftBlockedSlots((current) => {
@@ -264,6 +272,16 @@ export default function CustomizationModal({
                   value={calculationModeLabel}
                   onClick={() => setPage('calculationMode')}
                 />
+                <div className="customization__row">
+                  <span className="customization__row-title">展示排课方案数量</span>
+                  <SelectWithChevron
+                    aria-label="展示排课方案数量"
+                    className="customization__arrangement-count-select"
+                    value={settings.arrangementDisplayCount}
+                    options={ARRANGEMENT_DISPLAY_COUNT_OPTIONS.map((option) => ({ ...option }))}
+                    onChange={(value) => setArrangementDisplayCount(value as ArrangementDisplayCount)}
+                  />
+                </div>
                 <div className="customization__row">
                   <span className="customization__row-copy">
                     <span className="customization__row-title">合并课程所有时间组</span>

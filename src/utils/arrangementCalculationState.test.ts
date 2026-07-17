@@ -21,6 +21,7 @@ function settings(
 ): CustomScheduleSettings {
   return {
     calculationMode: 'manual',
+    arrangementDisplayCount: 8,
     mergeAllTimeGroups: false,
     preferHalfDay: false,
     preferFewerEarlyMornings: true,
@@ -78,6 +79,14 @@ describe('arrangement calculation input identity', () => {
       settings({ residentCampus: '高新区' }),
     ));
     expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
+      groups,
+      settings({ arrangementDisplayCount: 12 }),
+    ));
+    expect(calculationInputKey(groups, automatic)).toBe(calculationInputKey(
+      groups,
+      settings({ mergeAllTimeGroups: true }),
+    ));
+    expect(calculationInputKey(groups, automatic)).not.toBe(calculationInputKey(
       [group('A', 'a', ['A.02'])],
       automatic,
     ));
@@ -85,6 +94,25 @@ describe('arrangement calculation input identity', () => {
 });
 
 describe('arrangement calculation state', () => {
+  it('commits recommended arrangements with the conflict-free preview and total', () => {
+    const groups = [group('A', 'a')];
+    const recommended = [arrangement('a', groups)];
+    let state = createArrangementCalculationState('fall:plan-a', groups, settings());
+    state = completeArrangementCalculation(
+      startArrangementCalculation(state, 1),
+      1,
+      {
+        arrangements: recommended,
+        conflictFreePreview: recommended,
+        totalConflictFreeCount: 123,
+      },
+    );
+
+    expect(state.committed?.arrangements).toEqual(recommended);
+    expect(state.committed?.conflictFreePreview).toEqual(recommended);
+    expect(state.committed?.totalConflictFreeCount).toBe(123);
+  });
+
   it('starts empty without inputs and dirty with inputs', () => {
     const empty = createArrangementCalculationState('fall:plan-a', [], settings());
     const dirty = createArrangementCalculationState(

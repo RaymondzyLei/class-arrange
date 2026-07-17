@@ -160,7 +160,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
-  const [arrangementSelection, setArrangementSelection] = useState<{
+  const [arrangementView, setArrangementView] = useState<'recommended' | 'conflict-free'>('recommended');
+  const [recommendedArrangementSelection, setRecommendedArrangementSelection] = useState<{
+    inputKey: string | null;
+    id: string | null;
+  }>({ inputKey: null, id: null });
+  const [conflictFreeArrangementSelection, setConflictFreeArrangementSelection] = useState<{
     inputKey: string | null;
     id: string | null;
   }>({ inputKey: null, id: null });
@@ -222,10 +227,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     groups: allSelectedGroups,
     settings: customSettings,
   });
-  const arrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
+  const recommendedArrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
+  const conflictFreeArrangements = calculation.allConflictFreePhase === 'ready'
+    ? calculation.allConflictFreeArrangements
+    : calculation.committed?.conflictFreePreview ?? EMPTY_ARRANGEMENTS;
+  const arrangements = arrangementView === 'recommended'
+    ? recommendedArrangements
+    : conflictFreeArrangements;
   const committedArrangementInputKey = calculation.committed?.inputKey ?? null;
-  const selectedArrangementId = arrangementSelection.inputKey === committedArrangementInputKey
-    ? arrangementSelection.id
+  const activeArrangementSelection = arrangementView === 'recommended'
+    ? recommendedArrangementSelection
+    : conflictFreeArrangementSelection;
+  const selectedArrangementId = activeArrangementSelection.inputKey === committedArrangementInputKey
+    ? activeArrangementSelection.id
     : null;
 
   // 用户选择有效 → 应用之；否则用默认（最低冲突）
@@ -282,14 +296,30 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => {
     setDetailGroupKey(null);
-    setArrangementSelection({ inputKey: null, id: null });
+    setArrangementView('recommended');
+    setRecommendedArrangementSelection({ inputKey: null, id: null });
+    setConflictFreeArrangementSelection({ inputKey: null, id: null });
   }, [activePlan?.id]);
   useLayoutEffect(() => {
-    setArrangementSelection((current) => ({
+    setRecommendedArrangementSelection((current) => ({
       inputKey: committedArrangementInputKey,
-      id: resolveSelectedArrangementId(current.id, arrangements),
+      id: resolveSelectedArrangementId(current.id, recommendedArrangements),
     }));
-  }, [arrangements, committedArrangementInputKey]);
+  }, [committedArrangementInputKey, recommendedArrangements]);
+  useLayoutEffect(() => {
+    if (arrangementView !== 'conflict-free') return;
+    setConflictFreeArrangementSelection((current) => ({
+      inputKey: committedArrangementInputKey,
+      id: current.inputKey === committedArrangementInputKey
+        && conflictFreeArrangements.some(({ id }) => id === current.id)
+        ? current.id
+        : conflictFreeArrangements[0]?.id ?? null,
+    }));
+  }, [arrangementView, committedArrangementInputKey, conflictFreeArrangements]);
+  useEffect(() => {
+    setArrangementView('recommended');
+    setConflictFreeArrangementSelection({ inputKey: null, id: null });
+  }, [calculation.draft.inputKey]);
 
   const handleExport = async () => {
     if (!exportRef.current) {
@@ -327,7 +357,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleArrangementChange = (id: string) => {
     if (id === appliedArrangement?.id) return;
     const index = arrangements.findIndex((arrangement) => arrangement.id === id);
-    setArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    if (arrangementView === 'recommended') {
+      setRecommendedArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    } else {
+      setConflictFreeArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    }
     if (index >= 0) message.success(`已切换到排课方案 #${index}`);
   };
   const calculationStatus = (
@@ -473,15 +507,21 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
           <div className="panel-inner calculation-results no-print">
-            {arrangements.length > 1 && (
+            {calculation.committed ? (
               <ArrangementPanel
                 arrangements={arrangements}
                 selectedId={appliedArrangement?.id ?? null}
                 onSelect={handleArrangementChange}
                 status={calculationStatus}
+                mode={arrangementView}
+                totalConflictFreeCount={calculation.committed.totalConflictFreeCount}
+                allConflictFreePhase={calculation.allConflictFreePhase}
+                allConflictFreeError={calculation.allConflictFreeError}
+                onShowConflictFree={() => setArrangementView('conflict-free')}
+                onShowRecommended={() => setArrangementView('recommended')}
+                onLoadAllConflictFree={calculation.loadAllConflictFree}
               />
-            )}
-            {arrangements.length <= 1 && calculationStatus}
+            ) : calculationStatus}
           </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
             <FilterBar
