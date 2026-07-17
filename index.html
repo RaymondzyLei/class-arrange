@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>科大选课协助</title>
+    <script>
+      // 在 React 挂载前预置深色主题，避免加载页 fallback 出现 light->dark 闪现。
+      (function () {
+        try {
+          if (localStorage.getItem('class-arrange:v1:theme') === 'dark') {
+            document.documentElement.dataset.theme = 'dark';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
