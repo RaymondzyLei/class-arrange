@@ -51,6 +51,14 @@ interface SectionRow {
   rating?: IcourseRatingInfo;
 }
 
+interface TimeGroupRow {
+  key: string;
+  label: string;
+  sections: string;
+  teachers: string;
+  schedule: string;
+}
+
 function RatingLink({ rating }: { rating?: IcourseRatingInfo }) {
   if (!rating) return <>—</>;
   const label = typeof rating.ratingCount === 'number'
@@ -121,6 +129,7 @@ export default function CourseDetailModal({
 
   if (!display) return null;
 
+  const mergedTimeGroups = display.timeGroups;
   const rep = display.sections[0];
   const examType = displayDetail?.examType.trim() || rep?.examType.trim() || '—';
   const grading = displayDetail?.grading.trim() || rep?.grading.trim() || '—';
@@ -171,6 +180,13 @@ export default function CourseDetailModal({
     classes: s.classes.length ? formatClassLabels(s.classes) : '—',
     rating: getIcourseRatingInfo(s.id),
   } satisfies SectionRow));
+  const timeGroupRows = (mergedTimeGroups ?? []).map((timeGroup, index) => ({
+    key: timeGroup.key,
+    label: `时间组 ${index + 1}`,
+    sections: sectionLabelForGroup(timeGroup),
+    teachers: formatTeacherList(timeGroup.teachers, '—'),
+    schedule: formatScheduleCompact(timeGroup.schedule),
+  } satisfies TimeGroupRow));
 
   const toggleSelected = (scope: 'group' | 'course') => {
     if (!activePlan) {
@@ -221,15 +237,17 @@ export default function CourseDetailModal({
       bodyRef={modalBodyRef}
       actions={(
         <Space size={4} wrap className="course-selection-actions">
-          <Button
-            size="small"
-            type={groupSelected ? 'default' : 'primary'}
-            danger={groupSelected}
-            aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
-            onClick={() => toggleSelected('group')}
-          >
-            {groupSelected ? '移除此时间组' : '选择此时间组'}
-          </Button>
+          {!mergedTimeGroups ? (
+            <Button
+              size="small"
+              type={groupSelected ? 'default' : 'primary'}
+              danger={groupSelected}
+              aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
+              onClick={() => toggleSelected('group')}
+            >
+              {groupSelected ? '移除此时间组' : '选择此时间组'}
+            </Button>
+          ) : null}
           <Button
             size="small"
             type={courseSelected ? 'default' : 'primary'}
@@ -323,6 +341,39 @@ export default function CourseDetailModal({
         </section>
       </div>
 
+      {mergedTimeGroups ? (
+        <section className="course-time-groups" aria-label="时间组明细">
+          <Typography.Title level={5}>时间组明细</Typography.Title>
+          <div className="course-detail-desktop">
+            <Table
+              className="detail-table detail-time-group-table"
+              size="small"
+              dataSource={timeGroupRows}
+              pagination={false}
+              tableLayout="fixed"
+              columns={[
+                { title: '时间组', dataIndex: 'label', width: 90 },
+                { title: '课堂号 / 班次', dataIndex: 'sections', width: 170 },
+                { title: '教师', dataIndex: 'teachers', width: 160 },
+                { title: '时间地点', dataIndex: 'schedule' },
+              ]}
+            />
+          </div>
+          <div className="mobile-card-list course-detail-mobile">
+            {timeGroupRows.map((row) => (
+              <article className="mobile-card course-detail-time-group-card" key={row.key}>
+                <div className="mobile-card__head">
+                  <span className="mobile-card__title">{row.label}</span>
+                  <span className="mobile-card__meta">{row.sections}</span>
+                </div>
+                <div className="mobile-card__line">{row.teachers}</div>
+                <div className="mobile-card__line">{row.schedule}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <section className="course-material-groups" aria-label="教材与参考资料">
         <Typography.Title level={5}>教材与参考资料</Typography.Title>
         <div className="course-material-group">
@@ -377,35 +428,39 @@ export default function CourseDetailModal({
         </>
       )}
 
-      <Typography.Title level={5} style={{ marginTop: 16 }}>时间地点</Typography.Title>
-      <Table
-        className="detail-table detail-schedule-table"
-        size="small"
-        dataSource={scheduleRows}
-        pagination={false}
-        tableLayout="auto"
-        columns={[
-          { title: '周次', dataIndex: 'weeks', width: 120 },
-          { title: '展开周', dataIndex: 'weeksExpanded', render: (v: string) => <Typography.Text type="secondary" style={{ fontSize: 12 }}>{v}</Typography.Text> },
-          { title: '星期', dataIndex: 'day', width: 70 },
-          { title: '时间 / 节次', dataIndex: 'time', width: 130 },
-          { title: '教室', dataIndex: 'room' },
-        ]}
-      />
-      <div className="mobile-card-list course-detail-mobile">
-        {scheduleRows.map((row) => (
-          <article className="mobile-card course-detail-schedule-card" key={row.key}>
-            <div className="mobile-card__head">
-              <span className="mobile-card__title">{row.weeks}</span>
-              <span className="mobile-card__meta">
-                {row.day} · {row.time}{row.exactTime ? '' : ' 节'}
-              </span>
-            </div>
-            <div className="mobile-card__line">{row.room}</div>
-            <div className="mobile-card__subline">展开周：{row.weeksExpanded || '—'}</div>
-          </article>
-        ))}
-      </div>
+      {!mergedTimeGroups ? (
+        <>
+          <Typography.Title level={5} style={{ marginTop: 16 }}>时间地点</Typography.Title>
+          <Table
+            className="detail-table detail-schedule-table"
+            size="small"
+            dataSource={scheduleRows}
+            pagination={false}
+            tableLayout="auto"
+            columns={[
+              { title: '周次', dataIndex: 'weeks', width: 120 },
+              { title: '展开周', dataIndex: 'weeksExpanded', render: (v: string) => <Typography.Text type="secondary" style={{ fontSize: 12 }}>{v}</Typography.Text> },
+              { title: '星期', dataIndex: 'day', width: 70 },
+              { title: '时间 / 节次', dataIndex: 'time', width: 130 },
+              { title: '教室', dataIndex: 'room' },
+            ]}
+          />
+          <div className="mobile-card-list course-detail-mobile">
+            {scheduleRows.map((row) => (
+              <article className="mobile-card course-detail-schedule-card" key={row.key}>
+                <div className="mobile-card__head">
+                  <span className="mobile-card__title">{row.weeks}</span>
+                  <span className="mobile-card__meta">
+                    {row.day} · {row.time}{row.exactTime ? '' : ' 节'}
+                  </span>
+                </div>
+                <div className="mobile-card__line">{row.room}</div>
+                <div className="mobile-card__subline">展开周：{row.weeksExpanded || '—'}</div>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : null}
     </BottomModal>
   );
 }

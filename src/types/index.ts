@@ -93,6 +93,8 @@ export interface CourseGroup {
   teachers: string[];
   /** 组内全部 section，详情弹窗用 */
   sections: CourseSection[];
+  /** 仅展示层合并时存在：该课程原本的各个时间组。 */
+  timeGroups?: CourseGroup[];
   /** 组唯一键：`${courseCode}::${fingerprint}` */
   key: string;
 }

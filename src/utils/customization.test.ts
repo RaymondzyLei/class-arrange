@@ -37,6 +37,15 @@ describe('custom schedule settings persistence', () => {
     });
   });
 
+  it('defaults time-group merging to disabled and preserves an explicit opt-in', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.mergeAllTimeGroups).toBe(false);
+    expect(normalizeCustomScheduleSettings({}).mergeAllTimeGroups).toBe(false);
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: true }).mergeAllTimeGroups)
+      .toBe(true);
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: 'yes' }).mergeAllTimeGroups)
+      .toBe(false);
+  });
+
   it('preserves valid campus preferences and normalizes an invalid residence', () => {
     expect(normalizeCustomScheduleSettings({
       preferAvoidCampusTransfers: false,
@@ -64,6 +73,7 @@ describe('custom schedule settings persistence', () => {
       blockedSlots: ['2-6', 'bad', '2-6', '1-1'],
     }))).toEqual({
       calculationMode: 'auto',
+      mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
       preferAvoidCampusTransfers: true,

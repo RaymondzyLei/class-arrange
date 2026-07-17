@@ -4,7 +4,7 @@ import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
 import { computeStats } from '@/utils/stats';
-import { buildCourseGroups } from '@/utils/courseGroup';
+import { buildCourseGroups, mergeCourseTimeGroups } from '@/utils/courseGroup';
 import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
 import { pickDefaultArrangement } from '@/utils/arrangement';
 import type {
@@ -23,7 +23,7 @@ import ArrangementPanel from '@/components/ArrangementPanel';
 import CalculationStatus from '@/components/CalculationStatus';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
-import CustomizationModal from '@/components/CustomizationModal';
+import CustomizationModal, { type CustomizationPage } from '@/components/CustomizationModal';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import SpotlightTour from '@/components/onboarding/SpotlightTour';
 import { useConflicts } from '@/hooks/useConflicts';
@@ -167,6 +167,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [customizationInitialPage, setCustomizationInitialPage] = useState<CustomizationPage>('main');
   const [updateHistoryOpen, setUpdateHistoryOpen] = useState(false);
   const [customSettings, setCustomSettings] = useState<CustomScheduleSettings>(
     readCustomScheduleSettings,
@@ -176,7 +177,21 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
-  const filteredGroups = useFilteredCourses(courses, groups, filter);
+  const mergedGroups = useMemo(() => mergeCourseTimeGroups(groups), [groups]);
+  const mergedGroupByKey = useMemo(
+    () => new Map(mergedGroups.map((group) => [group.key, group])),
+    [mergedGroups],
+  );
+  const mergedGroupByCode = useMemo(
+    () => new Map(mergedGroups.map((group) => [group.courseCode, group])),
+    [mergedGroups],
+  );
+  const filteredGroups = useFilteredCourses(
+    courses,
+    groups,
+    filter,
+    customSettings.mergeAllTimeGroups,
+  );
 
   useEffect(() => {
     if (!updateAwareness.automaticNotice || onboarding.stage !== 'hidden') {
@@ -236,8 +251,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
-    return groupByKey.get(detailGroupKey) ?? null;
-  }, [detailGroupKey, groupByKey]);
+    const canonicalGroup = groupByKey.get(detailGroupKey);
+    if (!customSettings.mergeAllTimeGroups) return canonicalGroup ?? null;
+    if (canonicalGroup) return mergedGroupByCode.get(canonicalGroup.courseCode) ?? canonicalGroup;
+    return mergedGroupByKey.get(detailGroupKey) ?? null;
+  }, [
+    customSettings.mergeAllTimeGroups,
+    detailGroupKey,
+    groupByKey,
+    mergedGroupByCode,
+    mergedGroupByKey,
+  ]);
 
   useEffect(() => {
     try {
@@ -412,6 +436,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
     if (action === 'openCustomization') {
       setSelectedCoursesOpen(false);
+      setCustomizationInitialPage('blockedSlots');
       setCustomizationOpen(true);
       return;
     }
@@ -487,7 +512,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             onExport={handleExport}
             exporting={exporting}
             blockedSlots={committedBlockedSlots}
-            onOpenCustomization={() => setCustomizationOpen(true)}
+            onOpenCustomization={() => {
+              setCustomizationInitialPage('main');
+              setCustomizationOpen(true);
+            }}
             calendar={catalog.semester.calendar}
             catalogGeneratedAt={catalog.generatedAt}
             semesters={manifest.semesters}
@@ -526,6 +554,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         showUpdatePopup={updateAwareness.preferences.showUpdatePopup}
         onShowUpdatePopupChange={updateAwareness.setShowUpdatePopup}
         onOpenUpdateHistory={handleOpenUpdateHistory}
+        initialPage={customizationInitialPage}
       />
       {updateAwareness.automaticNotice ? (
         <UpdateNoticeModal

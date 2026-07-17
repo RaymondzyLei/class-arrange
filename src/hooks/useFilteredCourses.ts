@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { CourseGroup, CourseSection, FilterState } from '@/types';
-import { buildCourseGroups } from '@/utils/courseGroup';
+import { buildCourseGroups, mergeCourseTimeGroups } from '@/utils/courseGroup';
 import { courseMatchesKeyword } from '@/utils/courseSearch';
 
 function isEmptyFilter(f: FilterState): boolean {
@@ -35,9 +35,12 @@ export function useFilteredCourses(
   courses: CourseSection[],
   groups: CourseGroup[],
   filter: FilterState,
+  mergeAllTimeGroups: boolean,
 ): CourseGroup[] {
   return useMemo(() => {
-    if (isEmptyFilter(filter)) return groups;
-    return buildCourseGroups(filterCourses(courses, filter));
-  }, [courses, filter, groups]);
+    const filteredGroups = isEmptyFilter(filter)
+      ? groups
+      : buildCourseGroups(filterCourses(courses, filter));
+    return mergeAllTimeGroups ? mergeCourseTimeGroups(filteredGroups) : filteredGroups;
+  }, [courses, filter, groups, mergeAllTimeGroups]);
 }

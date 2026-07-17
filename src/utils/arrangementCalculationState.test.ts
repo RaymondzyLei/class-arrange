@@ -21,6 +21,7 @@ function settings(
 ): CustomScheduleSettings {
   return {
     calculationMode: 'manual',
+    mergeAllTimeGroups: false,
     preferHalfDay: false,
     preferFewerEarlyMornings: true,
     preferAvoidCampusTransfers: true,

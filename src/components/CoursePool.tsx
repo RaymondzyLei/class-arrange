@@ -49,15 +49,20 @@ function PoolRow({
   onOpenDetailRow,
   observeRowElements,
 }: RowComponentProps<RowExtraProps>) {
-  const g = groups[index];
+  const group = groups[index];
   const rowStyle: CSSProperties = {
     ...(style as CSSProperties),
     paddingBottom: ROW_GAP,
     boxSizing: 'border-box',
     display: 'flex',
   };
-  const groupIds = idsForGroup(g);
-  const courseIds = idsForCourse(g.courseCode, groupsByCode);
+  const groupIds = idsForGroup(group);
+  const courseIds = idsForCourse(group.courseCode, groupsByCode);
+  const canonicalTimeGroups = group.timeGroups ?? [group];
+  const conflicting = canonicalTimeGroups.some((timeGroup) => (
+    conflictGroupKeys.has(timeGroup.key)
+    && timeGroup.sectionIds.some((id) => selectedIds.has(id))
+  ));
   return (
     <div
       style={rowStyle}
@@ -68,14 +73,14 @@ function PoolRow({
       }}
     >
       <CoursePoolItem
-        group={g}
+        group={group}
         groupSelected={groupIds.length > 0 && groupIds.every((id) => selectedIds.has(id))}
         courseSelected={courseIds.length > 0 && courseIds.every((id) => selectedIds.has(id))}
-        conflicting={conflictGroupKeys.has(g.key) && g.sectionIds.some((id) => selectedIds.has(id))}
+        conflicting={conflicting}
         theme={themeMode}
-        onToggleGroup={() => onToggleGroupRow(g)}
-        onToggleCourse={() => onToggleCourseRow(g)}
-        onOpenDetail={() => onOpenDetailRow(g.key)}
+        onToggleGroup={() => onToggleGroupRow(group)}
+        onToggleCourse={() => onToggleCourseRow(group)}
+        onOpenDetail={() => onOpenDetailRow(group.key)}
       />
     </div>
   );

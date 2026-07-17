@@ -37,4 +37,14 @@ describe('course detail layout', () => {
     expect(styles).toContain('@media (max-width: 1080px)');
     expect(styles).toContain('.course-detail-modal .detail-section-table');
   });
+
+  it('shows every source time group when a course card is merged', () => {
+    expect(source).toContain('const mergedTimeGroups = display.timeGroups');
+    expect(source).toContain('时间组明细');
+    expect(source).toContain('className="detail-table detail-time-group-table"');
+    expect(source).toContain("{ title: '时间组', dataIndex: 'label'");
+    expect(source).toContain("{ title: '时间地点', dataIndex: 'schedule'");
+    expect(source).toContain('{!mergedTimeGroups ? (');
+    expect(styles).toContain('.detail-time-group-table');
+  });
 });

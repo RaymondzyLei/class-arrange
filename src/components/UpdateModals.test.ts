@@ -17,6 +17,7 @@ import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
 const courseUpdateDetailsSource = readFileSync(new URL('./CourseUpdateBatchDetails.tsx', import.meta.url), 'utf8');
+const historyModalSource = readFileSync(new URL('./UpdateHistoryModal.tsx', import.meta.url), 'utf8');
 const noticeModalSource = readFileSync(new URL('./UpdateNoticeModal.tsx', import.meta.url), 'utf8');
 const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 const normalizedStylesSource = stylesSource.replace(/\r\n/g, '\n');
@@ -339,6 +340,12 @@ describe('update modals', () => {
     expect(regionStyles).toContain('grid-template-rows: 0fr');
     expect(regionStyles).toContain('grid-template-rows 0.18s ease');
     expect(stylesSource).not.toContain('.update-release > div');
+  });
+
+  test('places expanded course changes below the details toggle in update history', () => {
+    expect(historyModalSource).toContain('className="update-history__entry-header"');
+    expect(stylesSource).toContain('.update-history__entry-header');
+    expect(stylesSource).not.toContain('.update-history__entry > div');
   });
 
   test('keeps update notices mounted until the shared modal exit animation completes', () => {

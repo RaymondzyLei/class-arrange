@@ -12,6 +12,7 @@ import { enumerateArrangementsOracle } from './arrangementOracle';
 
 const NO_PREFERENCES: CustomScheduleSettings = {
   calculationMode: 'auto',
+  mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: false,
   preferAvoidCampusTransfers: false,
@@ -83,6 +84,7 @@ describe('compareArrangementRanks', () => {
   it('applies the exact conflict, half-day, early-morning, key, and credit ordering', () => {
     const allPreferences: CustomScheduleSettings = {
       calculationMode: 'auto',
+      mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
       preferAvoidCampusTransfers: true,
@@ -200,6 +202,7 @@ describe('exact Top-8 differential contract', () => {
           for (const preferAvoidCampusTransfers of [false, true]) {
           const settings: CustomScheduleSettings = {
             calculationMode: 'auto',
+            mergeAllTimeGroups: false,
             preferHalfDay,
             preferFewerEarlyMornings,
             preferAvoidCampusTransfers,
@@ -297,6 +300,7 @@ describe('exact Top-8 differential contract', () => {
     }
     expect(enumerateArrangements(halfDayGroups, {
       calculationMode: 'auto',
+      mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: false,
       preferAvoidCampusTransfers: false,
@@ -313,6 +317,7 @@ describe('exact Top-8 differential contract', () => {
     ];
     expect(enumerateArrangements(earlyGroups, {
       calculationMode: 'auto',
+      mergeAllTimeGroups: false,
       preferHalfDay: false,
       preferFewerEarlyMornings: true,
       preferAvoidCampusTransfers: false,

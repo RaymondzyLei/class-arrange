@@ -21,6 +21,7 @@ export const CALCULATION_MODE_OPTIONS = [
 
 export interface CustomScheduleSettings {
   calculationMode: CalculationMode;
+  mergeAllTimeGroups: boolean;
   preferHalfDay: boolean;
   preferFewerEarlyMornings: boolean;
   preferAvoidCampusTransfers: boolean;
@@ -37,6 +38,7 @@ export const CUSTOM_SETTINGS_KEY = 'class-arrange:v1:custom-settings';
 
 export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
+  mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
   preferAvoidCampusTransfers: true,
@@ -60,6 +62,7 @@ export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleS
     : {};
   return {
     calculationMode: source.calculationMode === 'manual' ? 'manual' : 'auto',
+    mergeAllTimeGroups: source.mergeAllTimeGroups === true,
     preferHalfDay: typeof source.preferHalfDay === 'boolean'
       ? source.preferHalfDay
       : source.schedulePreference === 'half-day',

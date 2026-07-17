@@ -90,6 +90,54 @@ export function buildCourseGroups(sections: CourseSection[]): CourseGroup[] {
   return groups;
 }
 
+/**
+ * 仅用于课程列表展示：把同一课程号下的多个时间组合成一张卡片。
+ * 单时间组课程保留原对象，避免无意义的 key 和引用变化；多时间组课程
+ * 通过 timeGroups 保存规范分组，选课、冲突检测和排课计算仍使用原分组。
+ */
+export function mergeCourseTimeGroups(groups: CourseGroup[]): CourseGroup[] {
+  const byCourse = new Map<string, CourseGroup[]>();
+  for (const group of groups) {
+    const bucket = byCourse.get(group.courseCode);
+    if (bucket) bucket.push(group);
+    else byCourse.set(group.courseCode, [group]);
+  }
+
+  return [...byCourse.values()].map((timeGroups) => {
+    if (timeGroups.length === 1) return timeGroups[0];
+    const first = timeGroups[0];
+    const sections: CourseSection[] = [];
+    const sectionIds: string[] = [];
+    const teachers: string[] = [];
+    const seenSections = new Set<string>();
+    const seenTeachers = new Set<string>();
+    for (const group of timeGroups) {
+      for (const section of group.sections) {
+        if (seenSections.has(section.id)) continue;
+        seenSections.add(section.id);
+        sections.push(section);
+        sectionIds.push(section.id);
+      }
+      for (const teacher of group.teachers) {
+        if (!teacher || seenTeachers.has(teacher)) continue;
+        seenTeachers.add(teacher);
+        teachers.push(teacher);
+      }
+    }
+    return {
+      key: `${first.courseCode}::all-time-groups`,
+      courseCode: first.courseCode,
+      courseName: first.courseName,
+      schedule: [],
+      fingerprint: 'all-time-groups',
+      sectionIds,
+      teachers,
+      sections,
+      timeGroups,
+    };
+  });
+}
+
 /** section.id → 所属 CourseGroup 的索引，供冲突检测/查组用 */
 export function buildGroupIndex(sections: CourseSection[]): Map<string, CourseGroup> {
   const groups = buildCourseGroups(sections);

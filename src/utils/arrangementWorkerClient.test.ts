@@ -13,6 +13,7 @@ import type {
 
 const SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
+  mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
   preferAvoidCampusTransfers: true,

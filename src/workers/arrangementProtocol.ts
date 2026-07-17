@@ -115,6 +115,7 @@ export function executeArrangementWorkerRequest(
 ): ArrangementWorkerResult {
   const settings: CustomScheduleSettings = {
     calculationMode: 'auto',
+    mergeAllTimeGroups: false,
     preferHalfDay: request.settings.preferHalfDay,
     preferFewerEarlyMornings: request.settings.preferFewerEarlyMornings,
     preferAvoidCampusTransfers: request.settings.preferAvoidCampusTransfers,

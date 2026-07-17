@@ -44,7 +44,9 @@ export default function UpdateHistoryModal({
           <h3>网站更新</h3>
           {appReleases.length > 0 ? appReleases.slice().reverse().map((release) => (
             <article className="update-history__entry" key={release.version}>
-              <div><strong>{release.title}</strong><time>{release.publishedAt}</time></div>
+              <div className="update-history__entry-header">
+                <strong>{release.title}</strong><time>{release.publishedAt}</time>
+              </div>
               <ul>{release.items.map((item) => <li key={item}>{item}</li>)}</ul>
             </article>
           )) : <p>暂无网站更新记录。</p>}
@@ -61,7 +63,7 @@ export default function UpdateHistoryModal({
                       <h5>与我的方案相关</h5>
                       {semesterImpacts.slice().reverse().map((impact) => (
                         <article className="update-history__entry" key={impact.id}>
-                          <div>
+                          <div className="update-history__entry-header">
                             <strong>{impact.courseName} <small>{impact.courseId}</small></strong>
                             {impact.occurredAt ? <time>{impact.occurredAt.slice(0, 10)}</time> : null}
                           </div>
@@ -79,7 +81,9 @@ export default function UpdateHistoryModal({
                       {semesterImpacts.length > 0 ? <h5>课程目录变化</h5> : null}
                       {entries.slice().reverse().map((entry) => (
                         <article className="update-history__entry" key={entry.id}>
-                          <div><strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong></div>
+                          <div className="update-history__entry-header">
+                            <strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong>
+                          </div>
                           <p>新增 {entry.summary.added} 个课堂，删除 {entry.summary.removed} 个课堂，修改 {entry.summary.modified} 个课堂。</p>
                           <CourseUpdateBatchDetails batch={entry} />
                         </article>
