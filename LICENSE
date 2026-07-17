@@ -1,0 +1,59 @@
+# License
+
+This repository contains two sets of independently developed, loosely coupled code modules
+that do not form a single derivative work. Each set is governed by its respective license terms below.
+
+---
+
+## 1. Original Application Code
+
+### Copyright
+Copyright (c) 2026 RaymondzyLei and contributors.
+
+### Scope
+Unless otherwise explicitly noted, all original application code, generated course data,
+documentation, page styles, graphical assets, and core scheduling logic in this repository
+fall under this section, including but not limited to:
+- index.html, js.js, table.css, data.js, data_generator.py
+- All frontend interface and scheduling algorithm related code
+- Project documentation and configuration files
+
+### Terms of Use
+- You are granted a free, non-exclusive, non-transferable license to use, copy, and modify
+  the above code for personal, non-commercial USTC course-planning and academic purposes only.
+- Any commercial use, including but not limited to paid distribution, paid SaaS services,
+  and commercial secondary development, requires prior written permission from the copyright holder.
+- All rights not explicitly granted in this license are reserved by the copyright holder.
+
+---
+
+## 2. Third-Party AGPL v3 Derivative Code
+
+### Affected Files
+The following files are modified derivatives of the open-source project
+`feixukeji/paike` <https://github.com/feixukeji/paike>:
+- icourse_spider/spider.py
+- icourse_spider/lesson_match.py
+
+### Original Copyright
+Copyright (c) 2025-2026 Xulei Sun, Brealid, Determinant and contributors of the feixukeji/paike project.
+
+### Modification Statement
+Modifications have been made to the above files to adapt them to the course data structure
+and matching requirements of this project. All modifications are made in compliance with
+the terms of the GNU Affero General Public License Version 3.
+
+### License Terms
+These files, and all modified versions thereof, remain subject to the full terms of the
+GNU Affero General Public License Version 3 (AGPL-3.0).
+The complete official text of the AGPL-3.0 license is provided in the `COPYING` file
+located in the root of this repository.
+
+### Network Service Obligation (AGPL-3.0 Section 13)
+If you run modified versions of these files over a network to provide services to other users,
+you must make the complete corresponding source code of the modified version available to
+all users of the service, in compliance with Section 13 of the AGPL-3.0 license.
+
+### Attribution
+- Original source repository: https://github.com/feixukeji/paike
+- Original license: GNU Affero General Public License v3.0
