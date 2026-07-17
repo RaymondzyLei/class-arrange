@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { CourseGroup, CourseSection, SemesterCatalog, SemesterManifest } from '@/types';
+import AppDataState from '@/components/AppDataState';
 import { buildCourseGroups } from '@/utils/courseGroup';
 import {
   buildCourseFilterOptions,
@@ -204,11 +205,7 @@ export function SemesterCatalogProvider({
   }, [courseMap, courses, data, filterOptions, groupByKey, groups, groupsByCode, status, switchSemester]);
 
   if (!value) {
-    return (
-      <div className="app-data-state" role={status.phase === 'error' ? 'alert' : 'status'}>
-        {status.error ?? '正在加载课程数据…'}
-      </div>
-    );
+    return <AppDataState phase={status.phase === 'error' ? 'error' : 'loading'} error={status.error} />;
   }
 
   return <SemesterCatalogContext.Provider value={value}>{children}</SemesterCatalogContext.Provider>;
