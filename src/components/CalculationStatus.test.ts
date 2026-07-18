@@ -32,8 +32,11 @@ function renderStatus(
 describe('CalculationStatus', () => {
   it('uses a separate Worker client for loading every conflict-free result', () => {
     expect(arrangementCalculationHookSource).toContain('allConflictFreeClientRef');
-    expect(arrangementCalculationHookSource).toContain("calculateResults(draft.groups, draft.settings)");
+    expect(arrangementCalculationHookSource).toMatch(
+      /calculateResults\(\s*draft\.groups,\s*draft\.settings,\s*'recommended',\s*draft\.favorites,/,
+    );
     expect(arrangementCalculationHookSource).toContain("'all-conflict-free'");
+    expect(arrangementCalculationHookSource).toContain('committed.favorites');
     expect(arrangementCalculationHookSource).toContain('loadAllConflictFree');
   });
 

@@ -1,4 +1,9 @@
-import type { Campus, CourseGroup, ResidentCampus } from '../types';
+import type {
+  ArrangementFavoritePreferences,
+  Campus,
+  CourseGroup,
+  ResidentCampus,
+} from '../types';
 import {
   enumerateArrangementResultsExact,
   type ArrangementResultMode,
@@ -21,6 +26,7 @@ export interface ArrangementWorkerScheduleDto {
 export interface ArrangementWorkerGroupDto {
   courseCode: string;
   key: string;
+  sectionIds: string[];
   schedule: ArrangementWorkerScheduleDto[];
   credits: number;
   hours: number;
@@ -41,6 +47,7 @@ export interface ArrangementWorkerRequest {
   mode: ArrangementResultMode;
   groups: ArrangementWorkerGroupDto[];
   settings: ArrangementWorkerSettingsDto;
+  favorites: ArrangementFavoritePreferences;
 }
 
 export interface ArrangementResultDto {
@@ -73,6 +80,7 @@ export function createArrangementWorkerRequest(
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
   mode: ArrangementResultMode = 'recommended',
+  favorites?: ArrangementFavoritePreferences,
 ): ArrangementWorkerRequest {
   return {
     type: 'calculate',
@@ -81,6 +89,7 @@ export function createArrangementWorkerRequest(
     groups: groups.map((group) => ({
       courseCode: group.courseCode,
       key: group.key,
+      sectionIds: [...group.sectionIds],
       schedule: group.schedule.map((slot) => ({
         weeks: [...slot.weeks],
         day: slot.day,
@@ -100,6 +109,23 @@ export function createArrangementWorkerRequest(
       residentCampus: settings.residentCampus,
       blockedSlots: [...settings.blockedSlots],
     },
+    favorites: copyFavoritePreferences(favorites),
+  };
+}
+
+function copyFavoritePreferences(
+  favorites?: ArrangementFavoritePreferences,
+): ArrangementFavoritePreferences {
+  return {
+    arrangementIds: Array.isArray(favorites?.arrangementIds)
+      ? [...favorites.arrangementIds]
+      : [],
+    timeGroupKeys: Array.isArray(favorites?.timeGroupKeys)
+      ? [...favorites.timeGroupKeys]
+      : [],
+    sectionIds: Array.isArray(favorites?.sectionIds)
+      ? [...favorites.sectionIds]
+      : [],
   };
 }
 
@@ -117,7 +143,7 @@ function rehydrateWorkerInputGroup(dto: ArrangementWorkerGroupDto): CourseGroup 
       ...(slot.endTime ? { endTime: slot.endTime } : {}),
     })),
     fingerprint: '',
-    sectionIds: [],
+    sectionIds: Array.isArray(dto.sectionIds) ? [...dto.sectionIds] : [],
     teachers: [],
     sections: [{ credits: dto.credits, hours: dto.hours }] as CourseGroup['sections'],
     key: dto.key,
@@ -141,7 +167,10 @@ export function executeArrangementWorkerRequest(
   const result = enumerateArrangementResultsExact(
     request.groups.map(rehydrateWorkerInputGroup),
     settings,
-    { mode: request.mode ?? 'recommended' },
+    {
+      mode: request.mode ?? 'recommended',
+      favorites: copyFavoritePreferences(request.favorites),
+    },
   );
   const toDto = (arrangement: (typeof result.arrangements)[number]): ArrangementResultDto => ({
     id: arrangement.id,

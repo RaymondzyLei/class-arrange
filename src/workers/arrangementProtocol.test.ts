@@ -34,13 +34,17 @@ function schedule(
   }] as ScheduleSlot[];
 }
 
-function group(key: string, slots: ScheduleSlot[]): CourseGroup {
+function group(
+  key: string,
+  slots: ScheduleSlot[],
+  sectionIds: string[] = [],
+): CourseGroup {
   return {
     courseCode: key,
     courseName: key,
     schedule: slots,
     fingerprint: key,
-    sectionIds: [],
+    sectionIds,
     teachers: [],
     sections: [],
     key,
@@ -49,11 +53,24 @@ function group(key: string, slots: ScheduleSlot[]): CourseGroup {
 
 describe('arrangement Worker precise schedule protocol', () => {
   it('serializes campus preferences and optional clock times into the Worker DTO', () => {
+    const groups = [group('A::late', schedule([11], '19:00', '19:30'), ['A.01'])];
+    const favorites = {
+      arrangementIds: ['A::late'],
+      timeGroupKeys: ['A::late'],
+      sectionIds: ['A.01'],
+    };
     const request = createArrangementWorkerRequest(
       7,
-      [group('exact', schedule([11], '19:00', '19:30'))],
+      groups,
       SETTINGS,
+      'recommended',
+      favorites,
     );
+
+    groups[0].sectionIds.push('A.02');
+    favorites.arrangementIds.push('changed');
+    favorites.timeGroupKeys.push('changed');
+    favorites.sectionIds.push('A.02');
 
     expect(request.groups[0].schedule[0]).toMatchObject({
       campus: '高新区',
@@ -65,7 +82,30 @@ describe('arrangement Worker precise schedule protocol', () => {
       preferAvoidCampusTransfers: true,
       residentCampus: '高新区',
     });
+    expect(request.groups[0].sectionIds).toEqual(['A.01']);
+    expect(request.favorites).toEqual({
+      arrangementIds: ['A::late'],
+      timeGroupKeys: ['A::late'],
+      sectionIds: ['A.01'],
+    });
     expect(request.mode).toBe('recommended');
+  });
+
+  it('ranks a lexicographically later group first when its section is favorited', () => {
+    const early = group('A::early', [], ['A.01']);
+    const late = group('A::late', [], ['A.02']);
+    early.courseCode = 'A';
+    late.courseCode = 'A';
+    const request = createArrangementWorkerRequest(
+      8,
+      [early, late],
+      SETTINGS,
+      'recommended',
+      { arrangementIds: [], timeGroupKeys: [], sectionIds: ['A.02'] },
+    );
+
+    expect(executeArrangementWorkerRequest(request).arrangements.map(({ id }) => id))
+      .toEqual(['A::late', 'A::early']);
   });
 
   it('returns a bounded conflict-free preview with the exact total', () => {
@@ -149,7 +189,7 @@ describe('arrangement Worker precise schedule protocol', () => {
         residentCampus: '本部',
         blockedSlots: [],
       },
-    } as ArrangementWorkerRequest;
+    } as unknown as ArrangementWorkerRequest;
 
     expect(executeArrangementWorkerRequest(request).arrangements.map(({ id }) => id))
       .toEqual(['z-main', 'a-high']);

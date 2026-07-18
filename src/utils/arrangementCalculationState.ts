@@ -1,4 +1,8 @@
-import type { Arrangement, CourseGroup } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '@/types';
 import type { CustomScheduleSettings } from './customization';
 import type { ArrangementEnumerationResult } from './arrangementEngine';
 
@@ -14,6 +18,7 @@ export interface ArrangementCalculationDraft {
   inputKey: string;
   groups: CourseGroup[];
   settings: CustomScheduleSettings;
+  favorites: ArrangementFavoritePreferences;
 }
 
 export interface CommittedArrangementCalculation extends ArrangementCalculationDraft {
@@ -37,22 +42,41 @@ function copySettings(settings: CustomScheduleSettings): CustomScheduleSettings 
   };
 }
 
+const EMPTY_FAVORITES: ArrangementFavoritePreferences = {
+  arrangementIds: [],
+  timeGroupKeys: [],
+  sectionIds: [],
+};
+
+function copyFavorites(
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
+): ArrangementFavoritePreferences {
+  return {
+    arrangementIds: [...favorites.arrangementIds],
+    timeGroupKeys: [...favorites.timeGroupKeys],
+    sectionIds: [...favorites.sectionIds],
+  };
+}
+
 function createDraft(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationDraft {
   return {
     scopeKey,
-    inputKey: calculationInputKey(groups, settings),
+    inputKey: calculationInputKey(groups, settings, favorites),
     groups: [...groups],
     settings: copySettings(settings),
+    favorites: copyFavorites(favorites),
   };
 }
 
 export function calculationInputKey(
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): string {
   return JSON.stringify({
     groups: groups.map((group) => [group.courseCode, group.key, group.sectionIds]),
@@ -62,6 +86,11 @@ export function calculationInputKey(
     preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
     residentCampus: settings.residentCampus,
     blockedSlots: [...settings.blockedSlots].sort(),
+    favorites: {
+      arrangementIds: [...favorites.arrangementIds].sort(),
+      timeGroupKeys: [...favorites.timeGroupKeys].sort(),
+      sectionIds: [...favorites.sectionIds].sort(),
+    },
   });
 }
 
@@ -69,10 +98,11 @@ export function createArrangementCalculationState(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationState {
   return {
     phase: groups.length === 0 ? 'empty' : 'dirty',
-    draft: createDraft(scopeKey, groups, settings),
+    draft: createDraft(scopeKey, groups, settings, favorites),
     committed: null,
     activeGeneration: null,
     error: null,
@@ -84,8 +114,9 @@ export function syncArrangementCalculationInputs(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationState {
-  const draft = createDraft(scopeKey, groups, settings);
+  const draft = createDraft(scopeKey, groups, settings, favorites);
   if (scopeKey !== state.draft.scopeKey) {
     return {
       phase: groups.length === 0 ? 'empty' : 'dirty',
@@ -168,6 +199,7 @@ export function completeArrangementCalculation(
       ...state.draft,
       groups: [...state.draft.groups],
       settings: copySettings(state.draft.settings),
+      favorites: copyFavorites(state.draft.favorites),
       arrangements: result.arrangements,
       conflictFreePreview: result.conflictFreePreview,
       totalConflictFreeCount: result.totalConflictFreeCount,

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Arrangement, CourseGroup } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '@/types';
 import {
   calculationActionLabel,
   calculationInputKey,
@@ -24,6 +28,7 @@ interface Options {
   scopeKey: string;
   groups: CourseGroup[];
   settings: CustomScheduleSettings;
+  favorites?: ArrangementFavoritePreferences;
 }
 
 type AllConflictFreePhase = 'idle' | 'loading' | 'ready' | 'error';
@@ -42,6 +47,12 @@ const EMPTY_ALL_CONFLICT_FREE: AllConflictFreeState = {
   error: null,
 };
 
+const EMPTY_FAVORITES: ArrangementFavoritePreferences = {
+  arrangementIds: [],
+  timeGroupKeys: [],
+  sectionIds: [],
+};
+
 function errorMessage(error: unknown): string {
   if (error instanceof Error && error.message) return error.message;
   return '排课计算失败，请稍后重试。';
@@ -51,9 +62,14 @@ function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError';
 }
 
-export function useArrangementCalculation({ scopeKey, groups, settings }: Options) {
+export function useArrangementCalculation({
+  scopeKey,
+  groups,
+  settings,
+  favorites = EMPTY_FAVORITES,
+}: Options) {
   const [state, setState] = useState<ArrangementCalculationState>(() => (
-    createArrangementCalculationState(scopeKey, groups, settings)
+    createArrangementCalculationState(scopeKey, groups, settings, favorites)
   ));
   const stateRef = useRef(state);
   const clientRef = useRef<ArrangementWorkerClient | null>(null);
@@ -65,12 +81,12 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
   const generationRef = useRef(0);
   const mountedRef = useRef(false);
   const inputKey = useMemo(
-    () => calculationInputKey(groups, settings),
-    [groups, settings],
+    () => calculationInputKey(groups, settings, favorites),
+    [favorites, groups, settings],
   );
   const projectedState = useMemo(
-    () => syncArrangementCalculationInputs(state, scopeKey, groups, settings),
-    [groups, inputKey, scopeKey, settings, state],
+    () => syncArrangementCalculationInputs(state, scopeKey, groups, settings, favorites),
+    [favorites, groups, inputKey, scopeKey, settings, state],
   );
 
   // Project draft changes during render so a plan/semester hard reset cannot paint
@@ -108,7 +124,12 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
     const draft = calculating.draft;
     setCurrentState(calculating);
 
-    void getClient().calculateResults(draft.groups, draft.settings).then(
+    void getClient().calculateResults(
+      draft.groups,
+      draft.settings,
+      'recommended',
+      draft.favorites,
+    ).then(
       (result) => {
         const next = completeArrangementCalculation(
           stateRef.current,
@@ -154,6 +175,7 @@ export function useArrangementCalculation({ scopeKey, groups, settings }: Option
       committed.groups,
       committed.settings,
       'all-conflict-free',
+      committed.favorites,
     ).then(
       (result) => {
         if (!mountedRef.current || stateRef.current.committed?.inputKey !== requestInputKey) return;

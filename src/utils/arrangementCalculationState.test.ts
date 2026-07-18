@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { Arrangement, CourseGroup } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '@/types';
 import type { CustomScheduleSettings } from './customization';
 import {
   calculationActionLabel,
@@ -57,6 +61,42 @@ function arrangement(id: string, groups: CourseGroup[]): Arrangement {
 }
 
 describe('arrangement calculation input identity', () => {
+  it('canonicalizes favorite arrays without mutating caller input', () => {
+    const groups = [group('A', 'a')];
+    const unordered: ArrangementFavoritePreferences = {
+      arrangementIds: ['b', 'a'],
+      timeGroupKeys: ['g2', 'g1'],
+      sectionIds: ['S.02', 'S.01'],
+    };
+    const original = structuredClone(unordered);
+
+    const key = calculationInputKey(groups, settings(), unordered);
+    expect(key).toBe(calculationInputKey(
+      groups,
+      settings(),
+      {
+        arrangementIds: ['a', 'b'],
+        timeGroupKeys: ['g1', 'g2'],
+        sectionIds: ['S.01', 'S.02'],
+      },
+    ));
+    expect(JSON.parse(key).favorites).toEqual({
+      arrangementIds: ['a', 'b'],
+      timeGroupKeys: ['g1', 'g2'],
+      sectionIds: ['S.01', 'S.02'],
+    });
+    expect(unordered).toEqual(original);
+  });
+
+  it('changes when a favorite is added or removed', () => {
+    const groups = [group('A', 'a')];
+    const empty = { arrangementIds: [], timeGroupKeys: [], sectionIds: [] };
+    const favorite = { ...empty, sectionIds: ['A.01'] };
+
+    expect(calculationInputKey(groups, settings(), empty))
+      .not.toBe(calculationInputKey(groups, settings(), favorite));
+  });
+
   it('tracks calculation inputs but excludes calculation mode', () => {
     const groups = [group('A', 'a')];
     const automatic = settings({ calculationMode: 'auto' });
@@ -94,6 +134,50 @@ describe('arrangement calculation input identity', () => {
 });
 
 describe('arrangement calculation state', () => {
+  it('keeps the committed favorite snapshot while changed favorites make the draft dirty', () => {
+    const groups = [group('A', 'a')];
+    const committedFavorites: ArrangementFavoritePreferences = {
+      arrangementIds: ['a'],
+      timeGroupKeys: [],
+      sectionIds: ['A.01'],
+    };
+    const nextFavorites: ArrangementFavoritePreferences = {
+      arrangementIds: [],
+      timeGroupKeys: ['a'],
+      sectionIds: [],
+    };
+    const result = [arrangement('a', groups)];
+    let state = createArrangementCalculationState(
+      'fall:plan-a',
+      groups,
+      settings(),
+      committedFavorites,
+    );
+    state = completeArrangementCalculation(startArrangementCalculation(state, 1), 1, result);
+    state = syncArrangementCalculationInputs(
+      state,
+      'fall:plan-a',
+      groups,
+      settings(),
+      nextFavorites,
+    );
+
+    committedFavorites.arrangementIds.push('changed');
+    nextFavorites.timeGroupKeys.push('changed');
+    expect(state.phase).toBe('dirty');
+    expect(state.committed?.favorites).toEqual({
+      arrangementIds: ['a'],
+      timeGroupKeys: [],
+      sectionIds: ['A.01'],
+    });
+    expect(state.committed?.arrangements).toEqual(result);
+    expect(state.draft.favorites).toEqual({
+      arrangementIds: [],
+      timeGroupKeys: ['a'],
+      sectionIds: [],
+    });
+  });
+
   it('commits recommended arrangements with the conflict-free preview and total', () => {
     const groups = [group('A', 'a')];
     const recommended = [arrangement('a', groups)];
