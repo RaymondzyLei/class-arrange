@@ -294,7 +294,6 @@ export default function CourseDetailModal({
   const renderSingleSectionIdentity = () => (
     <span className="course-detail-section-identity">
       <span>{sectionLabel}</span>
-      {sectionRows[0] ? renderSectionFavorite(sectionRows[0]) : null}
     </span>
   );
 

@@ -46,4 +46,24 @@ describe('FavoriteButton', () => {
       /\.favorite-button--active\s*\{\s*color:\s*var\(--favorite\);\s*\}/,
     );
   });
+
+  it('keeps the selected star yellow with a yellow-tinted background on hover', () => {
+    const activeHover = stylesSource.match(
+      /\.favorite-button--active:hover\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
+
+    expect(activeHover).toContain('color: var(--favorite)');
+    expect(activeHover).toContain('background: color-mix(in srgb, var(--favorite)');
+    expect(activeHover).not.toContain('var(--accent)');
+  });
+
+  it('uses the yellow favorite palette when an inactive star is hovered', () => {
+    const hover = stylesSource.match(
+      /\.favorite-button:hover\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
+
+    expect(hover).toContain('color: var(--favorite)');
+    expect(hover).toContain('background: color-mix(in srgb, var(--favorite)');
+    expect(hover).not.toContain('var(--accent)');
+  });
 });

@@ -33,6 +33,7 @@ interface RowExtraProps {
   themeMode: 'light' | 'dark';
   favoriteIds: ReadonlySet<string>;
   toggleFavorite: (kind: FavoriteKind, id: string) => void;
+  tourFavoriteGroupKey: string | null;
   onToggleGroupRow: (group: CourseGroup) => void;
   onToggleCourseRow: (group: CourseGroup) => void;
   onOpenDetailRow: (groupKey: string) => void;
@@ -50,6 +51,7 @@ function PoolRow({
   themeMode,
   favoriteIds,
   toggleFavorite,
+  tourFavoriteGroupKey,
   onToggleGroupRow,
   onToggleCourseRow,
   onOpenDetailRow,
@@ -86,6 +88,7 @@ function PoolRow({
         theme={themeMode}
         favoriteIds={favoriteIds}
         toggleFavorite={toggleFavorite}
+        tourFavorite={group.key === tourFavoriteGroupKey}
         onToggleGroup={() => onToggleGroupRow(group)}
         onToggleCourse={() => onToggleCourseRow(group)}
         onOpenDetail={() => onOpenDetailRow(group.key)}
@@ -111,6 +114,10 @@ export default function CoursePool({
   const { message } = App.useApp();
   const listRef = useListRef(null);
   const rowHeightKey = useMemo(() => groups.map((group) => group.key).join('|'), [groups]);
+  const tourFavoriteGroupKey = useMemo(
+    () => groups.find((group) => !group.timeGroups)?.key ?? null,
+    [groups],
+  );
   const rowHeight = useDynamicRowHeight({
     defaultRowHeight: DEFAULT_ROW_HEIGHT,
     key: `${themeMode}:${rowHeightKey}`,
@@ -187,11 +194,12 @@ export default function CoursePool({
     themeMode,
     favoriteIds: timeGroupKeys,
     toggleFavorite,
+    tourFavoriteGroupKey,
     onToggleGroupRow: toggleGroup,
     onToggleCourseRow: toggleCourse,
     onOpenDetailRow: onOpenDetail,
     observeRowElements: rowHeight.observeRowElements,
-  }), [groups, selectedIds, groupsByCode, conflictGroupKeys, themeMode, timeGroupKeys, toggleFavorite, toggleGroup, toggleCourse, onOpenDetail, rowHeight.observeRowElements]);
+  }), [groups, selectedIds, groupsByCode, conflictGroupKeys, themeMode, timeGroupKeys, toggleFavorite, tourFavoriteGroupKey, toggleGroup, toggleCourse, onOpenDetail, rowHeight.observeRowElements]);
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (

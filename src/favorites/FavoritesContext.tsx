@@ -9,10 +9,17 @@ import {
 } from 'react';
 import type {
   ArrangementFavoritePreferences,
+  ArrangementFavoriteRecord,
   FavoriteKind,
   FavoritesState,
 } from '@/types';
-import { loadFavorites, saveFavorites, toggleFavorite } from './favorites';
+import {
+  loadFavorites,
+  rememberArrangementFavorites,
+  saveFavorites,
+  toggleArrangementFavorite,
+  toggleFavorite,
+} from './favorites';
 
 interface FavoritesContextValue {
   state: FavoritesState;
@@ -22,6 +29,8 @@ interface FavoritesContextValue {
   sectionIds: ReadonlySet<string>;
   arrangementPreferences: ArrangementFavoritePreferences;
   toggle: (kind: FavoriteKind, id: string) => void;
+  toggleArrangement: (record: ArrangementFavoriteRecord) => void;
+  rememberArrangements: (records: readonly ArrangementFavoriteRecord[]) => void;
 }
 
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
@@ -53,6 +62,21 @@ function FavoritesProviderInner({ children, semesterKey }: FavoritesProviderProp
     saveFavorites(semesterKey, next);
   }, [semesterKey]);
 
+  const toggleArrangement = useCallback((record: ArrangementFavoriteRecord) => {
+    const next = toggleArrangementFavorite(latestStateRef.current, record);
+    latestStateRef.current = next;
+    setState(next);
+    saveFavorites(semesterKey, next);
+  }, [semesterKey]);
+
+  const rememberArrangements = useCallback((records: readonly ArrangementFavoriteRecord[]) => {
+    const next = rememberArrangementFavorites(latestStateRef.current, records);
+    if (next === latestStateRef.current) return;
+    latestStateRef.current = next;
+    setState(next);
+    saveFavorites(semesterKey, next);
+  }, [semesterKey]);
+
   const value = useMemo<FavoritesContextValue>(() => ({
     state,
     planIds: new Set(state.planIds),
@@ -65,7 +89,9 @@ function FavoritesProviderInner({ children, semesterKey }: FavoritesProviderProp
       sectionIds: state.sectionIds,
     },
     toggle,
-  }), [state, toggle]);
+    toggleArrangement,
+    rememberArrangements,
+  }), [rememberArrangements, state, toggle, toggleArrangement]);
 
   return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>;
 }

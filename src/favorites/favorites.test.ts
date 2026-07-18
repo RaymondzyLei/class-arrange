@@ -6,6 +6,7 @@ import {
   favoritesStorageKey,
   loadFavorites,
   saveFavorites,
+  toggleArrangementFavorite,
   toggleFavorite,
   type StorageLike,
 } from './favorites';
@@ -26,6 +27,17 @@ const allKinds: FavoritesState = {
   version: 1,
   planIds: ['p1'],
   arrangementIds: ['g1||g2'],
+  arrangementRecords: [{
+    id: 'g1||g2',
+    planId: 'p1',
+    planName: '方案一',
+    originalIndex: 3,
+    courseCount: 2,
+    totalCredits: 5,
+    totalHours: 80,
+    conflictCount: 0,
+    courseNames: ['高等数学', '大学物理'],
+  }],
   timeGroupKeys: ['MATH::slot'],
   sectionIds: ['MATH.01'],
 };
@@ -80,6 +92,7 @@ describe('favorites persistence', () => {
       version: 1,
       planIds: ['p1', 'p2'],
       arrangementIds: ['a', 'b'],
+      arrangementRecords: [],
       timeGroupKeys: [],
       sectionIds: [],
     });
@@ -106,6 +119,26 @@ describe('favorites persistence', () => {
 
   it('does not change state for a blank toggle id', () => {
     expect(toggleFavorite(allKinds, 'plan', '  ')).toBe(allKinds);
+  });
+
+  it('persists arrangement ownership and removes only the matching plan record', () => {
+    const secondPlanRecord = {
+      ...allKinds.arrangementRecords[0],
+      planId: 'p2',
+      planName: '方案二',
+      originalIndex: 6,
+    };
+    const withSecondPlan = toggleArrangementFavorite(allKinds, secondPlanRecord);
+
+    expect(withSecondPlan.arrangementRecords).toHaveLength(2);
+    expect(withSecondPlan.arrangementIds).toEqual(['g1||g2']);
+
+    const removedFirst = toggleArrangementFavorite(
+      withSecondPlan,
+      allKinds.arrangementRecords[0],
+    );
+    expect(removedFirst.arrangementRecords).toEqual([secondPlanRecord]);
+    expect(removedFirst.arrangementIds).toEqual(['g1||g2']);
   });
 
   it('remounts its state owner when the semester key changes', () => {

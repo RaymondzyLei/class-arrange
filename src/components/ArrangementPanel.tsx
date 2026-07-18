@@ -14,7 +14,8 @@ interface Props {
   allConflictFreeError: string | null;
   onShowConflictFree: () => void;
   favoriteIds: ReadonlySet<string>;
-  onToggleFavorite: (id: string) => void;
+  numbersById: ReadonlyMap<string, number>;
+  onToggleFavorite: (arrangement: Arrangement, number: number) => void;
 }
 
 export default function ArrangementPanel({
@@ -28,6 +29,7 @@ export default function ArrangementPanel({
   allConflictFreeError,
   onShowConflictFree,
   favoriteIds,
+  numbersById,
   onToggleFavorite,
 }: Props) {
   const conflictFreeMode = mode === 'conflict-free';
@@ -47,6 +49,7 @@ export default function ArrangementPanel({
           }`}
         >
           {arrangements.map((a, index) => {
+            const number = numbersById.get(a.id) ?? index;
             const applied = a.id === selectedId;
             const conflictFree = a.conflictCount === 0;
             const favorite = favoriteIds.has(a.id);
@@ -56,10 +59,10 @@ export default function ArrangementPanel({
                   type="button"
                   className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
                   onClick={() => onSelect(a.id)}
-                  aria-label={`排课方案 ${index}`}
+                  aria-label={`排课方案 ${number}`}
                 >
                   <div className="arrangement-card__row">
-                    <span className="arrangement-card__idx">#{index}</span>
+                    <span className="arrangement-card__idx">#{number}</span>
                     <span className="arrangement-card__meta">
                       {a.courseCount} 门 · {a.totalCredits} 学分
                     </span>
@@ -74,8 +77,8 @@ export default function ArrangementPanel({
                 <FavoriteButton
                   className="arrangement-card__favorite"
                   active={favorite}
-                  label={`${favorite ? '取消收藏' : '收藏'}排课方案 #${index}`}
-                  onToggle={() => onToggleFavorite(a.id)}
+                  label={`${favorite ? '取消收藏' : '收藏'}排课方案 #${number}`}
+                  onToggle={() => onToggleFavorite(a, number)}
                 />
               </div>
             );

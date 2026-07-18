@@ -30,7 +30,7 @@ describe('merged course time-group integration', () => {
 
   it('provides semester favorites to ranking and plan controls', () => {
     expect(appSource).toContain('<FavoritesProvider');
-    expect(appSource).toContain('favorites: favoriteState.arrangementPreferences');
+    expect(appSource).toContain('favorites: activeArrangementPreferences');
     expect(planSwitcherSource).toContain("toggleFavorite('plan', plan.id)");
     expect(planSwitcherSource).toContain('active={planIds.has(plan.id)}');
   });
@@ -46,15 +46,30 @@ describe('merged course time-group integration', () => {
     );
   });
 
-  it('anchors each visible time-group favorite at the course card bottom-right', () => {
+  it('overlays each visible time-group favorite at the course card bottom-right without adding a row', () => {
     const favoriteRule = ruleBody('.pool-item__favorite');
     const reservedSpaceRule = ruleBody('.pool-item--has-favorite');
+    const scheduleRule = ruleBody('.pool-item--has-favorite .pool-item__schedule');
 
     expect(itemSource).toContain("cls.push('pool-item--has-favorite')");
     expect(itemSource).toContain('className="pool-item__favorite"');
     expect(favoriteRule).toContain('position: absolute');
     expect(favoriteRule).toContain('right: 6px');
     expect(favoriteRule).toContain('bottom: 4px');
-    expect(reservedSpaceRule).toContain('padding-bottom: 36px');
+    expect(reservedSpaceRule).not.toContain('padding-bottom');
+    expect(scheduleRule).toContain('padding-right: 30px');
+  });
+
+  it('keeps the conflict badge on the first row aligned beside the right-side actions', () => {
+    const headRule = ruleBody('.pool-item__head');
+    const conflictRule = ruleBody('.pool-item__conflict-tag');
+    const actionsRule = ruleBody('.pool-item__actions');
+
+    expect(itemSource).toMatch(
+      /<\/span>\s*\{conflicting && <span className="pool-item__conflict-tag">冲突<\/span>\}\s*<div className="pool-item__actions">/,
+    );
+    expect(headRule).toContain('grid-template-areas: "name conflict actions"');
+    expect(conflictRule).toContain('grid-area: conflict');
+    expect(actionsRule).toContain('grid-area: actions');
   });
 });

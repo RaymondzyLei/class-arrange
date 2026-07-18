@@ -15,6 +15,7 @@ interface Props {
   theme: 'light' | 'dark';
   favoriteIds: ReadonlySet<string>;
   toggleFavorite: (kind: FavoriteKind, id: string) => void;
+  tourFavorite: boolean;
   onToggleGroup: () => void;
   onToggleCourse: () => void;
   onOpenDetail: () => void;
@@ -28,6 +29,7 @@ function CoursePoolItem({
   theme,
   favoriteIds,
   toggleFavorite,
+  tourFavorite,
   onToggleGroup,
   onToggleCourse,
   onOpenDetail,
@@ -88,8 +90,8 @@ function CoursePoolItem({
                 : `${group.sections.length}个班`}
             </span>
           )}
-          {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         </span>
+        {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         <div className="pool-item__actions">
           {!mergedTimeGroups ? (
             <Button
@@ -147,6 +149,7 @@ function CoursePoolItem({
           active={favoriteIds.has(group.key)}
           label={`${favoriteIds.has(group.key) ? '取消收藏' : '收藏'}时间组：${courseCodeLabel}`}
           onToggle={() => toggleFavorite('timeGroup', group.key)}
+          dataTour={tourFavorite ? 'course-favorite' : undefined}
         />
       ) : null}
     </div>

@@ -6,6 +6,9 @@ const customizationSource = readFileSync(new URL('../CustomizationModal.tsx', im
 const spotlightSource = readFileSync(new URL('./SpotlightTour.tsx', import.meta.url), 'utf8');
 const tourStepsSource = readFileSync(new URL('../../onboarding/tourSteps.tsx', import.meta.url), 'utf8');
 const arrangementPanelSource = readFileSync(new URL('../ArrangementPanel.tsx', import.meta.url), 'utf8');
+const statsBarSource = readFileSync(new URL('../StatsBar.tsx', import.meta.url), 'utf8');
+const coursePoolSource = readFileSync(new URL('../CoursePool.tsx', import.meta.url), 'utf8');
+const coursePoolItemSource = readFileSync(new URL('../CoursePoolItem.tsx', import.meta.url), 'utf8');
 const selectSource = readFileSync(new URL('../SelectWithChevron.tsx', import.meta.url), 'utf8');
 const onboardingStylesSource = readFileSync(new URL('./onboarding.css', import.meta.url), 'utf8');
 
@@ -76,6 +79,21 @@ describe('onboarding content', () => {
     expect(spotlightSource).not.toContain('getArrangementPreviewRect');
     expect(tourStepsSource).toContain('展示数量可以在设置中调整');
     expect(tourStepsSource).toContain('不同时间组组合');
+  });
+
+  it('inserts favorite guidance between the former first and second steps', () => {
+    const schemeIndex = tourStepsSource.indexOf("id: 'scheme-list'");
+    const favoriteIndex = tourStepsSource.indexOf("id: 'favorite-management'");
+    const arrangementIndex = tourStepsSource.indexOf("id: 'arrangement-preview'");
+
+    expect(schemeIndex).toBeGreaterThan(-1);
+    expect(favoriteIndex).toBeGreaterThan(schemeIndex);
+    expect(arrangementIndex).toBeGreaterThan(favoriteIndex);
+    expect(tourStepsSource).toContain("'[data-tour=\"favorites-manage\"]'");
+    expect(tourStepsSource).toContain("'[data-tour=\"course-favorite\"]'");
+    expect(statsBarSource).toContain('data-tour="favorites-manage"');
+    expect(coursePoolSource).toContain('tourFavoriteGroupKey');
+    expect(coursePoolItemSource).toContain("dataTour={tourFavorite ? 'course-favorite' : undefined}");
   });
 
   it('removes the former step 10 preference spotlight but keeps blocked slots', () => {

@@ -6,6 +6,7 @@ interface FavoriteButtonProps {
   label: string;
   onToggle: () => void;
   className?: string;
+  dataTour?: string;
 }
 
 function stopEvent(event: MouseEvent<HTMLButtonElement>) {
@@ -18,6 +19,7 @@ export function FavoriteButton({
   label,
   onToggle,
   className,
+  dataTour,
 }: FavoriteButtonProps) {
   const classes = [
     'favorite-button',
@@ -32,6 +34,7 @@ export function FavoriteButton({
       aria-pressed={active}
       aria-label={label}
       title={label}
+      data-tour={dataTour}
       onMouseDown={stopEvent}
       onClick={(event) => {
         stopEvent(event);

@@ -32,6 +32,7 @@ describe('ArrangementPanel viewport height', () => {
     allConflictFreeError: null,
     onShowConflictFree: () => undefined,
     favoriteIds: new Set(['first']),
+    numbersById: new Map([['first', 7], ['second', 2]]),
     onToggleFavorite: () => undefined,
   };
 
@@ -42,23 +43,37 @@ describe('ArrangementPanel viewport height', () => {
     }));
 
     expect(html).toContain('aria-pressed="true"');
-    expect(html).toContain('title="取消收藏排课方案 #0"');
+    expect(html).toContain('title="取消收藏排课方案 #7"');
     expect(html.match(/aria-label="排课方案 \d+"/g)).toHaveLength(arrangements.length);
     expect(html.match(/class="favorite-button/g)).toHaveLength(arrangements.length);
+    expect(html).toContain('aria-label="排课方案 7"');
+    expect(html).toContain('title="取消收藏排课方案 #7"');
     expect(source).toContain('<div className="arrangement-card-wrap" key={a.id}>');
     expect(source).not.toContain('key={index}');
   });
 
-  it('anchors arrangement favorites at the card bottom-right without covering its row', () => {
+  it('overlays arrangement favorites at the card bottom-right without increasing card height', () => {
     const favoriteRule = ruleBody('.arrangement-card__favorite');
     const cardRule = ruleBody('.arrangement-card');
+    const rowRule = ruleBody('.arrangement-card__row');
+    const metaRule = ruleBody('.arrangement-card__meta');
+    const conflictRule = ruleBody('.arrangement-card__conflict');
 
     expect(favoriteRule).toContain('position: absolute');
     expect(favoriteRule).toContain('right: 6px');
     expect(favoriteRule).toContain('bottom: 4px');
     expect(favoriteRule).not.toContain('top:');
     expect(favoriteRule).not.toContain('transform:');
-    expect(cardRule).toContain('padding: 8px 40px 34px 10px');
+    expect(cardRule).toContain('padding: 6px 10px');
+    expect(cardRule).not.toContain('34px');
+    expect(rowRule).toContain('grid-template-areas:');
+    expect(rowRule).toContain('"idx meta"');
+    expect(rowRule).toContain('"conflict conflict"');
+    expect(metaRule).toContain('white-space: nowrap');
+    expect(metaRule).not.toContain('text-overflow: ellipsis');
+    expect(conflictRule).toContain('grid-area: conflict');
+    expect(styles).toContain('--arrangement-card-height: 60px');
+    expect(styles).not.toContain('--arrangement-card-height: 48px');
   });
 
   it('shows the conflict-free summary action at the bottom in recommended mode', () => {
@@ -125,7 +140,7 @@ describe('ArrangementPanel viewport height', () => {
     }));
 
     expect(loadingHtml).toContain('正在加载全部方案');
-    expect(loadingHtml).toContain('排课方案 0');
+    expect(loadingHtml).toContain('排课方案 7');
     expect(emptyHtml).toContain('没有不冲突的排课方案');
   });
 

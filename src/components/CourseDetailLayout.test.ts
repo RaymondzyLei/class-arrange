@@ -77,8 +77,9 @@ describe('course detail layout', () => {
     expect(occurrenceCount(source, 'renderSectionFavorite(row)')).toBe(2);
   });
 
-  it('shows the concrete section favorite in both single-section overview layouts', () => {
+  it('does not duplicate the concrete section favorite in a single-section overview', () => {
     expect(source).toContain('renderSingleSectionIdentity()');
     expect(occurrenceCount(source, 'renderSingleSectionIdentity()')).toBe(2);
+    expect(source).not.toContain('sectionRows[0] ? renderSectionFavorite(sectionRows[0]) : null');
   });
 });

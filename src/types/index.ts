@@ -81,9 +81,23 @@ export interface ArrangementFavoritePreferences {
 
 export type FavoriteKind = 'plan' | 'arrangement' | 'timeGroup' | 'section';
 
+export interface ArrangementFavoriteRecord {
+  id: string;
+  planId: string;
+  planName: string;
+  originalIndex: number;
+  courseCount: number;
+  totalCredits: number;
+  totalHours: number;
+  conflictCount: number;
+  courseNames: string[];
+}
+
 export interface FavoritesState extends ArrangementFavoritePreferences {
   version: 1;
   planIds: string[];
+  /** 排课收藏的定位与展示快照；旧数据没有此字段时会无损迁移为空数组。 */
+  arrangementRecords: ArrangementFavoriteRecord[];
 }
 
 /**

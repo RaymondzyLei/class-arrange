@@ -1,4 +1,8 @@
-import type { FavoriteKind, FavoritesState } from '@/types';
+import type {
+  ArrangementFavoriteRecord,
+  FavoriteKind,
+  FavoritesState,
+} from '@/types';
 
 export interface StorageLike {
   getItem(key: string): string | null;
@@ -9,6 +13,7 @@ export const EMPTY_FAVORITES_STATE: FavoritesState = {
   version: 1,
   planIds: [],
   arrangementIds: [],
+  arrangementRecords: [],
   timeGroupKeys: [],
   sectionIds: [],
 };
@@ -25,6 +30,7 @@ function emptyFavoritesState(): FavoritesState {
     version: 1,
     planIds: [],
     arrangementIds: [],
+    arrangementRecords: [],
     timeGroupKeys: [],
     sectionIds: [],
   };
@@ -41,6 +47,47 @@ function normalizeIds(value: unknown): string[] {
     seen.add(normalized);
     return [normalized];
   });
+}
+
+function normalizeArrangementRecords(
+  value: unknown,
+  favoriteIds: readonly string[],
+): ArrangementFavoriteRecord[] {
+  if (!Array.isArray(value)) return [];
+  const allowedIds = new Set(favoriteIds);
+  const seen = new Set<string>();
+  const records: ArrangementFavoriteRecord[] = [];
+
+  for (const item of value) {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+    const record = item as Record<string, unknown>;
+    const id = typeof record.id === 'string' ? record.id.trim() : '';
+    const planId = typeof record.planId === 'string' ? record.planId.trim() : '';
+    const key = `${planId}\u0000${id}`;
+    if (!id || !planId || !allowedIds.has(id) || seen.has(key)) continue;
+    if (
+      typeof record.planName !== 'string'
+      || !Number.isSafeInteger(record.originalIndex)
+      || (record.originalIndex as number) < 0
+      || typeof record.courseCount !== 'number'
+      || typeof record.totalCredits !== 'number'
+      || typeof record.totalHours !== 'number'
+      || typeof record.conflictCount !== 'number'
+    ) continue;
+    seen.add(key);
+    records.push({
+      id,
+      planId,
+      planName: record.planName.trim() || '选课方案',
+      originalIndex: record.originalIndex as number,
+      courseCount: record.courseCount,
+      totalCredits: record.totalCredits,
+      totalHours: record.totalHours,
+      conflictCount: record.conflictCount,
+      courseNames: normalizeIds(record.courseNames),
+    });
+  }
+  return records;
 }
 
 function getStorage(storage?: StorageLike): StorageLike | null {
@@ -63,10 +110,12 @@ export function loadFavorites(semesterKey: string, storage?: StorageLike): Favor
     const stored = parsed as Record<string, unknown>;
     if (stored.version !== 1) return emptyFavoritesState();
 
+    const arrangementIds = normalizeIds(stored.arrangementIds);
     return {
       version: 1,
       planIds: normalizeIds(stored.planIds),
-      arrangementIds: normalizeIds(stored.arrangementIds),
+      arrangementIds,
+      arrangementRecords: normalizeArrangementRecords(stored.arrangementRecords, arrangementIds),
       timeGroupKeys: normalizeIds(stored.timeGroupKeys),
       sectionIds: normalizeIds(stored.sectionIds),
     };
@@ -83,10 +132,12 @@ export function saveFavorites(
   try {
     const target = getStorage(storage);
     if (!target) return false;
+    const arrangementIds = normalizeIds(state.arrangementIds);
     target.setItem(favoritesStorageKey(semesterKey), JSON.stringify({
       version: 1,
       planIds: normalizeIds(state.planIds),
-      arrangementIds: normalizeIds(state.arrangementIds),
+      arrangementIds,
+      arrangementRecords: normalizeArrangementRecords(state.arrangementRecords, arrangementIds),
       timeGroupKeys: normalizeIds(state.timeGroupKeys),
       sectionIds: normalizeIds(state.sectionIds),
     } satisfies FavoritesState));
@@ -105,10 +156,56 @@ export function toggleFavorite(
   if (!normalizedId) return state;
   const field = FIELD_BY_KIND[kind];
   const values = state[field] as string[];
+  const removing = values.includes(normalizedId);
   return {
     ...state,
-    [field]: values.includes(normalizedId)
+    [field]: removing
       ? values.filter((value) => value !== normalizedId)
       : [...values, normalizedId],
+    ...(kind === 'arrangement' && removing
+      ? { arrangementRecords: state.arrangementRecords.filter((record) => record.id !== normalizedId) }
+      : {}),
   };
+}
+
+export function toggleArrangementFavorite(
+  state: FavoritesState,
+  record: ArrangementFavoriteRecord,
+): FavoritesState {
+  const exists = state.arrangementRecords.some(
+    (item) => item.id === record.id && item.planId === record.planId,
+  );
+  const arrangementRecords = exists
+    ? state.arrangementRecords.filter(
+        (item) => item.id !== record.id || item.planId !== record.planId,
+      )
+    : [...state.arrangementRecords, record];
+  const stillFavorited = arrangementRecords.some((item) => item.id === record.id);
+  return {
+    ...state,
+    arrangementIds: exists && !stillFavorited
+      ? state.arrangementIds.filter((id) => id !== record.id)
+      : state.arrangementIds.includes(record.id)
+        ? state.arrangementIds
+        : [...state.arrangementIds, record.id],
+    arrangementRecords,
+  };
+}
+
+export function rememberArrangementFavorites(
+  state: FavoritesState,
+  records: readonly ArrangementFavoriteRecord[],
+): FavoritesState {
+  let changed = false;
+  const next = [...state.arrangementRecords];
+  for (const record of records) {
+    if (!state.arrangementIds.includes(record.id)) continue;
+    const index = next.findIndex(
+      (item) => item.id === record.id && item.planId === record.planId,
+    );
+    if (index >= 0) continue;
+    next.push(record);
+    changed = true;
+  }
+  return changed ? { ...state, arrangementRecords: next } : state;
 }
