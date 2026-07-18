@@ -6,6 +6,12 @@ const hookSource = readFileSync(new URL('../hooks/useFilteredCourses.ts', import
 const poolSource = readFileSync(new URL('./CoursePool.tsx', import.meta.url), 'utf8');
 const itemSource = readFileSync(new URL('./CoursePoolItem.tsx', import.meta.url), 'utf8');
 const planSwitcherSource = readFileSync(new URL('./PlanSwitcher.tsx', import.meta.url), 'utf8');
+const styles = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
+
+function ruleBody(selector: string): string {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return styles.match(new RegExp(`${escaped}\\s*\\{([\\s\\S]*?)\\}`, 'm'))?.[1] ?? '';
+}
 
 describe('merged course time-group integration', () => {
   it('derives merged display groups from the persisted setting', () => {
@@ -38,5 +44,17 @@ describe('merged course time-group integration', () => {
     expect(itemSource).toMatch(
       /\{!mergedTimeGroups \? \([\s\S]*?<FavoriteButton[\s\S]*?toggleFavorite\('timeGroup', group\.key\)[\s\S]*?\) : null\}/,
     );
+  });
+
+  it('anchors each visible time-group favorite at the course card bottom-right', () => {
+    const favoriteRule = ruleBody('.pool-item__favorite');
+    const reservedSpaceRule = ruleBody('.pool-item--has-favorite');
+
+    expect(itemSource).toContain("cls.push('pool-item--has-favorite')");
+    expect(itemSource).toContain('className="pool-item__favorite"');
+    expect(favoriteRule).toContain('position: absolute');
+    expect(favoriteRule).toContain('right: 6px');
+    expect(favoriteRule).toContain('bottom: 4px');
+    expect(reservedSpaceRule).toContain('padding-bottom: 36px');
   });
 });

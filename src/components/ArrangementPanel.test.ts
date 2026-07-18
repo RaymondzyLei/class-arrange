@@ -49,6 +49,18 @@ describe('ArrangementPanel viewport height', () => {
     expect(source).not.toContain('key={index}');
   });
 
+  it('anchors arrangement favorites at the card bottom-right without covering its row', () => {
+    const favoriteRule = ruleBody('.arrangement-card__favorite');
+    const cardRule = ruleBody('.arrangement-card');
+
+    expect(favoriteRule).toContain('position: absolute');
+    expect(favoriteRule).toContain('right: 6px');
+    expect(favoriteRule).toContain('bottom: 4px');
+    expect(favoriteRule).not.toContain('top:');
+    expect(favoriteRule).not.toContain('transform:');
+    expect(cardRule).toContain('padding: 8px 40px 34px 10px');
+  });
+
   it('shows the conflict-free summary action at the bottom in recommended mode', () => {
     const html = renderToStaticMarkup(createElement(ArrangementPanel, {
       ...baseProps,

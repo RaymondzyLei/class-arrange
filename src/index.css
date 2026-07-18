@@ -1098,7 +1098,7 @@ html {
   background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 40px 8px 10px;
+  padding: 8px 40px 34px 10px;
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -1112,9 +1112,8 @@ html {
 
 .arrangement-card__favorite {
   position: absolute;
-  top: 50%;
   right: 6px;
-  transform: translateY(-50%);
+  bottom: 4px;
 }
 
 .arrangement-card:hover {
@@ -2081,6 +2080,16 @@ html {
 .pool-item {
   padding: 8px 10px 8px 12px;
   gap: 3px;
+}
+
+.pool-item--has-favorite {
+  padding-bottom: 36px;
+}
+
+.pool-item__favorite {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
 }
 
 .pool-item__name-text {
@@ -3160,7 +3169,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .arrangement-panel {
-    --arrangement-card-height: 48px;
+    --arrangement-card-height: 60px;
   }
 
   .arrangement-panel__list,
@@ -3172,11 +3181,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .arrangement-card {
-    padding: 4px 10px;
-  }
-
-  .arrangement-card-wrap .arrangement-card {
-    padding-right: 40px;
+    padding: 4px 40px 34px 10px;
   }
 
   .arrangement-panel__list--mobile-scroll {

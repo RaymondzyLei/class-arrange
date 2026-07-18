@@ -42,6 +42,7 @@ function CoursePoolItem({
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
 
   const cls = ['pool-item'];
+  if (!mergedTimeGroups) cls.push('pool-item--has-favorite');
   if (groupSelected && !conflicting) cls.push('pool-item--selected');
   if (conflicting) cls.push('pool-item--conflict');
 
@@ -91,25 +92,18 @@ function CoursePoolItem({
         </span>
         <div className="pool-item__actions">
           {!mergedTimeGroups ? (
-            <>
-              <FavoriteButton
-                active={favoriteIds.has(group.key)}
-                label={`${favoriteIds.has(group.key) ? '取消收藏' : '收藏'}时间组：${courseCodeLabel}`}
-                onToggle={() => toggleFavorite('timeGroup', group.key)}
-              />
-              <Button
-                size="small"
-                type={groupSelected ? 'default' : 'primary'}
-                danger={groupSelected}
-                aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${group.courseName}`}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onToggleGroup();
-                }}
-              >
-                {groupSelected ? '移除此时间组' : '选择此时间组'}
-              </Button>
-            </>
+            <Button
+              size="small"
+              type={groupSelected ? 'default' : 'primary'}
+              danger={groupSelected}
+              aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${group.courseName}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleGroup();
+              }}
+            >
+              {groupSelected ? '移除此时间组' : '选择此时间组'}
+            </Button>
           ) : null}
           <Button
             size="small"
@@ -147,6 +141,14 @@ function CoursePoolItem({
       </div>
       <div className="pool-item__teacher-row">{teacherLine}</div>
       <div className="pool-item__schedule">{scheduleSummary}</div>
+      {!mergedTimeGroups ? (
+        <FavoriteButton
+          className="pool-item__favorite"
+          active={favoriteIds.has(group.key)}
+          label={`${favoriteIds.has(group.key) ? '取消收藏' : '收藏'}时间组：${courseCodeLabel}`}
+          onToggle={() => toggleFavorite('timeGroup', group.key)}
+        />
+      ) : null}
     </div>
   );
 }
