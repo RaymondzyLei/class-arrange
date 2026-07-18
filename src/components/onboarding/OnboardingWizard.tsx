@@ -104,7 +104,7 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
             <div className="onboarding-wizard__step">
               <p className="onboarding-wizard__eyebrow">基础偏好</p>
               <h2 id="onboarding-wizard-title" className="onboarding-wizard__title">选择使用偏好</h2>
-              <p className="onboarding-wizard__setting-note">稍后可在“自定义”中修改设置</p>
+              <p className="onboarding-wizard__setting-note">稍后可在“设置”中修改设置</p>
               <div className="onboarding-wizard__preference-group">
                 <p className="onboarding-wizard__group-label">排课偏好设置</p>
                 <div className="onboarding-wizard__calculation-mode">
@@ -181,7 +181,7 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
       <OnboardingConfirm
         open={confirmSkipOpen}
         title="跳过新手引导？"
-        description="跳过后不会自动再次弹出，你仍然可以从“自定义”中重新查看。"
+        description="跳过后不会自动再次弹出，你仍然可以从“设置”中重新查看。"
         confirmText="确认跳过"
         onCancel={() => setConfirmSkipOpen(false)}
         onConfirm={onSkip}

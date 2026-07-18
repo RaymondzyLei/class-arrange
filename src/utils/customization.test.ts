@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ARRANGEMENT_DISPLAY_COUNT_OPTIONS,
   CALCULATION_MODE_OPTIONS,
   DEFAULT_CUSTOM_SETTINGS,
   normalizeCustomScheduleSettings,
@@ -37,6 +38,30 @@ describe('custom schedule settings persistence', () => {
     });
   });
 
+  it('uses eight displayed arrangements by default and accepts only supported counts', () => {
+    expect(ARRANGEMENT_DISPLAY_COUNT_OPTIONS.map(({ value }) => value))
+      .toEqual([2, 4, 8, 12, 16]);
+    expect(DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount).toBe(8);
+    expect(normalizeCustomScheduleSettings({}).arrangementDisplayCount).toBe(8);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 2 }).arrangementDisplayCount)
+      .toBe(2);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 16 }).arrangementDisplayCount)
+      .toBe(16);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: 100 }).arrangementDisplayCount)
+      .toBe(8);
+    expect(normalizeCustomScheduleSettings({ arrangementDisplayCount: '12' }).arrangementDisplayCount)
+      .toBe(8);
+  });
+
+  it('defaults time-group merging to disabled and preserves an explicit opt-in', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.mergeAllTimeGroups).toBe(false);
+    expect(normalizeCustomScheduleSettings({}).mergeAllTimeGroups).toBe(false);
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: true }).mergeAllTimeGroups)
+      .toBe(true);
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: 'yes' }).mergeAllTimeGroups)
+      .toBe(false);
+  });
+
   it('preserves valid campus preferences and normalizes an invalid residence', () => {
     expect(normalizeCustomScheduleSettings({
       preferAvoidCampusTransfers: false,
@@ -64,6 +89,8 @@ describe('custom schedule settings persistence', () => {
       blockedSlots: ['2-6', 'bad', '2-6', '1-1'],
     }))).toEqual({
       calculationMode: 'auto',
+      arrangementDisplayCount: 8,
+      mergeAllTimeGroups: false,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
       preferAvoidCampusTransfers: true,

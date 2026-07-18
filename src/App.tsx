@@ -4,7 +4,7 @@ import { ConfigProvider, Layout, theme, App as AntApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { PlansProvider, usePlans } from '@/store/plansContext';
 import { computeStats } from '@/utils/stats';
-import { buildCourseGroups } from '@/utils/courseGroup';
+import { buildCourseGroups, mergeCourseTimeGroups } from '@/utils/courseGroup';
 import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
 import { pickDefaultArrangement } from '@/utils/arrangement';
 import type {
@@ -23,7 +23,7 @@ import ArrangementPanel from '@/components/ArrangementPanel';
 import CalculationStatus from '@/components/CalculationStatus';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
-import CustomizationModal from '@/components/CustomizationModal';
+import CustomizationModal, { type CustomizationPage } from '@/components/CustomizationModal';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import SpotlightTour from '@/components/onboarding/SpotlightTour';
 import { useConflicts } from '@/hooks/useConflicts';
@@ -160,13 +160,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
-  const [arrangementSelection, setArrangementSelection] = useState<{
+  const [arrangementView, setArrangementView] = useState<'recommended' | 'conflict-free'>('recommended');
+  const [recommendedArrangementSelection, setRecommendedArrangementSelection] = useState<{
+    inputKey: string | null;
+    id: string | null;
+  }>({ inputKey: null, id: null });
+  const [conflictFreeArrangementSelection, setConflictFreeArrangementSelection] = useState<{
     inputKey: string | null;
     id: string | null;
   }>({ inputKey: null, id: null });
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [customizationOpen, setCustomizationOpen] = useState(false);
+  const [customizationInitialPage, setCustomizationInitialPage] = useState<CustomizationPage>('main');
   const [updateHistoryOpen, setUpdateHistoryOpen] = useState(false);
   const [customSettings, setCustomSettings] = useState<CustomScheduleSettings>(
     readCustomScheduleSettings,
@@ -176,7 +182,21 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
-  const filteredGroups = useFilteredCourses(courses, groups, filter);
+  const mergedGroups = useMemo(() => mergeCourseTimeGroups(groups), [groups]);
+  const mergedGroupByKey = useMemo(
+    () => new Map(mergedGroups.map((group) => [group.key, group])),
+    [mergedGroups],
+  );
+  const mergedGroupByCode = useMemo(
+    () => new Map(mergedGroups.map((group) => [group.courseCode, group])),
+    [mergedGroups],
+  );
+  const filteredGroups = useFilteredCourses(
+    courses,
+    groups,
+    filter,
+    customSettings.mergeAllTimeGroups,
+  );
 
   useEffect(() => {
     if (!updateAwareness.automaticNotice || onboarding.stage !== 'hidden') {
@@ -207,10 +227,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     groups: allSelectedGroups,
     settings: customSettings,
   });
-  const arrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
+  const recommendedArrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
+  const conflictFreeArrangements = calculation.allConflictFreePhase === 'ready'
+    ? calculation.allConflictFreeArrangements
+    : calculation.committed?.conflictFreePreview ?? EMPTY_ARRANGEMENTS;
+  const arrangements = arrangementView === 'recommended'
+    ? recommendedArrangements
+    : conflictFreeArrangements;
   const committedArrangementInputKey = calculation.committed?.inputKey ?? null;
-  const selectedArrangementId = arrangementSelection.inputKey === committedArrangementInputKey
-    ? arrangementSelection.id
+  const activeArrangementSelection = arrangementView === 'recommended'
+    ? recommendedArrangementSelection
+    : conflictFreeArrangementSelection;
+  const selectedArrangementId = activeArrangementSelection.inputKey === committedArrangementInputKey
+    ? activeArrangementSelection.id
     : null;
 
   // 用户选择有效 → 应用之；否则用默认（最低冲突）
@@ -236,8 +265,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
-    return groupByKey.get(detailGroupKey) ?? null;
-  }, [detailGroupKey, groupByKey]);
+    const canonicalGroup = groupByKey.get(detailGroupKey);
+    if (!customSettings.mergeAllTimeGroups) return canonicalGroup ?? null;
+    if (canonicalGroup) return mergedGroupByCode.get(canonicalGroup.courseCode) ?? canonicalGroup;
+    return mergedGroupByKey.get(detailGroupKey) ?? null;
+  }, [
+    customSettings.mergeAllTimeGroups,
+    detailGroupKey,
+    groupByKey,
+    mergedGroupByCode,
+    mergedGroupByKey,
+  ]);
 
   useEffect(() => {
     try {
@@ -258,14 +296,30 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   // 切换方案时关闭详情弹窗 + 清空排课选择
   useEffect(() => {
     setDetailGroupKey(null);
-    setArrangementSelection({ inputKey: null, id: null });
+    setArrangementView('recommended');
+    setRecommendedArrangementSelection({ inputKey: null, id: null });
+    setConflictFreeArrangementSelection({ inputKey: null, id: null });
   }, [activePlan?.id]);
   useLayoutEffect(() => {
-    setArrangementSelection((current) => ({
+    setRecommendedArrangementSelection((current) => ({
       inputKey: committedArrangementInputKey,
-      id: resolveSelectedArrangementId(current.id, arrangements),
+      id: resolveSelectedArrangementId(current.id, recommendedArrangements),
     }));
-  }, [arrangements, committedArrangementInputKey]);
+  }, [committedArrangementInputKey, recommendedArrangements]);
+  useLayoutEffect(() => {
+    if (arrangementView !== 'conflict-free') return;
+    setConflictFreeArrangementSelection((current) => ({
+      inputKey: committedArrangementInputKey,
+      id: current.inputKey === committedArrangementInputKey
+        && conflictFreeArrangements.some(({ id }) => id === current.id)
+        ? current.id
+        : conflictFreeArrangements[0]?.id ?? null,
+    }));
+  }, [arrangementView, committedArrangementInputKey, conflictFreeArrangements]);
+  useEffect(() => {
+    setArrangementView('recommended');
+    setConflictFreeArrangementSelection({ inputKey: null, id: null });
+  }, [calculation.draft.inputKey]);
 
   const handleExport = async () => {
     if (!exportRef.current) {
@@ -303,8 +357,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleArrangementChange = (id: string) => {
     if (id === appliedArrangement?.id) return;
     const index = arrangements.findIndex((arrangement) => arrangement.id === id);
-    setArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    if (arrangementView === 'recommended') {
+      setRecommendedArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    } else {
+      setConflictFreeArrangementSelection({ inputKey: committedArrangementInputKey, id });
+    }
     if (index >= 0) message.success(`已切换到排课方案 #${index}`);
+  };
+  const showAllConflictFreeArrangements = () => {
+    setArrangementView('conflict-free');
+    calculation.loadAllConflictFree();
   };
   const calculationStatus = (
     <CalculationStatus
@@ -314,7 +376,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       actionLabel={calculation.actionLabel}
       error={calculation.error}
       onCalculate={calculation.startCalculation}
-      compact={arrangements.length > 1}
+      compact={true}
     />
   );
 
@@ -412,6 +474,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
     if (action === 'openCustomization') {
       setSelectedCoursesOpen(false);
+      setCustomizationInitialPage('blockedSlots');
       setCustomizationOpen(true);
       return;
     }
@@ -448,15 +511,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
           <div className="panel-inner calculation-results no-print">
-            {arrangements.length > 1 && (
-              <ArrangementPanel
-                arrangements={arrangements}
-                selectedId={appliedArrangement?.id ?? null}
-                onSelect={handleArrangementChange}
-                status={calculationStatus}
-              />
-            )}
-            {arrangements.length <= 1 && calculationStatus}
+            <ArrangementPanel
+              arrangements={arrangements}
+              selectedId={appliedArrangement?.id ?? null}
+              onSelect={handleArrangementChange}
+              status={calculationStatus}
+              mode={arrangementView}
+              totalConflictFreeCount={calculation.committed?.totalConflictFreeCount ?? 0}
+              allConflictFreePhase={calculation.allConflictFreePhase}
+              allConflictFreeError={calculation.allConflictFreeError}
+              onShowConflictFree={showAllConflictFreeArrangements}
+            />
           </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
             <FilterBar
@@ -487,7 +552,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             onExport={handleExport}
             exporting={exporting}
             blockedSlots={committedBlockedSlots}
-            onOpenCustomization={() => setCustomizationOpen(true)}
+            onOpenCustomization={() => {
+              setCustomizationInitialPage('main');
+              setCustomizationOpen(true);
+            }}
             calendar={catalog.semester.calendar}
             catalogGeneratedAt={catalog.generatedAt}
             semesters={manifest.semesters}
@@ -526,6 +594,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         showUpdatePopup={updateAwareness.preferences.showUpdatePopup}
         onShowUpdatePopupChange={updateAwareness.setShowUpdatePopup}
         onOpenUpdateHistory={handleOpenUpdateHistory}
+        initialPage={customizationInitialPage}
       />
       {updateAwareness.automaticNotice ? (
         <UpdateNoticeModal
@@ -541,7 +610,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         loading={updateAwareness.history.loading}
         failedSemesterKeys={updateAwareness.history.failedSemesterKeys}
         appReleases={updateAwareness.history.appReleases}
-        impacts={updateAwareness.history.impacts}
         semesters={updateAwareness.history.semesters}
         onClose={() => setUpdateHistoryOpen(false)}
       />

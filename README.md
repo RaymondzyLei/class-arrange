@@ -326,6 +326,7 @@ key = courseName + '#' + ','.join(sorted(teachers))
 - 前端不用 ESLint，用 oxlint（更快）
 - TypeScript 严格模式，`verbatimModuleSyntax` + `noUnusedLocals`
 - 前端测试用 Vitest（`pnpm test`），Python 爬虫 / 工具用 pytest（`uv run pytest catalog_spider/tests -v`）
+- 功能更新时同步完善 `src/updates/appUpdates.ts` 中的更新记录
 - 提交前跑 `pnpm tsc -b && pnpm lint` 确保通过
 
 ---

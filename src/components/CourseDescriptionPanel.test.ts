@@ -66,6 +66,7 @@ describe('CourseDescriptionPanel', () => {
     expect(detailModalSource).toContain('titleExtra={');
     expect(detailModalSource).toContain('<CourseDescriptionToggle');
     expect(bottomModalSource).toContain('bottom-modal__title-extra');
+    expect(bottomModalSource).toContain('headerLeading');
     expect(stylesSource).toContain('.course-description-region--open');
   });
 

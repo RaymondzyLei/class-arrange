@@ -30,4 +30,8 @@ describe('responsive modal and course-list layout', () => {
       /@media \(max-width: 900px\)\s*\{\s*\.course-pool__list\s*\{[^}]*flex:\s*0 0 auto;[^}]*height:\s*clamp\(360px, 68dvh, 640px\);[^}]*\}\s*\}/s,
     );
   });
+
+  it('keeps the desktop timetable frame on the same bottom edge as the course list', () => {
+    expect(ruleBodies('.table-panel')).not.toMatch(/margin-bottom:\s*-\d/);
+  });
 });

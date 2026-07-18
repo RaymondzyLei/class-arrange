@@ -13,6 +13,8 @@ import type {
 
 const SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
+  arrangementDisplayCount: 8,
+  mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
   preferAvoidCampusTransfers: true,
@@ -65,6 +67,35 @@ afterEach(() => {
 });
 
 describe('arrangement Worker client', () => {
+  it('requests and rehydrates all conflict-free result metadata', async () => {
+    const groups = [group('A', 'a')];
+    const worker = new FakeWorker();
+    const client = createArrangementWorkerClient({ workerFactory: () => worker });
+    const pending = client.calculateResults(groups, SETTINGS, 'all-conflict-free');
+
+    expect(worker.requests[0]).toMatchObject({
+      mode: 'all-conflict-free',
+      settings: { arrangementDisplayCount: 8 },
+    });
+    worker.reply({
+      type: 'result',
+      generation: 1,
+      arrangements: [{
+        id: 'a', groupKeys: ['a'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+      }],
+      conflictFreePreview: [{
+        id: 'a', groupKeys: ['a'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+      }],
+      totalConflictFreeCount: 1,
+    });
+
+    await expect(pending).resolves.toMatchObject({
+      arrangements: [{ id: 'a', groups }],
+      conflictFreePreview: [{ id: 'a', groups }],
+      totalConflictFreeCount: 1,
+    });
+  });
+
   it('posts a generation-tagged request and rehydrates result group keys', async () => {
     const groups = [group('A', 'a'), group('B', 'b')];
     const worker = new FakeWorker();
@@ -75,11 +106,13 @@ describe('arrangement Worker client', () => {
     expect(worker.requests).toEqual([{
       type: 'calculate',
       generation: 1,
+      mode: 'recommended',
       groups: [
         { courseCode: 'A', key: 'a', schedule: [], credits: 0, hours: 0 },
         { courseCode: 'B', key: 'b', schedule: [], credits: 0, hours: 0 },
       ],
       settings: {
+        arrangementDisplayCount: 8,
         preferHalfDay: false,
         preferFewerEarlyMornings: true,
         preferAvoidCampusTransfers: true,
@@ -98,6 +131,8 @@ describe('arrangement Worker client', () => {
         totalCredits: 5,
         totalHours: 64,
       }],
+      conflictFreePreview: [],
+      totalConflictFreeCount: 0,
     });
 
     const [result] = await pending;
@@ -143,6 +178,8 @@ describe('arrangement Worker client', () => {
       type: 'result',
       generation: 1,
       arrangements: [],
+      conflictFreePreview: [],
+      totalConflictFreeCount: 0,
     });
     workers[1].reply({
       type: 'result',
@@ -155,6 +192,10 @@ describe('arrangement Worker client', () => {
         totalCredits: 0,
         totalHours: 0,
       }],
+      conflictFreePreview: [{
+        id: 'b', groupKeys: ['b'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+      }],
+      totalConflictFreeCount: 1,
     });
 
     await staleRejection;
@@ -210,6 +251,8 @@ describe('arrangement Worker client', () => {
         totalCredits: 0,
         totalHours: 0,
       }],
+      conflictFreePreview: [],
+      totalConflictFreeCount: 0,
     });
 
     await expect(pending).rejects.toThrow('unknown group key: missing');
@@ -270,7 +313,13 @@ describe('arrangement Worker client', () => {
 
     expect(workerUrl).toContain('arrangement.worker.ts');
     expect(workerOptions).toEqual({ type: 'module' });
-    worker.reply({ type: 'result', generation: 1, arrangements: [] });
+    worker.reply({
+      type: 'result',
+      generation: 1,
+      arrangements: [],
+      conflictFreePreview: [],
+      totalConflictFreeCount: 0,
+    });
     await expect(pending).resolves.toEqual([]);
   });
 });

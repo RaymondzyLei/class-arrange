@@ -25,7 +25,7 @@ export function findAmbiguousCodes(groups: CourseGroup[]): string[] {
 }
 
 /**
- * 精确搜索每门课程的时间组选择，并按既有比较契约返回 Top 8。
+ * 精确搜索每门课程的时间组选择，并按既有比较契约返回设置数量的推荐方案。
  *
  * - 输入 groups 已聚合（useMemo 后的 buildCourseGroups 结果）
  * - 无歧义时返回 1 个 Arrangement（唯一视图）

@@ -13,6 +13,93 @@ function ruleBody(selector: string): string {
 }
 
 describe('ArrangementPanel viewport height', () => {
+  const arrangements: Arrangement[] = [
+    {
+      id: 'first', groups: [], conflictCount: 0, courseCount: 3, totalCredits: 6, totalHours: 96,
+    },
+    {
+      id: 'second', groups: [], conflictCount: 1, courseCount: 3, totalCredits: 6, totalHours: 96,
+    },
+  ];
+  const baseProps = {
+    arrangements,
+    selectedId: 'first',
+    onSelect: () => undefined,
+    status: createElement('span', { className: 'test-compact-status' }, '当前课表来自最近一次成功计算。'),
+    totalConflictFreeCount: 2,
+    allConflictFreePhase: 'idle' as const,
+    allConflictFreeError: null,
+    onShowConflictFree: () => undefined,
+  };
+
+  it('shows the conflict-free summary action at the bottom in recommended mode', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'recommended',
+    }));
+
+    expect(html).not.toContain('展示所有不冲突方案');
+    expect(html).not.toContain('返回推荐方案');
+    expect(html).not.toContain('arrangement-panel__mode-action');
+    expect(html).toContain('共 2 种不冲突方案，');
+    expect(html).toMatch(/<button[^>]*class="arrangement-panel__show-all"[^>]*>显示全部<\/button>/);
+  });
+
+  it('hides the conflict-free summary action when no conflict-free arrangement exists', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'recommended',
+      totalConflictFreeCount: 0,
+    }));
+
+    expect(html).not.toContain('显示全部');
+    expect(html).not.toContain('种不冲突方案');
+  });
+
+  it('shows the exact conflict-free count without load-all at or below 100', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'conflict-free',
+      totalConflictFreeCount: 100,
+    }));
+
+    expect(html).not.toContain('返回推荐方案');
+    expect(html).toContain('共 100 种不冲突方案');
+    expect(html).not.toContain('全部展示');
+  });
+
+  it('does not offer a second load-all action above 100 results', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'conflict-free',
+      totalConflictFreeCount: 123,
+    }));
+
+    expect(html).toContain('共 123 种不冲突方案');
+    expect(html).not.toContain('全部展示');
+    expect(html).not.toContain('arrangement-panel__load-all');
+  });
+
+  it('keeps the preview visible while loading all and explains empty results', () => {
+    const loadingHtml = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'conflict-free',
+      totalConflictFreeCount: 123,
+      allConflictFreePhase: 'loading',
+    }));
+    const emptyHtml = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      arrangements: [],
+      selectedId: null,
+      mode: 'conflict-free',
+      totalConflictFreeCount: 0,
+    }));
+
+    expect(loadingHtml).toContain('正在加载全部方案');
+    expect(loadingHtml).toContain('排课方案 0');
+    expect(emptyHtml).toContain('没有不冲突的排课方案');
+  });
+
   it.each([
     '.arrangement-panel__list--scroll',
     '.arrangement-panel__list--mobile-scroll',
@@ -26,19 +113,9 @@ describe('ArrangementPanel viewport height', () => {
   });
 
   it('places a supplied compact status beside the title instead of a plan count', () => {
-    const arrangements: Arrangement[] = [
-      {
-        id: 'first', groups: [], conflictCount: 0, courseCount: 3, totalCredits: 6, totalHours: 96,
-      },
-      {
-        id: 'second', groups: [], conflictCount: 1, courseCount: 3, totalCredits: 6, totalHours: 96,
-      },
-    ];
     const html = renderToStaticMarkup(createElement(ArrangementPanel, {
-      arrangements,
-      selectedId: 'first',
-      onSelect: () => undefined,
-      status: createElement('span', { className: 'test-compact-status' }, '当前课表来自最近一次成功计算。'),
+      ...baseProps,
+      mode: 'recommended',
     }));
 
     expect(html).toContain('排课方案');

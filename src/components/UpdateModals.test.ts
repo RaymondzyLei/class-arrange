@@ -17,6 +17,7 @@ import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
 const courseUpdateDetailsSource = readFileSync(new URL('./CourseUpdateBatchDetails.tsx', import.meta.url), 'utf8');
+const historyModalSource = readFileSync(new URL('./UpdateHistoryModal.tsx', import.meta.url), 'utf8');
 const noticeModalSource = readFileSync(new URL('./UpdateNoticeModal.tsx', import.meta.url), 'utf8');
 const stylesSource = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 const normalizedStylesSource = stylesSource.replace(/\r\n/g, '\n');
@@ -215,14 +216,13 @@ describe('update modals', () => {
     expect(html.indexOf('部分课程已失效')).toBeLessThan(html.indexOf('已选课程信息有变化'));
   });
 
-  test('history has two top-level sections and only lists semesters with course changes', () => {
+  test('history has two top-level sections without plan-specific impact notices', () => {
     const html = renderToStaticMarkup(
       createElement(UpdateHistoryModal, {
         open: true,
         loading: false,
         failedSemesterKeys: [],
         appReleases: notice.appReleases,
-        impacts: [event('modified')],
         semesters: [...notice.semesterUpdates, {
           semester: { ...semester, key: '2026-summer', name: '2026年夏季学期' },
           entries: [],
@@ -233,7 +233,11 @@ describe('update modals', () => {
 
     expect(html).toContain('网站更新');
     expect(html).toContain('课程信息更新');
-    expect(html).toContain('与我的方案相关');
+    expect(html).not.toContain('与我的方案相关');
+    expect(html).not.toContain('课堂已删除，并从');
+    expect(historyModalSource).not.toContain('CourseImpactEvent');
+    expect(appSource).not.toContain('impacts={updateAwareness.history.impacts}');
+    expect(noticeModalSource).toContain('notice.impacts');
     expect(html).toContain('2026年秋季学期');
     expect(html).not.toContain('2026年夏季学期');
     expect(html.match(/class="update-section"/g)).toHaveLength(2);
@@ -247,7 +251,6 @@ describe('update modals', () => {
         loading: false,
         failedSemesterKeys: [],
         appReleases: notice.appReleases,
-        impacts: [],
         semesters: [{ semester, entries: [] }, {
           semester: { ...semester, key: '2026-summer', name: '2026年夏季学期' },
           entries: [],
@@ -339,6 +342,12 @@ describe('update modals', () => {
     expect(regionStyles).toContain('grid-template-rows: 0fr');
     expect(regionStyles).toContain('grid-template-rows 0.18s ease');
     expect(stylesSource).not.toContain('.update-release > div');
+  });
+
+  test('places expanded course changes below the details toggle in update history', () => {
+    expect(historyModalSource).toContain('className="update-history__entry-header"');
+    expect(stylesSource).toContain('.update-history__entry-header');
+    expect(stylesSource).not.toContain('.update-history__entry > div');
   });
 
   test('keeps update notices mounted until the shared modal exit animation completes', () => {

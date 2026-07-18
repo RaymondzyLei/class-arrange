@@ -17,7 +17,6 @@ export interface TourStep {
   clickTarget?: string;
   entryAnimation?: 'float';
   mergeTargets?: boolean;
-  preview?: 'arrangementPanel';
 }
 
 export const tourSteps: TourStep[] = [
@@ -33,9 +32,8 @@ export const tourSteps: TourStep[] = [
     id: 'arrangement-preview',
     target: '[data-tour="arrangement-preview"]',
     title: '了解排课方案',
-    description: '这里展示同一个“我的方案”生成的多种排课结果。系统会为已选课程尝试不同时间组组合，按冲突数和偏好排序，最多展示 8 种；点击任一方案即可切换右侧课表。',
+    description: '这里展示同一个“我的方案”生成的多种排课结果。系统会为已选课程尝试不同时间组组合，按冲突数和偏好排序，展示数量可以在设置中调整；点击任一方案即可切换右侧课表。',
     placement: 'right',
-    preview: 'arrangementPanel',
   },
   {
     id: 'program-selector',
@@ -89,7 +87,7 @@ export const tourSteps: TourStep[] = [
   {
     id: 'customization-entry',
     target: '[data-tour="customization"]',
-    title: '打开自定义',
+    title: '打开设置',
     description: '回到主页后，可以从这里进入自定义设置，调整排课倾向和占位时间。',
     action: 'closeSelectedCourses',
     placement: 'left',
@@ -140,7 +138,7 @@ export const tourSteps: TourStep[] = [
         <span className="tour-card__credits-title">贡献列表：</span>
         <ContributorList variant="links" />
         <span className="tour-card__closing-note">
-          再次查看引导可以从“自定义”里的“重新查看新手引导”进入。
+          再次查看引导可以从“设置”里的“重新查看新手引导”进入。
         </span>
       </>
     ),

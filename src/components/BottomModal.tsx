@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   width?: number;
   titleExtra?: ReactNode;
+  headerLeading?: ReactNode;
   footer?: ReactNode;
   actions?: ReactNode;
   bodyRef?: Ref<HTMLDivElement>;
@@ -25,6 +26,7 @@ export default function BottomModal({
   className,
   width = 720,
   titleExtra,
+  headerLeading,
   footer,
   actions,
   bodyRef,
@@ -74,8 +76,12 @@ export default function BottomModal({
       >
         <div className="bottom-modal__header">
           <div className="bottom-modal__heading">
-            <h2 className="bottom-modal__title">{title}</h2>
-            {titleExtra ? <div className="bottom-modal__title-extra">{titleExtra}</div> : null}
+            {headerLeading ?? (
+              <>
+                <h2 className="bottom-modal__title">{title}</h2>
+                {titleExtra ? <div className="bottom-modal__title-extra">{titleExtra}</div> : null}
+              </>
+            )}
           </div>
           {actions ? <div className="bottom-modal__actions">{actions}</div> : null}
           <button className="bottom-modal__close" type="button" onClick={onClose} aria-label="关闭">

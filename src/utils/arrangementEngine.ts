@@ -17,7 +17,20 @@ import {
   scheduleSlotOverlapsBlocked,
 } from './scheduleTime';
 
-const RESULT_LIMIT = 8;
+export const ARRANGEMENT_RESULT_LIMIT = 100;
+
+export type ArrangementResultMode = 'recommended' | 'all-conflict-free';
+
+export interface ArrangementEnumerationResult {
+  arrangements: Arrangement[];
+  conflictFreePreview: Arrangement[];
+  totalConflictFreeCount: number;
+}
+
+export interface ArrangementEnumerationOptions {
+  mode?: ArrangementResultMode;
+  diagnostics?: ArrangementSearchDiagnostics;
+}
 
 export interface ArrangementRank {
   conflictCount: number;
@@ -433,13 +446,20 @@ function resetDiagnostics(diagnostics: ArrangementSearchDiagnostics | undefined)
   diagnostics.maxRetainedCandidates = 0;
 }
 
-export function enumerateArrangementsExact(
+export function enumerateArrangementResultsExact(
   groups: CourseGroup[],
   settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
-  diagnostics?: ArrangementSearchDiagnostics,
-): Arrangement[] {
+  options: ArrangementEnumerationOptions = {},
+): ArrangementEnumerationResult {
+  const { diagnostics, mode = 'recommended' } = options;
   resetDiagnostics(diagnostics);
-  if (groups.length === 0) return [];
+  if (groups.length === 0) {
+    return {
+      arrangements: [],
+      conflictFreePreview: [],
+      totalConflictFreeCount: 0,
+    };
+  }
 
   const blockedSlots = new Set(settings.blockedSlots);
   const records = precomputeGroups(groups, blockedSlots);
@@ -462,7 +482,7 @@ export function enumerateArrangementsExact(
   for (const code of codeOrder) {
     const bucket = byCode.get(code)!;
     if (bucket.length === 1) lockedIndices.push(bucket[0]);
-    else ambiguousBuckets.push(bucket);
+      else ambiguousBuckets.push(bucket);
   }
 
   const state = new IncrementalSearchState(
@@ -474,7 +494,13 @@ export function enumerateArrangementsExact(
   for (const groupIndex of lockedIndices) state.add(groupIndex);
 
   const pickedIndices: number[] = [];
-  const best = new BoundedCandidateHeap(RESULT_LIMIT, settings);
+  const recommended = new BoundedCandidateHeap(
+    settings.arrangementDisplayCount ?? DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
+    settings,
+  );
+  const conflictFreePreview = new BoundedCandidateHeap(ARRANGEMENT_RESULT_LIMIT, settings);
+  const allConflictFree: RankedCandidate[] = [];
+  let totalConflictFreeCount = 0;
   let ordinal = 0;
 
   const visit = (depth: number): void => {
@@ -502,11 +528,17 @@ export function enumerateArrangementsExact(
         ordinal,
       };
       ordinal += 1;
-      best.add(candidate);
+      recommended.add(candidate);
+      if (candidate.rank.conflictCount === 0) {
+        totalConflictFreeCount += 1;
+        conflictFreePreview.add(candidate);
+        if (mode === 'all-conflict-free') allConflictFree.push(candidate);
+      }
       if (diagnostics) {
         diagnostics.maxRetainedCandidates = Math.max(
           diagnostics.maxRetainedCandidates,
-          best.size,
+          recommended.size,
+          conflictFreePreview.size,
         );
       }
       return;
@@ -523,12 +555,29 @@ export function enumerateArrangementsExact(
 
   visit(0);
 
-  return best.sortedBestFirst().map((candidate): Arrangement => ({
+  const toArrangement = (candidate: RankedCandidate): Arrangement => ({
     id: candidate.id,
     groups: candidate.groupIndices.map((index) => records[index].group),
     conflictCount: candidate.rank.conflictCount,
     courseCount: candidate.groupIndices.length,
     totalCredits: candidate.rank.totalCredits,
     totalHours: candidate.totalHours,
-  }));
+  });
+  const preview = conflictFreePreview.sortedBestFirst();
+  return {
+    arrangements: (mode === 'all-conflict-free'
+      ? allConflictFree.sort((left, right) => compareCandidates(left, right, settings))
+      : recommended.sortedBestFirst()).map(toArrangement),
+    conflictFreePreview: preview.map(toArrangement),
+    totalConflictFreeCount,
+  };
+}
+
+export function enumerateArrangementsExact(
+  groups: CourseGroup[],
+  settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
+  diagnostics?: ArrangementSearchDiagnostics,
+): Arrangement[] {
+  return enumerateArrangementResultsExact(groups, settings, { diagnostics })
+    .arrangements;
 }

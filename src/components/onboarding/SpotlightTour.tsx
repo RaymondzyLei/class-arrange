@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import arrangementPreviewImage from '@/assets/onboarding/arrangement-preview.png';
 import { tourSteps, type TourPlacement, type TourStep } from '@/onboarding/tourSteps';
 import OnboardingConfirm from './OnboardingConfirm';
 import TourCard from './TourCard';
@@ -44,7 +43,6 @@ const CARD_GAP = 16;
 const DESKTOP_CARD_WIDTH = 360;
 const DEFAULT_CARD_HEIGHT = 220;
 const SIDE_PLACEMENTS: SidePlacement[] = ['right', 'bottom', 'left', 'top'];
-const ARRANGEMENT_PREVIEW_HEIGHT = 260;
 const FIRST_FLOAT_STEP_ID = tourSteps[0]?.entryAnimation === 'float' ? tourSteps[0].id : '';
 
 function clamp(value: number, min: number, max: number): number {
@@ -173,61 +171,6 @@ function cardPositionFor(
     top: clamp(selected.top, VIEWPORT_PADDING, maxTop),
     placement: selected.placement,
   };
-}
-
-function getArrangementPreviewRect(): SpotlightRect {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-  const fallbackWidth = viewportWidth - VIEWPORT_PADDING * 2;
-  if (viewportWidth <= 640) {
-    return {
-      left: VIEWPORT_PADDING,
-      top: VIEWPORT_PADDING + 58,
-      width: fallbackWidth,
-      height: Math.min(ARRANGEMENT_PREVIEW_HEIGHT, viewportHeight - VIEWPORT_PADDING * 2 - 58),
-    };
-  }
-
-  const poolPanel = document.querySelector<HTMLElement>('.pool-panel');
-  const planSummary = document.querySelector<HTMLElement>('.plan-summary');
-  if (!poolPanel) {
-    return {
-      left: VIEWPORT_PADDING,
-      top: VIEWPORT_PADDING + 92,
-      width: Math.min(520, fallbackWidth),
-      height: ARRANGEMENT_PREVIEW_HEIGHT,
-    };
-  }
-
-  const poolRect = poolPanel.getBoundingClientRect();
-  const summaryRect = planSummary?.getBoundingClientRect();
-  const top = (summaryRect?.bottom ?? poolRect.top) + 8;
-  const bottomLimit = Math.min(poolRect.bottom, viewportHeight - VIEWPORT_PADDING);
-  const availableHeight = Math.max(240, bottomLimit - top);
-
-  return {
-    left: poolRect.left,
-    top,
-    width: poolRect.width,
-    height: Math.min(ARRANGEMENT_PREVIEW_HEIGHT, availableHeight),
-  };
-}
-
-function ArrangementPanelPreview({ rect }: { rect: SpotlightRect }) {
-  return (
-    <div
-      className="spotlight-tour__arrangement-preview"
-      data-tour="arrangement-preview"
-      style={{
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-      }}
-      aria-hidden="true"
-    >
-      <img src={arrangementPreviewImage} alt="" />
-    </div>
-  );
 }
 
 export default function SpotlightTour({
@@ -413,13 +356,8 @@ export default function SpotlightTour({
   const hasMeasuredTarget = !hasTarget || rects.length > 0;
   const shouldFloatCard = step.entryAnimation === 'float' && entryAnimationStepId === step.id;
   const cardVisible = !shouldFloatCard || hasMeasuredTarget;
-  const arrangementPreviewRect = step.preview === 'arrangementPanel'
-    ? getArrangementPreviewRect()
-    : null;
-
   return createPortal(
     <div className={`spotlight-tour spotlight-tour--${entryMode}`}>
-      {arrangementPreviewRect ? <ArrangementPanelPreview rect={arrangementPreviewRect} /> : null}
       <svg className="spotlight-tour__shade-svg" aria-hidden="true">
         <defs>
           <mask id={maskId}>
@@ -496,7 +434,7 @@ export default function SpotlightTour({
       <OnboardingConfirm
         open={confirmSkipOpen}
         title="跳过功能教学？"
-        description="跳过后不会自动再次弹出，你仍然可以从“自定义”中重新查看。"
+        description="跳过后不会自动再次弹出，你仍然可以从“设置”中重新查看。"
         confirmText="确认跳过"
         onCancel={() => setConfirmSkipOpen(false)}
         onConfirm={onSkip}

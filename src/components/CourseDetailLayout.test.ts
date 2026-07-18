@@ -37,4 +37,25 @@ describe('course detail layout', () => {
     expect(styles).toContain('@media (max-width: 1080px)');
     expect(styles).toContain('.course-detail-modal .detail-section-table');
   });
+
+  it('shows every source time group when a course card is merged', () => {
+    expect(source).toContain('const mergedTimeGroups = display.timeGroups');
+    expect(source).toContain('时间组明细');
+    expect(source).toContain('className="detail-table detail-time-group-table"');
+    expect(source).toContain("{ title: '时间组', dataIndex: 'label'");
+    expect(source).toContain("{ title: '时间地点', dataIndex: 'schedule'");
+    expect(source).toContain('{!mergedTimeGroups ? (');
+    expect(styles).toContain('.detail-time-group-table');
+  });
+
+  it('offers an independent selection action for every merged time group', () => {
+    expect(source).toContain('selected: idsForGroup(timeGroup).every');
+    expect(source).toContain('toggleTimeGroupSelected(row.group)');
+    expect(source).toContain("row.selected ? '移除此时间组' : '选择此时间组'");
+    expect(source).toContain("{ title: '操作'");
+    expect(source).toContain("{ title: '操作', key: 'action', width: 132, align: 'left'");
+    expect(source).toContain('className="course-detail-time-group-action"');
+    expect(source).toContain("dispatch({ type: 'removeCourses', courseIds: ids })");
+    expect(source).toContain("dispatch({ type: 'addCourses', courseIds: ids })");
+  });
 });

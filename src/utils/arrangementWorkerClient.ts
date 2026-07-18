@@ -7,6 +7,10 @@ import {
   type ArrangementWorkerResponse,
 } from '../workers/arrangementProtocol';
 import type { CustomScheduleSettings } from './customization';
+import type {
+  ArrangementEnumerationResult,
+  ArrangementResultMode,
+} from './arrangementEngine';
 
 export interface ArrangementWorkerLike {
   onmessage: ((event: MessageEvent<unknown>) => void) | null;
@@ -22,6 +26,11 @@ export interface ArrangementWorkerClient {
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
   ): Promise<Arrangement[]>;
+  calculateResults(
+    groups: CourseGroup[],
+    settings: CustomScheduleSettings,
+    mode?: ArrangementResultMode,
+  ): Promise<ArrangementEnumerationResult>;
   cancel(): void;
   dispose(): void;
 }
@@ -34,7 +43,7 @@ interface ActiveCalculation {
   generation: number;
   groupsByKey: Map<string, CourseGroup>;
   worker: ArrangementWorkerLike | null;
-  resolve: (arrangements: Arrangement[]) => void;
+  resolve: (result: ArrangementEnumerationResult) => void;
   reject: (error: Error) => void;
 }
 
@@ -83,10 +92,16 @@ function parseWorkerResponse(value: unknown): ArrangementWorkerResponse {
     if (typeof value.message !== 'string') throw invalidWorkerResponse();
     return { type: 'error', generation, message: value.message };
   }
-  if (value.type !== 'result' || !Array.isArray(value.arrangements)) {
+  if (
+    value.type !== 'result'
+    || !Array.isArray(value.arrangements)
+    || !Array.isArray(value.conflictFreePreview)
+    || !Number.isSafeInteger(value.totalConflictFreeCount)
+    || (value.totalConflictFreeCount as number) < 0
+  ) {
     throw invalidWorkerResponse();
   }
-  const arrangements = value.arrangements.map((item): ArrangementResultDto => {
+  const parseArrangements = (items: unknown[]): ArrangementResultDto[] => items.map((item) => {
     if (
       !isRecord(item)
       || typeof item.id !== 'string'
@@ -108,7 +123,13 @@ function parseWorkerResponse(value: unknown): ArrangementWorkerResponse {
       totalHours: item.totalHours,
     };
   });
-  return { type: 'result', generation, arrangements };
+  return {
+    type: 'result',
+    generation,
+    arrangements: parseArrangements(value.arrangements),
+    conflictFreePreview: parseArrangements(value.conflictFreePreview),
+    totalConflictFreeCount: value.totalConflictFreeCount as number,
+  };
 }
 
 function rehydrateArrangement(
@@ -145,6 +166,14 @@ class DefaultArrangementWorkerClient implements ArrangementWorkerClient {
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
   ): Promise<Arrangement[]> {
+    return this.calculateResults(groups, settings).then(({ arrangements }) => arrangements);
+  }
+
+  calculateResults(
+    groups: CourseGroup[],
+    settings: CustomScheduleSettings,
+    mode: ArrangementResultMode = 'recommended',
+  ): Promise<ArrangementEnumerationResult> {
     this.abortActive();
     const generation = ++this.generation;
     const groupsByKey = new Map(groups.map((group) => [group.key, group]));
@@ -161,7 +190,7 @@ class DefaultArrangementWorkerClient implements ArrangementWorkerClient {
 
       let request: ArrangementWorkerRequest;
       try {
-        request = createArrangementWorkerRequest(generation, groups, settings);
+        request = createArrangementWorkerRequest(generation, groups, settings, mode);
       } catch (error) {
         this.rejectActive(active, toError(error, 'Unable to prepare arrangement calculation'));
         return;
@@ -223,15 +252,24 @@ class DefaultArrangementWorkerClient implements ArrangementWorkerClient {
       if (response.type === 'error') throw new Error(response.message);
       const arrangements = response.arrangements.map((dto) =>
         rehydrateArrangement(dto, active.groupsByKey));
-      this.resolveActive(active, arrangements);
+      const conflictFreePreview = response.conflictFreePreview.map((dto) =>
+        rehydrateArrangement(dto, active.groupsByKey));
+      this.resolveActive(active, {
+        arrangements,
+        conflictFreePreview,
+        totalConflictFreeCount: response.totalConflictFreeCount,
+      });
     } catch (error) {
       this.rejectActive(active, toError(error, 'Invalid Arrangement Worker response'));
     }
   }
 
-  private resolveActive(active: ActiveCalculation, arrangements: Arrangement[]): void {
+  private resolveActive(
+    active: ActiveCalculation,
+    result: ArrangementEnumerationResult,
+  ): void {
     if (!this.releaseActive(active)) return;
-    active.resolve(arrangements);
+    active.resolve(result);
   }
 
   private rejectActive(active: ActiveCalculation, error: Error): void {

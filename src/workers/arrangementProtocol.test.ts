@@ -9,6 +9,8 @@ import {
 
 const SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
+  arrangementDisplayCount: 8,
+  mergeAllTimeGroups: false,
   preferHalfDay: false,
   preferFewerEarlyMornings: false,
   preferAvoidCampusTransfers: true,
@@ -59,15 +61,31 @@ describe('arrangement Worker precise schedule protocol', () => {
       endTime: '19:30',
     });
     expect(request.settings).toMatchObject({
+      arrangementDisplayCount: 8,
       preferAvoidCampusTransfers: true,
       residentCampus: '高新区',
     });
+    expect(request.mode).toBe('recommended');
+  });
+
+  it('returns a bounded conflict-free preview with the exact total', () => {
+    const request = createArrangementWorkerRequest(
+      10,
+      [group('A', []), group('A', [])],
+      SETTINGS,
+    );
+    const result = executeArrangementWorkerRequest(request);
+
+    expect(result.totalConflictFreeCount).toBe(2);
+    expect(result.arrangements).toHaveLength(2);
+    expect(result.conflictFreePreview).toHaveLength(2);
   });
 
   it('rehydrates clock times before calculating conflicts', () => {
     const request = {
       type: 'calculate',
       generation: 8,
+      mode: 'recommended',
       groups: [
         {
           courseCode: 'exact',
@@ -92,6 +110,7 @@ describe('arrangement Worker precise schedule protocol', () => {
         },
       ],
       settings: {
+        arrangementDisplayCount: 8,
         preferHalfDay: false,
         preferFewerEarlyMornings: false,
         preferAvoidCampusTransfers: true,
@@ -107,6 +126,7 @@ describe('arrangement Worker precise schedule protocol', () => {
     const request = {
       type: 'calculate',
       generation: 9,
+      mode: 'recommended',
       groups: [
         {
           courseCode: 'A', key: 'a-high', credits: 1, hours: 16,
@@ -122,6 +142,7 @@ describe('arrangement Worker precise schedule protocol', () => {
         },
       ],
       settings: {
+        arrangementDisplayCount: 8,
         preferHalfDay: false,
         preferFewerEarlyMornings: false,
         preferAvoidCampusTransfers: true,

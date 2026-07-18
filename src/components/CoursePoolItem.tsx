@@ -28,7 +28,10 @@ function CoursePoolItem({
   onOpenDetail,
 }: Props) {
   const rep = group.sections[0];
-  const scheduleSummary = formatScheduleCompact(group.schedule);
+  const mergedTimeGroups = group.timeGroups;
+  const scheduleSummary = mergedTimeGroups
+    ? `共 ${mergedTimeGroups.length} 个时间组，点击查看详情`
+    : formatScheduleCompact(group.schedule);
 
   // 主题由父层传入，与 React 订阅对齐（同步 DOM 读取已被 cache 彻底替代）
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
@@ -43,7 +46,9 @@ function CoursePoolItem({
 
   /** 课程号标签：单班组直接展示完整 section.id（如 `001101.01`），
    *  多班组用 `courseCode.(01,02)` 这种折叠形式 */
-  const courseCodeLabel = group.sections.length > 1
+  const courseCodeLabel = mergedTimeGroups
+    ? group.courseCode
+    : group.sections.length > 1
     ? `${group.courseCode}.(${group.sectionIds
         .map((id) => id.slice(id.lastIndexOf('.') + 1))
         .sort()
@@ -70,24 +75,30 @@ function CoursePoolItem({
       <div className="pool-item__head">
         <span className="pool-item__name">
           <span className="pool-item__name-text">{group.courseName}</span>
-          {group.sections.length > 1 && (
-            <span className="pool-item__count-tag">{group.sections.length}个班</span>
+          {(mergedTimeGroups || group.sections.length > 1) && (
+            <span className="pool-item__count-tag">
+              {mergedTimeGroups
+                ? `${mergedTimeGroups.length}个时间组 · ${group.sections.length}个班`
+                : `${group.sections.length}个班`}
+            </span>
           )}
           {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         </span>
         <div className="pool-item__actions">
-          <Button
-            size="small"
-            type={groupSelected ? 'default' : 'primary'}
-            danger={groupSelected}
-            aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${group.courseName}`}
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleGroup();
-            }}
-          >
-            {groupSelected ? '移除此时间组' : '选择此时间组'}
-          </Button>
+          {!mergedTimeGroups ? (
+            <Button
+              size="small"
+              type={groupSelected ? 'default' : 'primary'}
+              danger={groupSelected}
+              aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${group.courseName}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleGroup();
+              }}
+            >
+              {groupSelected ? '移除此时间组' : '选择此时间组'}
+            </Button>
+          ) : null}
           <Button
             size="small"
             type={courseSelected ? 'default' : 'primary'}
