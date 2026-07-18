@@ -1,4 +1,9 @@
-import type { Arrangement, CourseGroup, ResidentCampus } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+  ResidentCampus,
+} from '@/types';
 import {
   blockedSlotKey,
   DEFAULT_CUSTOM_SETTINGS,
@@ -30,10 +35,13 @@ export interface ArrangementEnumerationResult {
 export interface ArrangementEnumerationOptions {
   mode?: ArrangementResultMode;
   diagnostics?: ArrangementSearchDiagnostics;
+  favorites?: ArrangementFavoritePreferences;
 }
 
 export interface ArrangementRank {
+  favoriteArrangement: boolean;
   conflictCount: number;
+  favoriteCourseCount: number;
   campusTransitionCount: number;
   halfDayScore: number;
   earlyMorningDayCount: number;
@@ -50,6 +58,7 @@ export interface ArrangementSearchDiagnostics {
 
 interface PrecomputedGroup {
   group: CourseGroup;
+  favoriteCourse: boolean;
   keyId: number;
   expandedIntervals: ExpandedInterval[];
   occupiedDayPeriods: string[];
@@ -90,8 +99,14 @@ export function compareArrangementRanks(
   right: ArrangementRank,
   settings: CustomScheduleSettings,
 ): number {
+  if (left.favoriteArrangement !== right.favoriteArrangement) {
+    return left.favoriteArrangement ? -1 : 1;
+  }
   if (left.conflictCount !== right.conflictCount) {
     return left.conflictCount - right.conflictCount;
+  }
+  if (left.favoriteCourseCount !== right.favoriteCourseCount) {
+    return right.favoriteCourseCount - left.favoriteCourseCount;
   }
   if (settings.preferAvoidCampusTransfers) {
     const campusDelta = left.campusTransitionCount - right.campusTransitionCount;
@@ -192,6 +207,8 @@ class BoundedCandidateHeap {
 function precomputeGroups(
   groups: CourseGroup[],
   blockedSlots: Set<string>,
+  favoriteTimeGroupKeys: Set<string>,
+  favoriteSectionIds: Set<string>,
 ): PrecomputedGroup[] {
   const keyIds = new Map<string, number>();
   const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
@@ -232,6 +249,8 @@ function precomputeGroups(
     const representative = group.sections[0];
     return {
       group,
+      favoriteCourse: favoriteTimeGroupKeys.has(group.key)
+        || group.sectionIds.some((id) => favoriteSectionIds.has(id)),
       keyId,
       expandedIntervals: [...expandedIntervals.values()],
       occupiedDayPeriods: [...occupiedDayPeriods],
@@ -288,6 +307,7 @@ class IncrementalSearchState {
   private readonly trackCampusTransfers: boolean;
 
   conflictCount = 0;
+  favoriteCourseCount = 0;
   campusTransitionCount = 0;
   earlyMorningDayCount = 0;
   totalCredits = 0;
@@ -319,6 +339,7 @@ class IncrementalSearchState {
       totalHours: this.totalHours,
     };
     this.selected[groupIndex] = true;
+    if (record.favoriteCourse) this.favoriteCourseCount += 1;
     if (record.blockedSlotHit) this.adjustConflictRef(this.blockedConflictRefs, record.keyId, 1);
     for (const neighborIndex of record.conflictNeighbors) {
       if (!this.selected[neighborIndex]) continue;
@@ -356,6 +377,7 @@ class IncrementalSearchState {
       );
     }
     this.selected[groupIndex] = false;
+    if (record.favoriteCourse) this.favoriteCourseCount -= 1;
     for (const key of record.occupiedDayPeriods) this.decrementMap(this.occupiedDayPeriodRefs, key);
     for (const day of record.earlyMorningDays) {
       const previous = this.earlyMorningDayRefs.get(day) ?? 0;
@@ -451,7 +473,7 @@ export function enumerateArrangementResultsExact(
   settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
   options: ArrangementEnumerationOptions = {},
 ): ArrangementEnumerationResult {
-  const { diagnostics, mode = 'recommended' } = options;
+  const { diagnostics, favorites, mode = 'recommended' } = options;
   resetDiagnostics(diagnostics);
   if (groups.length === 0) {
     return {
@@ -462,7 +484,15 @@ export function enumerateArrangementResultsExact(
   }
 
   const blockedSlots = new Set(settings.blockedSlots);
-  const records = precomputeGroups(groups, blockedSlots);
+  const favoriteArrangementIds = new Set(favorites?.arrangementIds ?? []);
+  const favoriteTimeGroupKeys = new Set(favorites?.timeGroupKeys ?? []);
+  const favoriteSectionIds = new Set(favorites?.sectionIds ?? []);
+  const records = precomputeGroups(
+    groups,
+    blockedSlots,
+    favoriteTimeGroupKeys,
+    favoriteSectionIds,
+  );
   if (diagnostics) diagnostics.precomputedGroupCount = records.length;
 
   const byCode = new Map<string, number[]>();
@@ -509,11 +539,14 @@ export function enumerateArrangementResultsExact(
       if (diagnostics) diagnostics.visitedLeaves += 1;
       const groupIndices = [...lockedIndices, ...pickedIndices];
       const sortedKeys = groupIndices.map((index) => records[index].group.key).sort();
+      const id = sortedKeys.join('||');
       const candidate: RankedCandidate = {
         groupIndices,
-        id: sortedKeys.join('||'),
+        id,
         rank: {
+          favoriteArrangement: favoriteArrangementIds.has(id),
           conflictCount: state.conflictCount,
+          favoriteCourseCount: state.favoriteCourseCount,
           campusTransitionCount: settings.preferAvoidCampusTransfers
             ? state.campusTransitionCount
             : 0,
@@ -577,7 +610,8 @@ export function enumerateArrangementsExact(
   groups: CourseGroup[],
   settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
   diagnostics?: ArrangementSearchDiagnostics,
+  favorites?: ArrangementFavoritePreferences,
 ): Arrangement[] {
-  return enumerateArrangementResultsExact(groups, settings, { diagnostics })
+  return enumerateArrangementResultsExact(groups, settings, { diagnostics, favorites })
     .arrangements;
 }

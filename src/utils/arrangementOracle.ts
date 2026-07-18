@@ -3,7 +3,7 @@
  * Keep this implementation independent from the optimized engine so differential
  * tests can detect ranking, metric, and output-shape regressions.
  */
-import type { Arrangement, CourseGroup } from '@/types';
+import type { Arrangement, ArrangementFavoritePreferences, CourseGroup } from '@/types';
 import { expandWeeks } from './weeks';
 import {
   DEFAULT_CUSTOM_SETTINGS,
@@ -144,9 +144,13 @@ function cartesian<T>(lists: T[][]): T[][] {
 export function enumerateArrangementsOracle(
   groups: CourseGroup[],
   settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
+  favorites?: ArrangementFavoritePreferences,
 ): Arrangement[] {
   if (groups.length === 0) return [];
   const blockedSlots = new Set(settings.blockedSlots);
+  const favoriteArrangementIds = new Set(favorites?.arrangementIds ?? []);
+  const favoriteTimeGroupKeys = new Set(favorites?.timeGroupKeys ?? []);
+  const favoriteSectionIds = new Set(favorites?.sectionIds ?? []);
 
   const byCode = new Map<string, CourseGroup[]>();
   const order: string[] = [];
@@ -170,9 +174,9 @@ export function enumerateArrangementsOracle(
 
   const combos = cartesian(ambiguousChoices);
 
-  const arrs: Arrangement[] = combos.map((picked) => {
+  const arrs = combos.map((picked, ordinal) => {
     const allGroups = [...locked, ...picked];
-    return {
+    const arrangement: Arrangement = {
       id: arrangementId(allGroups),
       groups: allGroups,
       conflictCount: countConflicts(allGroups, blockedSlots),
@@ -180,31 +184,51 @@ export function enumerateArrangementsOracle(
       totalCredits: sumCredits(allGroups),
       totalHours: sumHours(allGroups),
     };
+    return {
+      arrangement,
+      favoriteArrangement: favoriteArrangementIds.has(arrangement.id),
+      favoriteCourseCount: allGroups.filter((group) =>
+        favoriteTimeGroupKeys.has(group.key)
+        || group.sectionIds.some((id) => favoriteSectionIds.has(id))).length,
+      ordinal,
+    };
   });
 
   arrs.sort((a, b) => {
-    if (a.conflictCount !== b.conflictCount) return a.conflictCount - b.conflictCount;
+    if (a.favoriteArrangement !== b.favoriteArrangement) {
+      return a.favoriteArrangement ? -1 : 1;
+    }
+    if (a.arrangement.conflictCount !== b.arrangement.conflictCount) {
+      return a.arrangement.conflictCount - b.arrangement.conflictCount;
+    }
+    if (a.favoriteCourseCount !== b.favoriteCourseCount) {
+      return b.favoriteCourseCount - a.favoriteCourseCount;
+    }
     if (settings.preferAvoidCampusTransfers) {
-      const campusDelta = countCampusTransfers(a.groups, settings.residentCampus)
-        - countCampusTransfers(b.groups, settings.residentCampus);
+      const campusDelta = countCampusTransfers(a.arrangement.groups, settings.residentCampus)
+        - countCampusTransfers(b.arrangement.groups, settings.residentCampus);
       if (campusDelta !== 0) return campusDelta;
     }
     if (settings.preferHalfDay) {
-      const scoreDelta = halfDayScore(b.groups, blockedSlots) - halfDayScore(a.groups, blockedSlots);
+      const scoreDelta = halfDayScore(b.arrangement.groups, blockedSlots)
+        - halfDayScore(a.arrangement.groups, blockedSlots);
       if (scoreDelta !== 0) return scoreDelta;
     }
     if (settings.preferFewerEarlyMornings) {
-      const earlyDelta = earlyMorningDayCount(a.groups) - earlyMorningDayCount(b.groups);
+      const earlyDelta = earlyMorningDayCount(a.arrangement.groups)
+        - earlyMorningDayCount(b.arrangement.groups);
       if (earlyDelta !== 0) return earlyDelta;
     }
-    const aKeys = a.groups.map((g) => g.key).sort().join('|');
-    const bKeys = b.groups.map((g) => g.key).sort().join('|');
+    const aKeys = a.arrangement.groups.map((g) => g.key).sort().join('|');
+    const bKeys = b.arrangement.groups.map((g) => g.key).sort().join('|');
     if (aKeys !== bKeys) return aKeys < bKeys ? -1 : 1;
-    return b.totalCredits - a.totalCredits;
+    const creditDelta = b.arrangement.totalCredits - a.arrangement.totalCredits;
+    if (!Number.isNaN(creditDelta) && creditDelta !== 0) return creditDelta;
+    return a.ordinal - b.ordinal;
   });
 
   return arrs.slice(
     0,
     settings.arrangementDisplayCount ?? DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
-  );
+  ).map(({ arrangement }) => arrangement);
 }
