@@ -1,5 +1,6 @@
 import type { AppRelease } from '@/updates/appUpdates';
 import type { SemesterUpdateHistory } from '@/updates/updateAwareness';
+import { newestFirstByDate } from '../updates/updateOrdering';
 import BottomModal from './BottomModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 
@@ -20,7 +21,11 @@ export default function UpdateHistoryModal({
   semesters,
   onClose,
 }: Props) {
-  const courseHistories = semesters.filter(({ entries }) => entries.length > 0);
+  const courseHistories = newestFirstByDate(
+    semesters.filter(({ entries }) => entries.length > 0),
+    ({ entries }) => newestFirstByDate(entries, (entry) => entry.publishedAt)[0]?.publishedAt ?? '',
+  );
+  const orderedAppReleases = newestFirstByDate(appReleases, (release) => release.publishedAt);
 
   return (
     <BottomModal open={open} title="更新记录" onClose={onClose} width={760} className="update-modal">
@@ -33,7 +38,7 @@ export default function UpdateHistoryModal({
         ) : null}
         <section className="update-section">
           <h3>网站更新</h3>
-          {appReleases.length > 0 ? appReleases.slice().reverse().map((release) => (
+          {orderedAppReleases.length > 0 ? orderedAppReleases.map((release) => (
             <article className="update-history__entry" key={release.version}>
               <div className="update-history__entry-header">
                 <strong>{release.title}</strong><time>{release.publishedAt}</time>
@@ -50,7 +55,7 @@ export default function UpdateHistoryModal({
                 <section className="update-history__semester" key={semester.key}>
                   <h4>{semester.name}</h4>
                   <div className="update-history__group">
-                    {entries.slice().reverse().map((entry) => (
+                    {newestFirstByDate(entries, (entry) => entry.publishedAt).map((entry) => (
                       <article className="update-history__entry" key={entry.id}>
                         <div className="update-history__entry-header">
                           <strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong>

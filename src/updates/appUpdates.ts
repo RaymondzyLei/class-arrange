@@ -39,6 +39,16 @@ export const APP_RELEASES: AppRelease[] = [
       '其他UI改进。',
     ],
   },
+  {
+    version: '2026.07.18.2',
+    publishedAt: '2026-07-18',
+    title: '收藏功能与更新顺序优化',
+    items: [
+      '新增选课方案、排课方案、课程时间组和具体课堂收藏，收藏状态保存在本地。',
+      '排课结果优先展示已收藏方案，并在冲突相同时优先满足更多收藏课程。',
+      '最近更新与更新记录按日期从新到旧展示。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

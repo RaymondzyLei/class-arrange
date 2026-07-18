@@ -113,7 +113,56 @@ const notice: AutomaticNoticeSelection = {
   suppressedImpactIds: [],
 };
 
+const orderedNotice: AutomaticNoticeSelection = {
+  ...notice,
+  appReleases: [
+    { version: 'old', publishedAt: '2026-07-16', title: '较早网站更新', items: [] },
+    { version: 'new', publishedAt: '2026-07-18', title: '较新网站更新', items: [] },
+  ],
+  semesterUpdates: [
+    {
+      semester: { ...semester, key: 'older-semester', name: '较早学期' },
+      entries: [{
+        id: 'old-entry', revision: 'r1', previousRevision: '', publishedAt: '2026-07-16',
+        summary: { added: 0, removed: 0, modified: 0 }, added: [], removed: [], modified: [],
+      }],
+    },
+    {
+      semester,
+      entries: [
+        {
+          id: 'old-entry', revision: 'r1', previousRevision: '', publishedAt: '2026-07-16',
+          summary: { added: 0, removed: 0, modified: 0 }, added: [], removed: [], modified: [],
+        },
+        {
+          id: 'new-entry', revision: 'r2', previousRevision: 'r1', publishedAt: '2026-07-18',
+          summary: { added: 0, removed: 0, modified: 0 }, added: [], removed: [], modified: [],
+        },
+      ],
+    },
+  ],
+};
+
 describe('update modals', () => {
+  test('renders update data newest first without changing its domain order', () => {
+    const historySemesters = [...orderedNotice.semesterUpdates];
+    const noticeHtml = renderToStaticMarkup(createElement(UpdateNoticeModal, {
+      open: true, notice: orderedNotice, onClose: () => undefined,
+    }));
+    const historyHtml = renderToStaticMarkup(createElement(UpdateHistoryModal, {
+      open: true, loading: false, failedSemesterKeys: [],
+      appReleases: orderedNotice.appReleases, semesters: historySemesters, onClose: () => undefined,
+    }));
+
+    for (const html of [noticeHtml, historyHtml]) {
+      expect(html.indexOf('较新网站更新')).toBeLessThan(html.indexOf('较早网站更新'));
+      expect(html.indexOf('2026-07-18')).toBeLessThan(html.indexOf('2026-07-16'));
+      expect(html.indexOf('2026年秋季学期')).toBeLessThan(html.indexOf('较早学期'));
+    }
+    expect(orderedNotice.appReleases.map(({ title }) => title)).toEqual(['较早网站更新', '较新网站更新']);
+    expect(orderedNotice.semesterUpdates[1].entries.map(({ id }) => id)).toEqual(['old-entry', 'new-entry']);
+    expect(historySemesters.map(({ semester: item }) => item.key)).toEqual(['older-semester', '2026-fall']);
+  });
   test('shows the before and after values for every modified course field', () => {
     const batch: SemesterUpdateBatch = {
       id: 'schedule-change',
