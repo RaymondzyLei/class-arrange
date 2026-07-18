@@ -429,6 +429,22 @@ export default function CourseDetailModal({
         </section>
       </div>
 
+      <section className="course-material-groups" aria-label="教材与参考资料">
+        <Typography.Title level={5}>教材与参考资料</Typography.Title>
+        <div className="course-material-group">
+          <span className="course-material-group__label">参考书</span>
+          <div className="course-material-group__value">{materialDisplay.referenceBooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">教材</span>
+          <div className="course-material-group__value">{materialDisplay.textbooks}</div>
+        </div>
+        <div className="course-material-group">
+          <span className="course-material-group__label">讲义</span>
+          <div className="course-material-group__value">{materialDisplay.materials}</div>
+        </div>
+      </section>
+
       {mergedTimeGroups ? (
         <section className="course-time-groups" aria-label="时间组明细">
           <Typography.Title level={5}>时间组明细</Typography.Title>
@@ -464,22 +480,6 @@ export default function CourseDetailModal({
           </div>
         </section>
       ) : null}
-
-      <section className="course-material-groups" aria-label="教材与参考资料">
-        <Typography.Title level={5}>教材与参考资料</Typography.Title>
-        <div className="course-material-group">
-          <span className="course-material-group__label">参考书</span>
-          <div className="course-material-group__value">{materialDisplay.referenceBooks}</div>
-        </div>
-        <div className="course-material-group">
-          <span className="course-material-group__label">教材</span>
-          <div className="course-material-group__value">{materialDisplay.textbooks}</div>
-        </div>
-        <div className="course-material-group">
-          <span className="course-material-group__label">讲义</span>
-          <div className="course-material-group__value">{materialDisplay.materials}</div>
-        </div>
-      </section>
 
       {display.sections.length > 1 && (
         <>

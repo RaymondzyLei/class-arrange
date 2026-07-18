@@ -29,6 +29,12 @@ describe('course detail layout', () => {
     expect(styles).toContain('.course-material-group__value');
   });
 
+  it('shows teaching materials before merged time-group details', () => {
+    expect(source.indexOf('aria-label="教材与参考资料"')).toBeLessThan(
+      source.indexOf('aria-label="时间组明细"'),
+    );
+  });
+
   it('keeps section detail columns readable without vertical text wrapping', () => {
     expect(source).toContain('className="detail-table detail-section-table"');
     expect(source).not.toContain('scroll={{ x: 1040 }}');
