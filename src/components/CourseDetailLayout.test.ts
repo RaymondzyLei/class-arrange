@@ -53,9 +53,32 @@ describe('course detail layout', () => {
     expect(source).toContain('toggleTimeGroupSelected(row.group)');
     expect(source).toContain("row.selected ? '移除此时间组' : '选择此时间组'");
     expect(source).toContain("{ title: '操作'");
-    expect(source).toContain("{ title: '操作', key: 'action', width: 132, align: 'left'");
+    expect(source).toContain("{ title: '操作', key: 'action'");
     expect(source).toContain('className="course-detail-time-group-action"');
     expect(source).toContain("dispatch({ type: 'removeCourses', courseIds: ids })");
     expect(source).toContain("dispatch({ type: 'addCourses', courseIds: ids })");
+  });
+
+  it('favorites each real time group in desktop, mobile, and ordinary modal actions', () => {
+    expect(source).toContain('FavoriteButton');
+    expect(source).toContain('favorite: timeGroupKeys.has(timeGroup.key)');
+    expect(source).toContain("toggleFavorite('timeGroup', row.group.key)");
+    expect(source).toContain("toggleFavorite('timeGroup', display.key)");
+    expect(source).toContain('renderTimeGroupActions(row)');
+    expect(occurrenceCount(source, 'renderTimeGroupActions(row)')).toBeGreaterThanOrEqual(2);
+  });
+
+  it('favorites concrete sections in the desktop table and mobile section cards', () => {
+    expect(source).toContain('<Table<SectionRow>');
+    expect(source).toContain('favorite: sectionIds.has(s.id)');
+    expect(source).toContain("toggleFavorite('section', row.id)");
+    expect(source).toContain("{ title: '收藏', key: 'favorite'");
+    expect(source).toContain('renderSectionFavorite(row)');
+    expect(occurrenceCount(source, 'renderSectionFavorite(row)')).toBe(2);
+  });
+
+  it('shows the concrete section favorite in both single-section overview layouts', () => {
+    expect(source).toContain('renderSingleSectionIdentity()');
+    expect(occurrenceCount(source, 'renderSingleSectionIdentity()')).toBe(2);
   });
 });

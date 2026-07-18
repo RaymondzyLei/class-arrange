@@ -6,6 +6,7 @@ import type { Arrangement } from '@/types';
 import ArrangementPanel from './ArrangementPanel';
 
 const styles = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
+const source = readFileSync(new URL('./ArrangementPanel.tsx', import.meta.url), 'utf8');
 
 function ruleBody(selector: string): string {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -30,7 +31,23 @@ describe('ArrangementPanel viewport height', () => {
     allConflictFreePhase: 'idle' as const,
     allConflictFreeError: null,
     onShowConflictFree: () => undefined,
+    favoriteIds: new Set(['first']),
+    onToggleFavorite: () => undefined,
   };
+
+  it('renders favorites beside separate arrangement selection buttons keyed by arrangement ID', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'recommended',
+    }));
+
+    expect(html).toContain('aria-pressed="true"');
+    expect(html).toContain('title="取消收藏排课方案 #0"');
+    expect(html.match(/aria-label="排课方案 \d+"/g)).toHaveLength(arrangements.length);
+    expect(html.match(/class="favorite-button/g)).toHaveLength(arrangements.length);
+    expect(source).toContain('<div className="arrangement-card-wrap" key={a.id}>');
+    expect(source).not.toContain('key={index}');
+  });
 
   it('shows the conflict-free summary action at the bottom in recommended mode', () => {
     const html = renderToStaticMarkup(createElement(ArrangementPanel, {

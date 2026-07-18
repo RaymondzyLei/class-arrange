@@ -135,7 +135,7 @@ describe('CalculationStatus', () => {
     expect(appSource).toContain('useLayoutEffect');
     expect(appSource).toContain('activeArrangementSelection.inputKey === committedArrangementInputKey');
     expect(appSource).toContain('setRecommendedArrangementSelection((current) => ({');
-    expect(arrangementPanelSource).toContain('key={index}');
+    expect(arrangementPanelSource).toContain('key={a.id}');
     const cardRule = stylesSource.match(/\.arrangement-card\s*\{([\s\S]*?)\}/)?.[1] ?? '';
     expect(cardRule).not.toContain('transition:');
   });

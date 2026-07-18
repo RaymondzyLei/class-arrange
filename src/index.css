@@ -412,6 +412,12 @@ html {
   white-space: nowrap;
 }
 
+.plan-option__favorite {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+}
+
 .plan-option__delete {
   display: inline-flex;
   align-items: center;
@@ -419,7 +425,7 @@ html {
   flex: 0 0 26px;
   width: 26px;
   height: 26px;
-  margin-left: auto;
+  margin-left: 0;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1086,15 +1092,29 @@ html {
 }
 
 .arrangement-card {
+  width: 100%;
   min-height: var(--arrangement-card-height, 64px);
   text-align: left;
   background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 8px 40px 8px 10px;
   cursor: pointer;
   font: inherit;
   color: inherit;
+}
+
+.arrangement-card-wrap {
+  position: relative;
+  min-width: 0;
+  min-height: var(--arrangement-card-height);
+}
+
+.arrangement-card__favorite {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
 }
 
 .arrangement-card:hover {
@@ -2596,6 +2616,22 @@ html {
   white-space: nowrap;
 }
 
+.course-detail-time-group-actions,
+.course-detail-section-identity,
+.course-detail-section-card__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.course-detail-section-identity {
+  max-width: 100%;
+}
+
+.course-detail-section-card__actions {
+  flex: 0 0 auto;
+}
+
 .detail-table .ant-table-content {
   background: transparent !important;
 }
@@ -2630,7 +2666,7 @@ html {
   vertical-align: top;
 }
 
-.detail-section-table .ant-table-cell:nth-child(3),
+.detail-section-table .ant-table-cell:nth-child(4),
 .detail-schedule-table .ant-table-cell:nth-child(2) {
   min-width: 220px;
 }
@@ -3137,6 +3173,10 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
   .arrangement-card {
     padding: 4px 10px;
+  }
+
+  .arrangement-card-wrap .arrangement-card {
+    padding-right: 40px;
   }
 
   .arrangement-panel__list--mobile-scroll {

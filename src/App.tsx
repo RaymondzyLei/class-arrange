@@ -54,6 +54,7 @@ import { useUpdateAwareness } from '@/updates/UpdateAwarenessContext';
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
+import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -143,6 +144,7 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { state: plansState, activePlan, dispatch } = usePlans();
+  const favoriteState = useFavorites();
   const updateAwareness = useUpdateAwareness();
   const {
     manifest,
@@ -226,6 +228,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     scopeKey: `${catalog.semester.key}:${activePlan?.id ?? 'no-plan'}`,
     groups: allSelectedGroups,
     settings: customSettings,
+    favorites: favoriteState.arrangementPreferences,
   });
   const recommendedArrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
   const conflictFreeArrangements = calculation.allConflictFreePhase === 'ready'
@@ -521,6 +524,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               allConflictFreePhase={calculation.allConflictFreePhase}
               allConflictFreeError={calculation.allConflictFreeError}
               onShowConflictFree={showAllConflictFreeArrangements}
+              favoriteIds={favoriteState.arrangementIds}
+              onToggleFavorite={(id) => favoriteState.toggle('arrangement', id)}
             />
           </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
@@ -734,15 +739,20 @@ export default function App() {
       }}
     >
       <AntApp>
-        <PlansProvider
-          key={catalog.semester.key}
+        <FavoritesProvider
+          key={`favorites:${catalog.semester.key}`}
           semesterKey={catalog.semester.key}
-          defaultSemesterKey={manifest.defaultSemester}
-          courseMap={courseMap}
-          catalogRevision={catalog.revision}
         >
-          <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
-        </PlansProvider>
+          <PlansProvider
+            key={catalog.semester.key}
+            semesterKey={catalog.semester.key}
+            defaultSemesterKey={manifest.defaultSemester}
+            courseMap={courseMap}
+            catalogRevision={catalog.revision}
+          >
+            <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
+          </PlansProvider>
+        </FavoritesProvider>
       </AntApp>
     </ConfigProvider>
   );
