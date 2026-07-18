@@ -1,10 +1,11 @@
 import { Button } from 'antd';
 import { memo, useMemo, type CSSProperties } from 'react';
-import type { CourseGroup } from '@/types';
+import type { CourseGroup, FavoriteKind } from '@/types';
 import { courseColor } from '@/utils/courseColor';
 import { getIcourseRatingInfo } from '@/utils/icourseRating';
 import { formatScheduleCompact } from '@/utils/scheduleFormat';
 import { formatTeacherList } from '@/utils/teachers';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
   group: CourseGroup;
@@ -12,6 +13,9 @@ interface Props {
   courseSelected: boolean;
   conflicting: boolean;
   theme: 'light' | 'dark';
+  favoriteIds: ReadonlySet<string>;
+  toggleFavorite: (kind: FavoriteKind, id: string) => void;
+  tourFavorite: boolean;
   onToggleGroup: () => void;
   onToggleCourse: () => void;
   onOpenDetail: () => void;
@@ -23,6 +27,9 @@ function CoursePoolItem({
   courseSelected,
   conflicting,
   theme,
+  favoriteIds,
+  toggleFavorite,
+  tourFavorite,
   onToggleGroup,
   onToggleCourse,
   onOpenDetail,
@@ -37,6 +44,7 @@ function CoursePoolItem({
   const color = useMemo(() => courseColor(group.key, theme), [group.key, theme]);
 
   const cls = ['pool-item'];
+  if (!mergedTimeGroups) cls.push('pool-item--has-favorite');
   if (groupSelected && !conflicting) cls.push('pool-item--selected');
   if (conflicting) cls.push('pool-item--conflict');
 
@@ -82,8 +90,8 @@ function CoursePoolItem({
                 : `${group.sections.length}个班`}
             </span>
           )}
-          {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         </span>
+        {conflicting && <span className="pool-item__conflict-tag">冲突</span>}
         <div className="pool-item__actions">
           {!mergedTimeGroups ? (
             <Button
@@ -135,6 +143,15 @@ function CoursePoolItem({
       </div>
       <div className="pool-item__teacher-row">{teacherLine}</div>
       <div className="pool-item__schedule">{scheduleSummary}</div>
+      {!mergedTimeGroups ? (
+        <FavoriteButton
+          className="pool-item__favorite"
+          active={favoriteIds.has(group.key)}
+          label={`${favoriteIds.has(group.key) ? '取消收藏' : '收藏'}时间组：${courseCodeLabel}`}
+          onToggle={() => toggleFavorite('timeGroup', group.key)}
+          dataTour={tourFavorite ? 'course-favorite' : undefined}
+        />
+      ) : null}
     </div>
   );
 }

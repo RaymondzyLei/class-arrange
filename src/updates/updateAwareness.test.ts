@@ -12,7 +12,7 @@ import {
   selectAutomaticNotice,
   unseenAppReleases,
 } from './updateAwareness';
-import { APP_RELEASES } from './appUpdates';
+import { APP_RELEASES, CURRENT_APP_VERSION } from './appUpdates';
 
 const manifest: SemesterManifest = {
   schemaVersion: 1,
@@ -77,18 +77,19 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 18 arrangement and time-group release as the latest app update', () => {
+  test('publishes the July 18 favorites release as the latest app update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.18.1',
+      version: '2026.07.18.2',
       publishedAt: '2026-07-18',
-      title: '课程时间组与排课方案优化',
+      title: '添加收藏功能',
       items: [
-        '添加“合并课程所有时间组”设置选项，更直观地展示课程信息。',
-        '添加“展示排课方案数量”选项。',
-        '优化排课方案结果展示，允许展示所有不冲突方案。',
+        '新增选课方案、排课方案、课程时间组和具体课堂收藏，收藏状态保存在本地。',
+        '排课结果优先展示已收藏方案，并在冲突相同时优先满足更多收藏课程。',
         '其他UI改进。',
       ],
     });
+    expect(CURRENT_APP_VERSION).toBe('2026.07.18.2');
+    expect(APP_RELEASES.at(-1)?.items.join('')).toContain('收藏');
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {

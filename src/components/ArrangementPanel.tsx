@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Tag } from 'antd';
 import type { Arrangement } from '@/types';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
   arrangements: Arrangement[];
@@ -12,6 +13,9 @@ interface Props {
   allConflictFreePhase: 'idle' | 'loading' | 'ready' | 'error';
   allConflictFreeError: string | null;
   onShowConflictFree: () => void;
+  favoriteIds: ReadonlySet<string>;
+  numbersById: ReadonlyMap<string, number>;
+  onToggleFavorite: (arrangement: Arrangement, number: number) => void;
 }
 
 export default function ArrangementPanel({
@@ -24,6 +28,9 @@ export default function ArrangementPanel({
   allConflictFreePhase,
   allConflictFreeError,
   onShowConflictFree,
+  favoriteIds,
+  numbersById,
+  onToggleFavorite,
 }: Props) {
   const conflictFreeMode = mode === 'conflict-free';
   const loadingAll = allConflictFreePhase === 'loading';
@@ -42,29 +49,38 @@ export default function ArrangementPanel({
           }`}
         >
           {arrangements.map((a, index) => {
+            const number = numbersById.get(a.id) ?? index;
             const applied = a.id === selectedId;
             const conflictFree = a.conflictCount === 0;
+            const favorite = favoriteIds.has(a.id);
             return (
-              <button
-                key={index}
-                type="button"
-                className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
-                onClick={() => onSelect(a.id)}
-                aria-label={`排课方案 ${index}`}
-              >
-                <div className="arrangement-card__row">
-                  <span className="arrangement-card__idx">#{index}</span>
-                  <span className="arrangement-card__meta">
-                    {a.courseCount} 门 · {a.totalCredits} 学分
-                  </span>
-                  <Tag
-                    color={conflictFree ? 'green' : 'orange'}
-                    className="arrangement-card__conflict"
-                  >
-                    {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
-                  </Tag>
-                </div>
-              </button>
+              <div className="arrangement-card-wrap" key={a.id}>
+                <button
+                  type="button"
+                  className={`arrangement-card${applied ? ' arrangement-card--applied' : ''}`}
+                  onClick={() => onSelect(a.id)}
+                  aria-label={`排课方案 ${number}`}
+                >
+                  <div className="arrangement-card__row">
+                    <span className="arrangement-card__idx">#{number}</span>
+                    <span className="arrangement-card__meta">
+                      {a.courseCount} 门 · {a.totalCredits} 学分
+                    </span>
+                    <Tag
+                      color={conflictFree ? 'green' : 'orange'}
+                      className="arrangement-card__conflict"
+                    >
+                      {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
+                    </Tag>
+                  </div>
+                </button>
+                <FavoriteButton
+                  className="arrangement-card__favorite"
+                  active={favorite}
+                  label={`${favorite ? '取消收藏' : '收藏'}排课方案 #${number}`}
+                  onToggle={() => onToggleFavorite(a, number)}
+                />
+              </div>
             );
           })}
         </div>

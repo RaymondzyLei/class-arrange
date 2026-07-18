@@ -35,6 +35,7 @@ interface Props {
   selectedIds: Set<string>;
   conflictGroupKeys: Set<string>;
   arrangements: Arrangement[];
+  arrangementNumbers: ReadonlyMap<string, number>;
   currentArrangementId: string | null;
   selectedCurriculumId: string | null;
   selectedCurriculumTerm: string | null;
@@ -128,6 +129,7 @@ export default function SelectedCoursesModal({
   selectedIds,
   conflictGroupKeys,
   arrangements,
+  arrangementNumbers,
   currentArrangementId,
   selectedCurriculumId,
   selectedCurriculumTerm,
@@ -163,11 +165,11 @@ export default function SelectedCoursesModal({
   const arrangementOptions = useMemo(
     () => arrangements.map((arrangement, index) => ({
       value: arrangement.id,
-      label: `#${index} · ${arrangement.courseCount} 门 · ${arrangement.totalCredits} 学分 · ${
+      label: `#${arrangementNumbers.get(arrangement.id) ?? index} · ${arrangement.courseCount} 门 · ${arrangement.totalCredits} 学分 · ${
         arrangement.conflictCount === 0 ? '无冲突' : `${arrangement.conflictCount} 冲突`
       }`,
     })),
-    [arrangements],
+    [arrangementNumbers, arrangements],
   );
 
   const selectedCurriculum = getCurriculum(selectedCurriculumId);

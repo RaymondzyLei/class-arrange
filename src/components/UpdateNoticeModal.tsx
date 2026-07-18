@@ -4,6 +4,7 @@ import type {
   SelectedCourseSnapshot,
 } from '@/types';
 import type { AutomaticNoticeSelection } from '@/updates/updateAwareness';
+import { newestFirstByDate } from '../updates/updateOrdering';
 import BottomModal from './BottomModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 import { WarningIcon } from './icons';
@@ -64,6 +65,11 @@ export default function UpdateNoticeModal({
 }: Props) {
   const removed = notice.impacts.filter((impact) => impact.kind === 'removed');
   const modified = notice.impacts.filter((impact) => impact.kind === 'modified');
+  const appReleases = newestFirstByDate(notice.appReleases, (release) => release.publishedAt);
+  const semesterUpdates = newestFirstByDate(
+    notice.semesterUpdates.filter((item) => item.entries.length > 0),
+    ({ entries }) => newestFirstByDate(entries, (entry) => entry.publishedAt)[0]?.publishedAt ?? '',
+  );
   return (
     <BottomModal
       open={open}
@@ -148,10 +154,10 @@ export default function UpdateNoticeModal({
           </section>
         ) : null}
 
-        {notice.appReleases.length > 0 ? (
+        {appReleases.length > 0 ? (
           <section className="update-section">
             <h3>网站更新</h3>
-            {notice.appReleases.map((release) => (
+            {appReleases.map((release) => (
               <article className="update-release" key={release.version}>
                 <div className="update-release__header"><strong>{release.title}</strong><time>{release.publishedAt}</time></div>
                 <ul>{release.items.map((item) => <li key={item}>{item}</li>)}</ul>
@@ -160,10 +166,10 @@ export default function UpdateNoticeModal({
           </section>
         ) : null}
 
-        {notice.semesterUpdates.filter((item) => item.entries.length > 0).map(({ semester, entries }) => (
+        {semesterUpdates.map(({ semester, entries }) => (
           <section className="update-section" key={semester.key}>
             <h3>{semester.name}课程更新</h3>
-            {entries.map((entry) => (
+            {newestFirstByDate(entries, (entry) => entry.publishedAt).map((entry) => (
               <article className="update-release" key={entry.id}>
                 <div className="update-release__header"><strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong></div>
                 <p>新增 {entry.summary.added} 个课堂，删除 {entry.summary.removed} 个课堂，修改 {entry.summary.modified} 个课堂。</p>

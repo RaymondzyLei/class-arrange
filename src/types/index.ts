@@ -73,6 +73,33 @@ export interface PlansState {
   activePlanId: string | null;
 }
 
+export interface ArrangementFavoritePreferences {
+  arrangementIds: string[];
+  timeGroupKeys: string[];
+  sectionIds: string[];
+}
+
+export type FavoriteKind = 'plan' | 'arrangement' | 'timeGroup' | 'section';
+
+export interface ArrangementFavoriteRecord {
+  id: string;
+  planId: string;
+  planName: string;
+  originalIndex: number;
+  courseCount: number;
+  totalCredits: number;
+  totalHours: number;
+  conflictCount: number;
+  courseNames: string[];
+}
+
+export interface FavoritesState extends ArrangementFavoritePreferences {
+  version: 1;
+  planIds: string[];
+  /** 排课收藏的定位与展示快照；旧数据没有此字段时会无损迁移为空数组。 */
+  arrangementRecords: ArrangementFavoriteRecord[];
+}
+
 /**
  * 选课单元：把「同课程号 + 时间完全一致」的多个班次合并成一个对象。
  * 学生排课时不纠结老师，同时间同课的不同班次视为同一选课对象。

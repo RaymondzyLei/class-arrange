@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import type { CourseGroup, CourseSection, ScheduleSlot } from '@/types';
+import type {
+  ArrangementFavoritePreferences,
+  CourseGroup,
+  CourseSection,
+  ScheduleSlot,
+} from '@/types';
 import type { CustomScheduleSettings } from './customization';
 import { enumerateArrangements } from './arrangement';
 import {
@@ -96,7 +101,9 @@ function makeGroup(
 
 function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
   return {
+    favoriteArrangement: false,
     conflictCount: 0,
+    favoriteCourseCount: 0,
     campusTransitionCount: 0,
     halfDayScore: 0,
     earlyMorningDayCount: 0,
@@ -107,6 +114,26 @@ function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
 }
 
 describe('compareArrangementRanks', () => {
+  it('orders exact favorites, conflicts, and distinct favorite courses first', () => {
+    expect(compareArrangementRanks(
+      makeRank({ favoriteArrangement: true, conflictCount: 3 }),
+      makeRank({ favoriteArrangement: false, conflictCount: 0 }),
+      NO_PREFERENCES,
+    )).toBeLessThan(0);
+
+    expect(compareArrangementRanks(
+      makeRank({ conflictCount: 0, favoriteCourseCount: 0 }),
+      makeRank({ conflictCount: 1, favoriteCourseCount: 3 }),
+      NO_PREFERENCES,
+    )).toBeLessThan(0);
+
+    expect(compareArrangementRanks(
+      makeRank({ conflictCount: 0, favoriteCourseCount: 2 }),
+      makeRank({ conflictCount: 0, favoriteCourseCount: 1 }),
+      NO_PREFERENCES,
+    )).toBeLessThan(0);
+  });
+
   it('applies the exact conflict, half-day, early-morning, key, and credit ordering', () => {
     const allPreferences: CustomScheduleSettings = {
       calculationMode: 'auto',
@@ -220,6 +247,18 @@ function blockedSlotsForSeed(seed: number): string[] {
   return candidates.filter((_, index) => (seed & (1 << index)) !== 0);
 }
 
+function favoriteSnapshotForGroups(groups: CourseGroup[]): ArrangementFavoritePreferences {
+  const firstByCode = new Map<string, CourseGroup>();
+  for (const group of groups) {
+    if (!firstByCode.has(group.courseCode)) firstByCode.set(group.courseCode, group);
+  }
+  return {
+    arrangementIds: [[...firstByCode.values()].map((group) => group.key).sort().join('||')],
+    timeGroupKeys: groups.length > 0 ? [groups[groups.length - 1].key] : [],
+    sectionIds: groups.length > 0 ? [groups[0].sectionIds[0]] : [],
+  };
+}
+
 describe('exact Top-8 differential contract', () => {
   it('matches every oracle field and result position for seeded small inputs', () => {
     for (let seed = 1; seed <= 40; seed += 1) {
@@ -237,8 +276,9 @@ describe('exact Top-8 differential contract', () => {
             residentCampus: seed % 2 === 0 ? '本部' : '高新区',
             blockedSlots: blockedSlotsForSeed(seed),
           };
-          const expected = enumerateArrangementsOracle(groups, settings);
-          const actual = enumerateArrangements(groups, settings);
+          const favorites = favoriteSnapshotForGroups(groups);
+          const expected = enumerateArrangementsOracle(groups, settings, favorites);
+          const actual = enumerateArrangements(groups, settings, favorites);
           expect(
             actual,
             `seed=${seed}, halfDay=${preferHalfDay}, early=${preferFewerEarlyMornings}, campus=${preferAvoidCampusTransfers}`,
@@ -247,6 +287,97 @@ describe('exact Top-8 differential contract', () => {
         }
       }
     }
+  });
+
+  it('ranks a lexicographically later favorite time group first', () => {
+    const groups = [
+      makeGroup('A', 'a-default'),
+      makeGroup('A', 'z-favorite'),
+    ];
+
+    expect(enumerateArrangements(groups, NO_PREFERENCES, {
+      arrangementIds: [],
+      timeGroupKeys: ['z-favorite'],
+      sectionIds: [],
+    }).map((result) => result.id)).toEqual(['z-favorite', 'a-default']);
+  });
+
+  it('counts a group once when its key and multiple section IDs are favorites', () => {
+    const duplicateMatch = makeGroup('A', 'z-duplicate-match');
+    duplicateMatch.sectionIds = ['A.section-1', 'A.section-2'];
+    duplicateMatch.sections = [
+      makeSection('A.section-1', 0, 0, []),
+      makeSection('A.section-2', 0, 0, []),
+    ];
+    const singleMatch = makeGroup('A', 'a-single-match');
+    const lockedFavorite = makeGroup('B', 'b-locked-favorite');
+
+    const results = enumerateArrangements(
+      [duplicateMatch, singleMatch, lockedFavorite],
+      NO_PREFERENCES,
+      {
+        arrangementIds: [],
+        timeGroupKeys: ['z-duplicate-match', 'b-locked-favorite'],
+        sectionIds: [
+          'A.section-1',
+          'A.section-2',
+          singleMatch.sectionIds[0],
+        ],
+      },
+    );
+
+    expect(results.map((result) => result.id)).toEqual([
+      'a-single-match||b-locked-favorite',
+      'b-locked-favorite||z-duplicate-match',
+    ]);
+  });
+
+  it('applies favorite ranking before bounded Top-N truncation', () => {
+    const groups = [
+      makeGroup('A', 'a-first'),
+      makeGroup('A', 'b-second'),
+      makeGroup('A', 'z-favorite'),
+    ];
+
+    const results = enumerateArrangements(groups, {
+      ...NO_PREFERENCES,
+      arrangementDisplayCount: 2,
+    }, {
+      arrangementIds: [],
+      timeGroupKeys: [],
+      sectionIds: [groups[2].sectionIds[0]],
+    });
+
+    expect(results.map((result) => result.id)).toEqual(['z-favorite', 'a-first']);
+  });
+
+  it('retains every valid favorite arrangement beyond the display limit', () => {
+    const groups = [
+      makeGroup('A', 'a-default'),
+      makeGroup('A', 'b-favorite'),
+      makeGroup('A', 'c-favorite'),
+      makeGroup('A', 'd-favorite'),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      arrangementDisplayCount: 2,
+    };
+
+    expect(enumerateArrangements(groups, settings, {
+      arrangementIds: ['b-favorite', 'c-favorite', 'd-favorite'],
+      timeGroupKeys: [],
+      sectionIds: [],
+    }).map((result) => result.id)).toEqual([
+      'b-favorite',
+      'c-favorite',
+      'd-favorite',
+    ]);
+
+    expect(enumerateArrangements(groups, settings, {
+      arrangementIds: ['missing-favorite'],
+      timeGroupKeys: [],
+      sectionIds: [],
+    }).map((result) => result.id)).toEqual(['a-default', 'b-favorite']);
   });
 
   it('counts blocked-slot hits without conflating them with timetable overlaps', () => {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { CourseGroup } from '@/types';
+import type { ArrangementFavoritePreferences, CourseGroup } from '@/types';
 import { enumerateArrangementsExact } from './arrangementEngine';
 import type { CustomScheduleSettings } from './customization';
 import {
@@ -22,13 +22,17 @@ const SETTINGS: CustomScheduleSettings = {
   blockedSlots: [],
 };
 
-function group(courseCode: string, key: string): CourseGroup {
+function group(
+  courseCode: string,
+  key: string,
+  sectionIds = [`${courseCode}.01`],
+): CourseGroup {
   return {
     courseCode,
     courseName: courseCode,
     schedule: [],
     fingerprint: key,
-    sectionIds: [`${courseCode}.01`],
+    sectionIds,
     teachers: [],
     sections: [],
     key,
@@ -67,14 +71,22 @@ afterEach(() => {
 });
 
 describe('arrangement Worker client', () => {
+  const FAVORITES: ArrangementFavoritePreferences = {
+    arrangementIds: ['a'],
+    timeGroupKeys: ['a'],
+    sectionIds: ['A.01'],
+  };
+
   it('requests and rehydrates all conflict-free result metadata', async () => {
     const groups = [group('A', 'a')];
     const worker = new FakeWorker();
     const client = createArrangementWorkerClient({ workerFactory: () => worker });
-    const pending = client.calculateResults(groups, SETTINGS, 'all-conflict-free');
+    const pending = client.calculateResults(groups, SETTINGS, 'all-conflict-free', FAVORITES);
 
     expect(worker.requests[0]).toMatchObject({
       mode: 'all-conflict-free',
+      groups: [{ sectionIds: ['A.01'] }],
+      favorites: FAVORITES,
       settings: { arrangementDisplayCount: 8 },
     });
     worker.reply({
@@ -108,9 +120,14 @@ describe('arrangement Worker client', () => {
       generation: 1,
       mode: 'recommended',
       groups: [
-        { courseCode: 'A', key: 'a', schedule: [], credits: 0, hours: 0 },
-        { courseCode: 'B', key: 'b', schedule: [], credits: 0, hours: 0 },
+        {
+          courseCode: 'A', key: 'a', sectionIds: ['A.01'], schedule: [], credits: 0, hours: 0,
+        },
+        {
+          courseCode: 'B', key: 'b', sectionIds: ['B.01'], schedule: [], credits: 0, hours: 0,
+        },
       ],
+      favorites: { arrangementIds: [], timeGroupKeys: [], sectionIds: [] },
       settings: {
         arrangementDisplayCount: 8,
         preferHalfDay: false,
@@ -294,6 +311,23 @@ describe('arrangement Worker client', () => {
     const results = await fresh;
     expect(results).toEqual(enumerateArrangementsExact(freshGroups, SETTINGS));
     expect(results[0].groups.find(({ key }) => key === 'x1')).toBe(freshGroups[1]);
+  });
+
+  it('preserves section favorite ranking in synchronous fallback mode', async () => {
+    const groups = [
+      group('A', 'A::early', ['A.01']),
+      group('A', 'A::late', ['A.02']),
+    ];
+    const favorites: ArrangementFavoritePreferences = {
+      arrangementIds: [],
+      timeGroupKeys: [],
+      sectionIds: ['A.02'],
+    };
+    const client = createArrangementWorkerClient({ workerFactory: null });
+
+    const results = await client.calculate(groups, SETTINGS, favorites);
+
+    expect(results.map(({ id }) => id)).toEqual(['A::late', 'A::early']);
   });
 
   it('creates a Vite module Worker by default when Worker is available', async () => {

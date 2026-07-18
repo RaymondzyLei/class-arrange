@@ -10,6 +10,8 @@ import {
 } from '@/utils/courseSelection';
 import type { CourseGroup, CourseSection } from '@/types';
 import CoursePoolItem from './CoursePoolItem';
+import { useFavorites } from '@/favorites/FavoritesContext';
+import type { FavoriteKind } from '@/types';
 
 interface Props {
   groups: CourseGroup[];
@@ -29,6 +31,9 @@ interface RowExtraProps {
   groupsByCode: ReadonlyMap<string, CourseGroup[]>;
   conflictGroupKeys: Set<string>;
   themeMode: 'light' | 'dark';
+  favoriteIds: ReadonlySet<string>;
+  toggleFavorite: (kind: FavoriteKind, id: string) => void;
+  tourFavoriteGroupKey: string | null;
   onToggleGroupRow: (group: CourseGroup) => void;
   onToggleCourseRow: (group: CourseGroup) => void;
   onOpenDetailRow: (groupKey: string) => void;
@@ -44,6 +49,9 @@ function PoolRow({
   groupsByCode,
   conflictGroupKeys,
   themeMode,
+  favoriteIds,
+  toggleFavorite,
+  tourFavoriteGroupKey,
   onToggleGroupRow,
   onToggleCourseRow,
   onOpenDetailRow,
@@ -78,6 +86,9 @@ function PoolRow({
         courseSelected={courseIds.length > 0 && courseIds.every((id) => selectedIds.has(id))}
         conflicting={conflicting}
         theme={themeMode}
+        favoriteIds={favoriteIds}
+        toggleFavorite={toggleFavorite}
+        tourFavorite={group.key === tourFavoriteGroupKey}
         onToggleGroup={() => onToggleGroupRow(group)}
         onToggleCourse={() => onToggleCourseRow(group)}
         onOpenDetail={() => onOpenDetailRow(group.key)}
@@ -99,9 +110,14 @@ export default function CoursePool({
   groupsByCode,
 }: Props) {
   const { activePlan, dispatch } = usePlans();
+  const { timeGroupKeys, toggle: toggleFavorite } = useFavorites();
   const { message } = App.useApp();
   const listRef = useListRef(null);
   const rowHeightKey = useMemo(() => groups.map((group) => group.key).join('|'), [groups]);
+  const tourFavoriteGroupKey = useMemo(
+    () => groups.find((group) => !group.timeGroups)?.key ?? null,
+    [groups],
+  );
   const rowHeight = useDynamicRowHeight({
     defaultRowHeight: DEFAULT_ROW_HEIGHT,
     key: `${themeMode}:${rowHeightKey}`,
@@ -176,11 +192,14 @@ export default function CoursePool({
     groupsByCode,
     conflictGroupKeys,
     themeMode,
+    favoriteIds: timeGroupKeys,
+    toggleFavorite,
+    tourFavoriteGroupKey,
     onToggleGroupRow: toggleGroup,
     onToggleCourseRow: toggleCourse,
     onOpenDetailRow: onOpenDetail,
     observeRowElements: rowHeight.observeRowElements,
-  }), [groups, selectedIds, groupsByCode, conflictGroupKeys, themeMode, toggleGroup, toggleCourse, onOpenDetail, rowHeight.observeRowElements]);
+  }), [groups, selectedIds, groupsByCode, conflictGroupKeys, themeMode, timeGroupKeys, toggleFavorite, tourFavoriteGroupKey, toggleGroup, toggleCourse, onOpenDetail, rowHeight.observeRowElements]);
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (

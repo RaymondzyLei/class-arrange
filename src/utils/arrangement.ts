@@ -1,4 +1,4 @@
-import type { Arrangement, CourseGroup } from '@/types';
+import type { Arrangement, ArrangementFavoritePreferences, CourseGroup } from '@/types';
 import {
   DEFAULT_CUSTOM_SETTINGS,
   type CustomScheduleSettings,
@@ -34,8 +34,9 @@ export function findAmbiguousCodes(groups: CourseGroup[]): string[] {
 export function enumerateArrangements(
   groups: CourseGroup[],
   settings: CustomScheduleSettings = DEFAULT_CUSTOM_SETTINGS,
+  favorites?: ArrangementFavoritePreferences,
 ): Arrangement[] {
-  return enumerateArrangementsExact(groups, settings);
+  return enumerateArrangementsExact(groups, settings, undefined, favorites);
 }
 
 /** 取列表的第一个作为默认应用方案；空数组返回 null */

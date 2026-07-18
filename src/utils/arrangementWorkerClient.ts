@@ -1,4 +1,8 @@
-import type { Arrangement, CourseGroup } from '../types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '../types';
 import {
   createArrangementWorkerRequest,
   executeArrangementWorkerRequest,
@@ -25,11 +29,13 @@ export interface ArrangementWorkerClient {
   calculate(
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
+    favorites?: ArrangementFavoritePreferences,
   ): Promise<Arrangement[]>;
   calculateResults(
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
     mode?: ArrangementResultMode,
+    favorites?: ArrangementFavoritePreferences,
   ): Promise<ArrangementEnumerationResult>;
   cancel(): void;
   dispose(): void;
@@ -165,14 +171,17 @@ class DefaultArrangementWorkerClient implements ArrangementWorkerClient {
   calculate(
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
+    favorites?: ArrangementFavoritePreferences,
   ): Promise<Arrangement[]> {
-    return this.calculateResults(groups, settings).then(({ arrangements }) => arrangements);
+    return this.calculateResults(groups, settings, 'recommended', favorites)
+      .then(({ arrangements }) => arrangements);
   }
 
   calculateResults(
     groups: CourseGroup[],
     settings: CustomScheduleSettings,
     mode: ArrangementResultMode = 'recommended',
+    favorites?: ArrangementFavoritePreferences,
   ): Promise<ArrangementEnumerationResult> {
     this.abortActive();
     const generation = ++this.generation;
@@ -190,7 +199,7 @@ class DefaultArrangementWorkerClient implements ArrangementWorkerClient {
 
       let request: ArrangementWorkerRequest;
       try {
-        request = createArrangementWorkerRequest(generation, groups, settings, mode);
+        request = createArrangementWorkerRequest(generation, groups, settings, mode, favorites);
       } catch (error) {
         this.rejectActive(active, toError(error, 'Unable to prepare arrangement calculation'));
         return;

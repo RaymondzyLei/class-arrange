@@ -29,6 +29,13 @@ export const tourSteps: TourStep[] = [
     entryAnimation: 'float',
   },
   {
+    id: 'favorite-management',
+    targets: ['[data-tour="favorites-manage"]', '[data-tour="course-favorite"]'],
+    title: '收藏常用项目',
+    description: '点击课程卡片右下角的星标可以收藏时间组；上方“收藏项目”的管理入口可以集中查看并取消收藏。选课方案、排课方案和具体课堂也支持同样的收藏操作。',
+    placement: 'right',
+  },
+  {
     id: 'arrangement-preview',
     target: '[data-tour="arrangement-preview"]',
     title: '了解排课方案',

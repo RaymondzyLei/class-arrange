@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { Arrangement, CourseGroup } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '@/types';
 import type { CustomScheduleSettings } from './customization';
 import {
   calculationActionLabel,
@@ -8,6 +12,7 @@ import {
   completeArrangementCalculation,
   createArrangementCalculationState,
   failArrangementCalculation,
+  pendingFavoriteArrangementAction,
   recoverCancelledArrangementCalculation,
   resolveSelectedArrangementId,
   shouldSynchronizeArrangementCalculationProjection,
@@ -57,6 +62,42 @@ function arrangement(id: string, groups: CourseGroup[]): Arrangement {
 }
 
 describe('arrangement calculation input identity', () => {
+  it('canonicalizes favorite arrays without mutating caller input', () => {
+    const groups = [group('A', 'a')];
+    const unordered: ArrangementFavoritePreferences = {
+      arrangementIds: ['b', 'a'],
+      timeGroupKeys: ['g2', 'g1'],
+      sectionIds: ['S.02', 'S.01'],
+    };
+    const original = structuredClone(unordered);
+
+    const key = calculationInputKey(groups, settings(), unordered);
+    expect(key).toBe(calculationInputKey(
+      groups,
+      settings(),
+      {
+        arrangementIds: ['a', 'b'],
+        timeGroupKeys: ['g1', 'g2'],
+        sectionIds: ['S.01', 'S.02'],
+      },
+    ));
+    expect(JSON.parse(key).favorites).toEqual({
+      arrangementIds: ['a', 'b'],
+      timeGroupKeys: ['g1', 'g2'],
+      sectionIds: ['S.01', 'S.02'],
+    });
+    expect(unordered).toEqual(original);
+  });
+
+  it('changes when a favorite is added or removed', () => {
+    const groups = [group('A', 'a')];
+    const empty = { arrangementIds: [], timeGroupKeys: [], sectionIds: [] };
+    const favorite = { ...empty, sectionIds: ['A.01'] };
+
+    expect(calculationInputKey(groups, settings(), empty))
+      .not.toBe(calculationInputKey(groups, settings(), favorite));
+  });
+
   it('tracks calculation inputs but excludes calculation mode', () => {
     const groups = [group('A', 'a')];
     const automatic = settings({ calculationMode: 'auto' });
@@ -91,9 +132,87 @@ describe('arrangement calculation input identity', () => {
       automatic,
     ));
   });
+
+  it('changes when arrangement metadata used by results changes', () => {
+    const original = group('A', 'a');
+    original.courseName = 'Original course';
+    original.teachers = ['Teacher A'];
+    original.schedule = [{
+      weeks: [1, 18],
+      room: 'Room 101',
+      campus: '本部',
+      day: 1,
+      periods: [1, 2],
+    }];
+    original.sections = [{ credits: 2, hours: 32 }] as CourseGroup['sections'];
+    const originalKey = calculationInputKey([original], settings());
+    const variants: Array<[string, CourseGroup]> = [
+      ['teacher', { ...original, teachers: ['Teacher B'] }],
+      ['room', {
+        ...original,
+        schedule: original.schedule.map((slot) => ({ ...slot, room: 'Room 102' })),
+      }],
+      ['credits', {
+        ...original,
+        sections: [{ ...original.sections[0], credits: 3 }],
+      }],
+      ['hours', {
+        ...original,
+        sections: [{ ...original.sections[0], hours: 48 }],
+      }],
+    ];
+
+    for (const [field, changed] of variants) {
+      expect(calculationInputKey([changed], settings()), field).not.toBe(originalKey);
+    }
+  });
 });
 
 describe('arrangement calculation state', () => {
+  it('keeps the committed favorite snapshot while changed favorites make the draft dirty', () => {
+    const groups = [group('A', 'a')];
+    const committedFavorites: ArrangementFavoritePreferences = {
+      arrangementIds: ['a'],
+      timeGroupKeys: [],
+      sectionIds: ['A.01'],
+    };
+    const nextFavorites: ArrangementFavoritePreferences = {
+      arrangementIds: [],
+      timeGroupKeys: ['a'],
+      sectionIds: [],
+    };
+    const result = [arrangement('a', groups)];
+    let state = createArrangementCalculationState(
+      'fall:plan-a',
+      groups,
+      settings(),
+      committedFavorites,
+    );
+    state = completeArrangementCalculation(startArrangementCalculation(state, 1), 1, result);
+    state = syncArrangementCalculationInputs(
+      state,
+      'fall:plan-a',
+      groups,
+      settings(),
+      nextFavorites,
+    );
+
+    committedFavorites.arrangementIds.push('changed');
+    nextFavorites.timeGroupKeys.push('changed');
+    expect(state.phase).toBe('dirty');
+    expect(state.committed?.favorites).toEqual({
+      arrangementIds: ['a'],
+      timeGroupKeys: [],
+      sectionIds: ['A.01'],
+    });
+    expect(state.committed?.arrangements).toEqual(result);
+    expect(state.draft.favorites).toEqual({
+      arrangementIds: [],
+      timeGroupKeys: ['a'],
+      sectionIds: [],
+    });
+  });
+
   it('commits recommended arrangements with the conflict-free preview and total', () => {
     const groups = [group('A', 'a')];
     const recommended = [arrangement('a', groups)];
@@ -318,6 +437,40 @@ describe('arrangement calculation state', () => {
       projected,
       completed,
     )).toBe(false);
+  });
+
+  it('calculates a target scope before opening its pending favorite arrangement', () => {
+    const groups = [group('B', 'b')];
+    let target = createArrangementCalculationState(
+      'fall:plan-b',
+      groups,
+      settings(),
+    );
+
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('calculate');
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-a', 'favorite')).toBe('wait');
+
+    target = startArrangementCalculation(target, 1);
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('wait');
+
+    target = completeArrangementCalculation(target, 1, [arrangement('favorite', groups)]);
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('open');
+
+    const missing = completeArrangementCalculation(
+      startArrangementCalculation(createArrangementCalculationState(
+        'fall:plan-b',
+        groups,
+        settings(),
+      ), 2),
+      2,
+      [],
+    );
+    expect(pendingFavoriteArrangementAction(missing, 'fall:plan-b', 'favorite')).toBe('missing');
+    expect(pendingFavoriteArrangementAction(
+      createArrangementCalculationState('fall:plan-b', [], settings()),
+      'fall:plan-b',
+      'favorite',
+    )).toBe('empty');
   });
 });
 

@@ -23,6 +23,7 @@ import ArrangementPanel from '@/components/ArrangementPanel';
 import CalculationStatus from '@/components/CalculationStatus';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
+import FavoritesManagerModal, { type FavoriteManagerItem } from '@/components/FavoritesManagerModal';
 import CustomizationModal, { type CustomizationPage } from '@/components/CustomizationModal';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import SpotlightTour from '@/components/onboarding/SpotlightTour';
@@ -49,11 +50,21 @@ import {
   saveCustomScheduleSettings,
   type CustomScheduleSettings,
 } from '@/utils/customization';
-import { resolveSelectedArrangementId } from '@/utils/arrangementCalculationState';
+import {
+  pendingFavoriteArrangementAction,
+  resolveSelectedArrangementId,
+} from '@/utils/arrangementCalculationState';
 import { useUpdateAwareness } from '@/updates/UpdateAwarenessContext';
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
+import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
+import {
+  activeArrangementFavoritePreferences,
+  activeArrangementFavoriteIds,
+  arrangementNumbersById,
+  createArrangementFavoriteRecord,
+} from '@/utils/arrangementFavorites';
 
 const EMPTY_FILTER: FilterState = {
   keyword: '',
@@ -143,6 +154,7 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { state: plansState, activePlan, dispatch } = usePlans();
+  const favoriteState = useFavorites();
   const updateAwareness = useUpdateAwareness();
   const {
     manifest,
@@ -171,6 +183,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   }>({ inputKey: null, id: null });
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [pendingFavoriteArrangement, setPendingFavoriteArrangement] = useState<{
+    planId: string;
+    arrangementId: string;
+  } | null>(null);
   const [customizationOpen, setCustomizationOpen] = useState(false);
   const [customizationInitialPage, setCustomizationInitialPage] = useState<CustomizationPage>('main');
   const [updateHistoryOpen, setUpdateHistoryOpen] = useState(false);
@@ -191,6 +208,13 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     () => new Map(mergedGroups.map((group) => [group.courseCode, group])),
     [mergedGroups],
   );
+  const sectionGroupKeyById = useMemo(() => {
+    const result = new Map<string, string>();
+    groups.forEach((group) => {
+      group.sectionIds.forEach((sectionId) => result.set(sectionId, group.key));
+    });
+    return result;
+  }, [groups]);
   const filteredGroups = useFilteredCourses(
     courses,
     groups,
@@ -222,10 +246,37 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     [activePlan],
   );
 
+  const activeArrangementFavoriteIdList = useMemo(
+    () => activeArrangementFavoriteIds(
+      favoriteState.state.arrangementIds,
+      favoriteState.state.arrangementRecords,
+      activePlan?.id,
+    ),
+    [activePlan?.id, favoriteState.state.arrangementIds, favoriteState.state.arrangementRecords],
+  );
+  const activeArrangementFavoriteIdSet = useMemo(
+    () => new Set(activeArrangementFavoriteIdList),
+    [activeArrangementFavoriteIdList],
+  );
+  const activeArrangementPreferences = useMemo(() => (
+    activeArrangementFavoritePreferences(
+      activeArrangementFavoriteIdList,
+      favoriteState.state.timeGroupKeys,
+      favoriteState.state.sectionIds,
+      allSelectedGroups,
+    )
+  ), [
+    activeArrangementFavoriteIdList,
+    allSelectedGroups,
+    favoriteState.state.sectionIds,
+    favoriteState.state.timeGroupKeys,
+  ]);
+
   const calculation = useArrangementCalculation({
     scopeKey: `${catalog.semester.key}:${activePlan?.id ?? 'no-plan'}`,
     groups: allSelectedGroups,
     settings: customSettings,
+    favorites: activeArrangementPreferences,
   });
   const recommendedArrangements = calculation.committed?.arrangements ?? EMPTY_ARRANGEMENTS;
   const conflictFreeArrangements = calculation.allConflictFreePhase === 'ready'
@@ -234,6 +285,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const arrangements = arrangementView === 'recommended'
     ? recommendedArrangements
     : conflictFreeArrangements;
+  const arrangementNumbers = useMemo(
+    () => arrangementNumbersById(
+      arrangements,
+      favoriteState.state.arrangementRecords,
+      activePlan?.id,
+    ),
+    [activePlan?.id, arrangements, favoriteState.state.arrangementRecords],
+  );
   const committedArrangementInputKey = calculation.committed?.inputKey ?? null;
   const activeArrangementSelection = arrangementView === 'recommended'
     ? recommendedArrangementSelection
@@ -262,6 +321,98 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     () => computeStats(appliedGroups, conflictGroupKeys),
     [appliedGroups, conflictGroupKeys],
   );
+
+  const favoriteItems = useMemo<FavoriteManagerItem[]>(() => {
+    const arrangementById = new Map(
+      [...recommendedArrangements, ...conflictFreeArrangements]
+        .map((arrangement) => [arrangement.id, arrangement] as const),
+    );
+    const items: FavoriteManagerItem[] = [];
+
+    favoriteState.state.planIds.forEach((id) => {
+      const plan = plansState.plans.find((item) => item.id === id);
+      items.push({
+        kind: 'plan',
+        id,
+        planId: id,
+        title: plan?.name ?? '已删除的选课方案',
+        detail: plan ? `选课方案 · ${plan.courseIds.length} 个课堂` : '选课方案 · 原记录已不存在',
+      });
+    });
+    const recordedArrangementIds = new Set(
+      favoriteState.state.arrangementRecords.map((record) => record.id),
+    );
+    favoriteState.state.arrangementRecords.forEach((record) => {
+      const plan = plansState.plans.find((item) => item.id === record.planId);
+      const planName = plan?.name ?? record.planName;
+      const courseSummary = record.courseNames.length > 0
+        ? ` · ${record.courseNames.join('、')}`
+        : '';
+      items.push({
+        kind: 'arrangement',
+        id: record.id,
+        planId: record.planId,
+        title: `${planName} · 排课方案 #${record.originalIndex}`,
+        detail: `${record.courseCount} 门 · ${record.totalCredits} 学分 / ${record.totalHours} 学时 · ${
+          record.conflictCount === 0 ? '无冲突' : `${record.conflictCount} 冲突`
+        }${courseSummary}`,
+      });
+    });
+    favoriteState.state.arrangementIds
+      .filter((id) => !recordedArrangementIds.has(id))
+      .forEach((id, index) => {
+        const arrangement = arrangementById.get(id);
+        const number = arrangement ? arrangementNumbers.get(id) ?? index : index;
+        items.push({
+          kind: 'arrangement',
+          id,
+          planId: arrangement ? activePlan?.id : undefined,
+          title: arrangement
+            ? `${activePlan?.name ?? '当前选课方案'} · 排课方案 #${number}`
+            : `旧版排课方案收藏 ${index + 1}`,
+          detail: arrangement
+            ? `${arrangement.courseCount} 门 · ${arrangement.totalCredits} 学分 / ${arrangement.totalHours} 学时 · ${
+              arrangement.conflictCount === 0 ? '无冲突' : `${arrangement.conflictCount} 冲突`
+            }`
+            : '当前排课结果中暂不可见',
+        });
+      });
+    favoriteState.state.timeGroupKeys.forEach((id) => {
+      const group = groupByKey.get(id);
+      items.push({
+        kind: 'timeGroup',
+        id,
+        groupKey: id,
+        title: group?.courseName ?? id,
+        detail: group
+          ? `时间组 · ${group.sectionIds.join('、')}`
+          : '时间组 · 当前课程目录中暂不可见',
+      });
+    });
+    favoriteState.state.sectionIds.forEach((id) => {
+      const section = courseMap.get(id);
+      items.push({
+        kind: 'section',
+        id,
+        groupKey: sectionGroupKeyById.get(id),
+        title: section?.courseName ?? id,
+        detail: section ? `具体课堂 · ${id}` : '具体课堂 · 当前课程目录中暂不可见',
+      });
+    });
+
+    return items;
+  }, [
+    conflictFreeArrangements,
+    activePlan?.id,
+    activePlan?.name,
+    arrangementNumbers,
+    courseMap,
+    favoriteState.state,
+    groupByKey,
+    plansState.plans,
+    recommendedArrangements,
+    sectionGroupKeyById,
+  ]);
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
@@ -317,6 +468,75 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }));
   }, [arrangementView, committedArrangementInputKey, conflictFreeArrangements]);
   useEffect(() => {
+    if (!activePlan) return;
+    const recordedIds = new Set(favoriteState.state.arrangementRecords.map((record) => record.id));
+    const records = recommendedArrangements.flatMap((arrangement, index) => {
+      if (!favoriteState.state.arrangementIds.includes(arrangement.id) || recordedIds.has(arrangement.id)) {
+        return [];
+      }
+      return [createArrangementFavoriteRecord(
+        activePlan,
+        arrangement,
+        arrangementNumbers.get(arrangement.id) ?? index,
+      )];
+    });
+    if (records.length > 0) favoriteState.rememberArrangements(records);
+  }, [
+    activePlan,
+    arrangementNumbers,
+    favoriteState,
+    recommendedArrangements,
+  ]);
+  useEffect(() => {
+    if (!pendingFavoriteArrangement || activePlan?.id !== pendingFavoriteArrangement.planId) return;
+    const expectedScope = `${catalog.semester.key}:${pendingFavoriteArrangement.planId}`;
+    const action = pendingFavoriteArrangementAction(
+      calculation,
+      expectedScope,
+      pendingFavoriteArrangement.arrangementId,
+    );
+    if (action === 'open') {
+      const arrangement = recommendedArrangements.find(
+        (item) => item.id === pendingFavoriteArrangement.arrangementId,
+      );
+      if (!arrangement) return;
+      setArrangementView('recommended');
+      setRecommendedArrangementSelection({
+        inputKey: committedArrangementInputKey,
+        id: arrangement.id,
+      });
+      const number = arrangementNumbers.get(arrangement.id);
+      message.success(`已打开${activePlan.name}的排课方案${number === undefined ? '' : ` #${number}`}`);
+      setPendingFavoriteArrangement(null);
+      return;
+    }
+    if (action === 'calculate') {
+      calculation.startCalculation();
+      return;
+    }
+    if (action === 'missing') {
+      message.warning('该收藏排课方案已不在当前计算结果中');
+      setPendingFavoriteArrangement(null);
+      return;
+    }
+    if (action === 'empty') {
+      message.warning('该排课方案所属的选课方案已无可排课程');
+      setPendingFavoriteArrangement(null);
+    }
+  }, [
+    activePlan,
+    arrangementNumbers,
+    calculation.committed?.scopeKey,
+    calculation.draft.scopeKey,
+    calculation.phase,
+    calculation.startCalculation,
+    catalog.semester.key,
+    committedArrangementInputKey,
+    message,
+    pendingFavoriteArrangement,
+    recommendedArrangements,
+  ]);
+  useEffect(() => {
     setArrangementView('recommended');
     setConflictFreeArrangementSelection({ inputKey: null, id: null });
   }, [calculation.draft.inputKey]);
@@ -362,7 +582,59 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     } else {
       setConflictFreeArrangementSelection({ inputKey: committedArrangementInputKey, id });
     }
-    if (index >= 0) message.success(`已切换到排课方案 #${index}`);
+    if (index >= 0) message.success(`已切换到排课方案 #${arrangementNumbers.get(id) ?? index}`);
+  };
+  const handleToggleArrangementFavorite = (arrangement: Arrangement, number: number) => {
+    if (!activePlan) return;
+    const exactRecord = favoriteState.state.arrangementRecords.find(
+      (record) => record.id === arrangement.id && record.planId === activePlan.id,
+    );
+    if (activeArrangementFavoriteIdSet.has(arrangement.id) && !exactRecord) {
+      favoriteState.toggle('arrangement', arrangement.id);
+      return;
+    }
+    favoriteState.toggleArrangement(
+      exactRecord ?? createArrangementFavoriteRecord(activePlan, arrangement, number),
+    );
+  };
+  const handleOpenFavorite = (item: FavoriteManagerItem) => {
+    if (item.kind === 'plan') {
+      setFavoritesOpen(false);
+      if (item.planId && plansState.plans.some((plan) => plan.id === item.planId)) {
+        dispatch({ type: 'switchPlan', id: item.planId });
+      } else {
+        message.warning('该选课方案已不存在');
+      }
+      return;
+    }
+    if (item.kind === 'arrangement') {
+      setFavoritesOpen(false);
+      if (!item.planId || !plansState.plans.some((plan) => plan.id === item.planId)) {
+        message.warning('该排课方案所属的选课方案已不存在');
+        return;
+      }
+      setPendingFavoriteArrangement({ planId: item.planId, arrangementId: item.id });
+      setArrangementView('recommended');
+      if (activePlan?.id !== item.planId) dispatch({ type: 'switchPlan', id: item.planId });
+      return;
+    }
+    if (item.groupKey && groupByKey.has(item.groupKey)) {
+      setDetailGroupKey(item.groupKey);
+    } else {
+      message.warning('该课程已不在当前课程目录中');
+    }
+  };
+  const handleRemoveFavorite = (item: FavoriteManagerItem) => {
+    if (item.kind === 'arrangement' && item.planId) {
+      const record = favoriteState.state.arrangementRecords.find(
+        (candidate) => candidate.id === item.id && candidate.planId === item.planId,
+      );
+      if (record) {
+        favoriteState.toggleArrangement(record);
+        return;
+      }
+    }
+    favoriteState.toggle(item.kind, item.id);
   };
   const showAllConflictFreeArrangements = () => {
     setArrangementView('conflict-free');
@@ -405,6 +677,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const handleRestartOnboarding = () => {
     setDetailGroupKey(null);
+    setFavoritesOpen(false);
     setCustomizationOpen(false);
     window.setTimeout(() => onboarding.startTour(), 220);
   };
@@ -462,6 +735,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const handleTourStepAction = useCallback((action: NonNullable<TourStep['action']>) => {
     setDetailGroupKey(null);
+    setFavoritesOpen(false);
     if (action === 'openSelectedCoursesCurriculum') {
       setCustomizationOpen(false);
       openSelectedCourses('curriculum');
@@ -486,6 +760,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleTourFinish = () => {
     setDetailGroupKey(null);
     setSelectedCoursesOpen(false);
+    setFavoritesOpen(false);
     setCustomizationOpen(false);
     onboarding.finishTour();
   };
@@ -493,6 +768,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleTourSkip = () => {
     setDetailGroupKey(null);
     setSelectedCoursesOpen(false);
+    setFavoritesOpen(false);
     setCustomizationOpen(false);
     onboarding.skipTour();
   };
@@ -508,7 +784,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               onCurriculumChange={handleCurriculumChange}
               onManageCurriculum={() => openSelectedCourses('curriculum')}
             />
-            <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
+            <StatsBar
+              stats={stats}
+              favoriteCount={favoriteItems.length}
+              onOpenSelectedCourses={() => openSelectedCourses('current')}
+              onOpenFavorites={() => setFavoritesOpen(true)}
+            />
           </div>
           <div className="panel-inner calculation-results no-print">
             <ArrangementPanel
@@ -521,6 +802,9 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               allConflictFreePhase={calculation.allConflictFreePhase}
               allConflictFreeError={calculation.allConflictFreeError}
               onShowConflictFree={showAllConflictFreeArrangements}
+              numbersById={arrangementNumbers}
+              favoriteIds={activeArrangementFavoriteIdSet}
+              onToggleFavorite={handleToggleArrangementFavorite}
             />
           </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
@@ -576,6 +860,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         selectedIds={selectedIds}
         conflictGroupKeys={conflictGroupKeys}
         arrangements={arrangements}
+        arrangementNumbers={arrangementNumbers}
         currentArrangementId={appliedArrangement?.id ?? null}
         selectedCurriculumId={curriculumSelection.curriculumId}
         selectedCurriculumTerm={curriculumSelection.term}
@@ -584,6 +869,13 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onCurriculumTermChange={handleCurriculumTermChange}
         onOpenDetail={openCourseDetailFromManager}
         groupsByCode={groupsByCode}
+      />
+      <FavoritesManagerModal
+        open={favoritesOpen}
+        items={favoriteItems}
+        onClose={() => setFavoritesOpen(false)}
+        onOpen={handleOpenFavorite}
+        onRemove={handleRemoveFavorite}
       />
       <CustomizationModal
         open={customizationOpen}
@@ -734,15 +1026,20 @@ export default function App() {
       }}
     >
       <AntApp>
-        <PlansProvider
-          key={catalog.semester.key}
+        <FavoritesProvider
+          key={`favorites:${catalog.semester.key}`}
           semesterKey={catalog.semester.key}
-          defaultSemesterKey={manifest.defaultSemester}
-          courseMap={courseMap}
-          catalogRevision={catalog.revision}
         >
-          <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
-        </PlansProvider>
+          <PlansProvider
+            key={catalog.semester.key}
+            semesterKey={catalog.semester.key}
+            defaultSemesterKey={manifest.defaultSemester}
+            courseMap={courseMap}
+            catalogRevision={catalog.revision}
+          >
+            <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
+          </PlansProvider>
+        </FavoritesProvider>
       </AntApp>
     </ConfigProvider>
   );

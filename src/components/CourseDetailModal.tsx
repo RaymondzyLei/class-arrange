@@ -19,6 +19,8 @@ import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
 import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
 import CourseDescriptionPanel, { CourseDescriptionToggle } from './CourseDescriptionPanel';
+import { useFavorites } from '@/favorites/FavoritesContext';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
   group: CourseGroup | null;
@@ -49,6 +51,7 @@ interface SectionRow {
   time: string;
   classes: string;
   rating?: IcourseRatingInfo;
+  favorite: boolean;
 }
 
 interface TimeGroupRow {
@@ -59,6 +62,7 @@ interface TimeGroupRow {
   teachers: string;
   schedule: string;
   selected: boolean;
+  favorite: boolean;
 }
 
 function RatingLink({ rating }: { rating?: IcourseRatingInfo }) {
@@ -106,6 +110,7 @@ export default function CourseDetailModal({
   groupsByCode,
 }: Props) {
   const { activePlan, dispatch } = usePlans();
+  const { timeGroupKeys, sectionIds, toggle: toggleFavorite } = useFavorites();
   const { message } = App.useApp();
   // 缓存最后一次非 null 的组，保证关闭动画期间内容不消失。
   const [cached, setCached] = useState<CourseGroup | null>(null);
@@ -181,6 +186,7 @@ export default function CourseDetailModal({
     time: formatScheduleCompact(s.schedule),
     classes: s.classes.length ? formatClassLabels(s.classes) : '—',
     rating: getIcourseRatingInfo(s.id),
+    favorite: sectionIds.has(s.id),
   } satisfies SectionRow));
   const timeGroupRows = (mergedTimeGroups ?? []).map((timeGroup, index) => ({
     key: timeGroup.key,
@@ -190,6 +196,7 @@ export default function CourseDetailModal({
     teachers: formatTeacherList(timeGroup.teachers, '—'),
     schedule: formatScheduleCompact(timeGroup.schedule),
     selected: idsForGroup(timeGroup).every((id) => activePlan?.courseIds.includes(id)),
+    favorite: timeGroupKeys.has(timeGroup.key),
   } satisfies TimeGroupRow));
 
   const toggleTimeGroupSelected = (timeGroup: CourseGroup) => {
@@ -261,6 +268,35 @@ export default function CourseDetailModal({
     </Button>
   );
 
+  const renderTimeGroupFavorite = (row: TimeGroupRow) => (
+    <FavoriteButton
+      active={row.favorite}
+      label={`${row.favorite ? '取消收藏' : '收藏'}时间组：${row.label}`}
+      onToggle={() => toggleFavorite('timeGroup', row.group.key)}
+    />
+  );
+
+  const renderTimeGroupActions = (row: TimeGroupRow) => (
+    <div className="course-detail-time-group-actions">
+      {renderTimeGroupFavorite(row)}
+      {renderTimeGroupAction(row)}
+    </div>
+  );
+
+  const renderSectionFavorite = (row: SectionRow) => (
+    <FavoriteButton
+      active={row.favorite}
+      label={`${row.favorite ? '取消收藏' : '收藏'}课堂：${row.id}`}
+      onToggle={() => toggleFavorite('section', row.id)}
+    />
+  );
+
+  const renderSingleSectionIdentity = () => (
+    <span className="course-detail-section-identity">
+      <span>{sectionLabel}</span>
+    </span>
+  );
+
   return (
     <BottomModal
       className="course-detail-modal"
@@ -279,15 +315,22 @@ export default function CourseDetailModal({
       actions={(
         <Space size={4} wrap className="course-selection-actions">
           {!mergedTimeGroups ? (
-            <Button
-              size="small"
-              type={groupSelected ? 'default' : 'primary'}
-              danger={groupSelected}
-              aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
-              onClick={() => toggleSelected('group')}
-            >
-              {groupSelected ? '移除此时间组' : '选择此时间组'}
-            </Button>
+            <div className="course-detail-time-group-actions">
+              <FavoriteButton
+                active={timeGroupKeys.has(display.key)}
+                label={`${timeGroupKeys.has(display.key) ? '取消收藏' : '收藏'}时间组：${sectionLabel}`}
+                onToggle={() => toggleFavorite('timeGroup', display.key)}
+              />
+              <Button
+                size="small"
+                type={groupSelected ? 'default' : 'primary'}
+                danger={groupSelected}
+                aria-label={`${groupSelected ? '移除此时间组' : '选择此时间组'}：${display.courseName}`}
+                onClick={() => toggleSelected('group')}
+              >
+                {groupSelected ? '移除此时间组' : '选择此时间组'}
+              </Button>
+            </div>
           ) : null}
           <Button
             size="small"
@@ -308,7 +351,9 @@ export default function CourseDetailModal({
       />
       <div className="course-detail-desktop">
         <Descriptions className="course-detail-overview" size="small" column={3} bordered>
-          <Descriptions.Item label="课堂号/班次">{sectionLabel}</Descriptions.Item>
+          <Descriptions.Item label="课堂号/班次">
+            {display.sections.length === 1 ? renderSingleSectionIdentity() : sectionLabel}
+          </Descriptions.Item>
           <Descriptions.Item label="开课单位" span={2}>{rep?.department.name ?? '—'}（{rep?.department.code ?? ''}）</Descriptions.Item>
           <Descriptions.Item label="授课教师" span={3}>
             {formatTeacherList(display.teachers, '—')}
@@ -333,7 +378,9 @@ export default function CourseDetailModal({
         <section className="mobile-card course-detail-summary-card">
           <div className="mobile-field">
             <span className="mobile-field__label">课堂号 / 班次</span>
-            <span className="mobile-field__value mobile-field__value--mono">{sectionLabel}</span>
+            <span className="mobile-field__value mobile-field__value--mono">
+              {display.sections.length === 1 ? renderSingleSectionIdentity() : sectionLabel}
+            </span>
           </div>
           <div className="mobile-field">
             <span className="mobile-field__label">授课教师</span>
@@ -382,41 +429,6 @@ export default function CourseDetailModal({
         </section>
       </div>
 
-      {mergedTimeGroups ? (
-        <section className="course-time-groups" aria-label="时间组明细">
-          <Typography.Title level={5}>时间组明细</Typography.Title>
-          <div className="course-detail-desktop">
-            <Table
-              className="detail-table detail-time-group-table"
-              size="small"
-              dataSource={timeGroupRows}
-              pagination={false}
-              tableLayout="fixed"
-              columns={[
-                { title: '时间组', dataIndex: 'label', width: 90 },
-                { title: '课堂号 / 班次', dataIndex: 'sections', width: 170 },
-                { title: '教师', dataIndex: 'teachers', width: 160 },
-                { title: '时间地点', dataIndex: 'schedule' },
-                { title: '操作', key: 'action', width: 132, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupAction(row) },
-              ]}
-            />
-          </div>
-          <div className="mobile-card-list course-detail-mobile">
-            {timeGroupRows.map((row) => (
-              <article className="mobile-card course-detail-time-group-card" key={row.key}>
-                <div className="mobile-card__head">
-                  <span className="mobile-card__title">{row.label}</span>
-                  {renderTimeGroupAction(row)}
-                </div>
-                <div className="mobile-card__line">{row.sections}</div>
-                <div className="mobile-card__line">{row.teachers}</div>
-                <div className="mobile-card__line">{row.schedule}</div>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       <section className="course-material-groups" aria-label="教材与参考资料">
         <Typography.Title level={5}>教材与参考资料</Typography.Title>
         <div className="course-material-group">
@@ -433,10 +445,46 @@ export default function CourseDetailModal({
         </div>
       </section>
 
+      {mergedTimeGroups ? (
+        <section className="course-time-groups" aria-label="时间组明细">
+          <Typography.Title level={5}>时间组明细</Typography.Title>
+          <div className="course-detail-desktop">
+            <Table
+              className="detail-table detail-time-group-table"
+              size="small"
+              dataSource={timeGroupRows}
+              pagination={false}
+              tableLayout="fixed"
+              columns={[
+                { title: '时间组', dataIndex: 'label', width: 90 },
+                { title: '收藏', key: 'favorite', width: 64, align: 'center', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupFavorite(row) },
+                { title: '课堂号 / 班次', dataIndex: 'sections', width: 170 },
+                { title: '教师', dataIndex: 'teachers', width: 160 },
+                { title: '时间地点', dataIndex: 'schedule' },
+                { title: '操作', key: 'action', width: 132, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupAction(row) },
+              ]}
+            />
+          </div>
+          <div className="mobile-card-list course-detail-mobile">
+            {timeGroupRows.map((row) => (
+              <article className="mobile-card course-detail-time-group-card" key={row.key}>
+                <div className="mobile-card__head">
+                  <span className="mobile-card__title">{row.label}</span>
+                  {renderTimeGroupActions(row)}
+                </div>
+                <div className="mobile-card__line">{row.sections}</div>
+                <div className="mobile-card__line">{row.teachers}</div>
+                <div className="mobile-card__line">{row.schedule}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {display.sections.length > 1 && (
         <>
           <Typography.Title level={5} style={{ marginTop: 16 }}>班次明细</Typography.Title>
-          <Table
+          <Table<SectionRow>
             className="detail-table detail-section-table"
             size="small"
             dataSource={sectionRows}
@@ -444,9 +492,10 @@ export default function CourseDetailModal({
             tableLayout="fixed"
             columns={[
               { title: '课堂号', dataIndex: 'id', width: 110 },
+              { title: '收藏', key: 'favorite', width: 64, align: 'center', render: (_: unknown, row: SectionRow) => renderSectionFavorite(row) },
               { title: '教师', dataIndex: 'teacher', width: 120 },
               { title: '时间地点', dataIndex: 'time', width: 360 },
-              { title: '选课/限选', dataIndex: 'capacity', width: 96, render: (_: unknown, r: { enrolled: number; capacity: number }) => `${r.enrolled} / ${r.capacity}` },
+              { title: '选课/限选', dataIndex: 'capacity', width: 96, render: (_: unknown, r: SectionRow) => `${r.enrolled} / ${r.capacity}` },
               { title: '评分', dataIndex: 'rating', width: 110, render: (v: IcourseRatingInfo | undefined) => <RatingLink rating={v} /> },
               { title: '上课班级', dataIndex: 'classes', width: 240 },
             ]}
@@ -456,7 +505,10 @@ export default function CourseDetailModal({
               <article className="mobile-card course-detail-section-card" key={row.key}>
                 <div className="mobile-card__head">
                   <span className="mobile-card__title">{row.id}</span>
-                  <span className="mobile-card__meta">{row.enrolled} / {row.capacity}</span>
+                  <span className="course-detail-section-card__actions">
+                    {renderSectionFavorite(row)}
+                    <span className="mobile-card__meta">{row.enrolled} / {row.capacity}</span>
+                  </span>
                 </div>
                 <div className="mobile-card__line">{row.teacher}</div>
                 <div className="mobile-card__line">{row.time}</div>

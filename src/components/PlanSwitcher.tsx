@@ -7,6 +7,8 @@ import { nextDuplicatePlanName } from '@/utils/planSeed';
 import BottomModal from './BottomModal';
 import { MoreIcon, PlusIcon, TrashIcon } from './icons';
 import SelectWithChevron from './SelectWithChevron';
+import { useFavorites } from '@/favorites/FavoritesContext';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
   curriculumOptions: CurriculumOption[];
@@ -22,6 +24,7 @@ export default function PlanSwitcher({
   onManageCurriculum,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
+  const { planIds, toggle: toggleFavorite } = useFavorites();
   const { message } = App.useApp();
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameValue, setRenameValue] = useState('');
@@ -89,6 +92,12 @@ export default function PlanSwitcher({
     label: (
       <span className={`plan-option${plan.id === activePlan?.id ? ' plan-option--active' : ''}`}>
         <span className="plan-option__name">{plan.name}</span>
+        <FavoriteButton
+          className="plan-option__favorite"
+          active={planIds.has(plan.id)}
+          label={`${planIds.has(plan.id) ? '取消收藏' : '收藏'}${plan.name}`}
+          onToggle={() => toggleFavorite('plan', plan.id)}
+        />
         <button
           type="button"
           className="plan-option__delete"

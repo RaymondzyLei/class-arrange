@@ -1,4 +1,8 @@
-import type { Arrangement, CourseGroup } from '@/types';
+import type {
+  Arrangement,
+  ArrangementFavoritePreferences,
+  CourseGroup,
+} from '@/types';
 import type { CustomScheduleSettings } from './customization';
 import type { ArrangementEnumerationResult } from './arrangementEngine';
 
@@ -14,6 +18,7 @@ export interface ArrangementCalculationDraft {
   inputKey: string;
   groups: CourseGroup[];
   settings: CustomScheduleSettings;
+  favorites: ArrangementFavoritePreferences;
 }
 
 export interface CommittedArrangementCalculation extends ArrangementCalculationDraft {
@@ -37,31 +42,72 @@ function copySettings(settings: CustomScheduleSettings): CustomScheduleSettings 
   };
 }
 
+const EMPTY_FAVORITES: ArrangementFavoritePreferences = {
+  arrangementIds: [],
+  timeGroupKeys: [],
+  sectionIds: [],
+};
+
+function copyFavorites(
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
+): ArrangementFavoritePreferences {
+  return {
+    arrangementIds: [...favorites.arrangementIds],
+    timeGroupKeys: [...favorites.timeGroupKeys],
+    sectionIds: [...favorites.sectionIds],
+  };
+}
+
 function createDraft(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationDraft {
   return {
     scopeKey,
-    inputKey: calculationInputKey(groups, settings),
+    inputKey: calculationInputKey(groups, settings, favorites),
     groups: [...groups],
     settings: copySettings(settings),
+    favorites: copyFavorites(favorites),
   };
 }
 
 export function calculationInputKey(
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): string {
   return JSON.stringify({
-    groups: groups.map((group) => [group.courseCode, group.key, group.sectionIds]),
+    groups: groups.map((group) => ({
+      courseCode: group.courseCode,
+      courseName: group.courseName,
+      key: group.key,
+      sectionIds: group.sectionIds,
+      teachers: group.teachers,
+      schedule: group.schedule.map((slot) => ({
+        weeks: slot.weeks,
+        room: slot.room,
+        campus: slot.campus,
+        day: slot.day,
+        periods: slot.periods,
+        startTime: slot.startTime ?? null,
+        endTime: slot.endTime ?? null,
+      })),
+      credits: group.sections[0]?.credits ?? 0,
+      hours: group.sections[0]?.hours ?? 0,
+    })),
     arrangementDisplayCount: settings.arrangementDisplayCount,
     preferHalfDay: settings.preferHalfDay,
     preferFewerEarlyMornings: settings.preferFewerEarlyMornings,
     preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
     residentCampus: settings.residentCampus,
     blockedSlots: [...settings.blockedSlots].sort(),
+    favorites: {
+      arrangementIds: [...favorites.arrangementIds].sort(),
+      timeGroupKeys: [...favorites.timeGroupKeys].sort(),
+      sectionIds: [...favorites.sectionIds].sort(),
+    },
   });
 }
 
@@ -69,10 +115,11 @@ export function createArrangementCalculationState(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationState {
   return {
     phase: groups.length === 0 ? 'empty' : 'dirty',
-    draft: createDraft(scopeKey, groups, settings),
+    draft: createDraft(scopeKey, groups, settings, favorites),
     committed: null,
     activeGeneration: null,
     error: null,
@@ -84,8 +131,9 @@ export function syncArrangementCalculationInputs(
   scopeKey: string,
   groups: CourseGroup[],
   settings: CustomScheduleSettings,
+  favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): ArrangementCalculationState {
-  const draft = createDraft(scopeKey, groups, settings);
+  const draft = createDraft(scopeKey, groups, settings, favorites);
   if (scopeKey !== state.draft.scopeKey) {
     return {
       phase: groups.length === 0 ? 'empty' : 'dirty',
@@ -129,6 +177,20 @@ export function shouldAutomaticallyCalculate(state: ArrangementCalculationState)
   return state.phase === 'dirty' && state.draft.settings.calculationMode === 'auto';
 }
 
+export function pendingFavoriteArrangementAction(
+  state: Pick<ArrangementCalculationState, 'phase' | 'draft' | 'committed'>,
+  expectedScopeKey: string,
+  arrangementId: string,
+): 'open' | 'calculate' | 'missing' | 'empty' | 'wait' {
+  if (state.draft.scopeKey !== expectedScopeKey) return 'wait';
+  if (state.phase === 'dirty') return 'calculate';
+  if (state.phase === 'empty') return 'empty';
+  if (state.phase !== 'ready' || state.committed?.scopeKey !== expectedScopeKey) return 'wait';
+  return state.committed.arrangements.some(({ id }) => id === arrangementId)
+    ? 'open'
+    : 'missing';
+}
+
 export function calculationActionLabel(
   state: ArrangementCalculationState,
 ): '开始排课' | '重新计算' {
@@ -168,6 +230,7 @@ export function completeArrangementCalculation(
       ...state.draft,
       groups: [...state.draft.groups],
       settings: copySettings(state.draft.settings),
+      favorites: copyFavorites(state.draft.favorites),
       arrangements: result.arrangements,
       conflictFreePreview: result.conflictFreePreview,
       totalConflictFreeCount: result.totalConflictFreeCount,

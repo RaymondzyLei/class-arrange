@@ -32,8 +32,11 @@ function renderStatus(
 describe('CalculationStatus', () => {
   it('uses a separate Worker client for loading every conflict-free result', () => {
     expect(arrangementCalculationHookSource).toContain('allConflictFreeClientRef');
-    expect(arrangementCalculationHookSource).toContain("calculateResults(draft.groups, draft.settings)");
+    expect(arrangementCalculationHookSource).toMatch(
+      /calculateResults\(\s*draft\.groups,\s*draft\.settings,\s*'recommended',\s*draft\.favorites,/,
+    );
     expect(arrangementCalculationHookSource).toContain("'all-conflict-free'");
+    expect(arrangementCalculationHookSource).toContain('committed.favorites');
     expect(arrangementCalculationHookSource).toContain('loadAllConflictFree');
   });
 
@@ -132,7 +135,7 @@ describe('CalculationStatus', () => {
     expect(appSource).toContain('useLayoutEffect');
     expect(appSource).toContain('activeArrangementSelection.inputKey === committedArrangementInputKey');
     expect(appSource).toContain('setRecommendedArrangementSelection((current) => ({');
-    expect(arrangementPanelSource).toContain('key={index}');
+    expect(arrangementPanelSource).toContain('key={a.id}');
     const cardRule = stylesSource.match(/\.arrangement-card\s*\{([\s\S]*?)\}/)?.[1] ?? '';
     expect(cardRule).not.toContain('transition:');
   });

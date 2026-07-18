@@ -133,6 +133,20 @@ export function MoreIcon(props: IconProps) {
   );
 }
 
+export function StarIcon({ filled = false, ...props }: IconProps & { filled?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="m12 3.2 2.72 5.51 6.08.88-4.4 4.29 1.04 6.06L12 17.08l-5.44 2.86 1.04-6.06-4.4-4.29 6.08-.88L12 3.2Z"
+        fill={filled ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function ExternalLinkIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
