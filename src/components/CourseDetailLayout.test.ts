@@ -65,7 +65,16 @@ describe('course detail layout', () => {
     expect(source).toContain("toggleFavorite('timeGroup', row.group.key)");
     expect(source).toContain("toggleFavorite('timeGroup', display.key)");
     expect(source).toContain('renderTimeGroupActions(row)');
-    expect(occurrenceCount(source, 'renderTimeGroupActions(row)')).toBeGreaterThanOrEqual(2);
+    expect(occurrenceCount(source, 'renderTimeGroupActions(row)')).toBe(1);
+  });
+
+  it('uses a standalone favorite column for desktop time-group details', () => {
+    expect(source).toContain(
+      "{ title: '收藏', key: 'favorite', width: 64, align: 'center', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupFavorite(row) }",
+    );
+    expect(source).toContain(
+      "{ title: '操作', key: 'action', width: 132, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupAction(row) }",
+    );
   });
 
   it('favorites concrete sections in the desktop table and mobile section cards', () => {

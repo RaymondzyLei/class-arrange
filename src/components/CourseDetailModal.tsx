@@ -441,10 +441,11 @@ export default function CourseDetailModal({
               tableLayout="fixed"
               columns={[
                 { title: '时间组', dataIndex: 'label', width: 90 },
+                { title: '收藏', key: 'favorite', width: 64, align: 'center', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupFavorite(row) },
                 { title: '课堂号 / 班次', dataIndex: 'sections', width: 170 },
                 { title: '教师', dataIndex: 'teachers', width: 160 },
                 { title: '时间地点', dataIndex: 'schedule' },
-                { title: '操作', key: 'action', width: 176, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupActions(row) },
+                { title: '操作', key: 'action', width: 132, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupAction(row) },
               ]}
             />
           </div>
