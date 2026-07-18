@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import type { FavoritesState } from '@/types';
 import {
   EMPTY_FAVORITES_STATE,
@@ -28,6 +29,11 @@ const allKinds: FavoritesState = {
   timeGroupKeys: ['MATH::slot'],
   sectionIds: ['MATH.01'],
 };
+
+const favoritesContextSource = readFileSync(
+  new URL('./FavoritesContext.tsx', import.meta.url),
+  'utf8',
+);
 
 describe('favorites persistence', () => {
   it('uses a semester-scoped versioned storage key and empty fallback', () => {
@@ -100,5 +106,14 @@ describe('favorites persistence', () => {
 
   it('does not change state for a blank toggle id', () => {
     expect(toggleFavorite(allKinds, 'plan', '  ')).toBe(allKinds);
+  });
+
+  it('remounts its state owner when the semester key changes', () => {
+    expect(favoritesContextSource).toMatch(
+      /export function FavoritesProvider\([\s\S]*?<FavoritesProviderInner key=\{semesterKey\} semesterKey=\{semesterKey\}>/,
+    );
+    expect(favoritesContextSource).toMatch(
+      /function FavoritesProviderInner[\s\S]*?useState<FavoritesState>\(\(\) => loadFavorites\(semesterKey\)\)/,
+    );
   });
 });

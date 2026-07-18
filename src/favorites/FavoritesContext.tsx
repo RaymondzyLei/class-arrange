@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -33,15 +32,17 @@ interface FavoritesProviderProps {
 }
 
 export function FavoritesProvider({ children, semesterKey }: FavoritesProviderProps) {
+  return (
+    <FavoritesProviderInner key={semesterKey} semesterKey={semesterKey}>
+      {children}
+    </FavoritesProviderInner>
+  );
+}
+
+function FavoritesProviderInner({ children, semesterKey }: FavoritesProviderProps) {
   const [state, setState] = useState<FavoritesState>(() => loadFavorites(semesterKey));
   const latestStateRef = useRef(state);
   latestStateRef.current = state;
-
-  useEffect(() => {
-    const loaded = loadFavorites(semesterKey);
-    latestStateRef.current = loaded;
-    setState(loaded);
-  }, [semesterKey]);
 
   const toggle = useCallback((kind: FavoriteKind, id: string) => {
     const next = toggleFavorite(latestStateRef.current, kind, id);
