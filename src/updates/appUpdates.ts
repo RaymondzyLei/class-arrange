@@ -28,6 +28,17 @@ export const APP_RELEASES: AppRelease[] = [
       '其他UI改进。',
     ],
   },
+  {
+    version: '2026.07.18.1',
+    publishedAt: '2026-07-18',
+    title: '课程时间组与排课方案优化',
+    items: [
+      '添加“合并课程所有时间组”设置选项，更直观地展示课程信息。',
+      '添加“展示排课方案数量”选项。',
+      '优化排课方案结果展示，允许展示所有不冲突方案。',
+      '其他UI改进。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

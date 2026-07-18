@@ -47,4 +47,15 @@ describe('course detail layout', () => {
     expect(source).toContain('{!mergedTimeGroups ? (');
     expect(styles).toContain('.detail-time-group-table');
   });
+
+  it('offers an independent selection action for every merged time group', () => {
+    expect(source).toContain('selected: idsForGroup(timeGroup).every');
+    expect(source).toContain('toggleTimeGroupSelected(row.group)');
+    expect(source).toContain("row.selected ? '移除此时间组' : '选择此时间组'");
+    expect(source).toContain("{ title: '操作'");
+    expect(source).toContain("{ title: '操作', key: 'action', width: 132, align: 'left'");
+    expect(source).toContain('className="course-detail-time-group-action"');
+    expect(source).toContain("dispatch({ type: 'removeCourses', courseIds: ids })");
+    expect(source).toContain("dispatch({ type: 'addCourses', courseIds: ids })");
+  });
 });

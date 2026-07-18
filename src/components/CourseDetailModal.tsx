@@ -53,10 +53,12 @@ interface SectionRow {
 
 interface TimeGroupRow {
   key: string;
+  group: CourseGroup;
   label: string;
   sections: string;
   teachers: string;
   schedule: string;
+  selected: boolean;
 }
 
 function RatingLink({ rating }: { rating?: IcourseRatingInfo }) {
@@ -182,11 +184,37 @@ export default function CourseDetailModal({
   } satisfies SectionRow));
   const timeGroupRows = (mergedTimeGroups ?? []).map((timeGroup, index) => ({
     key: timeGroup.key,
+    group: timeGroup,
     label: `时间组 ${index + 1}`,
     sections: sectionLabelForGroup(timeGroup),
     teachers: formatTeacherList(timeGroup.teachers, '—'),
     schedule: formatScheduleCompact(timeGroup.schedule),
+    selected: idsForGroup(timeGroup).every((id) => activePlan?.courseIds.includes(id)),
   } satisfies TimeGroupRow));
+
+  const toggleTimeGroupSelected = (timeGroup: CourseGroup) => {
+    if (!activePlan) {
+      message.warning('请先新建一个方案');
+      return;
+    }
+    const ids = idsForGroup(timeGroup);
+    if (ids.length === 0) return;
+    const selected = ids.every((id) => activePlan.courseIds.includes(id));
+    if (selected) {
+      dispatch({ type: 'removeCourses', courseIds: ids });
+      message.success(`已移除「${display.courseName}」的此时间组`);
+      return;
+    }
+    const conflictNames = conflictingCourseNamesForSelection([timeGroup], allSelectedGroups);
+    dispatch({ type: 'addCourses', courseIds: ids });
+    if (conflictNames.length > 0) {
+      message.warning(
+        `「${display.courseName}」的此时间组与已选课程存在时间冲突：${conflictNames.slice(0, 3).join('、')}（仍已选择）`,
+      );
+      return;
+    }
+    message.success(`已选择「${display.courseName}」的此时间组`);
+  };
 
   const toggleSelected = (scope: 'group' | 'course') => {
     if (!activePlan) {
@@ -219,6 +247,19 @@ export default function CourseDetailModal({
       ? `已选择「${display.courseName}」的此时间组`
       : `已选择「${display.courseName}」的全部时间组`);
   };
+
+  const renderTimeGroupAction = (row: TimeGroupRow) => (
+    <Button
+      className="course-detail-time-group-action"
+      size="small"
+      type={row.selected ? 'default' : 'primary'}
+      danger={row.selected}
+      aria-label={`${row.selected ? '移除此时间组' : '选择此时间组'}：${row.label}`}
+      onClick={() => toggleTimeGroupSelected(row.group)}
+    >
+      {row.selected ? '移除此时间组' : '选择此时间组'}
+    </Button>
+  );
 
   return (
     <BottomModal
@@ -356,6 +397,7 @@ export default function CourseDetailModal({
                 { title: '课堂号 / 班次', dataIndex: 'sections', width: 170 },
                 { title: '教师', dataIndex: 'teachers', width: 160 },
                 { title: '时间地点', dataIndex: 'schedule' },
+                { title: '操作', key: 'action', width: 132, align: 'left', render: (_: unknown, row: TimeGroupRow) => renderTimeGroupAction(row) },
               ]}
             />
           </div>
@@ -364,8 +406,9 @@ export default function CourseDetailModal({
               <article className="mobile-card course-detail-time-group-card" key={row.key}>
                 <div className="mobile-card__head">
                   <span className="mobile-card__title">{row.label}</span>
-                  <span className="mobile-card__meta">{row.sections}</span>
+                  {renderTimeGroupAction(row)}
                 </div>
+                <div className="mobile-card__line">{row.sections}</div>
                 <div className="mobile-card__line">{row.teachers}</div>
                 <div className="mobile-card__line">{row.schedule}</div>
               </article>

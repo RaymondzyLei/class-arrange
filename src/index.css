@@ -1004,7 +1004,7 @@ html {
 
 .arrangement-panel__head {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
@@ -1294,14 +1294,6 @@ html {
   font-weight: 500;
 }
 
-.timetable__cell {
-  height: 58px;
-  padding: 3px;
-  vertical-align: top;
-  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 94%, #fff));
-  position: relative;
-}
-
 .timetable__row--band-start > th,
 .timetable__row--band-start > td {
   border-top-color: var(--timetable-border, #232323) !important;
@@ -1435,10 +1427,6 @@ html {
 .timetable-shell--export .timetable {
   background: #fff;
   color: #111;
-}
-
-.timetable-shell--export .timetable__cell {
-  height: 69px;
 }
 
 .stats-bar {
@@ -1918,12 +1906,6 @@ html {
   line-height: 1.08;
 }
 
-.timetable__cell {
-  height: 38px;
-  padding: 2px;
-  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 96%, #fff));
-}
-
 .timetable__row--band-start > th,
 .timetable__row--band-start > td {
   border-top-color: var(--timetable-border) !important;
@@ -2004,10 +1986,6 @@ html {
   right: 2px;
   width: 13px;
   height: 13px;
-}
-
-.timetable-shell--export .timetable__cell {
-  height: 69px;
 }
 
 @media (max-width: 900px) {
@@ -2190,8 +2168,11 @@ html {
 }
 
 .timetable__cell {
-  height: 52px;
+  height: 51.5px;
   padding: 3px 4px 3px 3px;
+  vertical-align: top;
+  background: var(--timetable-cell-bg, color-mix(in srgb, var(--panel-bg) 96%, #fff));
+  position: relative;
 }
 
 .timetable__courses {
@@ -2519,27 +2500,6 @@ html {
   margin-top: 14px;
 }
 
-.arrangement-panel__mode-action {
-  min-height: var(--action-chip-height);
-  padding: 0 var(--action-chip-padding-inline);
-  border: var(--action-chip-border-width) solid var(--border);
-  border-radius: var(--action-chip-radius);
-  background: var(--panel-bg);
-  color: var(--accent);
-  font: inherit;
-  font-size: var(--action-chip-font-size);
-  line-height: var(--action-chip-line-height);
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.arrangement-panel__mode-action:hover,
-.arrangement-panel__mode-action:focus-visible {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  outline: 0;
-}
-
 .course-time-groups {
   margin-top: 14px;
 }
@@ -2597,6 +2557,10 @@ html {
 
 .detail-time-group-table .ant-table {
   table-layout: fixed !important;
+}
+
+.course-detail-time-group-action {
+  white-space: nowrap;
 }
 
 .detail-table .ant-table-content {
@@ -3373,7 +3337,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   text-align: center;
 }
 
-.arrangement-panel__load-all {
+.arrangement-panel__show-all {
   padding: 0;
   border: 0;
   background: transparent;
@@ -3382,8 +3346,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   cursor: pointer;
 }
 
-.arrangement-panel__load-all:hover,
-.arrangement-panel__load-all:focus-visible {
+.arrangement-panel__show-all:hover,
+.arrangement-panel__show-all:focus-visible {
   text-decoration: underline;
   outline: 0;
 }
@@ -5166,9 +5130,7 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: nowrap;
-  gap: 1px 4px;
-  height: 32px;
+  height: auto;
   min-height: 32px;
   margin-top: 0;
   padding: 0 4px;
@@ -5177,7 +5139,32 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   font-size: 12px;
   line-height: 16px;
   text-align: center;
+}
+
+.course-table__project-footer--wrapped {
+  margin-top: 4px;
+}
+
+.course-table__project-footer-content {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 4px;
+  text-align: center;
+}
+
+.course-table__project-footer-update,
+.course-table__project-footer-links {
   white-space: nowrap;
+}
+
+.course-table__project-footer-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .course-table__term-selector {
@@ -5698,10 +5685,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 }
 
 @media (min-width: 901px) {
-  .table-panel {
-    margin-bottom: -12px;
-  }
-
   .course-table-wrap {
     padding-bottom: 0;
   }

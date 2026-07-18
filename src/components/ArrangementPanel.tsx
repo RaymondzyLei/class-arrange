@@ -12,8 +12,6 @@ interface Props {
   allConflictFreePhase: 'idle' | 'loading' | 'ready' | 'error';
   allConflictFreeError: string | null;
   onShowConflictFree: () => void;
-  onShowRecommended: () => void;
-  onLoadAllConflictFree: () => void;
 }
 
 export default function ArrangementPanel({
@@ -26,24 +24,14 @@ export default function ArrangementPanel({
   allConflictFreePhase,
   allConflictFreeError,
   onShowConflictFree,
-  onShowRecommended,
-  onLoadAllConflictFree,
 }: Props) {
   const conflictFreeMode = mode === 'conflict-free';
-  const allLoaded = allConflictFreePhase === 'ready';
   const loadingAll = allConflictFreePhase === 'loading';
   return (
-    <div className="arrangement-panel">
+    <div className="arrangement-panel" data-tour="arrangement-preview">
       <div className="arrangement-panel__head">
         <span className="arrangement-panel__title">排课方案</span>
         {status}
-        <button
-          type="button"
-          className="arrangement-panel__mode-action"
-          onClick={conflictFreeMode ? onShowRecommended : onShowConflictFree}
-        >
-          {conflictFreeMode ? '返回推荐方案' : '展示所有不冲突方案'}
-        </button>
       </div>
       {arrangements.length > 0 ? (
         <div
@@ -85,29 +73,22 @@ export default function ArrangementPanel({
           {conflictFreeMode ? '没有不冲突的排课方案' : '没有可展示的排课方案'}
         </div>
       )}
-      {conflictFreeMode ? (
+      {!conflictFreeMode && totalConflictFreeCount > 0 ? (
         <div className="arrangement-panel__footer">
-          {totalConflictFreeCount > 100 ? (
-            <>
-              共 {totalConflictFreeCount} 种不冲突方案，
-              {allLoaded ? '已全部展示。' : loadingAll ? (
-                <span>正在加载全部方案…</span>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="arrangement-panel__load-all"
-                    onClick={onLoadAllConflictFree}
-                  >
-                    全部展示
-                  </button>
-                  。
-                </>
-              )}
-            </>
-          ) : (
-            <>共 {totalConflictFreeCount} 种不冲突方案</>
-          )}
+          共 {totalConflictFreeCount} 种不冲突方案，
+          <button
+            type="button"
+            className="arrangement-panel__show-all"
+            onClick={onShowConflictFree}
+          >
+            显示全部
+          </button>
+          。
+        </div>
+      ) : conflictFreeMode ? (
+        <div className="arrangement-panel__footer">
+          共 {totalConflictFreeCount} 种不冲突方案
+          {loadingAll ? <span>，正在加载全部方案…</span> : null}
           {allConflictFreePhase === 'error' && allConflictFreeError ? (
             <span className="arrangement-panel__load-error">{allConflictFreeError}</span>
           ) : null}

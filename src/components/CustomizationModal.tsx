@@ -204,7 +204,7 @@ export default function CustomizationModal({
     <BottomModal
       className="customization-modal"
       open={open}
-      title="自定义"
+      title="自定义设置"
       headerLeading={page === 'main' ? undefined : (
         <button type="button" className="customization__back" onClick={returnToMain}>
           <span aria-hidden="true">‹</span> 返回

@@ -42,14 +42,25 @@ describe('CalculationStatus', () => {
     expect(appSource).toContain('recommendedArrangementSelection');
     expect(appSource).toContain('conflictFreeArrangementSelection');
     expect(appSource).toContain('calculation.committed?.conflictFreePreview');
-    expect(appSource).toContain('onLoadAllConflictFree={calculation.loadAllConflictFree}');
+    expect(appSource).toMatch(
+      /const showAllConflictFreeArrangements = \(\) => \{[\s\S]*setArrangementView\('conflict-free'\);[\s\S]*calculation\.loadAllConflictFree\(\);[\s\S]*\};/,
+    );
+    expect(appSource).toContain('onShowConflictFree={showAllConflictFreeArrangements}');
+    expect(appSource).not.toContain('onLoadAllConflictFree=');
+    expect(arrangementPanelSource).not.toContain('全部展示');
+    expect(arrangementPanelSource).not.toContain('totalConflictFreeCount > 100');
   });
 
-  it('renders the calculation status inside the arrangement header when multiple arrangements exist', () => {
+  it('always renders the arrangement panel with a compact header status', () => {
     expect(appSource).toMatch(
-      /const calculationStatus = \([\s\S]*<CalculationStatus[\s\S]*compact[\s\S]*\);/,
+      /const calculationStatus = \([\s\S]*<CalculationStatus[\s\S]*compact=\{true\}[\s\S]*\);/,
     );
     expect(appSource).toMatch(/<ArrangementPanel[\s\S]*status=\{calculationStatus\}/);
+    expect(appSource).toContain(
+      'totalConflictFreeCount={calculation.committed?.totalConflictFreeCount ?? 0}',
+    );
+    expect(appSource).not.toContain('{calculation.committed ? (');
+    expect(appSource).not.toContain(') : calculationStatus}');
     expect(arrangementPanelSource).not.toContain('panel-inner arrangement-panel');
   });
 

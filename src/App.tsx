@@ -364,6 +364,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
     if (index >= 0) message.success(`已切换到排课方案 #${index}`);
   };
+  const showAllConflictFreeArrangements = () => {
+    setArrangementView('conflict-free');
+    calculation.loadAllConflictFree();
+  };
   const calculationStatus = (
     <CalculationStatus
       phase={calculation.phase}
@@ -372,7 +376,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       actionLabel={calculation.actionLabel}
       error={calculation.error}
       onCalculate={calculation.startCalculation}
-      compact={arrangements.length > 1}
+      compact={true}
     />
   );
 
@@ -507,21 +511,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             <StatsBar stats={stats} onOpenSelectedCourses={() => openSelectedCourses('current')} />
           </div>
           <div className="panel-inner calculation-results no-print">
-            {calculation.committed ? (
-              <ArrangementPanel
-                arrangements={arrangements}
-                selectedId={appliedArrangement?.id ?? null}
-                onSelect={handleArrangementChange}
-                status={calculationStatus}
-                mode={arrangementView}
-                totalConflictFreeCount={calculation.committed.totalConflictFreeCount}
-                allConflictFreePhase={calculation.allConflictFreePhase}
-                allConflictFreeError={calculation.allConflictFreeError}
-                onShowConflictFree={() => setArrangementView('conflict-free')}
-                onShowRecommended={() => setArrangementView('recommended')}
-                onLoadAllConflictFree={calculation.loadAllConflictFree}
-              />
-            ) : calculationStatus}
+            <ArrangementPanel
+              arrangements={arrangements}
+              selectedId={appliedArrangement?.id ?? null}
+              onSelect={handleArrangementChange}
+              status={calculationStatus}
+              mode={arrangementView}
+              totalConflictFreeCount={calculation.committed?.totalConflictFreeCount ?? 0}
+              allConflictFreePhase={calculation.allConflictFreePhase}
+              allConflictFreeError={calculation.allConflictFreeError}
+              onShowConflictFree={showAllConflictFreeArrangements}
+            />
           </div>
           <div className="course-search-tour-target" data-tour="course-search-area">
             <FilterBar
@@ -610,7 +610,6 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         loading={updateAwareness.history.loading}
         failedSemesterKeys={updateAwareness.history.failedSemesterKeys}
         appReleases={updateAwareness.history.appReleases}
-        impacts={updateAwareness.history.impacts}
         semesters={updateAwareness.history.semesters}
         onClose={() => setUpdateHistoryOpen(false)}
       />

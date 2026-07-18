@@ -10,7 +10,7 @@ const styles = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 
 describe('CustomizationModal grouped settings navigation', () => {
   it('keeps the existing modal shell and introduces grouped setting rows', () => {
-    expect(source).toContain('title="自定义"');
+    expect(source).toContain('title="自定义设置"');
     expect(source).toContain('排课倾向');
     expect(source).toContain('课表生成');
     expect(source).toContain('通知与帮助');

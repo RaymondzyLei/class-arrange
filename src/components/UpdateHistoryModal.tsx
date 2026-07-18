@@ -1,4 +1,3 @@
-import type { CourseImpactEvent } from '@/types';
 import type { AppRelease } from '@/updates/appUpdates';
 import type { SemesterUpdateHistory } from '@/updates/updateAwareness';
 import BottomModal from './BottomModal';
@@ -9,7 +8,6 @@ interface Props {
   loading: boolean;
   failedSemesterKeys: string[];
   appReleases: AppRelease[];
-  impacts: CourseImpactEvent[];
   semesters: SemesterUpdateHistory[];
   onClose: () => void;
 }
@@ -19,17 +17,10 @@ export default function UpdateHistoryModal({
   loading,
   failedSemesterKeys,
   appReleases,
-  impacts,
   semesters,
   onClose,
 }: Props) {
-  const courseHistories = semesters.map(({ semester, entries }) => ({
-    semester,
-    entries,
-    impacts: impacts.filter((impact) => impact.semesterKey === semester.key),
-  })).filter(({ entries, impacts: semesterImpacts }) => (
-    entries.length > 0 || semesterImpacts.length > 0
-  ));
+  const courseHistories = semesters.filter(({ entries }) => entries.length > 0);
 
   return (
     <BottomModal open={open} title="更新记录" onClose={onClose} width={760} className="update-modal">
@@ -55,41 +46,20 @@ export default function UpdateHistoryModal({
           <h3>课程信息更新</h3>
           {courseHistories.length > 0 ? (
             <div className="update-history__semester-list">
-              {courseHistories.map(({ semester, entries, impacts: semesterImpacts }) => (
+              {courseHistories.map(({ semester, entries }) => (
                 <section className="update-history__semester" key={semester.key}>
                   <h4>{semester.name}</h4>
-                  {semesterImpacts.length > 0 ? (
-                    <div className="update-history__group">
-                      <h5>与我的方案相关</h5>
-                      {semesterImpacts.slice().reverse().map((impact) => (
-                        <article className="update-history__entry" key={impact.id}>
-                          <div className="update-history__entry-header">
-                            <strong>{impact.courseName} <small>{impact.courseId}</small></strong>
-                            {impact.occurredAt ? <time>{impact.occurredAt.slice(0, 10)}</time> : null}
-                          </div>
-                          <p>
-                            {impact.kind === 'removed'
-                              ? `课堂已删除，并从${impact.affectedPlans.map((plan) => `“${plan.planName}”`).join('、')}中移出。`
-                              : `已变更：${impact.changes.map((change) => change.label).join('、')}。`}
-                          </p>
-                        </article>
-                      ))}
-                    </div>
-                  ) : null}
-                  {entries.length > 0 ? (
-                    <div className="update-history__group">
-                      {semesterImpacts.length > 0 ? <h5>课程目录变化</h5> : null}
-                      {entries.slice().reverse().map((entry) => (
-                        <article className="update-history__entry" key={entry.id}>
-                          <div className="update-history__entry-header">
-                            <strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong>
-                          </div>
-                          <p>新增 {entry.summary.added} 个课堂，删除 {entry.summary.removed} 个课堂，修改 {entry.summary.modified} 个课堂。</p>
-                          <CourseUpdateBatchDetails batch={entry} />
-                        </article>
-                      ))}
-                    </div>
-                  ) : null}
+                  <div className="update-history__group">
+                    {entries.slice().reverse().map((entry) => (
+                      <article className="update-history__entry" key={entry.id}>
+                        <div className="update-history__entry-header">
+                          <strong>{entry.publishedAt.slice(0, 10) || '课程目录更新'}</strong>
+                        </div>
+                        <p>新增 {entry.summary.added} 个课堂，删除 {entry.summary.removed} 个课堂，修改 {entry.summary.modified} 个课堂。</p>
+                        <CourseUpdateBatchDetails batch={entry} />
+                      </article>
+                    ))}
+                  </div>
                 </section>
               ))}
             </div>

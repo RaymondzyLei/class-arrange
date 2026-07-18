@@ -30,18 +30,30 @@ describe('ArrangementPanel viewport height', () => {
     allConflictFreePhase: 'idle' as const,
     allConflictFreeError: null,
     onShowConflictFree: () => undefined,
-    onShowRecommended: () => undefined,
-    onLoadAllConflictFree: () => undefined,
   };
 
-  it('offers a standalone conflict-free action in recommended mode', () => {
+  it('shows the conflict-free summary action at the bottom in recommended mode', () => {
     const html = renderToStaticMarkup(createElement(ArrangementPanel, {
       ...baseProps,
       mode: 'recommended',
     }));
 
-    expect(html).toContain('展示所有不冲突方案');
+    expect(html).not.toContain('展示所有不冲突方案');
     expect(html).not.toContain('返回推荐方案');
+    expect(html).not.toContain('arrangement-panel__mode-action');
+    expect(html).toContain('共 2 种不冲突方案，');
+    expect(html).toMatch(/<button[^>]*class="arrangement-panel__show-all"[^>]*>显示全部<\/button>/);
+  });
+
+  it('hides the conflict-free summary action when no conflict-free arrangement exists', () => {
+    const html = renderToStaticMarkup(createElement(ArrangementPanel, {
+      ...baseProps,
+      mode: 'recommended',
+      totalConflictFreeCount: 0,
+    }));
+
+    expect(html).not.toContain('显示全部');
+    expect(html).not.toContain('种不冲突方案');
   });
 
   it('shows the exact conflict-free count without load-all at or below 100', () => {
@@ -51,20 +63,21 @@ describe('ArrangementPanel viewport height', () => {
       totalConflictFreeCount: 100,
     }));
 
-    expect(html).toContain('返回推荐方案');
+    expect(html).not.toContain('返回推荐方案');
     expect(html).toContain('共 100 种不冲突方案');
     expect(html).not.toContain('全部展示');
   });
 
-  it('makes only the load-all text actionable above the 100-result preview cap', () => {
+  it('does not offer a second load-all action above 100 results', () => {
     const html = renderToStaticMarkup(createElement(ArrangementPanel, {
       ...baseProps,
       mode: 'conflict-free',
       totalConflictFreeCount: 123,
     }));
 
-    expect(html).toContain('共 123 种不冲突方案，');
-    expect(html).toMatch(/<button[^>]*class="arrangement-panel__load-all"[^>]*>全部展示<\/button>/);
+    expect(html).toContain('共 123 种不冲突方案');
+    expect(html).not.toContain('全部展示');
+    expect(html).not.toContain('arrangement-panel__load-all');
   });
 
   it('keeps the preview visible while loading all and explains empty results', () => {

@@ -1,5 +1,5 @@
 import { Button, Slider } from 'antd';
-import { useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
 import { PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
 import { formatWeeks, isWeekInArray } from '@/utils/weeks';
@@ -682,6 +682,24 @@ export default function CourseTable({
   const sliderWeek = typeof weekSelection === 'number' ? weekSelection : 1;
   const [contributorsOpen, setContributorsOpen] = useState(false);
   const contributorsTriggerRef = useRef<HTMLButtonElement>(null);
+  const footerContentRef = useRef<HTMLDivElement>(null);
+  const [footerWrapped, setFooterWrapped] = useState(false);
+
+  useLayoutEffect(() => {
+    const content = footerContentRef.current;
+    const [update, links] = Array.from(content?.children ?? []) as HTMLElement[];
+    if (!content || !update || !links) return undefined;
+
+    const updateFooterWrapState = () => {
+      setFooterWrapped(links.offsetTop > update.offsetTop);
+    };
+    updateFooterWrapState();
+
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(updateFooterWrapState);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
 
   const closeContributors = () => {
     setContributorsOpen(false);
@@ -740,11 +758,11 @@ export default function CourseTable({
           <Button
             className="course-table__customize-button"
             onClick={onOpenCustomization}
-            aria-label="自定义"
+            aria-label="设置"
             data-tour="customization"
             icon={<GearIcon className="course-table__button-icon" />}
           >
-            <span className="course-table__customize-label">自定义</span>
+            <span className="course-table__customize-label">设置</span>
           </Button>
           <Button
             className="course-table__export-button"
@@ -771,26 +789,35 @@ export default function CourseTable({
         />
       </div>
 
-      <div className="course-table__project-footer no-print">
-        <span>课程信息最后更新于 {formatCatalogUpdatedDate(catalogGeneratedAt)}. 访问</span>
-        <a
-          className="course-table__project-footer-link"
-          href={PROJECT_LINKS.repository}
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub
-        </a>
-        <span>或查看</span>
-        <button
-          ref={contributorsTriggerRef}
-          className="course-table__project-footer-link course-table__contributors-button"
-          type="button"
-          onClick={() => setContributorsOpen(true)}
-        >
-          贡献列表
-        </button>
-        <span>。</span>
+      <div
+        className={`course-table__project-footer no-print${footerWrapped ? ' course-table__project-footer--wrapped' : ''}`}
+      >
+        <div ref={footerContentRef} className="course-table__project-footer-content">
+          <span className="course-table__project-footer-update">
+            课程信息最后更新于 {formatCatalogUpdatedDate(catalogGeneratedAt)}.
+          </span>
+          <span className="course-table__project-footer-links">
+            <span>访问</span>
+            <a
+              className="course-table__project-footer-link"
+              href={PROJECT_LINKS.repository}
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            <span>或查看</span>
+            <button
+              ref={contributorsTriggerRef}
+              className="course-table__project-footer-link course-table__contributors-button"
+              type="button"
+              onClick={() => setContributorsOpen(true)}
+            >
+              贡献列表
+            </button>
+            <span>。</span>
+          </span>
+        </div>
       </div>
 
       <div className="timetable-export-stage" ref={exportRef}>

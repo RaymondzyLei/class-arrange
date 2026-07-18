@@ -5,12 +5,17 @@ const wizardSource = readFileSync(new URL('./OnboardingWizard.tsx', import.meta.
 const customizationSource = readFileSync(new URL('../CustomizationModal.tsx', import.meta.url), 'utf8');
 const spotlightSource = readFileSync(new URL('./SpotlightTour.tsx', import.meta.url), 'utf8');
 const tourStepsSource = readFileSync(new URL('../../onboarding/tourSteps.tsx', import.meta.url), 'utf8');
+const arrangementPanelSource = readFileSync(new URL('../ArrangementPanel.tsx', import.meta.url), 'utf8');
 const selectSource = readFileSync(new URL('../SelectWithChevron.tsx', import.meta.url), 'utf8');
 const onboardingStylesSource = readFileSync(new URL('./onboarding.css', import.meta.url), 'utf8');
 
 describe('onboarding content', () => {
   it('explains where preferences can be changed later', () => {
-    expect(wizardSource).toContain('稍后可在“自定义”中修改设置');
+    expect(wizardSource).toContain('稍后可在“设置”中修改');
+    expect(wizardSource).toContain('你仍然可以从“设置”中重新查看');
+    expect(spotlightSource).toContain('你仍然可以从“设置”中重新查看');
+    expect(tourStepsSource).toContain("title: '打开设置'");
+    expect(tourStepsSource).toContain('再次查看引导可以从“设置”里的“重新查看新手引导”进入');
   });
 
   it('offers campus transfer avoidance and a dependent residence selector in both settings surfaces', () => {
@@ -62,13 +67,14 @@ describe('onboarding content', () => {
     expect(selectSource).toContain("closest('.bottom-modal, .onboarding-wizard')");
   });
 
-  it('uses a real arrangement screenshot for step 2/11', () => {
-    expect(spotlightSource).toContain(
-      "import arrangementPreviewImage from '@/assets/onboarding/arrangement-preview.png';",
-    );
-    expect(spotlightSource).toContain('src={arrangementPreviewImage}');
-    expect(spotlightSource).not.toContain('ARRANGEMENT_PREVIEW_CONFLICTS');
-    expect(tourStepsSource).toContain('最多展示 8 种');
+  it('highlights the live arrangement panel in step 2 without rendering a screenshot preview', () => {
+    expect(arrangementPanelSource).toContain('data-tour="arrangement-preview"');
+    expect(tourStepsSource).toContain("target: '[data-tour=\"arrangement-preview\"]'");
+    expect(tourStepsSource).not.toContain("preview: 'arrangementPanel'");
+    expect(spotlightSource).not.toContain('arrangementPreviewImage');
+    expect(spotlightSource).not.toContain('ArrangementPanelPreview');
+    expect(spotlightSource).not.toContain('getArrangementPreviewRect');
+    expect(tourStepsSource).toContain('展示数量可以在设置中调整');
     expect(tourStepsSource).toContain('不同时间组组合');
   });
 

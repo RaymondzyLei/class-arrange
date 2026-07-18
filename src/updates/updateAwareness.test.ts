@@ -77,15 +77,15 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 16 schedule and UI release as the latest app update', () => {
+  test('publishes the July 18 arrangement and time-group release as the latest app update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.16.1',
-      publishedAt: '2026-07-16',
-      title: '排课方案与界面优化',
+      version: '2026.07.18.1',
+      publishedAt: '2026-07-18',
+      title: '课程时间组与排课方案优化',
       items: [
-        '排课方案标题整合计算状态，移除方案数量提示。',
-        '方案列表缩短为约 1.5 行可视高度，减少页面占用。',
-        '优化课程更新信息展示。',
+        '添加“合并课程所有时间组”设置选项，更直观地展示课程信息。',
+        '添加“展示排课方案数量”选项。',
+        '优化排课方案结果展示，允许展示所有不冲突方案。',
         '其他UI改进。',
       ],
     });
