@@ -73,6 +73,19 @@ export interface PlansState {
   activePlanId: string | null;
 }
 
+export interface ArrangementFavoritePreferences {
+  arrangementIds: string[];
+  timeGroupKeys: string[];
+  sectionIds: string[];
+}
+
+export type FavoriteKind = 'plan' | 'arrangement' | 'timeGroup' | 'section';
+
+export interface FavoritesState extends ArrangementFavoritePreferences {
+  version: 1;
+  planIds: string[];
+}
+
 /**
  * 选课单元：把「同课程号 + 时间完全一致」的多个班次合并成一个对象。
  * 学生排课时不纠结老师，同时间同课的不同班次视为同一选课对象。

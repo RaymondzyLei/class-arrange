@@ -24,6 +24,7 @@
   --accent-strong: #3a55d4;
   --success: #5b8a6f;
   --success-soft: #e2ebe5;
+  --favorite: #f2b400;
   --contributor-additions: #16a34a;
 
   /* —— 冲突 —— */
@@ -75,6 +76,7 @@
   --accent-strong: #b8c3f0;
   --success: #80c69d;
   --success-soft: #21352b;
+  --favorite: #e9b85b;
   --contributor-additions: #4ade80;
 
   --conflict: #ef7e86;

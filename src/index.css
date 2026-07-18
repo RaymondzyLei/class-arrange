@@ -34,6 +34,39 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.favorite-button {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.favorite-button:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.favorite-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.favorite-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.favorite-button--active {
+  color: var(--favorite);
+}
+
 /* —— 滚动条 —— */
 ::-webkit-scrollbar {
   width: 8px;
