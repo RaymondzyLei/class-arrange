@@ -351,6 +351,35 @@ describe('exact Top-8 differential contract', () => {
     expect(results.map((result) => result.id)).toEqual(['z-favorite', 'a-first']);
   });
 
+  it('retains every valid favorite arrangement beyond the display limit', () => {
+    const groups = [
+      makeGroup('A', 'a-default'),
+      makeGroup('A', 'b-favorite'),
+      makeGroup('A', 'c-favorite'),
+      makeGroup('A', 'd-favorite'),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      arrangementDisplayCount: 2,
+    };
+
+    expect(enumerateArrangements(groups, settings, {
+      arrangementIds: ['b-favorite', 'c-favorite', 'd-favorite'],
+      timeGroupKeys: [],
+      sectionIds: [],
+    }).map((result) => result.id)).toEqual([
+      'b-favorite',
+      'c-favorite',
+      'd-favorite',
+    ]);
+
+    expect(enumerateArrangements(groups, settings, {
+      arrangementIds: ['missing-favorite'],
+      timeGroupKeys: [],
+      sectionIds: [],
+    }).map((result) => result.id)).toEqual(['a-default', 'b-favorite']);
+  });
+
   it('counts blocked-slot hits without conflating them with timetable overlaps', () => {
     const groups = [
       makeGroup('A', 'a-blocked', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),

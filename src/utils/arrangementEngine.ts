@@ -524,10 +524,10 @@ export function enumerateArrangementResultsExact(
   for (const groupIndex of lockedIndices) state.add(groupIndex);
 
   const pickedIndices: number[] = [];
-  const recommended = new BoundedCandidateHeap(
-    settings.arrangementDisplayCount ?? DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
-    settings,
-  );
+  const arrangementDisplayCount = settings.arrangementDisplayCount
+    ?? DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount;
+  const recommended = new BoundedCandidateHeap(arrangementDisplayCount, settings);
+  const favoriteCandidates: RankedCandidate[] = [];
   const conflictFreePreview = new BoundedCandidateHeap(ARRANGEMENT_RESULT_LIMIT, settings);
   const allConflictFree: RankedCandidate[] = [];
   let totalConflictFreeCount = 0;
@@ -561,7 +561,8 @@ export function enumerateArrangementResultsExact(
         ordinal,
       };
       ordinal += 1;
-      recommended.add(candidate);
+      if (candidate.rank.favoriteArrangement) favoriteCandidates.push(candidate);
+      else recommended.add(candidate);
       if (candidate.rank.conflictCount === 0) {
         totalConflictFreeCount += 1;
         conflictFreePreview.add(candidate);
@@ -570,7 +571,7 @@ export function enumerateArrangementResultsExact(
       if (diagnostics) {
         diagnostics.maxRetainedCandidates = Math.max(
           diagnostics.maxRetainedCandidates,
-          recommended.size,
+          recommended.size + favoriteCandidates.length,
           conflictFreePreview.size,
         );
       }
@@ -597,10 +598,20 @@ export function enumerateArrangementResultsExact(
     totalHours: candidate.totalHours,
   });
   const preview = conflictFreePreview.sortedBestFirst();
+  const sortedFavorites = favoriteCandidates.sort((left, right) =>
+    compareCandidates(left, right, settings));
+  const remainingRecommendedCount = Math.max(
+    0,
+    arrangementDisplayCount - sortedFavorites.length,
+  );
+  const recommendedCandidates = [
+    ...sortedFavorites,
+    ...recommended.sortedBestFirst().slice(0, remainingRecommendedCount),
+  ];
   return {
     arrangements: (mode === 'all-conflict-free'
       ? allConflictFree.sort((left, right) => compareCandidates(left, right, settings))
-      : recommended.sortedBestFirst()).map(toArrangement),
+      : recommendedCandidates).map(toArrangement),
     conflictFreePreview: preview.map(toArrangement),
     totalConflictFreeCount,
   };

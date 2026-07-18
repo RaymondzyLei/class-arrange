@@ -12,6 +12,7 @@ import {
   completeArrangementCalculation,
   createArrangementCalculationState,
   failArrangementCalculation,
+  pendingFavoriteArrangementAction,
   recoverCancelledArrangementCalculation,
   resolveSelectedArrangementId,
   shouldSynchronizeArrangementCalculationProjection,
@@ -130,6 +131,40 @@ describe('arrangement calculation input identity', () => {
       [group('A', 'a', ['A.02'])],
       automatic,
     ));
+  });
+
+  it('changes when arrangement metadata used by results changes', () => {
+    const original = group('A', 'a');
+    original.courseName = 'Original course';
+    original.teachers = ['Teacher A'];
+    original.schedule = [{
+      weeks: [1, 18],
+      room: 'Room 101',
+      campus: '本部',
+      day: 1,
+      periods: [1, 2],
+    }];
+    original.sections = [{ credits: 2, hours: 32 }] as CourseGroup['sections'];
+    const originalKey = calculationInputKey([original], settings());
+    const variants: Array<[string, CourseGroup]> = [
+      ['teacher', { ...original, teachers: ['Teacher B'] }],
+      ['room', {
+        ...original,
+        schedule: original.schedule.map((slot) => ({ ...slot, room: 'Room 102' })),
+      }],
+      ['credits', {
+        ...original,
+        sections: [{ ...original.sections[0], credits: 3 }],
+      }],
+      ['hours', {
+        ...original,
+        sections: [{ ...original.sections[0], hours: 48 }],
+      }],
+    ];
+
+    for (const [field, changed] of variants) {
+      expect(calculationInputKey([changed], settings()), field).not.toBe(originalKey);
+    }
   });
 });
 
@@ -402,6 +437,40 @@ describe('arrangement calculation state', () => {
       projected,
       completed,
     )).toBe(false);
+  });
+
+  it('calculates a target scope before opening its pending favorite arrangement', () => {
+    const groups = [group('B', 'b')];
+    let target = createArrangementCalculationState(
+      'fall:plan-b',
+      groups,
+      settings(),
+    );
+
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('calculate');
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-a', 'favorite')).toBe('wait');
+
+    target = startArrangementCalculation(target, 1);
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('wait');
+
+    target = completeArrangementCalculation(target, 1, [arrangement('favorite', groups)]);
+    expect(pendingFavoriteArrangementAction(target, 'fall:plan-b', 'favorite')).toBe('open');
+
+    const missing = completeArrangementCalculation(
+      startArrangementCalculation(createArrangementCalculationState(
+        'fall:plan-b',
+        groups,
+        settings(),
+      ), 2),
+      2,
+      [],
+    );
+    expect(pendingFavoriteArrangementAction(missing, 'fall:plan-b', 'favorite')).toBe('missing');
+    expect(pendingFavoriteArrangementAction(
+      createArrangementCalculationState('fall:plan-b', [], settings()),
+      'fall:plan-b',
+      'favorite',
+    )).toBe('empty');
   });
 });
 

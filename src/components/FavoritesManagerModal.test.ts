@@ -47,4 +47,18 @@ describe('FavoritesManagerModal', () => {
     expect(courseBranch).not.toContain('setFavoritesOpen(false)');
     expect(courseBranch).toContain('setDetailGroupKey(item.groupKey)');
   });
+
+  it('recalculates a switched plan before opening its favorite arrangement', () => {
+    const start = appSource.indexOf('if (!pendingFavoriteArrangement');
+    const end = appSource.indexOf('useEffect(() => {', start + 1);
+    const pendingEffect = appSource.slice(start, end);
+
+    expect(pendingEffect).toContain('pendingFavoriteArrangementAction(');
+    expect(pendingEffect).toContain('calculation.startCalculation()');
+  });
+
+  it('passes only active-plan course favorites into arrangement calculation', () => {
+    expect(appSource).toContain('activeArrangementFavoritePreferences(');
+    expect(appSource).toContain('allSelectedGroups,');
+  });
 });

@@ -1,6 +1,8 @@
 import type {
   Arrangement,
+  ArrangementFavoritePreferences,
   ArrangementFavoriteRecord,
+  CourseGroup,
   Plan,
 } from '@/types';
 
@@ -35,6 +37,22 @@ export function activeArrangementFavoriteIds(
   );
 
   return arrangementIds.filter((id) => !recordedIds.has(id) || ownedIds.has(id));
+}
+
+export function activeArrangementFavoritePreferences(
+  arrangementIds: readonly string[],
+  timeGroupKeys: readonly string[],
+  sectionIds: readonly string[],
+  groups: readonly CourseGroup[],
+): ArrangementFavoritePreferences {
+  const selectedTimeGroupKeys = new Set(groups.map((group) => group.key));
+  const selectedSectionIds = new Set(groups.flatMap((group) => group.sectionIds));
+
+  return {
+    arrangementIds: [...arrangementIds],
+    timeGroupKeys: timeGroupKeys.filter((key) => selectedTimeGroupKeys.has(key)),
+    sectionIds: sectionIds.filter((id) => selectedSectionIds.has(id)),
+  };
 }
 
 export function arrangementNumbersById(

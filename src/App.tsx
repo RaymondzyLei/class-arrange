@@ -50,13 +50,17 @@ import {
   saveCustomScheduleSettings,
   type CustomScheduleSettings,
 } from '@/utils/customization';
-import { resolveSelectedArrangementId } from '@/utils/arrangementCalculationState';
+import {
+  pendingFavoriteArrangementAction,
+  resolveSelectedArrangementId,
+} from '@/utils/arrangementCalculationState';
 import { useUpdateAwareness } from '@/updates/UpdateAwarenessContext';
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
 import {
+  activeArrangementFavoritePreferences,
   activeArrangementFavoriteIds,
   arrangementNumbersById,
   createArrangementFavoriteRecord,
@@ -254,12 +258,16 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     () => new Set(activeArrangementFavoriteIdList),
     [activeArrangementFavoriteIdList],
   );
-  const activeArrangementPreferences = useMemo(() => ({
-    arrangementIds: activeArrangementFavoriteIdList,
-    timeGroupKeys: favoriteState.state.timeGroupKeys,
-    sectionIds: favoriteState.state.sectionIds,
-  }), [
+  const activeArrangementPreferences = useMemo(() => (
+    activeArrangementFavoritePreferences(
+      activeArrangementFavoriteIdList,
+      favoriteState.state.timeGroupKeys,
+      favoriteState.state.sectionIds,
+      allSelectedGroups,
+    )
+  ), [
     activeArrangementFavoriteIdList,
+    allSelectedGroups,
     favoriteState.state.sectionIds,
     favoriteState.state.timeGroupKeys,
   ]);
@@ -481,10 +489,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   ]);
   useEffect(() => {
     if (!pendingFavoriteArrangement || activePlan?.id !== pendingFavoriteArrangement.planId) return;
-    const arrangement = recommendedArrangements.find(
-      (item) => item.id === pendingFavoriteArrangement.arrangementId,
+    const expectedScope = `${catalog.semester.key}:${pendingFavoriteArrangement.planId}`;
+    const action = pendingFavoriteArrangementAction(
+      calculation,
+      expectedScope,
+      pendingFavoriteArrangement.arrangementId,
     );
-    if (arrangement) {
+    if (action === 'open') {
+      const arrangement = recommendedArrangements.find(
+        (item) => item.id === pendingFavoriteArrangement.arrangementId,
+      );
+      if (!arrangement) return;
       setArrangementView('recommended');
       setRecommendedArrangementSelection({
         inputKey: committedArrangementInputKey,
@@ -495,16 +510,26 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       setPendingFavoriteArrangement(null);
       return;
     }
-    const expectedScope = `${catalog.semester.key}:${pendingFavoriteArrangement.planId}`;
-    if (calculation.phase === 'ready' && calculation.committed?.scopeKey === expectedScope) {
+    if (action === 'calculate') {
+      calculation.startCalculation();
+      return;
+    }
+    if (action === 'missing') {
       message.warning('该收藏排课方案已不在当前计算结果中');
+      setPendingFavoriteArrangement(null);
+      return;
+    }
+    if (action === 'empty') {
+      message.warning('该排课方案所属的选课方案已无可排课程');
       setPendingFavoriteArrangement(null);
     }
   }, [
     activePlan,
     arrangementNumbers,
     calculation.committed?.scopeKey,
+    calculation.draft.scopeKey,
     calculation.phase,
+    calculation.startCalculation,
     catalog.semester.key,
     committedArrangementInputKey,
     message,

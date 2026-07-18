@@ -66,4 +66,20 @@ describe('FavoriteButton', () => {
     expect(hover).toContain('background: color-mix(in srgb, var(--favorite)');
     expect(hover).not.toContain('var(--accent)');
   });
+
+  it('reveals plan favorite and delete actions only for selected or hovered options', () => {
+    const favoriteRule = stylesSource.match(
+      /\.plan-option__favorite\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
+
+    expect(favoriteRule).toContain('opacity: 0');
+    for (const selector of [
+      '.plan-option--active .plan-option__favorite',
+      '.plan-select-dropdown .ant-select-item-option-active .plan-option__favorite',
+      '.plan-select-dropdown .ant-select-item-option:hover .plan-option__favorite',
+      '.plan-option__favorite:focus-visible',
+    ]) {
+      expect(stylesSource).toContain(selector);
+    }
+  });
 });

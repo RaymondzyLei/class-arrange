@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Arrangement, ArrangementFavoriteRecord, CourseGroup } from '@/types';
 import {
+  activeArrangementFavoritePreferences,
   activeArrangementFavoriteIds,
   arrangementNumbersById,
   createArrangementFavoriteRecord,
@@ -57,5 +58,20 @@ describe('arrangement favorite metadata', () => {
       .toEqual(['owned', 'legacy']);
     expect(activeArrangementFavoriteIds(['owned', 'legacy'], [record], 'p2'))
       .toEqual(['legacy']);
+  });
+
+  it('limits course favorites to groups selected by the active plan', () => {
+    const selected = group('selected', '已选课程');
+
+    expect(activeArrangementFavoritePreferences(
+      ['arrangement'],
+      [selected.key, 'unselected'],
+      [selected.sectionIds[0], 'unselected.01'],
+      [selected],
+    )).toEqual({
+      arrangementIds: ['arrangement'],
+      timeGroupKeys: [selected.key],
+      sectionIds: [selected.sectionIds[0]],
+    });
   });
 });

@@ -421,6 +421,8 @@ html {
   width: 26px;
   height: 26px;
   flex: 0 0 26px;
+  opacity: 0;
+  transition: opacity 0.14s ease;
 }
 
 .plan-option__delete {
@@ -446,9 +448,13 @@ html {
   height: 17px;
 }
 
+.plan-option--active .plan-option__favorite,
 .plan-option--active .plan-option__delete,
+.plan-select-dropdown .ant-select-item-option-active .plan-option__favorite,
 .plan-select-dropdown .ant-select-item-option-active .plan-option__delete,
+.plan-select-dropdown .ant-select-item-option:hover .plan-option__favorite,
 .plan-select-dropdown .ant-select-item-option:hover .plan-option__delete,
+.plan-option__favorite:focus-visible,
 .plan-option__delete:focus-visible {
   opacity: 1;
 }

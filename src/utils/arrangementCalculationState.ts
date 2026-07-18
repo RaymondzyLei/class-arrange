@@ -79,7 +79,24 @@ export function calculationInputKey(
   favorites: ArrangementFavoritePreferences = EMPTY_FAVORITES,
 ): string {
   return JSON.stringify({
-    groups: groups.map((group) => [group.courseCode, group.key, group.sectionIds]),
+    groups: groups.map((group) => ({
+      courseCode: group.courseCode,
+      courseName: group.courseName,
+      key: group.key,
+      sectionIds: group.sectionIds,
+      teachers: group.teachers,
+      schedule: group.schedule.map((slot) => ({
+        weeks: slot.weeks,
+        room: slot.room,
+        campus: slot.campus,
+        day: slot.day,
+        periods: slot.periods,
+        startTime: slot.startTime ?? null,
+        endTime: slot.endTime ?? null,
+      })),
+      credits: group.sections[0]?.credits ?? 0,
+      hours: group.sections[0]?.hours ?? 0,
+    })),
     arrangementDisplayCount: settings.arrangementDisplayCount,
     preferHalfDay: settings.preferHalfDay,
     preferFewerEarlyMornings: settings.preferFewerEarlyMornings,
@@ -158,6 +175,20 @@ export function canStartArrangementCalculation(state: ArrangementCalculationStat
 
 export function shouldAutomaticallyCalculate(state: ArrangementCalculationState): boolean {
   return state.phase === 'dirty' && state.draft.settings.calculationMode === 'auto';
+}
+
+export function pendingFavoriteArrangementAction(
+  state: Pick<ArrangementCalculationState, 'phase' | 'draft' | 'committed'>,
+  expectedScopeKey: string,
+  arrangementId: string,
+): 'open' | 'calculate' | 'missing' | 'empty' | 'wait' {
+  if (state.draft.scopeKey !== expectedScopeKey) return 'wait';
+  if (state.phase === 'dirty') return 'calculate';
+  if (state.phase === 'empty') return 'empty';
+  if (state.phase !== 'ready' || state.committed?.scopeKey !== expectedScopeKey) return 'wait';
+  return state.committed.arrangements.some(({ id }) => id === arrangementId)
+    ? 'open'
+    : 'missing';
 }
 
 export function calculationActionLabel(
