@@ -54,6 +54,15 @@ describe('precise clock schedules', () => {
     expect(formatted).not.toContain('2(11)');
   });
 
+  it('collapses a single-week closed interval in compact course details', () => {
+    const formatted = formatScheduleCompact([
+      slot({ weeks: [7, 7], day: 6, periods: [3, 4, 5] }),
+    ]);
+
+    expect(formatted).toContain('7周');
+    expect(formatted).not.toContain('7~7周');
+  });
+
   it('does not report an endpoint-touching exact course against period 11', () => {
     const exact = group('exact', [
       slot({ startTime: '19:00', endTime: '19:30' }),

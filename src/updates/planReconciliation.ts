@@ -42,6 +42,13 @@ function affectedPlans(payload: StoredPlansPayloadV2, courseId: string): Affecte
     }));
 }
 
+function uniqueSorted<T>(values: T[]): T[] {
+  const byKey = new Map(values.map((value) => [JSON.stringify(value), value]));
+  return [...byKey.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([, value]) => value);
+}
+
 function timePart(schedule: ScheduleSlot[]) {
   return schedule.map(({ weeks, day, periods, startTime, endTime }) => ({
     weeks,
@@ -53,10 +60,10 @@ function timePart(schedule: ScheduleSlot[]) {
 }
 
 function locationPart(schedule: ScheduleSlot[]) {
-  return schedule.map(({ room, campus }) => ({
+  return uniqueSorted(schedule.map(({ room, campus }) => ({
     room,
     campus,
-  })).sort((left, right) => `${left.campus}|${left.room}`.localeCompare(`${right.campus}|${right.room}`));
+  })));
 }
 
 function changed(before: unknown, after: unknown): boolean {

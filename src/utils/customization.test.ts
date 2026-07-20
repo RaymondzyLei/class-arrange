@@ -53,13 +53,15 @@ describe('custom schedule settings persistence', () => {
       .toBe(8);
   });
 
-  it('defaults time-group merging to disabled and preserves an explicit opt-in', () => {
-    expect(DEFAULT_CUSTOM_SETTINGS.mergeAllTimeGroups).toBe(false);
-    expect(normalizeCustomScheduleSettings({}).mergeAllTimeGroups).toBe(false);
+  it('defaults time-group merging to enabled and preserves explicit choices', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.mergeAllTimeGroups).toBe(true);
+    expect(normalizeCustomScheduleSettings({}).mergeAllTimeGroups).toBe(true);
     expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: true }).mergeAllTimeGroups)
       .toBe(true);
-    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: 'yes' }).mergeAllTimeGroups)
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: false }).mergeAllTimeGroups)
       .toBe(false);
+    expect(normalizeCustomScheduleSettings({ mergeAllTimeGroups: 'yes' }).mergeAllTimeGroups)
+      .toBe(true);
   });
 
   it('preserves valid campus preferences and normalizes an invalid residence', () => {
@@ -90,7 +92,7 @@ describe('custom schedule settings persistence', () => {
     }))).toEqual({
       calculationMode: 'auto',
       arrangementDisplayCount: 8,
-      mergeAllTimeGroups: false,
+      mergeAllTimeGroups: true,
       preferHalfDay: true,
       preferFewerEarlyMornings: true,
       preferAvoidCampusTransfers: true,

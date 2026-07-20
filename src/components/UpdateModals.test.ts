@@ -225,6 +225,68 @@ describe('update modals', () => {
     expect(html).toContain('course-update-change__arrow');
   });
 
+  test('formats highlighted and full schedule changes with the same week ranges', () => {
+    const before = [
+      { weeks: [2, 9], day: 2, periods: [8, 9, 10] },
+      { weeks: [10, 16], day: 2, periods: [8, 9, 10] },
+      { weeks: [2, 9], day: 4, periods: [6, 7] },
+      { weeks: [10, 16], day: 4, periods: [6, 7] },
+    ];
+    const after = [
+      { weeks: [7, 7], day: 2, periods: [8, 9, 10] },
+      { weeks: [2, 9], day: 2, periods: [8, 9, 10] },
+      { weeks: [10, 16], day: 2, periods: [8, 9, 10] },
+    ];
+    const impact = event('modified');
+    impact.courseId = '007001.01';
+    impact.courseName = '流体力学';
+    impact.changes = [{
+      field: 'schedule',
+      label: '上课时间与周次',
+      before,
+      after,
+    }];
+    const batch: SemesterUpdateBatch = {
+      id: 'fluid-schedule-change',
+      revision: 'r2',
+      previousRevision: 'r1',
+      publishedAt: '2026-07-20',
+      summary: { added: 0, removed: 0, modified: 1 },
+      added: [],
+      removed: [],
+      modified: [{
+        course: {
+          id: impact.courseId,
+          courseCode: '007001',
+          courseName: impact.courseName,
+          teacher: '郑建秋,袁仁民',
+        },
+        previous: impact.previous,
+        current: impact.current!,
+        changes: impact.changes,
+      }],
+    };
+    const highlightedHtml = renderToStaticMarkup(createElement(UpdateNoticeModal, {
+      open: true,
+      notice: {
+        impacts: [impact],
+        appReleases: [],
+        semesterUpdates: [],
+        suppressedImpactIds: [],
+      },
+      onClose: () => undefined,
+    }));
+    const fullHtml = renderToStaticMarkup(createElement(CourseUpdateBatchDetails, { batch }));
+
+    for (const html of [highlightedHtml, fullHtml]) {
+      expect(html).toContain('2~9周 周二 8–10节；10~16周 周二 8–10节');
+      expect(html).toContain('7周 周二 8–10节');
+      expect(html).toContain('course-update-change__arrow');
+      expect(html).not.toContain('第2、9周');
+      expect(html).not.toContain('7~7周');
+    }
+  });
+
   test('puts destructive plan changes before personalized and global updates', () => {
     const html = renderToStaticMarkup(
       createElement(UpdateNoticeModal, {

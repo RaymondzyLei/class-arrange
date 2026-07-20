@@ -32,7 +32,13 @@ export const tourSteps: TourStep[] = [
     id: 'favorite-management',
     targets: ['[data-tour="favorites-manage"]', '[data-tour="course-favorite"]'],
     title: '收藏常用项目',
-    description: '点击课程卡片右下角的星标可以收藏时间组；上方“收藏项目”的管理入口可以集中查看并取消收藏。选课方案、排课方案和具体课堂也支持同样的收藏操作。',
+    description: (
+      <>
+        点击课程卡片右下角的星标可以收藏时间组；上方“收藏项目”的管理入口可以集中查看并取消收藏。选课方案、排课方案和具体课堂也支持同样的收藏操作。
+        <br />
+        收藏的课程/课堂在计算排课方案时拥有更高的优先级。
+      </>
+    ),
     placement: 'right',
   },
   {

@@ -49,6 +49,16 @@ export const APP_RELEASES: AppRelease[] = [
       '其他UI改进。',
     ],
   },
+  {
+    version: '2026.07.20.1',
+    publishedAt: '2026-07-20',
+    title: '课程更新与默认展示优化',
+    items: [
+      '修复课程时间发生变化时，未变化的上课地点仍被列入课堂变化的问题。',
+      '默认合并课程所有时间组，仍可在自定义设置中关闭。',
+      '在新手引导中补充收藏课程和课堂的排课优先级说明。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

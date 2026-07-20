@@ -94,6 +94,10 @@ describe('onboarding content', () => {
     expect(statsBarSource).toContain('data-tour="favorites-manage"');
     expect(coursePoolSource).toContain('tourFavoriteGroupKey');
     expect(coursePoolItemSource).toContain("dataTour={tourFavorite ? 'course-favorite' : undefined}");
+
+    const favoriteStep = tourStepsSource.slice(favoriteIndex, arrangementIndex);
+    expect(favoriteStep).toContain('<br />');
+    expect(favoriteStep).toContain('收藏的课程/课堂在计算排课方案时拥有更高的优先级。');
   });
 
   it('removes the former step 10 preference spotlight but keeps blocked slots', () => {

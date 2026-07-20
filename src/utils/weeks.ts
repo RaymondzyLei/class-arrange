@@ -23,13 +23,14 @@ export function expandWeeks(weeks: number[]): number[] {
 }
 
 /** 把周次数组格式化为人类可读字符串：
- *  - length===2 闭区间 → "1~9周"
+ *  - length===2 闭区间 → "1~9周"；相同端点 → "1周"
  *  - length>2 枚举，若为连续等差(步长1/2) → "2~18周" / "1~17周(单)" / "2~18周(双)"
  *  - 否则 → "1,3,5周"
  */
 export function formatWeeks(weeks: number[]): string {
   if (weeks.length === 0) return '';
   if (weeks.length === 1) return `${weeks[0]}周`;
+  if (weeks.length === 2 && weeks[0] === weeks[1]) return `${weeks[0]}周`;
   if (weeks.length === 2) return `${weeks[0]}~${weeks[1]}周`;
   const sorted = [...weeks].sort((a, b) => a - b);
   const step = sorted[1] - sorted[0];

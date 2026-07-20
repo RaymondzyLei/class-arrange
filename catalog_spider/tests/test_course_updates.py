@@ -154,3 +154,25 @@ def test_time_only_change_does_not_also_report_a_location_change():
         for change in feed["entries"][0]["modified"][0]["changes"]
     ]
     assert fields == ["schedule"]
+
+
+def test_splitting_time_ranges_at_one_location_does_not_report_location_change():
+    previous = _catalog(_course("MATH100.01"))
+    current = deepcopy(previous)
+    current["courses"][0]["schedule"].append(
+        {
+            "weeks": [17, 18],
+            "room": "5101",
+            "day": 1,
+            "periods": [1, 2],
+            "campus": "本部",
+        }
+    )
+
+    _published, feed = build_catalog_publication(previous, current, None)
+
+    fields = [
+        change["field"]
+        for change in feed["entries"][0]["modified"][0]["changes"]
+    ]
+    assert fields == ["schedule"]

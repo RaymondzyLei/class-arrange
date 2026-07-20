@@ -99,18 +99,14 @@ def _schedule_time(schedule: list[dict]) -> list[dict]:
 
 
 def _schedule_location(schedule: list[dict]) -> list[dict]:
-    locations = [
-        {
-            key: deepcopy(slot[key])
-            for key in ("room", "campus")
-            if key in slot
+    locations = {
+        (slot.get("campus", ""), slot.get("room", "")): {
+            "room": deepcopy(slot.get("room", "")),
+            "campus": deepcopy(slot.get("campus", "")),
         }
         for slot in schedule
-    ]
-    return sorted(
-        locations,
-        key=lambda location: (location.get("campus", ""), location.get("room", "")),
-    )
+    }
+    return [locations[key] for key in sorted(locations)]
 
 
 def _value_change(field: str, label: str, before: Any, after: Any) -> dict:

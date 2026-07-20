@@ -52,7 +52,7 @@ export const CUSTOM_SETTINGS_KEY = 'class-arrange:v1:custom-settings';
 export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
   calculationMode: 'auto',
   arrangementDisplayCount: 8,
-  mergeAllTimeGroups: false,
+  mergeAllTimeGroups: true,
   preferHalfDay: false,
   preferFewerEarlyMornings: true,
   preferAvoidCampusTransfers: true,
@@ -83,7 +83,9 @@ export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleS
     arrangementDisplayCount: isArrangementDisplayCount(source.arrangementDisplayCount)
       ? source.arrangementDisplayCount
       : DEFAULT_CUSTOM_SETTINGS.arrangementDisplayCount,
-    mergeAllTimeGroups: source.mergeAllTimeGroups === true,
+    mergeAllTimeGroups: typeof source.mergeAllTimeGroups === 'boolean'
+      ? source.mergeAllTimeGroups
+      : DEFAULT_CUSTOM_SETTINGS.mergeAllTimeGroups,
     preferHalfDay: typeof source.preferHalfDay === 'boolean'
       ? source.preferHalfDay
       : source.schedulePreference === 'half-day',

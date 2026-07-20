@@ -5,6 +5,7 @@ import type {
 } from '@/types';
 import type { AutomaticNoticeSelection } from '@/updates/updateAwareness';
 import { newestFirstByDate } from '../updates/updateOrdering';
+import { formatCourseChangeSide } from '../utils/courseUpdateFormat';
 import BottomModal from './BottomModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
 import { WarningIcon } from './icons';
@@ -26,32 +27,22 @@ function affectedPlanText(event: CourseImpactEvent): string {
     .join('和');
 }
 
-function changeValue(value: unknown): string {
-  if (typeof value === 'string' || typeof value === 'number') return String(value || '无');
-  if (Array.isArray(value)) {
-    return value.map((item) => {
-      if (!item || typeof item !== 'object') return String(item);
-      const slot = item as Record<string, unknown>;
-      const weeks = Array.isArray(slot.weeks) ? `第${slot.weeks.join('、')}周` : '';
-      const day = typeof slot.day === 'number' ? `周${'一二三四五六日'[slot.day - 1]}` : '';
-      const periods = Array.isArray(slot.periods) ? `第${slot.periods.join('、')}节` : '';
-      const room = typeof slot.room === 'string' ? slot.room : '';
-      const campus = typeof slot.campus === 'string' ? slot.campus : '';
-      return [weeks, day, periods, room, campus].filter(Boolean).join(' ');
-    }).join('；') || '无';
-  }
-  return value == null ? '无' : String(value);
-}
-
 function ChangeRow({ change }: { change: CourseFieldChange }) {
+  const before = formatCourseChangeSide(change, 'before');
+  const after = formatCourseChangeSide(change, 'after');
   return (
     <li className="update-change-row">
       <span className="update-change-row__label">{change.label}</span>
-      {'before' in change || 'after' in change ? (
-        <span className="update-change-row__value">
-          {changeValue(change.before)} <span aria-hidden="true">→</span> {changeValue(change.after)}
-        </span>
-      ) : null}
+      <span className="update-change-row__value">
+        {before === null && after === null ? (
+          '内容已更新'
+        ) : (
+          <>
+            {before ?? '未填写'} <span className="course-update-change__arrow" aria-hidden="true">→</span>{' '}
+            {after ?? '未填写'}
+          </>
+        )}
+      </span>
     </li>
   );
 }
