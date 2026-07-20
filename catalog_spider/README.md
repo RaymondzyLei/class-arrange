@@ -86,7 +86,7 @@ uv run python -m catalog_spider validate-lessons --all
 ```
 
 `build-lessons` 是纯本地命令，不会打开浏览器或发送网络请求。它会先读取并转换所有指定学期，调用与在线同步相同的 catalog 校验，再一次性事务写入
-`public/data/semesters/<semester-key>/courses.json` 和 `index.json`；任一输入、转换、校验或写入失败时，现有发布文件保持不变。`--activate` 接受本次 `--semester-key` 中的一个 key；省略时保留 manifest 当前默认学期。
+`public/data/semesters/<semester-key>/courses.json`、`updates.json` 和 `index.json`；任一输入、转换、校验或写入失败时，现有发布文件保持不变。`--activate` 接受本次 `--semester-key` 中的一个 key；省略时保留 manifest 当前默认学期。
 
 流程会打开可见的持久浏览器，并通过与页面共享认证状态的请求上下文读取：
 
@@ -94,11 +94,21 @@ uv run python -m catalog_spider validate-lessons --all
 - 指定学期全量课堂；
 - 每个课堂的评分制、英文名、中英文简介、先修要求、教学大纲、教材、讲义和参考书等详情。
 
-详情每 50 个课堂写一次原始断点到 `data/raw/lessons/<semester-key>/`。所有请求学期都抓取、转换并校验成功后，才事务性发布 `public/data/semesters/<semester-key>/courses.json` 与 `index.json`；发布中途失败会恢复原文件，原始断点仍保留。
+详情每 50 个课堂写一次原始断点到 `data/raw/lessons/<semester-key>/`。所有请求学期都抓取、转换并校验成功后，才事务性发布 `public/data/semesters/<semester-key>/courses.json`、`updates.json` 与 `index.json`；发布中途失败会恢复原文件，原始断点仍保留。
+
+### 变更追踪（`updates.json` + `revision`）
+
+每次发布都为学期目录算一个内容哈希 `revision`（SHA-256，剥离 `generatedAt`、`enrolled` 等易变字段、教师按排序归一），写进 `courses.json.revision` 与 manifest 条目的 `revision`。若与上一版不同，`course_updates.py` 会 diff 出 `added` / `removed` / `modified` 三类变化，追加一条记录到该学期的 `updates.json`：
+
+- `removed` 课堂附带 `replacementCandidates`（优先同课程号、回退同名），供前端提示「替换失效课程」；
+- `modified` 课堂列出字段级 `changes`（教师、时间、地点、详情等），不内嵌大段 HTML；
+- 内容完全相同则不追加（幂等），重跑 `sync-lessons` 不会产生重复条目。
+
+前端 `UpdateAwarenessContext` 据此在访问时弹「最近更新」，并把删除的课堂从用户方案中移除。
 
 `validate-lessons` 除评分制和教材覆盖率外，还输出 `raw_schedule_non_empty`、`scheduled_courses` 与 `clock_time_courses`，便于同步或本地重建后立即发现课堂时间大量解析为空的问题。
 
-**数据已入 git**（用户明确）：clone 后无需重新抓取，直接跑 `build-index` / `build-by-term` / `curricula_to_ts.py` 即可；只有数据过期需要刷新时才跑 `fetch-tree` / `fetch-details`。
+**培养方案的 raw / index 不入 git**：clone 后 `catalog_spider/data/` 为空，需先跑 `fetch-tree` + `fetch-details` 抓取（约 2 分钟），再 `build-index` / `build-by-term` / `curricula_to_ts.py`。而**学期开课的发布文件 `public/data/semesters/*` 已入 git**（`index.json` + 每学期 `courses.json` / `updates.json`），前端无需抓取即可直接使用。
 
 爬取范围：**仅 `grade >= 2023` 的培养方案**（详见 `catalog_spider/details.py:MIN_GRADE`）。
 
@@ -108,29 +118,51 @@ uv run python -m catalog_spider validate-lessons --all
 
 ```
 catalog_spider/
-├── __main__.py            # CLI 入口（5 个子命令）
-├── client.py              # HTTP 客户端（10 次重试 + 浏览器 UA）
+├── __main__.py            # CLI 入口（8 个子命令，见下）
+├── client.py              # 培养方案爬取的 HTTP 客户端（10 次重试 + 浏览器 UA，无鉴权）
 ├── tree.py                # 解析 program_tree.json + filter_by_min_grade
-├── details.py             # 8 进程并发抓取 details（断点续爬）
+├── details.py             # 8 进程并发抓取 details（断点续爬，MIN_GRADE=2023）
 ├── process.py             # 从 raw 生成 index（programs.json + by_program_term.json）
 ├── paths.py               # 数据目录常量 + ensure_dirs()
+├── lesson_sync.py         # 学期开课同步：Playwright 登录 + 3 个 API + 事务发布
+├── lesson_transform.py    # 课堂/详情归一化、时间表解析、学期目录构建与校验
+├── course_updates.py      # 内容哈希 revision + 与上一版 diff，生成 updates.json
+├── semester_calendar.py   # 由学期起止算周数；CALENDAR_OVERRIDES 硬编码节假日/补课
 ├── README.md
-├── tests/                 # 19 个 pytest 单测
-│   ├── test_client.py
-│   ├── test_details.py
-│   ├── test_process.py
-│   ├── test_tree.py
-│   └── fixtures/          # 含真实 3413.json（断网也能跑测试）
-└── data/
-    ├── raw/
-    │   ├── program_tree.json
-    │   └── programs/{id}.json
-    └── index/
-        ├── programs.json
-        └── by_program_term.json
+├── tests/                 # 7 个文件、97 个 pytest 用例
+│   ├── test_client.py / test_details.py / test_process.py / test_tree.py
+│   ├── test_lesson_sync.py        # 同步流程、重试退避、断点续爬、事务回滚、CLI 参数
+│   ├── test_lesson_transform.py   # 时间表解析、校区归类、校验规则、日历
+│   ├── test_course_updates.py     # revision 幂等、diff、替换候选
+│   └── fixtures/                  # program_3413 / program_tree_mini / lesson_list/lesson_details mini
+└── data/                  # 不入 git（见下）：raw / index / browser-profile / raw/lessons
+    ├── raw/{program_tree.json, programs/{id}.json, lessons/<key>/{semester,lessons,details}.json}
+    └── index/{programs.json, by_program_term.json}
 
 scripts/curricula_to_ts.py    # 从 index/* 生成 src/data/curricula.ts（前端 import）
 ```
+
+### 子命令
+
+培养方案侧（`all` 只跑这 4 个）：
+
+| 命令 | 作用 |
+|---|---|
+| `fetch-tree` | 抓 `program_tree`（秒级） |
+| `fetch-details` | 并发抓所有 program 详情（断点续爬） |
+| `build-index` | 从 raw 生成 `index/programs.json` |
+| `build-by-term` | 从 raw 生成 `index/by_program_term.json` |
+| `all` | 按顺序跑完上面 4 个 |
+
+学期开课侧：
+
+| 命令 | 参数 | 作用 |
+|---|---|---|
+| `sync-lessons` | `--semester <中文名>`（可重复）、`--activate`、`--profile-dir` | 可见浏览器登录后同步指定学期开课与详情 |
+| `build-lessons` | `--semester-key <key>`（可重复）、`--activate` | 从本地 raw JSON 重建，不联网不开浏览器 |
+| `validate-lessons` | `--all` 或 `--semester-key <key>`（二选一） | 校验已发布学期目录并打印覆盖率 |
+
+`--activate` 必须精确匹配某个 `--semester` / `--semester-key`；`sync-lessons` 的 `--semester` 接教务系统 `nameZh`（如 `2026年秋季学期`），`build-lessons` 的 `--semester-key` 接短 key（如 `2026-fall`，正则 `^\d{4}-(fall|summer|spring)$`）。
 
 ---
 
