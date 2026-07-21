@@ -415,6 +415,13 @@ def _normalize_detail(section_code: str, detail: dict) -> dict:
     }
 
 
+def _education_level(lesson: dict) -> str:
+    gradation = _localized(lesson.get("courseGradation"))
+    if gradation == "本研贯通":
+        return gradation
+    return _localized(lesson.get("education"))
+
+
 def _normalize_lesson(lesson: dict, detail: dict | None) -> dict:
     code = _text(lesson.get("code"))
     course = lesson.get("course")
@@ -434,14 +441,14 @@ def _normalize_lesson(lesson: dict, detail: dict | None) -> dict:
         "teacher": ",".join(filter(None, (_localized(teacher) for teacher in teachers))),
         "credits": _number(lesson.get("credits")),
         "hours": _integer(lesson.get("period")),
-        "level": _localized(lesson.get("education")),
+        "level": _education_level(lesson),
         "sectionType": _localized(lesson.get("classType")),
         "category": _localized(lesson.get("courseClassify")),
         "courseType": _localized(lesson.get("courseType")),
         "language": _localized(lesson.get("teachLang")),
         "examType": _localized(lesson.get("examMode")),
         "grading": _text((detail or {}).get("grading")),
-        "undergradShared": _boolean(lesson.get("graduateAndPostgraduat")),
+        "undergradShared": _boolean(lesson.get("graduateAndPostgraduate")),
         "enrolled": _integer(lesson.get("stdCount")),
         "capacity": _integer(lesson.get("limitCount")),
         "classes": list(filter(None, (_localized(admin_class) for admin_class in classes))),

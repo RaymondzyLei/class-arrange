@@ -12,13 +12,19 @@ import {
   reconcilePlansWithUpdates,
 } from './planReconciliation';
 
-function snapshot(id: string, teacher = '张老师', room = '5101'): SelectedCourseSnapshot {
+function snapshot(
+  id: string,
+  teacher = '张老师',
+  room = '5101',
+  level?: string,
+): SelectedCourseSnapshot {
   return {
     id,
     courseCode: id.split('.')[0],
     courseName: '高等数学',
     teacher,
     schedule: [{ weeks: [1, 16], room, campus: '本部', day: 1, periods: [1, 2] }],
+    ...(level === undefined ? {} : { level }),
   };
 }
 
@@ -193,6 +199,88 @@ describe('selected-course update reconciliation', () => {
     );
 
     expect(result.pendingImpacts[0].changes.map((change) => change.field)).toEqual(['schedule']);
+  });
+
+  test('treats a real education level change as a personalized modification', () => {
+    const oldSnapshot = snapshot('MATH100.01', '张老师', '5101', '本科');
+    const newSnapshot = snapshot('MATH100.01', '张老师', '5101', '研究生');
+    const result = reconcilePlansWithUpdates(
+      payload(twoPlans, oldSnapshot),
+      '2026-fall',
+      'r2',
+      [batch({
+        modified: [{
+          course: newSnapshot,
+          previous: oldSnapshot,
+          current: newSnapshot,
+          changes: [{ field: 'level', label: '学历层次', before: '本科', after: '研究生' }],
+        }],
+      })],
+      100,
+    );
+
+    expect(result.pendingImpacts[0].changes).toEqual([
+      { field: 'level', label: '学历层次', before: '本科', after: '研究生' },
+    ]);
+  });
+
+  test('baselines a legacy selected snapshot without reporting its missing education level', () => {
+    const previous = snapshot('MATH100.01');
+    const current = {
+      ...previous,
+      department: { code: 'MATH', name: '数学学院' },
+      credits: 4,
+      hours: 64,
+      level: '本科',
+      sectionType: '计划内',
+      category: '',
+      courseType: '理论课',
+      language: '中文',
+      examType: '闭卷',
+      grading: '百分制',
+      undergradShared: false,
+      enrolled: 1,
+      capacity: 30,
+      classes: [],
+      rawSchedule: '',
+    } satisfies CourseSection;
+
+    const result = reconcilePlansWithCatalog(
+      payload(twoPlans, previous),
+      '2026-fall',
+      'r2',
+      new Map([[current.id, current]]),
+      100,
+    );
+
+    expect(result.pendingImpacts).toEqual([]);
+    expect(result.selectedSnapshots[current.id].level).toBe('本科');
+  });
+
+  test('uses the update feed baseline when a legacy snapshot has no education level', () => {
+    const legacySnapshot = snapshot('MATH100.01');
+    const previous = snapshot('MATH100.01', '张老师', '5101', '本科');
+    const current = snapshot('MATH100.01', '张老师', '5101', '研究生');
+
+    const result = reconcilePlansWithUpdates(
+      payload(twoPlans, legacySnapshot),
+      '2026-fall',
+      'r2',
+      [batch({
+        modified: [{
+          course: current,
+          previous,
+          current,
+          changes: [{ field: 'level', label: '学历层次', before: '本科', after: '研究生' }],
+        }],
+      })],
+      100,
+    );
+
+    expect(result.pendingImpacts[0].changes).toEqual([
+      { field: 'level', label: '学历层次', before: '本科', after: '研究生' },
+    ]);
+    expect(result.selectedSnapshots[current.id].level).toBe('研究生');
   });
 
   test('does not report a location change when one location gains another time range', () => {

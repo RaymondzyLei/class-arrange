@@ -43,7 +43,16 @@ export default function UpdateHistoryModal({
               <div className="update-history__entry-header">
                 <strong>{release.title}</strong><time>{release.publishedAt}</time>
               </div>
-              <ul>{release.items.map((item) => <li key={item}>{item}</li>)}</ul>
+              <ul>{release.items.map((item) => (
+                <li
+                  className={release.dangerItems?.includes(item)
+                    ? 'update-release__item--danger'
+                    : undefined}
+                  key={item}
+                >
+                  {item}
+                </li>
+              ))}</ul>
             </article>
           )) : <p>暂无网站更新记录。</p>}
         </section>

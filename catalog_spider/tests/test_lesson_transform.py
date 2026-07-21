@@ -168,6 +168,23 @@ def test_build_catalog_normalizes_course_fields_and_schedule(fixtures):
     ]
 
 
+def test_build_catalog_exposes_undergraduate_graduate_courses_as_a_distinct_level(fixtures):
+    lesson = {
+        **fixtures.lessons[1],
+        "courseGradation": {"cn": "本研贯通", "en": "Undergraduate-Graduate Courses"},
+    }
+
+    catalog = build_semester_catalog(
+        fixtures.semester,
+        [lesson],
+        {lesson["code"]: fixtures.details_by_code[lesson["code"]]},
+        calendar_overrides={},
+    )
+
+    assert catalog["courses"][0]["level"] == "本研贯通"
+    assert catalog["courses"][0]["undergradShared"] is False
+
+
 @pytest.mark.parametrize(
     ("room", "campus"),
     [

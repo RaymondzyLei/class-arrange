@@ -42,6 +42,24 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
         <SelectWithChevron
           className="filter-bar__select"
           size="small"
+          placeholder="课程范畴"
+          value={filter.category || undefined}
+          onChange={(v) => update({ category: v ?? '' })}
+          allowClear
+          options={options.categories.map((v) => ({ label: v, value: v }))}
+        />
+        <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
+          placeholder="学历层次"
+          value={filter.level || undefined}
+          onChange={(v) => update({ level: v ?? '' })}
+          allowClear
+          options={options.levels.map((v) => ({ label: v, value: v }))}
+        />
+        <SelectWithChevron
+          className="filter-bar__select"
+          size="small"
           placeholder="课程类型"
           value={filter.courseType || undefined}
           onChange={(v) => update({ courseType: v ?? '' })}

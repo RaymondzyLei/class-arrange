@@ -7,6 +7,8 @@ function isEmptyFilter(f: FilterState): boolean {
   return (
     f.keyword === '' &&
     f.department === '' &&
+    f.category === '' &&
+    f.level === '' &&
     f.courseType === '' &&
     f.sectionType === '' &&
     f.examType === '' &&
@@ -22,6 +24,8 @@ export function filterCourses(courses: CourseSection[], filter: FilterState): Co
   return courses.filter((course) => {
     if (keyword && !courseMatchesKeyword(course, keyword, filter.includeTeacher)) return false;
     if (filter.department && course.department.name !== filter.department) return false;
+    if (filter.category && course.category !== filter.category) return false;
+    if (filter.level && course.level !== filter.level) return false;
     if (filter.courseType && course.courseType !== filter.courseType) return false;
     if (filter.sectionType && course.sectionType !== filter.sectionType) return false;
     if (filter.examType && course.examType !== filter.examType) return false;

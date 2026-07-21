@@ -13,9 +13,13 @@ describe('course detail layout', () => {
     expect(source).toContain('className="course-detail-overview"');
     expect(source).toContain('column={3}');
 
-    for (const label of ['学分 / 学时', '课程类型', '考核方式', '评分制', '授课语言']) {
+    for (const label of ['学分 / 学时', '学历层次', '课程类型', '考核方式', '评分制', '授课语言']) {
       expect(source).toContain(`label="${label}"`);
     }
+
+    expect(occurrenceCount(source, '学历层次')).toBeGreaterThanOrEqual(2);
+    expect(source).not.toContain('label="课程范畴"');
+    expect(source).not.toContain('mobile-field__label">课程范畴');
 
     expect(source).not.toContain('<Tag color="blue">是</Tag>');
   });

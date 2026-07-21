@@ -55,6 +55,8 @@ import {
   resolveSelectedArrangementId,
 } from '@/utils/arrangementCalculationState';
 import { useUpdateAwareness } from '@/updates/UpdateAwarenessContext';
+import { useEducationLevelReminder } from '@/updates/EducationLevelReminderContext';
+import EducationLevelReminderModal from '@/components/EducationLevelReminderModal';
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
@@ -70,6 +72,8 @@ const EMPTY_FILTER: FilterState = {
   keyword: '',
   includeTeacher: false,
   department: '',
+  category: '',
+  level: '',
   courseType: '',
   sectionType: '',
   examType: '',
@@ -195,6 +199,9 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     readCustomScheduleSettings,
   );
   const onboarding = useOnboarding();
+  const educationLevelReminder = useEducationLevelReminder();
+  const educationLevelReminderPending = educationLevelReminder.pending;
+  const [educationLevelReminderOpen, setEducationLevelReminderOpen] = useState(false);
   const [automaticNoticeOpen, setAutomaticNoticeOpen] = useState(false);
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
@@ -223,13 +230,34 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   );
 
   useEffect(() => {
-    if (!updateAwareness.automaticNotice || onboarding.stage !== 'hidden') {
+    if (!educationLevelReminderPending || onboarding.stage !== 'hidden') {
+      setEducationLevelReminderOpen(false);
+      return undefined;
+    }
+    const frame = window.requestAnimationFrame(() => setEducationLevelReminderOpen(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, [educationLevelReminderPending, onboarding.stage]);
+
+  useEffect(() => {
+    if (
+      !updateAwareness.automaticNotice
+      || onboarding.stage !== 'hidden'
+      || educationLevelReminderPending
+      || educationLevelReminderOpen
+    ) {
       setAutomaticNoticeOpen(false);
       return undefined;
     }
     const frame = window.requestAnimationFrame(() => setAutomaticNoticeOpen(true));
     return () => window.cancelAnimationFrame(frame);
-  }, [onboarding.stage, updateAwareness.automaticNotice]);
+  }, [
+    educationLevelReminderOpen,
+    educationLevelReminderPending,
+    onboarding.stage,
+    updateAwareness.automaticNotice,
+  ]);
+
+  const acknowledgeEducationLevelReminder = educationLevelReminder.acknowledge;
 
   // 已选 sections → CourseGroup[]（按 groupKey 聚合）
   const allSelectedGroups = useMemo<CourseGroup[]>(() => {
@@ -416,6 +444,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   const detailGroup = useMemo<CourseGroup | null>(() => {
     if (!detailGroupKey) return null;
+    const explicitMergedGroup = mergedGroupByKey.get(detailGroupKey);
+    if (explicitMergedGroup?.timeGroups) return explicitMergedGroup;
     const canonicalGroup = groupByKey.get(detailGroupKey);
     if (!customSettings.mergeAllTimeGroups) return canonicalGroup ?? null;
     if (canonicalGroup) return mergedGroupByCode.get(canonicalGroup.courseCode) ?? canonicalGroup;
@@ -656,6 +686,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(groupKey);
   };
 
+  const openAllTimeGroupsFromManager = (courseCode: string) => {
+    const mergedGroup = mergedGroupByCode.get(courseCode);
+    if (mergedGroup) setDetailGroupKey(mergedGroup.key);
+  };
+
   const openSelectedCourses = useCallback((tab: 'current' | 'curriculum') => {
     setSelectedCoursesTab(tab);
     setSelectedCoursesOpen(true);
@@ -868,6 +903,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onCurriculumChange={handleCurriculumChange}
         onCurriculumTermChange={handleCurriculumTermChange}
         onOpenDetail={openCourseDetailFromManager}
+        onOpenAllTimeGroups={openAllTimeGroupsFromManager}
         groupsByCode={groupsByCode}
       />
       <FavoritesManagerModal
@@ -887,6 +923,12 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onShowUpdatePopupChange={updateAwareness.setShowUpdatePopup}
         onOpenUpdateHistory={handleOpenUpdateHistory}
         initialPage={customizationInitialPage}
+      />
+      {/* EDUCATION_LEVEL_REMINDER: standalone rollout warning; safe to edit or remove independently. */}
+      <EducationLevelReminderModal
+        open={educationLevelReminderOpen}
+        onClose={() => setEducationLevelReminderOpen(false)}
+        afterClose={acknowledgeEducationLevelReminder}
       />
       {updateAwareness.automaticNotice ? (
         <UpdateNoticeModal

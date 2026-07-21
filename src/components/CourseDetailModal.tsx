@@ -359,6 +359,7 @@ export default function CourseDetailModal({
             {formatTeacherList(display.teachers, '—')}
           </Descriptions.Item>
           <Descriptions.Item label="学分 / 学时">{rep?.credits ?? 0} / {rep?.hours ?? 0}</Descriptions.Item>
+          <Descriptions.Item label="学历层次">{rep?.level || '—'}</Descriptions.Item>
           <Descriptions.Item label="课程类型">{rep?.courseType || '—'}</Descriptions.Item>
           <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
           <Descriptions.Item label="考核方式">{examType}</Descriptions.Item>
@@ -389,6 +390,10 @@ export default function CourseDetailModal({
           <div className="mobile-field">
             <span className="mobile-field__label">学分 / 学时</span>
             <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
+          </div>
+          <div className="mobile-field">
+            <span className="mobile-field__label">学历层次</span>
+            <span className="mobile-field__value">{rep?.level || '—'}</span>
           </div>
           <div className="mobile-field mobile-field--pair">
             <span>

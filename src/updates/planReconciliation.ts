@@ -83,6 +83,14 @@ function selectedChanges(
       after: current.teacher,
     });
   }
+  if (previous.level !== undefined && previous.level !== current.level) {
+    changes.push({
+      field: 'level',
+      label: '学历层次',
+      before: previous.level,
+      after: current.level,
+    });
+  }
   const previousTime = timePart(previous.schedule);
   const currentTime = timePart(current.schedule);
   if (changed(previousTime, currentTime)) {
@@ -104,6 +112,15 @@ function selectedChanges(
     });
   }
   return changes;
+}
+
+function hydrateLegacyLevel(
+  stored: SelectedCourseSnapshot | undefined,
+  feedSnapshot: SelectedCourseSnapshot,
+): SelectedCourseSnapshot {
+  if (!stored) return feedSnapshot;
+  if (stored.level !== undefined || feedSnapshot.level === undefined) return stored;
+  return { ...stored, level: feedSnapshot.level };
 }
 
 function withEvents(
@@ -151,13 +168,19 @@ export function reconcilePlansWithUpdates(
     for (const item of batch.removed) {
       const id = item.course.id;
       if (!chosenIds.has(id)) continue;
-      if (!originalSnapshots.has(id)) originalSnapshots.set(id, item.course);
+      originalSnapshots.set(
+        id,
+        hydrateLegacyLevel(originalSnapshots.get(id), item.course),
+      );
       finalStates.set(id, { exists: false, removed: item, occurredAt: batch.publishedAt });
     }
     for (const item of batch.modified) {
       const id = item.course.id;
       if (!chosenIds.has(id)) continue;
-      if (!originalSnapshots.has(id)) originalSnapshots.set(id, item.previous);
+      originalSnapshots.set(
+        id,
+        hydrateLegacyLevel(originalSnapshots.get(id), item.previous),
+      );
       finalStates.set(id, { exists: true, snapshot: item.current, occurredAt: batch.publishedAt });
     }
   }
@@ -249,6 +272,7 @@ function snapshotFromCourse(course: CourseSection): SelectedCourseSnapshot {
     courseCode,
     courseName: course.courseName,
     teacher: course.teacher,
+    level: course.level,
     schedule: course.schedule,
   };
 }

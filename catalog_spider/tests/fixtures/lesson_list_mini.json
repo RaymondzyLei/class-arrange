@@ -50,7 +50,7 @@
       "cn": "考试",
       "en": "Examination"
     },
-    "graduateAndPostgraduat": true,
+    "graduateAndPostgraduate": true,
     "stdCount": 48,
     "limitCount": 60,
     "adminClasses": [
@@ -100,7 +100,7 @@
       "cn": "考查",
       "en": "Assessment"
     },
-    "graduateAndPostgraduat": false,
+    "graduateAndPostgraduate": false,
     "stdCount": 20,
     "limitCount": 30,
     "adminClasses": []

@@ -43,6 +43,7 @@ interface Props {
   onCurriculumChange: (id: string | null) => void;
   onCurriculumTermChange: (term: string | null) => void;
   onOpenDetail: (groupKey: string) => void;
+  onOpenAllTimeGroups: (courseCode: string) => void;
   groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
@@ -137,6 +138,7 @@ export default function SelectedCoursesModal({
   onCurriculumChange,
   onCurriculumTermChange,
   onOpenDetail,
+  onOpenAllTimeGroups,
   groupsByCode,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
@@ -486,6 +488,18 @@ export default function SelectedCoursesModal({
         >
           {allLabel}
         </Button>
+        {allSelected ? (
+          <span className="selected-courses-time-group-status">
+            已选择此课程全部时间组
+          </span>
+        ) : (
+          <Button
+            size="small"
+            onClick={() => onOpenAllTimeGroups(group.courseCode)}
+          >
+            查看全部时间组
+          </Button>
+        )}
       </Space>
     );
   };
@@ -530,7 +544,7 @@ export default function SelectedCoursesModal({
     },
     {
       title: '操作',
-      width: 250,
+      width: 430,
       render: (_, row) => renderGroupScopeActions(row.group, true),
     },
   ];

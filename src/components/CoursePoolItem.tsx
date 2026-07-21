@@ -124,7 +124,7 @@ function CoursePoolItem({
       <div className="pool-item__code-row">
         <span className="pool-item__course-code">{courseCodeLabel}</span>
         <span className="pool-item__meta-aside">
-          {rep?.department.name ?? ''} · {rep?.credits ?? 0}学分
+          {rep?.department.name ?? ''} · {rep?.level || '学历层次待定'} · {rep?.credits ?? 0}学分
           {rating && (
             <>
               {' · '}
