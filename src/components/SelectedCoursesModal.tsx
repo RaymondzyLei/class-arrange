@@ -533,7 +533,7 @@ export default function SelectedCoursesModal({
     { title: '课堂号/班次', dataIndex: 'sectionLabel', width: 130 },
     { title: '教师', dataIndex: 'teachers', width: 150 },
     { title: '学分', dataIndex: 'credits', width: 70 },
-    { title: '时间地点', dataIndex: 'schedule' },
+    { title: '时间地点', dataIndex: 'schedule', width: 250 },
     {
       title: '状态',
       width: 92,
@@ -544,7 +544,7 @@ export default function SelectedCoursesModal({
     },
     {
       title: '操作',
-      width: 430,
+      width: 260,
       render: (_, row) => renderGroupScopeActions(row.group, true),
     },
   ];
@@ -650,14 +650,15 @@ export default function SelectedCoursesModal({
 
   const renderGroupTable = (rows: GroupRow[], selectable: boolean) => (
     <Table<GroupRow>
-      className="detail-table selected-courses-table"
+      className="detail-table selected-courses-table selected-courses-group-table"
       size="small"
       rowKey="key"
       dataSource={rows}
       columns={groupColumns}
       rowSelection={selectable ? rowSelection : undefined}
       pagination={false}
-      tableLayout="auto"
+      scroll={{ x: 1155 }}
+      tableLayout="fixed"
       onRow={(row) => ({
         className: 'selected-courses-row--clickable',
         onClick: (event) => {

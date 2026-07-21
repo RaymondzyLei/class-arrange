@@ -33,4 +33,14 @@ describe('SelectedCoursesModal chooser actions', () => {
     expect(source).toContain('className="selected-courses-time-group-status"');
     expect(styles).toContain('.selected-courses-time-group-status');
   });
+
+  it('keeps the selected-course schedule column readable beside the action buttons', () => {
+    expect(source).toContain("{ title: '时间地点', dataIndex: 'schedule', width: 250 }");
+    expect(source).toMatch(/title: '操作',\r?\n\s+width: 260,/);
+    expect(source).toContain('className="detail-table selected-courses-table selected-courses-group-table"');
+    expect(source).toContain('scroll={{ x: 1155 }}');
+    expect(source).toContain('tableLayout="fixed"');
+    expect(styles).toContain('.selected-courses-group-table .ant-table');
+    expect(styles).toContain('table-layout: fixed !important;');
+  });
 });

@@ -2497,6 +2497,10 @@ html {
   vertical-align: middle;
 }
 
+.detail-table.selected-courses-group-table .ant-table {
+  table-layout: fixed !important;
+}
+
 .selected-courses-table .selected-courses-row--clickable {
   cursor: pointer;
 }
