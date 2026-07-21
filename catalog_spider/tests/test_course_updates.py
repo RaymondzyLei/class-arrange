@@ -12,6 +12,7 @@ def _course(
     campus: str = "本部",
     enrolled: int = 10,
     capacity: int = 30,
+    level: str = "本科",
 ) -> dict:
     return {
         "id": code,
@@ -20,7 +21,7 @@ def _course(
         "teacher": teacher,
         "credits": 4,
         "hours": 64,
-        "level": "本科",
+        "level": level,
         "sectionType": "计划内",
         "category": "",
         "courseType": "理论课",
@@ -176,3 +177,22 @@ def test_splitting_time_ranges_at_one_location_does_not_report_location_change()
         for change in feed["entries"][0]["modified"][0]["changes"]
     ]
     assert fields == ["schedule"]
+
+
+def test_education_level_change_is_recorded_in_update_snapshots():
+    previous = _catalog(_course("MATH100.01", level="本科"))
+    current = _catalog(_course("MATH100.01", level="研究生"))
+
+    _published, feed = build_catalog_publication(previous, current, None)
+
+    modified = feed["entries"][0]["modified"][0]
+    assert modified["previous"]["level"] == "本科"
+    assert modified["current"]["level"] == "研究生"
+    assert modified["changes"] == [
+        {
+            "field": "level",
+            "label": "学历层次",
+            "before": "本科",
+            "after": "研究生",
+        }
+    ]

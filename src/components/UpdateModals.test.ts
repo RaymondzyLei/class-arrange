@@ -13,6 +13,7 @@ vi.mock('./BottomModal', () => ({
 import UpdateHistoryModal from './UpdateHistoryModal';
 import UpdateNoticeModal from './UpdateNoticeModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
+import { APP_RELEASES } from '@/updates/appUpdates';
 
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
@@ -163,6 +164,42 @@ describe('update modals', () => {
     expect(orderedNotice.semesterUpdates[1].entries.map(({ id }) => id)).toEqual(['old-entry', 'new-entry']);
     expect(historySemesters.map(({ semester: item }) => item.key)).toEqual(['older-semester', '2026-fall']);
   });
+
+  test('marks July 21 education-level changelog items as dangerous in notices and history', () => {
+    const dangerousItems = [
+      '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
+      '请注意课堂开课对应的学历层次是本科生还是研究生。',
+    ];
+    const release = APP_RELEASES.find(({ publishedAt }) => publishedAt === '2026-07-21')!;
+
+    expect(release.dangerItems).toEqual(dangerousItems);
+    expect(release).toBeDefined();
+
+    const releaseNotice = { ...notice, impacts: [], appReleases: [release], semesterUpdates: [] };
+    const noticeHtml = renderToStaticMarkup(createElement(UpdateNoticeModal, {
+      open: true, notice: releaseNotice, onClose: () => undefined,
+    }));
+    const historyHtml = renderToStaticMarkup(createElement(UpdateHistoryModal, {
+      open: true,
+      loading: false,
+      failedSemesterKeys: [],
+      appReleases: [release],
+      semesters: [],
+      onClose: () => undefined,
+    }));
+
+    for (const html of [noticeHtml, historyHtml]) {
+      dangerousItems.forEach((item) => {
+        expect(html).toContain(`<li class="update-release__item--danger">${item}</li>`);
+      });
+      expect(html).toContain('<li>已选课程管理新增“查看全部时间组”入口，便于补选未选时间组。</li>');
+    }
+    expect(normalizedStylesSource).toContain(`.update-release li.update-release__item--danger,
+.update-history__entry li.update-release__item--danger {
+  color: var(--conflict);
+  font-weight: 650;
+}`);
+  });
   test('shows the before and after values for every modified course field', () => {
     const batch: SemesterUpdateBatch = {
       id: 'schedule-change',
@@ -223,6 +260,57 @@ describe('update modals', () => {
     expect(html).toContain('3C302（本部）');
     expect(html).toContain('3C304（本部）');
     expect(html).toContain('course-update-change__arrow');
+  });
+
+  test('renders education-level changes with dangerous styling in notices and history details', () => {
+    const levelImpact = event('modified');
+    levelImpact.id = 'education-level';
+    levelImpact.changes = [{
+      field: 'level',
+      label: '学历层次',
+      before: '本科',
+      after: '研究生',
+    }];
+    const batch: SemesterUpdateBatch = {
+      id: 'education-level',
+      revision: 'r2',
+      previousRevision: 'r1',
+      publishedAt: '2026-07-21',
+      summary: { added: 0, removed: 0, modified: 1 },
+      added: [],
+      removed: [],
+      modified: [{
+        course: {
+          id: levelImpact.courseId,
+          courseCode: 'MATH100',
+          courseName: levelImpact.courseName,
+          teacher: '张老师',
+        },
+        previous: { ...levelImpact.previous, level: '本科' },
+        current: { ...levelImpact.current!, level: '研究生' },
+        changes: levelImpact.changes,
+      }],
+    };
+
+    const noticeHtml = renderToStaticMarkup(createElement(UpdateNoticeModal, {
+      open: true,
+      notice: {
+        impacts: [levelImpact],
+        appReleases: [],
+        semesterUpdates: [],
+        suppressedImpactIds: [],
+      },
+      onClose: () => undefined,
+    }));
+    const batchHtml = renderToStaticMarkup(createElement(CourseUpdateBatchDetails, { batch }));
+
+    expect(noticeHtml).toContain('课程学历层次发生变化');
+    expect(noticeHtml).toContain('update-card update-card--danger');
+    expect(noticeHtml).toContain('update-change-row update-change-row--danger');
+    expect(batchHtml).toContain('course-update-details__modified-item--danger');
+    expect(batchHtml).toContain('course-update-change course-update-change--danger');
+    expect(stylesSource).toContain('.update-change-row--danger');
+    expect(stylesSource).toContain('.course-update-change--danger');
   });
 
   test('formats highlighted and full schedule changes with the same week ranges', () => {

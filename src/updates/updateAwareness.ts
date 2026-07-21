@@ -6,6 +6,7 @@ import type {
   SemesterUpdateFeed,
 } from '@/types';
 import type { AppRelease } from './appUpdates';
+import { isDangerousImpact } from './updateDanger';
 
 export const AWARENESS_STORAGE_KEY = 'class-arrange:v1:update-awareness';
 export const UPDATE_PREFERENCES_KEY = 'class-arrange:v1:update-preferences';
@@ -81,14 +82,14 @@ export function selectAutomaticNotice(input: {
   appReleases: AppRelease[];
   semesterUpdates: SemesterUpdateHistory[];
 }): AutomaticNoticeSelection {
-  const removed = input.impacts.filter((impact) => impact.kind === 'removed');
+  const dangerous = input.impacts.filter(isDangerousImpact);
   if (!input.showUpdatePopup) {
     return {
-      impacts: removed,
+      impacts: dangerous,
       appReleases: [],
       semesterUpdates: [],
       suppressedImpactIds: input.impacts
-        .filter((impact) => impact.kind !== 'removed')
+        .filter((impact) => !isDangerousImpact(impact))
         .map((impact) => impact.id),
     };
   }

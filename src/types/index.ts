@@ -131,6 +131,8 @@ export interface FilterState {
   keyword: string;
   includeTeacher: boolean;
   department: string; // 开课单位 name，空字符串表示不限
+  category: string;
+  level: string;
   courseType: string;
   sectionType: string;
   examType: string;
@@ -212,6 +214,7 @@ export interface SelectedCourseSnapshot {
   courseCode: string;
   courseName: string;
   teacher: string;
+  level?: string;
   schedule: ScheduleSlot[];
 }
 

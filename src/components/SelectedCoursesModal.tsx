@@ -43,6 +43,7 @@ interface Props {
   onCurriculumChange: (id: string | null) => void;
   onCurriculumTermChange: (term: string | null) => void;
   onOpenDetail: (groupKey: string) => void;
+  onOpenAllTimeGroups: (courseCode: string) => void;
   groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
@@ -137,6 +138,7 @@ export default function SelectedCoursesModal({
   onCurriculumChange,
   onCurriculumTermChange,
   onOpenDetail,
+  onOpenAllTimeGroups,
   groupsByCode,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
@@ -486,6 +488,18 @@ export default function SelectedCoursesModal({
         >
           {allLabel}
         </Button>
+        {allSelected ? (
+          <span className="selected-courses-time-group-status">
+            已选择此课程全部时间组
+          </span>
+        ) : (
+          <Button
+            size="small"
+            onClick={() => onOpenAllTimeGroups(group.courseCode)}
+          >
+            查看全部时间组
+          </Button>
+        )}
       </Space>
     );
   };
@@ -519,7 +533,7 @@ export default function SelectedCoursesModal({
     { title: '课堂号/班次', dataIndex: 'sectionLabel', width: 130 },
     { title: '教师', dataIndex: 'teachers', width: 150 },
     { title: '学分', dataIndex: 'credits', width: 70 },
-    { title: '时间地点', dataIndex: 'schedule' },
+    { title: '时间地点', dataIndex: 'schedule', width: 250 },
     {
       title: '状态',
       width: 92,
@@ -530,7 +544,7 @@ export default function SelectedCoursesModal({
     },
     {
       title: '操作',
-      width: 250,
+      width: 260,
       render: (_, row) => renderGroupScopeActions(row.group, true),
     },
   ];
@@ -636,14 +650,15 @@ export default function SelectedCoursesModal({
 
   const renderGroupTable = (rows: GroupRow[], selectable: boolean) => (
     <Table<GroupRow>
-      className="detail-table selected-courses-table"
+      className="detail-table selected-courses-table selected-courses-group-table"
       size="small"
       rowKey="key"
       dataSource={rows}
       columns={groupColumns}
       rowSelection={selectable ? rowSelection : undefined}
       pagination={false}
-      tableLayout="auto"
+      scroll={{ x: 1155 }}
+      tableLayout="fixed"
       onRow={(row) => ({
         className: 'selected-courses-row--clickable',
         onClick: (event) => {

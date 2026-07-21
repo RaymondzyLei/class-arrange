@@ -77,19 +77,23 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 20 course-update fix as the latest app update', () => {
+  test('publishes the July 21 education-level update with dangerous changelog items', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.20.1',
-      publishedAt: '2026-07-20',
-      title: '课程更新与默认展示优化',
+      version: '2026.07.21.1',
+      publishedAt: '2026-07-21',
+      title: '课程筛选与学历层次提醒',
       items: [
-        '修复课程时间发生变化时，未变化的上课地点仍被列入课堂变化的问题。',
-        '默认合并课程所有时间组，仍可在自定义设置中关闭。',
-        '在新手引导中补充收藏课程和课堂的排课优先级说明。',
+        '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
+        '请注意课堂开课对应的学历层次是本科生还是研究生。',
+        '已选课程管理新增“查看全部时间组”入口，便于补选未选时间组。',
+        '课程目录已从 catalog.ustc.edu.cn 更新。',
+      ],
+      dangerItems: [
+        '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
+        '请注意课堂开课对应的学历层次是本科生还是研究生。',
       ],
     });
-    expect(CURRENT_APP_VERSION).toBe('2026.07.20.1');
-    expect(APP_RELEASES.at(-1)?.items.join('')).toContain('上课地点');
+    expect(CURRENT_APP_VERSION).toBe('2026.07.21.1');
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {
@@ -128,18 +132,24 @@ describe('update awareness rules', () => {
     expect(entriesSinceRevision(feed, 'unknown')).toEqual(feed.entries);
   });
 
-  test('forces deletion notices even when ordinary update popups are disabled', () => {
+  test('forces deletion and education-level notices even when ordinary update popups are disabled', () => {
+    const ordinary = impact('modified');
+    ordinary.id = 'ordinary';
+    ordinary.changes = [{ field: 'teacher', label: '授课教师' }];
+    const educationLevel = impact('modified');
+    educationLevel.id = 'education-level';
+    educationLevel.changes = [{ field: 'level', label: '学历层次', before: '本科', after: '研究生' }];
     const selection = selectAutomaticNotice({
       showUpdatePopup: false,
-      impacts: [impact('modified'), impact('removed')],
+      impacts: [ordinary, impact('removed'), educationLevel],
       appReleases: APP_RELEASES,
       semesterUpdates: [{ semester: manifest.semesters[0], entries: feed.entries }],
     });
 
-    expect(selection.impacts.map((event) => event.kind)).toEqual(['removed']);
+    expect(selection.impacts.map((event) => event.id)).toEqual(['removed', 'education-level']);
     expect(selection.appReleases).toEqual([]);
     expect(selection.semesterUpdates).toEqual([]);
-    expect(selection.suppressedImpactIds).toEqual(['modified']);
+    expect(selection.suppressedImpactIds).toEqual(['ordinary']);
   });
 
   test('loads only changed semester feeds and leaves failures unacknowledged', async () => {

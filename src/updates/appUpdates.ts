@@ -3,6 +3,7 @@ export interface AppRelease {
   publishedAt: string;
   title: string;
   items: string[];
+  dangerItems?: string[];
 }
 
 /** Manually curated, user-facing website changelog. Keep versions oldest to newest. */
@@ -57,6 +58,20 @@ export const APP_RELEASES: AppRelease[] = [
       '修复课程时间发生变化时，未变化的上课地点仍被列入课堂变化的问题。',
       '默认合并课程所有时间组，仍可在自定义设置中关闭。',
       '在新手引导中补充收藏课程和课堂的排课优先级说明。',
+    ],
+  },
+  {
+    version: '2026.07.21.1',
+    publishedAt: '2026-07-21',
+    title: '课程筛选与学历层次提醒',
+    items: [
+      '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
+      '请注意课堂开课对应的学历层次是本科生还是研究生。',
+      '已选课程管理新增“查看全部时间组”入口，便于补选未选时间组。',
+    ],
+    dangerItems: [
+      '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
+      '请注意课堂开课对应的学历层次是本科生还是研究生。',
     ],
   },
 ];

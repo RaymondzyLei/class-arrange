@@ -4,6 +4,7 @@ import type {
   SelectedCourseSnapshot,
 } from '@/types';
 import type { AutomaticNoticeSelection } from '@/updates/updateAwareness';
+import { isDangerousCourseChange, isDangerousImpact } from '@/updates/updateDanger';
 import { newestFirstByDate } from '../updates/updateOrdering';
 import { formatCourseChangeSide } from '../utils/courseUpdateFormat';
 import BottomModal from './BottomModal';
@@ -30,8 +31,9 @@ function affectedPlanText(event: CourseImpactEvent): string {
 function ChangeRow({ change }: { change: CourseFieldChange }) {
   const before = formatCourseChangeSide(change, 'before');
   const after = formatCourseChangeSide(change, 'after');
+  const dangerous = isDangerousCourseChange(change);
   return (
-    <li className="update-change-row">
+    <li className={`update-change-row${dangerous ? ' update-change-row--danger' : ''}`}>
       <span className="update-change-row__label">{change.label}</span>
       <span className="update-change-row__value">
         {before === null && after === null ? (
@@ -55,7 +57,12 @@ export default function UpdateNoticeModal({
   onSelectReplacement,
 }: Props) {
   const removed = notice.impacts.filter((impact) => impact.kind === 'removed');
-  const modified = notice.impacts.filter((impact) => impact.kind === 'modified');
+  const dangerousModified = notice.impacts.filter(
+    (impact) => impact.kind === 'modified' && isDangerousImpact(impact),
+  );
+  const modified = notice.impacts.filter(
+    (impact) => impact.kind === 'modified' && !isDangerousImpact(impact),
+  );
   const appReleases = newestFirstByDate(notice.appReleases, (release) => release.publishedAt);
   const semesterUpdates = newestFirstByDate(
     notice.semesterUpdates.filter((item) => item.entries.length > 0),
@@ -126,6 +133,29 @@ export default function UpdateNoticeModal({
           </section>
         ) : null}
 
+        {dangerousModified.length > 0 ? (
+          <section className="update-section update-section--danger">
+            <h3>
+              <WarningIcon className="update-section__danger-icon" />
+              课程学历层次发生变化
+            </h3>
+            <p className="update-section__lead">以下已选课堂的学历层次已变化，请重新核对是否符合你的选课与毕业要求。</p>
+            <div className="update-card-list">
+              {dangerousModified.map((event) => (
+                <article className="update-card update-card--danger" key={event.id}>
+                  <h4>{event.courseName} <span>{event.courseId}</span></h4>
+                  <p>涉及：{affectedPlanText(event)}</p>
+                  <ul className="update-change-list">
+                    {event.changes.map((change) => (
+                      <ChangeRow key={change.field} change={change} />
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         {modified.length > 0 ? (
           <section className="update-section">
             <h3>已选课程信息有变化</h3>
@@ -151,7 +181,16 @@ export default function UpdateNoticeModal({
             {appReleases.map((release) => (
               <article className="update-release" key={release.version}>
                 <div className="update-release__header"><strong>{release.title}</strong><time>{release.publishedAt}</time></div>
-                <ul>{release.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                <ul>{release.items.map((item) => (
+                  <li
+                    className={release.dangerItems?.includes(item)
+                      ? 'update-release__item--danger'
+                      : undefined}
+                    key={item}
+                  >
+                    {item}
+                  </li>
+                ))}</ul>
               </article>
             ))}
           </section>

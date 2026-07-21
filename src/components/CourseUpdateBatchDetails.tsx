@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { Button } from 'antd';
 import type { SemesterUpdateBatch } from '@/types';
+import { isDangerousCourseChange } from '@/updates/updateDanger';
 import { formatCourseChangeSide } from '../utils/courseUpdateFormat';
 import { ChevronIcon } from './icons';
 
@@ -59,14 +60,26 @@ export default function CourseUpdateBatchDetails({ batch }: { batch: SemesterUpd
               <section>
                 <h5>修改课堂</h5>
                 <ul className="course-update-details__modified-list">{batch.modified.map(({ course, changes }) => (
-                  <li className="course-update-details__modified-item" key={course.id}>
+                  <li
+                    className={`course-update-details__modified-item${
+                      changes.some(isDangerousCourseChange)
+                        ? ' course-update-details__modified-item--danger'
+                        : ''
+                    }`}
+                    key={course.id}
+                  >
                     <span className="course-update-details__course-name">{course.courseName}</span>
                     <small>{course.id} {course.teacher || '待定'}</small>
                     <dl className="course-update-changes">{changes.map((change) => {
                       const before = formatCourseChangeSide(change, 'before');
                       const after = formatCourseChangeSide(change, 'after');
                       return (
-                        <div className="course-update-change" key={change.field}>
+                        <div
+                          className={`course-update-change${
+                            isDangerousCourseChange(change) ? ' course-update-change--danger' : ''
+                          }`}
+                          key={change.field}
+                        >
                           <dt>{change.label}</dt>
                           {before === null && after === null ? (
                             <dd>内容已更新</dd>

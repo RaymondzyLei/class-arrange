@@ -494,7 +494,7 @@ html {
 
 .filter-bar__controls {
   display: grid;
-  grid-template-columns: minmax(112px, 1.25fr) repeat(2, minmax(92px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   align-items: center;
 }
@@ -1726,6 +1726,22 @@ html {
   border-top: 1px solid var(--border);
 }
 
+.education-level-reminder-modal .bottom-modal__header {
+  padding-block: 14px 8px;
+}
+
+.education-level-reminder-modal .bottom-modal__body {
+  padding-block: 0 12px;
+}
+
+.education-level-reminder-modal .bottom-modal__body > p {
+  margin-block: 0;
+}
+
+.education-level-reminder-modal .bottom-modal__footer {
+  padding-block: 8px 12px;
+}
+
 .bottom-modal__message {
   margin: 0;
   color: var(--text-sub);
@@ -2481,6 +2497,10 @@ html {
   vertical-align: middle;
 }
 
+.detail-table.selected-courses-group-table .ant-table {
+  table-layout: fixed !important;
+}
+
 .selected-courses-table .selected-courses-row--clickable {
   cursor: pointer;
 }
@@ -2942,6 +2962,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
 .selected-courses-card__actions > .course-selection-actions {
   width: 100%;
+}
+
+.selected-courses-time-group-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--success, #2f8f4e);
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 @media (max-width: 640px) {
@@ -4050,6 +4079,11 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   overflow-wrap: anywhere;
 }
 
+.update-change-row--danger .update-change-row__label,
+.update-change-row--danger .update-change-row__value {
+  color: var(--conflict);
+}
+
 .update-release__header {
   display: flex;
   align-items: baseline;
@@ -4241,6 +4275,16 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   min-width: 0;
 }
 
+.update-release li.update-release__item--danger,
+.update-history__entry li.update-release__item--danger {
+  color: var(--conflict);
+  font-weight: 650;
+}
+
+.course-update-details__modified-item--danger {
+  box-shadow: inset 2px 0 0 var(--conflict);
+}
+
 .course-update-details__course-name {
   color: var(--text-sub);
 }
@@ -4257,6 +4301,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   gap: 8px;
   padding-left: 9px;
   border-left: 2px solid var(--border);
+}
+
+.course-update-change--danger {
+  border-left-color: var(--conflict);
+}
+
+.course-update-change--danger dt,
+.course-update-change--danger dd {
+  color: var(--conflict);
 }
 
 .course-update-change dt {

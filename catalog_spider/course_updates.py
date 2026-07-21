@@ -14,14 +14,14 @@ _COURSE_FIELD_LABELS = (
     ("teacher", "授课教师"),
     ("credits", "学分"),
     ("hours", "学时"),
-    ("level", "课程层次"),
+    ("level", "学历层次"),
     ("sectionType", "教学班类型"),
     ("category", "课程类别"),
     ("courseType", "课程类型"),
     ("language", "授课语言"),
     ("examType", "考试方式"),
     ("grading", "成绩记录方式"),
-    ("undergradShared", "本研共享"),
+    ("undergradShared", "本研同堂"),
     ("capacity", "课容量"),
     ("classes", "面向班级"),
 )
@@ -76,6 +76,7 @@ def _selected_snapshot(course: dict) -> dict:
         "courseCode": _course_code(classroom_id),
         "courseName": course.get("courseName", ""),
         "teacher": course.get("teacher", ""),
+        "level": course.get("level", ""),
         "schedule": deepcopy(course.get("schedule", [])),
     }
 
