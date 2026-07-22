@@ -262,7 +262,7 @@ describe('update modals', () => {
     expect(html).toContain('course-update-change__arrow');
   });
 
-  test('renders education-level changes with dangerous styling in notices and history details', () => {
+  test('highlights education-level changes without red line decorations in history details', () => {
     const levelImpact = event('modified');
     levelImpact.id = 'education-level';
     levelImpact.changes = [{
@@ -303,6 +303,12 @@ describe('update modals', () => {
       onClose: () => undefined,
     }));
     const batchHtml = renderToStaticMarkup(createElement(CourseUpdateBatchDetails, { batch }));
+    const modifiedItemDangerStyles = stylesSource.match(
+      /\.course-update-details__modified-item--danger\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const courseChangeDangerStyles = stylesSource.match(
+      /\.course-update-change--danger\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
 
     expect(noticeHtml).toContain('课程学历层次发生变化');
     expect(noticeHtml).toContain('update-card update-card--danger');
@@ -311,6 +317,8 @@ describe('update modals', () => {
     expect(batchHtml).toContain('course-update-change course-update-change--danger');
     expect(stylesSource).toContain('.update-change-row--danger');
     expect(stylesSource).toContain('.course-update-change--danger');
+    expect(modifiedItemDangerStyles).not.toContain('box-shadow');
+    expect(courseChangeDangerStyles).not.toContain('border-left-color');
   });
 
   test('formats highlighted and full schedule changes with the same week ranges', () => {

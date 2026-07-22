@@ -1,6 +1,1447 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-summer",
-  "currentRevision": "361155916d8e58461ad5b324445611b08d2eaece78f8fe24437db47cfea52f4e",
-  "entries": []
+  "currentRevision": "193249c0acc6eee027a715fa52651c0e51faf8312540bc08bcdea482c1cc514e",
+  "entries": [
+    {
+      "id": "2026-summer:193249c0acc6eee0",
+      "revision": "193249c0acc6eee027a715fa52651c0e51faf8312540bc08bcdea482c1cc514e",
+      "previousRevision": "361155916d8e58461ad5b324445611b08d2eaece78f8fe24437db47cfea52f4e",
+      "publishedAt": "2026-07-22T17:25:44Z",
+      "summary": {
+        "added": 0,
+        "removed": 1,
+        "modified": 5
+      },
+      "added": [],
+      "removed": [
+        {
+          "course": {
+            "id": "FORL6101U.01",
+            "courseCode": "FORL6101U",
+            "courseName": "研究生综合英语",
+            "teacher": "张曼君",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 1,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 1,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 3,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "3A113",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A113",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A113",
+                "day": 5,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A113",
+                "day": 6,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A113",
+                "day": 6,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "replacementCandidates": []
+        }
+      ],
+      "modified": [
+        {
+          "course": {
+            "id": "001M06.01",
+            "courseCode": "001M06",
+            "courseName": "计算机图形学前沿",
+            "teacher": "刘利刚"
+          },
+          "previous": {
+            "id": "001M06.01",
+            "courseCode": "001M06",
+            "courseName": "计算机图形学前沿",
+            "teacher": "刘利刚",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "001M06.01",
+            "courseCode": "001M06",
+            "courseName": "计算机图形学前沿",
+            "teacher": "刘利刚",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2321",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "206M07.01",
+            "courseCode": "206M07",
+            "courseName": "CASTEP/Materials Studio计算材料学",
+            "teacher": "李明宪,郝绿原"
+          },
+          "previous": {
+            "id": "206M07.01",
+            "courseCode": "206M07",
+            "courseName": "CASTEP/Materials Studio计算材料学",
+            "teacher": "李明宪,郝绿原",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 1,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 3,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 5,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "206M07.01",
+            "courseCode": "206M07",
+            "courseName": "CASTEP/Materials Studio计算材料学",
+            "teacher": "李明宪,郝绿原",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 1,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 3,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "西区电一楼机房2厅",
+                "day": 5,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BIOL5551P.01",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "王冬梅,黄成栋"
+          },
+          "previous": {
+            "id": "BIOL5551P.01",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "王冬梅,黄成栋",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K214",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K214",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "BIOL5551P.01",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "王冬梅,黄成栋",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K214",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K214",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K214",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "level",
+              "label": "学历层次",
+              "before": "研究生",
+              "after": "本研贯通"
+            },
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BIOL5551P.02",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "薛林,黄成栋"
+          },
+          "previous": {
+            "id": "BIOL5551P.02",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "薛林,黄成栋",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K211",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K211",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "BIOL5551P.02",
+            "courseCode": "BIOL5551P",
+            "courseName": "生物化学与分子生物学综合实验",
+            "teacher": "薛林,黄成栋",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K211",
+                "day": 1,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 2,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 3,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 4,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 5,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "生物楼附楼K211",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "生物楼附楼K211",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "level",
+              "label": "学历层次",
+              "before": "研究生",
+              "after": "本研贯通"
+            },
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MATH6432P.01",
+            "courseCode": "MATH6432P",
+            "courseName": "Hodge理论及其应用",
+            "teacher": "沈明民"
+          },
+          "previous": {
+            "id": "MATH6432P.01",
+            "courseCode": "MATH6432P",
+            "courseName": "Hodge理论及其应用",
+            "teacher": "沈明民",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "5106",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "5106",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "5106",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "5106",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MATH6432P.01",
+            "courseCode": "MATH6432P",
+            "courseName": "Hodge理论及其应用",
+            "teacher": "沈明民",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "5106",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "5106",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "5106",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "5106",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -4281,10 +4281,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   font-weight: 650;
 }
 
-.course-update-details__modified-item--danger {
-  box-shadow: inset 2px 0 0 var(--conflict);
-}
-
 .course-update-details__course-name {
   color: var(--text-sub);
 }
@@ -4301,10 +4297,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   gap: 8px;
   padding-left: 9px;
   border-left: 2px solid var(--border);
-}
-
-.course-update-change--danger {
-  border-left-color: var(--conflict);
 }
 
 .course-update-change--danger dt,
