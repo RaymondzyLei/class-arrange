@@ -1,12 +1,14 @@
 import { Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { OnboardingPreferences } from '@/onboarding/useOnboarding';
 import CalculationModePicker from '@/components/CalculationModePicker';
 import SelectWithChevron from '@/components/SelectWithChevron';
+import { useBodyScrollLock, useOverlayStack } from '@/components/overlayStack';
 import { RESIDENT_CAMPUS_OPTIONS } from '@/utils/customization';
 import OnboardingConfirm from './OnboardingConfirm';
 import PreferenceSwitch from './PreferenceSwitch';
+import { useManagedDialogFocus } from './useManagedDialogFocus';
 import './onboarding.css';
 
 interface Props {
@@ -40,6 +42,46 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState(preferences);
   const [confirmSkipOpen, setConfirmSkipOpen] = useState(false);
+  const panelRef = useRef<HTMLElement | null>(null);
+  const confirmReturnFocusRef = useRef<HTMLElement | null>(null);
+  const requestSkipConfirmation = useCallback(() => {
+    if (typeof document !== 'undefined') {
+      const activeElement = document.activeElement;
+      confirmReturnFocusRef.current = activeElement instanceof HTMLElement
+        && activeElement !== document.body
+        ? activeElement
+        : null;
+    }
+    setConfirmSkipOpen(true);
+  }, []);
+  const {
+    id,
+    isTop,
+    isFocusOwner,
+    isTopBlocking,
+    isInteractionBlocked,
+    zIndex,
+  } = useOverlayStack({
+    active: open,
+    priority: 1400,
+    blocksLowerInteraction: true,
+    managesFocus: true,
+    onEscape: requestSkipConfirmation,
+  });
+  const isWizardInteractive = open
+    && !confirmSkipOpen
+    && !isInteractionBlocked;
+  const isWizardModal = isWizardInteractive
+    && isTop
+    && isFocusOwner
+    && isTopBlocking;
+
+  useBodyScrollLock(open);
+  useManagedDialogFocus({
+    active: open,
+    interactive: isWizardInteractive && isFocusOwner,
+    containerRef: panelRef,
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -47,26 +89,6 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
     setDraft(preferences);
     setConfirmSkipOpen(false);
   }, [open, preferences]);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      event.preventDefault();
-      setConfirmSkipOpen(true);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onSkip, open]);
 
   if (!open || typeof document === 'undefined') return null;
 
@@ -77,16 +99,24 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
     setDraft((current) => ({ ...current, [key]: checked }));
   };
 
-  const skip = () => {
-    setConfirmSkipOpen(true);
-  };
+  const skip = requestSkipConfirmation;
 
   return createPortal(
-    <div className="onboarding-wizard" aria-hidden={!open}>
+    <div
+      className="onboarding-wizard"
+      data-overlay-id={id}
+      data-overlay-top={isTop ? 'true' : 'false'}
+      style={{ zIndex }}
+      inert={!isWizardInteractive}
+      aria-hidden={isWizardInteractive ? undefined : true}
+    >
       <section
+        ref={panelRef}
         className="onboarding-wizard__panel"
+        data-overlay-focus-root
+        tabIndex={-1}
         role="dialog"
-        aria-modal="true"
+        aria-modal={isWizardModal ? true : undefined}
         aria-labelledby="onboarding-wizard-title"
       >
         <div className="onboarding-wizard__content">
@@ -180,6 +210,7 @@ export default function OnboardingWizard({ open, preferences, onComplete, onSkip
       </section>
       <OnboardingConfirm
         open={confirmSkipOpen}
+        returnFocusTarget={confirmReturnFocusRef.current}
         title="跳过新手引导？"
         description="跳过后不会自动再次弹出，你仍然可以从“设置”中重新查看。"
         confirmText="确认跳过"

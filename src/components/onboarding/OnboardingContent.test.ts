@@ -2,8 +2,13 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const wizardSource = readFileSync(new URL('./OnboardingWizard.tsx', import.meta.url), 'utf8');
+const confirmSource = readFileSync(new URL('./OnboardingConfirm.tsx', import.meta.url), 'utf8');
 const customizationSource = readFileSync(new URL('../CustomizationModal.tsx', import.meta.url), 'utf8');
 const spotlightSource = readFileSync(new URL('./SpotlightTour.tsx', import.meta.url), 'utf8');
+const focusManagementSource = readFileSync(
+  new URL('./useManagedDialogFocus.ts', import.meta.url),
+  'utf8',
+);
 const tourStepsSource = readFileSync(new URL('../../onboarding/tourSteps.tsx', import.meta.url), 'utf8');
 const arrangementPanelSource = readFileSync(new URL('../ArrangementPanel.tsx', import.meta.url), 'utf8');
 const statsBarSource = readFileSync(new URL('../StatsBar.tsx', import.meta.url), 'utf8');
@@ -13,6 +18,40 @@ const selectSource = readFileSync(new URL('../SelectWithChevron.tsx', import.met
 const onboardingStylesSource = readFileSync(new URL('./onboarding.css', import.meta.url), 'utf8');
 
 describe('onboarding content', () => {
+  it('coordinates onboarding layers through the shared overlay stack', () => {
+    expect(wizardSource).toContain('priority: 1400');
+    expect(wizardSource).toContain('blocksLowerInteraction: true');
+    expect(wizardSource).toContain('managesFocus: true');
+    expect(wizardSource).toContain('useBodyScrollLock(open)');
+    expect(wizardSource).toContain('data-overlay-id={id}');
+    expect(wizardSource).toContain('aria-modal={isWizardModal ? true : undefined}');
+    expect(wizardSource).toContain('returnFocusTarget={confirmReturnFocusRef.current}');
+    expect(wizardSource).not.toContain("event.key !== 'Escape'");
+
+    expect(spotlightSource).toContain('priority: 1350');
+    expect(spotlightSource).toContain('blocksLowerInteraction: false');
+    expect(spotlightSource).toContain('managesFocus: false');
+    expect(spotlightSource).toContain('data-overlay-id={id}');
+    expect(spotlightSource).toContain('inert={!isTourInteractive}');
+    expect(spotlightSource).not.toContain('aria-modal="true"');
+    expect(spotlightSource).not.toContain("event.key !== 'Escape'");
+
+    expect(confirmSource).toContain('priority: 1600');
+    expect(confirmSource).toContain('managesFocus: true');
+    expect(confirmSource).toContain('onEscape: onCancel');
+    expect(confirmSource).toContain('createPortal(');
+    expect(confirmSource).toContain('ref={cancelButtonRef}');
+    expect(confirmSource).toContain('data-overlay-id={id}');
+    expect(confirmSource).toContain('useBodyScrollLock(open)');
+    expect(confirmSource).toContain('aria-modal={isModal ? true : undefined}');
+    expect(confirmSource).toContain('returnFocusTarget,');
+    expect(spotlightSource).toContain('returnFocusTarget={confirmReturnFocusRef.current}');
+    expect(focusManagementSource).toContain("event.key !== 'Tab'");
+    expect(focusManagementSource).toContain('queueMicrotask');
+    expect(focusManagementSource).toContain('const explicitTarget = returnFocusTarget');
+    expect(focusManagementSource).toContain('getFocusOwner(currentSnapshot)');
+  });
+
   it('explains where preferences can be changed later', () => {
     expect(wizardSource).toContain('稍后可在“设置”中修改');
     expect(wizardSource).toContain('你仍然可以从“设置”中重新查看');

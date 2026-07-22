@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { tourSteps, type TourPlacement, type TourStep } from '@/onboarding/tourSteps';
+import { useOverlayStack } from '@/components/overlayStack';
 import OnboardingConfirm from './OnboardingConfirm';
 import TourCard from './TourCard';
 import './onboarding.css';
@@ -188,6 +189,32 @@ export default function SpotlightTour({
     placement: 'center',
   });
   const [confirmSkipOpen, setConfirmSkipOpen] = useState(false);
+  const confirmReturnFocusRef = useRef<HTMLElement | null>(null);
+  const requestSkipConfirmation = useCallback(() => {
+    if (typeof document !== 'undefined') {
+      const activeElement = document.activeElement;
+      confirmReturnFocusRef.current = activeElement instanceof HTMLElement
+        && activeElement !== document.body
+        ? activeElement
+        : null;
+    }
+    setConfirmSkipOpen(true);
+  }, []);
+  const {
+    id,
+    isTop,
+    isInteractionBlocked,
+    zIndex,
+  } = useOverlayStack({
+    active: open,
+    priority: 1350,
+    blocksLowerInteraction: false,
+    managesFocus: false,
+    onEscape: requestSkipConfirmation,
+  });
+  const isTourInteractive = open
+    && !confirmSkipOpen
+    && !isInteractionBlocked;
   const [clickPoint, setClickPoint] = useState<ClickPoint | null>(null);
   const [entryAnimationStepId, setEntryAnimationStepId] = useState(FIRST_FLOAT_STEP_ID);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -321,17 +348,6 @@ export default function SpotlightTour({
     };
   }, [open, scrollTargetIntoView, updateGeometry]);
 
-  useEffect(() => {
-    if (!open) return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      event.preventDefault();
-      setConfirmSkipOpen(true);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [onSkip, open]);
-
   if (!open || typeof document === 'undefined') return null;
 
   const moveToStep = (nextIndex: number) => {
@@ -348,16 +364,21 @@ export default function SpotlightTour({
   const goNext = () => moveToStep(stepIndex + 1);
   const goPrevious = () => moveToStep(stepIndex - 1);
   const restart = () => moveToStep(0);
-  const skip = () => {
-    setConfirmSkipOpen(true);
-  };
+  const skip = requestSkipConfirmation;
   const maskId = `spotlight-tour-mask-${step.id}`;
   const hasTarget = stepSelectors(step).length > 0;
   const hasMeasuredTarget = !hasTarget || rects.length > 0;
   const shouldFloatCard = step.entryAnimation === 'float' && entryAnimationStepId === step.id;
   const cardVisible = !shouldFloatCard || hasMeasuredTarget;
   return createPortal(
-    <div className={`spotlight-tour spotlight-tour--${entryMode}`}>
+    <div
+      className={`spotlight-tour spotlight-tour--${entryMode}`}
+      data-overlay-id={id}
+      data-overlay-top={isTop ? 'true' : 'false'}
+      style={{ zIndex }}
+      inert={!isTourInteractive}
+      aria-hidden={isTourInteractive ? undefined : true}
+    >
       <svg className="spotlight-tour__shade-svg" aria-hidden="true">
         <defs>
           <mask id={maskId}>
@@ -416,8 +437,11 @@ export default function SpotlightTour({
           top: cardPosition.top,
           left: cardPosition.left,
         }}
+        data-overlay-focus-root
+        tabIndex={-1}
         role="dialog"
-        aria-modal="true"
+        inert={!isTourInteractive}
+        aria-hidden={isTourInteractive ? undefined : true}
         aria-label="新手引导"
       >
         <TourCard
@@ -433,6 +457,7 @@ export default function SpotlightTour({
       </div>
       <OnboardingConfirm
         open={confirmSkipOpen}
+        returnFocusTarget={confirmReturnFocusRef.current}
         title="跳过功能教学？"
         description="跳过后不会自动再次弹出，你仍然可以从“设置”中重新查看。"
         confirmText="确认跳过"

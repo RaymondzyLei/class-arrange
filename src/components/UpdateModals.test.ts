@@ -552,12 +552,13 @@ describe('update modals', () => {
   test('keeps update notices mounted until the shared modal exit animation completes', () => {
     expect(bottomModalSource).toContain('afterClose?: () => void');
     expect(bottomModalSource).toContain('event.target !== event.currentTarget');
-    expect(bottomModalSource).toContain('afterClose?.()');
+    expect(bottomModalSource).toContain('afterCloseRef.current?.()');
     expect(noticeModalSource).toContain('afterClose={afterClose}');
     expect(appSource).toContain('const [automaticNoticeOpen, setAutomaticNoticeOpen]');
     expect(appSource).toContain('requestAnimationFrame');
     expect(appSource).toContain('open={automaticNoticeOpen}');
-    expect(appSource).toContain('onClose={() => setAutomaticNoticeOpen(false)}');
+    expect(appSource).toContain('automaticNoticeClosingRef.current = true;');
+    expect(appSource).toContain('setAutomaticNoticeOpen(false);');
     expect(appSource).toContain('afterClose={updateAwareness.acknowledgeAutomaticNotice}');
     expect(appSource).not.toContain('onClose={updateAwareness.acknowledgeAutomaticNotice}');
   });

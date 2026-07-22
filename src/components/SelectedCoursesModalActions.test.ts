@@ -43,4 +43,37 @@ describe('SelectedCoursesModal chooser actions', () => {
     expect(styles).toContain('.selected-courses-group-table .ant-table');
     expect(styles).toContain('table-layout: fixed !important;');
   });
+
+  it('only stops card activation keys inside the three mobile action wrappers', () => {
+    expect(source).toContain('function stopMobileActionActivation(event: KeyboardEvent<HTMLDivElement>): void {');
+    expect(source).toContain("if (event.key === 'Enter' || event.key === ' ') {");
+    expect(source.match(/onKeyDown=\{stopMobileActionActivation\}/g)).toHaveLength(3);
+    expect(source).not.toContain('onKeyDown={(event) => event.stopPropagation()}');
+  });
+
+  it('does not fall back to a destructive confirm action when no action is selected', () => {
+    expect(source).toContain(": confirmAction === 'clearPlan'");
+    expect(source).toMatch(/: confirmAction === 'clearPlan'[\s\S]*?: null;/);
+    expect(source).toContain('onClick={confirmDialog.onConfirm}');
+    expect(source).toContain('footer={confirmDialog ? (');
+    expect(source).toContain('{confirmDialog ? (');
+    expect(source).not.toContain("confirmAction === 'batchRemove' ? removeSelectedGroups : clearActivePlan");
+  });
+});
+
+describe('automatic notice overlay gating', () => {
+  it('defers unopened notices until the overlay stack is empty without closing an open notice', () => {
+    expect(appSource).toContain("import { useOverlayStackSnapshot } from '@/components/overlayStack';");
+    expect(appSource).toContain('const overlayStack = useOverlayStackSnapshot();');
+    expect(appSource).toContain(
+      'const hasActiveOverlay = overlayStack.length > 0;',
+    );
+    expect(appSource).toContain(
+      'if (educationLevelReminderOpen || educationLevelReminderClosingRef.current) return undefined;',
+    );
+    expect(appSource).toContain(
+      'if (automaticNoticeOpen || automaticNoticeClosingRef.current) return undefined;',
+    );
+    expect(appSource.match(/if \(hasActiveOverlay\) return undefined;/g)).toHaveLength(2);
+  });
 });

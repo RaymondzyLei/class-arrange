@@ -1,5 +1,5 @@
 import { App, Button, Empty, Space, Table, Tabs, Tag } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type KeyboardEvent } from 'react';
 import type { TableProps } from 'antd';
 import type { Arrangement, CourseGroup } from '@/types';
 import {
@@ -119,6 +119,12 @@ function isInteractiveClick(target: EventTarget | null): boolean {
     '.ant-table-selection-column',
     '.ant-select',
   ].join(',')));
+}
+
+function stopMobileActionActivation(event: KeyboardEvent<HTMLDivElement>): void {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.stopPropagation();
+  }
 }
 
 export default function SelectedCoursesModal({
@@ -342,6 +348,22 @@ export default function SelectedCoursesModal({
     setConfirmAction(null);
     message.success('已清空当前方案');
   };
+
+  const confirmDialog = confirmAction === 'batchRemove'
+    ? {
+        title: '确认批量移除？',
+        confirmLabel: '批量移除',
+        message: `将移除已勾选的 ${selectedGroupKeys.length} 个时间组，此操作会同步更新当前方案和课表。`,
+        onConfirm: removeSelectedGroups,
+      }
+    : confirmAction === 'clearPlan'
+      ? {
+          title: '确认清空方案？',
+          confirmLabel: '清空方案',
+          message: `将清空当前方案中的 ${allRows.length} 个已选时间组，此操作不可直接撤销。`,
+          onConfirm: clearActivePlan,
+        }
+      : null;
 
   const switchPlan = (id: string) => {
     if (id === activePlan?.id) return;
@@ -699,7 +721,7 @@ export default function SelectedCoursesModal({
           <div
             className="selected-courses-card__actions"
             onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => event.stopPropagation()}
+            onKeyDown={stopMobileActionActivation}
           >
             {renderGroupScopeActions(row.group, true)}
           </div>
@@ -741,7 +763,7 @@ export default function SelectedCoursesModal({
           <div
             className="selected-courses-card__actions"
             onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => event.stopPropagation()}
+            onKeyDown={stopMobileActionActivation}
           >
             {row.matches.length === 0 ? (
               <Button size="small" disabled>选择全部时间组</Button>
@@ -788,7 +810,7 @@ export default function SelectedCoursesModal({
             <div
               className="selected-courses-card__actions"
               onClick={(event) => event.stopPropagation()}
-              onKeyDown={(event) => event.stopPropagation()}
+              onKeyDown={stopMobileActionActivation}
             >
               {renderGroupScopeActions(group)}
             </div>
@@ -984,28 +1006,26 @@ export default function SelectedCoursesModal({
       </BottomModal>
 
       <BottomModal
-        open={confirmAction !== null}
-        title={confirmAction === 'batchRemove' ? '确认批量移除？' : '确认清空方案？'}
+        open={confirmDialog !== null}
+        title={confirmDialog?.title ?? ''}
         onClose={() => setConfirmAction(null)}
         width={420}
-        footer={(
+        footer={confirmDialog ? (
           <>
             <Button onClick={() => setConfirmAction(null)}>取消</Button>
             <Button
               danger
               type="primary"
-              onClick={confirmAction === 'batchRemove' ? removeSelectedGroups : clearActivePlan}
+              onClick={confirmDialog.onConfirm}
             >
-              {confirmAction === 'batchRemove' ? '批量移除' : '清空方案'}
+              {confirmDialog.confirmLabel}
             </Button>
           </>
-        )}
+        ) : undefined}
       >
-        <p className="bottom-modal__message">
-          {confirmAction === 'batchRemove'
-            ? `将移除已勾选的 ${selectedGroupKeys.length} 个时间组，此操作会同步更新当前方案和课表。`
-            : `将清空当前方案中的 ${allRows.length} 个已选时间组，此操作不可直接撤销。`}
-        </p>
+        {confirmDialog ? (
+          <p className="bottom-modal__message">{confirmDialog.message}</p>
+        ) : null}
       </BottomModal>
 
       <BottomModal
