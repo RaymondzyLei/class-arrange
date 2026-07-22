@@ -1,7 +1,6 @@
 .onboarding-wizard {
   position: fixed;
   inset: 0;
-  z-index: 1400;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,7 +253,6 @@
 .onboarding-confirm {
   position: fixed;
   inset: 0;
-  z-index: 1600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,7 +295,6 @@
 .spotlight-tour {
   position: fixed;
   inset: 0;
-  z-index: 1350;
   pointer-events: none;
 }
 

@@ -1626,6 +1626,7 @@ html {
 }
 
 .bottom-modal[data-state='closed'] {
+  pointer-events: none;
   animation: bottom-modal-fade-out 0.18s ease both;
 }
 
@@ -1712,6 +1713,7 @@ html {
 .bottom-modal__body {
   padding: 0 18px 16px;
   overflow: auto;
+  overscroll-behavior: contain;
 }
 
 .bottom-modal .ant-select-dropdown {

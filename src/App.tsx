@@ -59,6 +59,7 @@ import { useEducationLevelReminder } from '@/updates/EducationLevelReminderConte
 import EducationLevelReminderModal from '@/components/EducationLevelReminderModal';
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
+import { useOverlayStackSnapshot } from '@/components/overlayStack';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
 import {
@@ -203,6 +204,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const educationLevelReminderPending = educationLevelReminder.pending;
   const [educationLevelReminderOpen, setEducationLevelReminderOpen] = useState(false);
   const [automaticNoticeOpen, setAutomaticNoticeOpen] = useState(false);
+  const educationLevelReminderClosingRef = useRef(false);
+  const automaticNoticeClosingRef = useRef(false);
+  const overlayStack = useOverlayStackSnapshot();
+  const hasActiveOverlay = overlayStack.length > 0;
   const [curriculumSelection, setCurriculumSelection] = useState<CurriculumSelection>(readInitialCurriculumSelection);
   const [exporting, setExporting] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -231,12 +236,20 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
 
   useEffect(() => {
     if (!educationLevelReminderPending || onboarding.stage !== 'hidden') {
+      if (!educationLevelReminderPending) educationLevelReminderClosingRef.current = false;
       setEducationLevelReminderOpen(false);
       return undefined;
     }
+    if (educationLevelReminderOpen || educationLevelReminderClosingRef.current) return undefined;
+    if (hasActiveOverlay) return undefined;
     const frame = window.requestAnimationFrame(() => setEducationLevelReminderOpen(true));
     return () => window.cancelAnimationFrame(frame);
-  }, [educationLevelReminderPending, onboarding.stage]);
+  }, [
+    educationLevelReminderOpen,
+    educationLevelReminderPending,
+    hasActiveOverlay,
+    onboarding.stage,
+  ]);
 
   useEffect(() => {
     if (
@@ -245,14 +258,19 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       || educationLevelReminderPending
       || educationLevelReminderOpen
     ) {
+      if (!updateAwareness.automaticNotice) automaticNoticeClosingRef.current = false;
       setAutomaticNoticeOpen(false);
       return undefined;
     }
+    if (automaticNoticeOpen || automaticNoticeClosingRef.current) return undefined;
+    if (hasActiveOverlay) return undefined;
     const frame = window.requestAnimationFrame(() => setAutomaticNoticeOpen(true));
     return () => window.cancelAnimationFrame(frame);
   }, [
+    automaticNoticeOpen,
     educationLevelReminderOpen,
     educationLevelReminderPending,
+    hasActiveOverlay,
     onboarding.stage,
     updateAwareness.automaticNotice,
   ]);
@@ -927,14 +945,20 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
       {/* EDUCATION_LEVEL_REMINDER: standalone rollout warning; safe to edit or remove independently. */}
       <EducationLevelReminderModal
         open={educationLevelReminderOpen}
-        onClose={() => setEducationLevelReminderOpen(false)}
+        onClose={() => {
+          educationLevelReminderClosingRef.current = true;
+          setEducationLevelReminderOpen(false);
+        }}
         afterClose={acknowledgeEducationLevelReminder}
       />
       {updateAwareness.automaticNotice ? (
         <UpdateNoticeModal
           open={automaticNoticeOpen}
           notice={updateAwareness.automaticNotice}
-          onClose={() => setAutomaticNoticeOpen(false)}
+          onClose={() => {
+            automaticNoticeClosingRef.current = true;
+            setAutomaticNoticeOpen(false);
+          }}
           afterClose={updateAwareness.acknowledgeAutomaticNotice}
           onSelectReplacement={handleSelectReplacement}
         />
