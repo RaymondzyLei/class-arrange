@@ -64,4 +64,16 @@ describe('CustomizationModal grouped settings navigation', () => {
     expect(source).toContain('<SelectWithChevron');
     expect(onboarding).not.toContain('arrangementDisplayCount');
   });
+
+  it('explains campus-transfer ranking and italicizes only the ranking warning', () => {
+    expect(source).toContain('在冲突课程数尽可能少的前提下，跨校区次数越少越好。');
+    expect(source).toContain('上午、下午、晚上分别从常驻地点出发');
+    expect(source).toContain('时段内（上午/下午/晚上）相邻课程换地区计1次，不计算返程。');
+    expect(source).not.toContain('<strong>');
+    expect(source).toContain('<em>这可能会导致方案被错误排序</em>');
+    expect(styles).toMatch(
+      /\.customization__row--with-description\s*\{[^}]*align-items:\s*center/s,
+    );
+    expect(onboarding).not.toContain('这可能会导致方案被错误排序');
+  });
 });

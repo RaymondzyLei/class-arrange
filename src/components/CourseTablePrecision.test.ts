@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 const source = readFileSync(new URL('./CourseTable.tsx', import.meta.url), 'utf8');
 const stylesheet = readFileSync(new URL('../index.css', import.meta.url), 'utf8');
 const gridSource = readFileSync(new URL('../constants/grid.ts', import.meta.url), 'utf8');
+const legacyGridSource = readFileSync(new URL('../utils/grid.ts', import.meta.url), 'utf8');
 
 describe('CourseTable precise conflict marking', () => {
   it('labels the customization entry as settings', () => {
@@ -19,6 +20,16 @@ describe('CourseTable precise conflict marking', () => {
 
   it('shows exact clock times instead of the approximate grid period', () => {
     expect(source).toContain("`${slot.startTime}~${slot.endTime}`");
+  });
+
+  it('builds one timetable entry from identical time-location fragments without expanding gaps', () => {
+    expect(source).toContain('coalesceScheduleSlots(group.schedule)');
+    expect(source).toContain('slot.activeWeeks.includes(date.effectiveWeek)');
+    expect(source).toContain('formatActiveWeeks(slot.activeWeeks)');
+    expect(source).not.toContain('isWeekInArray(slot.weeks, date.effectiveWeek)');
+
+    expect(legacyGridSource).toContain('coalesceScheduleSlots(g.schedule)');
+    expect(legacyGridSource).toContain('slot.activeWeeks.includes(week)');
   });
 
   it('keeps all-weeks weekday labels centered in the date-height header', () => {

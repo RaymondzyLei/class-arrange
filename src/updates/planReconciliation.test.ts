@@ -312,6 +312,34 @@ describe('selected-course update reconciliation', () => {
     expect(result.pendingImpacts[0].changes.map((change) => change.field)).toEqual(['schedule']);
   });
 
+  test('does not report a time change when one occupied range is only split into fragments', () => {
+    const oldSnapshot = snapshot('MATH100.01');
+    oldSnapshot.schedule[0].weeks = [8, 13];
+    const newSnapshot = structuredClone(oldSnapshot);
+    newSnapshot.schedule = [
+      { ...newSnapshot.schedule[0], weeks: [8, 9] },
+      { ...newSnapshot.schedule[0], weeks: [10, 13] },
+    ];
+
+    const result = reconcilePlansWithUpdates(
+      payload(twoPlans, oldSnapshot),
+      '2026-fall',
+      'r2',
+      [batch({
+        modified: [{
+          course: newSnapshot,
+          previous: oldSnapshot,
+          current: newSnapshot,
+          changes: [{ field: 'schedule', label: '上课时间与周次' }],
+        }],
+      })],
+      100,
+    );
+
+    expect(result.pendingImpacts).toEqual([]);
+    expect(result.selectedSnapshots['MATH100.01'].schedule).toEqual(newSnapshot.schedule);
+  });
+
   test('acknowledges only the displayed pending impacts and keeps history', () => {
     const reconciled = reconcilePlansWithUpdates(
       payload(twoPlans),

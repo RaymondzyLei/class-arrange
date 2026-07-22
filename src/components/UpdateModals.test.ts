@@ -321,7 +321,7 @@ describe('update modals', () => {
     expect(courseChangeDangerStyles).not.toContain('border-left-color');
   });
 
-  test('formats highlighted and full schedule changes with the same week ranges', () => {
+  test('formats highlighted and full schedule changes with coalesced week ranges', () => {
     const before = [
       { weeks: [2, 9], day: 2, periods: [8, 9, 10] },
       { weeks: [10, 16], day: 2, periods: [8, 9, 10] },
@@ -375,8 +375,8 @@ describe('update modals', () => {
     const fullHtml = renderToStaticMarkup(createElement(CourseUpdateBatchDetails, { batch }));
 
     for (const html of [highlightedHtml, fullHtml]) {
-      expect(html).toContain('2~9周 周二 8–10节；10~16周 周二 8–10节');
-      expect(html).toContain('7周 周二 8–10节');
+      expect(html).toContain('2~16周 周二 8–10节；2~16周 周四 6–7节');
+      expect(html).toContain('2~16周 周二 8–10节');
       expect(html).toContain('course-update-change__arrow');
       expect(html).not.toContain('第2、9周');
       expect(html).not.toContain('7~7周');

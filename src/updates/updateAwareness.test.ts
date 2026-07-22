@@ -77,22 +77,18 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 21 education-level update with dangerous changelog items', () => {
+  test('publishes the July 23 course information and timetable display update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.21.1',
-      publishedAt: '2026-07-21',
-      title: '课程筛选与学历层次提醒',
+      version: '2026.07.23.1',
+      publishedAt: '2026-07-23',
+      title: '课程信息与界面优化',
       items: [
-        '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
-        '请注意课堂开课对应的学历层次是本科生还是研究生。',
-        '已选课程管理新增“查看全部时间组”入口，便于补选未选时间组。',
-      ],
-      dangerItems: [
-        '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
-        '请注意课堂开课对应的学历层次是本科生还是研究生。',
+        '优化课程信息和课表时间块展示。',
+        '修复当课程只有一个课堂时不显示课堂容量信息的问题。',
+        '修复部分UI问题。',
       ],
     });
-    expect(CURRENT_APP_VERSION).toBe('2026.07.21.1');
+    expect(CURRENT_APP_VERSION).toBe('2026.07.23.1');
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {

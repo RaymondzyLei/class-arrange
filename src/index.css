@@ -3687,6 +3687,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   line-height: 1.45;
 }
 
+.customization__row--with-description {
+  align-items: center;
+}
+
+.customization__campus-transfer-description {
+  display: grid;
+  gap: 5px;
+}
+
 .customization__navigation-value {
   flex: 0 0 auto;
   display: inline-flex;

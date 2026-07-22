@@ -74,6 +74,16 @@ export const APP_RELEASES: AppRelease[] = [
       '请注意课堂开课对应的学历层次是本科生还是研究生。',
     ],
   },
+  {
+    version: '2026.07.23.1',
+    publishedAt: '2026-07-23',
+    title: '课程信息与界面优化',
+    items: [
+      '优化课程信息和课表时间块展示。',
+      '修复当课程只有一个课堂时不显示课堂容量信息的问题。',
+      '修复部分UI问题。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

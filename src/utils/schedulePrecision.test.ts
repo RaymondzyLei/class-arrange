@@ -63,6 +63,33 @@ describe('precise clock schedules', () => {
     expect(formatted).not.toContain('7~7周');
   });
 
+  it('coalesces source teacher ranges without filling real week gaps', () => {
+    const stat = formatScheduleCompact([
+      slot({ weeks: [1, 9], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] }),
+      slot({ weeks: [10, 18], room: '5103', campus: '本部', day: 4, periods: [3, 4, 5] }),
+    ]);
+    const ai = formatScheduleCompact([
+      slot({ weeks: [2, 3], room: '5103', campus: '本部', day: 5, periods: [8, 9, 10] }),
+      slot({ weeks: [18, 18], room: '5103', campus: '本部', day: 5, periods: [8, 9, 10] }),
+    ]);
+
+    expect(stat).toBe('1~18周 5103: 4(3,4,5)');
+    expect(ai).toBe('2~3周、18周 5103: 5(8,9,10)');
+  });
+
+  it('groups matching week labels and rooms across different weekdays', () => {
+    const formatted = formatScheduleCompact([
+      slot({ weeks: [1, 7], room: '2409', campus: '本部', day: 2, periods: [3, 4, 5] }),
+      slot({ weeks: [8, 14], room: '2409', campus: '本部', day: 2, periods: [3, 4, 5] }),
+      slot({ weeks: [15, 18], room: '2409', campus: '本部', day: 2, periods: [3, 4, 5] }),
+      slot({ weeks: [1, 7], room: '2409', campus: '本部', day: 4, periods: [3, 4] }),
+      slot({ weeks: [8, 14], room: '2409', campus: '本部', day: 4, periods: [3, 4] }),
+      slot({ weeks: [15, 18], room: '2409', campus: '本部', day: 4, periods: [3, 4] }),
+    ]);
+
+    expect(formatted).toBe('1~18周 2409: 2(3,4,5) 4(3,4)');
+  });
+
   it('does not report an endpoint-touching exact course against period 11', () => {
     const exact = group('exact', [
       slot({ startTime: '19:00', endTime: '19:30' }),

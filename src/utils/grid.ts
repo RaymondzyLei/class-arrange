@@ -1,6 +1,9 @@
-import type { CourseGroup, ScheduleSlot } from '@/types';
-import { isWeekInArray } from './weeks';
-import { formatWeeks } from './weeks';
+import type { CourseGroup } from '@/types';
+import {
+  coalesceScheduleSlots,
+  formatActiveWeeks,
+  type DisplayScheduleSlot,
+} from './scheduleDisplay';
 import { formatTeacherList } from './teachers';
 
 export interface GridEntry {
@@ -20,7 +23,7 @@ export interface GridEntry {
   periodsText: string;
   /** 是否为多班组（同课程号 + 同时间 > 1 个班次折叠而来） */
   isMultiSection: boolean;
-  slot: ScheduleSlot;
+  slot: DisplayScheduleSlot;
 }
 
 export interface GridCell {
@@ -50,9 +53,9 @@ export function buildWeekGrid(groups: CourseGroup[], week: number): GridCell[][]
     })),
   );
   for (const g of groups) {
-    for (const slot of g.schedule) {
+    for (const slot of coalesceScheduleSlots(g.schedule)) {
       if (slot.day < 1 || slot.day > DAY_COUNT) continue;
-      if (!isWeekInArray(slot.weeks, week)) continue;
+      if (!slot.activeWeeks.includes(week)) continue;
       for (const p of slot.periods) {
         if (p < 1 || p > PERIOD_COUNT) continue;
         const cell = grid[slot.day - 1][p - 1];
@@ -64,7 +67,7 @@ export function buildWeekGrid(groups: CourseGroup[], week: number): GridCell[][]
           courseName: g.courseName,
           teachers: formatTeacherList(g.teachers),
           credits: g.sections[0]?.credits ?? 0,
-          weeksText: formatWeeks(slot.weeks),
+          weeksText: formatActiveWeeks(slot.activeWeeks),
           periodsText: slot.periods.join(','),
           isMultiSection: g.sections.length > 1,
           slot,

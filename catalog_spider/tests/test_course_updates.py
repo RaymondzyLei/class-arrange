@@ -157,7 +157,7 @@ def test_time_only_change_does_not_also_report_a_location_change():
     assert fields == ["schedule"]
 
 
-def test_splitting_time_ranges_at_one_location_does_not_report_location_change():
+def test_extending_time_ranges_at_one_location_only_reports_a_time_change():
     previous = _catalog(_course("MATH100.01"))
     current = deepcopy(previous)
     current["courses"][0]["schedule"].append(
@@ -177,6 +177,28 @@ def test_splitting_time_ranges_at_one_location_does_not_report_location_change()
         for change in feed["entries"][0]["modified"][0]["changes"]
     ]
     assert fields == ["schedule"]
+
+
+def test_splitting_one_occupied_time_range_does_not_create_a_course_change():
+    previous = _catalog(_course("MATH100.01"))
+    previous["courses"][0]["schedule"][0]["weeks"] = [8, 13]
+    current = deepcopy(previous)
+    current["courses"][0]["schedule"] = [
+        {
+            **current["courses"][0]["schedule"][0],
+            "weeks": [8, 9],
+        },
+        {
+            **current["courses"][0]["schedule"][0],
+            "weeks": [10, 13],
+        },
+    ]
+
+    _published, feed = build_catalog_publication(previous, current, None)
+
+    entry = feed["entries"][0]
+    assert entry["summary"] == {"added": 0, "removed": 0, "modified": 0}
+    assert entry["modified"] == []
 
 
 def test_education_level_change_is_recorded_in_update_snapshots():
