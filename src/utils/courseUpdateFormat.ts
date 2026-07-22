@@ -1,6 +1,10 @@
 import { DAY_LABELS } from '../constants/grid';
 import type { CourseFieldChange } from '../types';
-import { formatWeeks } from './weeks';
+import {
+  coalesceScheduleSlots,
+  formatActiveWeeks,
+  type ScheduleDisplaySource,
+} from './scheduleDisplay';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -27,12 +31,23 @@ function formatSchedule(value: unknown): string | null {
     const weeks = numberList(slot.weeks);
     const periods = numberList(slot.periods);
     if (!weeks || typeof slot.day !== 'number' || !periods) return null;
-    const time = typeof slot.startTime === 'string' && typeof slot.endTime === 'string'
-      ? `${slot.startTime}–${slot.endTime}`
-      : formatPeriods(periods);
-    return `${formatWeeks(weeks)} ${DAY_LABELS[slot.day] ?? `周${slot.day}`} ${time}`;
+    return {
+      weeks,
+      day: slot.day,
+      periods,
+      ...(typeof slot.startTime === 'string' ? { startTime: slot.startTime } : {}),
+      ...(typeof slot.endTime === 'string' ? { endTime: slot.endTime } : {}),
+    } satisfies ScheduleDisplaySource;
   });
-  return slots.every((slot): slot is string => slot !== null) ? slots.join('；') : null;
+  if (!slots.every((slot): slot is ScheduleDisplaySource => slot !== null)) return null;
+
+  return coalesceScheduleSlots(slots).map((slot) => {
+    const time = slot.startTime && slot.endTime
+      ? `${slot.startTime}–${slot.endTime}`
+      : formatPeriods(slot.periods);
+    const weeks = slot.weeksSpecified ? formatActiveWeeks(slot.activeWeeks) : '';
+    return `${weeks} ${DAY_LABELS[slot.day] ?? `周${slot.day}`} ${time}`;
+  }).join('；');
 }
 
 function formatLocations(value: unknown): string | null {

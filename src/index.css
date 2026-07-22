@@ -3689,6 +3689,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   line-height: 1.45;
 }
 
+.customization__row--with-description {
+  align-items: center;
+}
+
+.customization__campus-transfer-description {
+  display: grid;
+  gap: 5px;
+}
+
 .customization__navigation-value {
   flex: 0 0 auto;
   display: inline-flex;
@@ -4283,10 +4292,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   font-weight: 650;
 }
 
-.course-update-details__modified-item--danger {
-  box-shadow: inset 2px 0 0 var(--conflict);
-}
-
 .course-update-details__course-name {
   color: var(--text-sub);
 }
@@ -4303,10 +4308,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   gap: 8px;
   padding-left: 9px;
   border-left: 2px solid var(--border);
-}
-
-.course-update-change--danger {
-  border-left-color: var(--conflict);
 }
 
 .course-update-change--danger dt,

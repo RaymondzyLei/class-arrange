@@ -24,6 +24,23 @@ describe('course detail layout', () => {
     expect(source).not.toContain('<Tag color="blue">是</Tag>');
   });
 
+  it('shows enrollment and capacity in both single-section overviews only', () => {
+    expect(source).toContain(
+      'const singleSection = display.sections.length === 1 ? display.sections[0] : undefined;',
+    );
+    expect(source).toContain('<Descriptions.Item label="选课/限选">');
+    expect(source).toContain('mobile-field__label">选课/限选');
+    expect(occurrenceCount(source, 'singleSection.enrolled} / {singleSection.capacity')).toBe(2);
+    expect(occurrenceCount(source, '{singleSection ? (')).toBe(2);
+    expect(source).toContain('{display.sections.length > 1 && (');
+  });
+
+  it('coalesces the detailed schedule rows with the shared display utility', () => {
+    expect(source).toContain('coalesceScheduleSlots(display.schedule)');
+    expect(source).toContain('formatActiveWeeks(s.activeWeeks)');
+    expect(source).toContain("s.activeWeeks.join(', ')");
+  });
+
   it('renders long material text once in a shared grouped section', () => {
     expect(source).toContain('className="course-material-groups"');
     expect(source).toContain('className="course-material-group"');

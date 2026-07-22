@@ -9,6 +9,7 @@ import type {
 } from '@/types';
 import type { StoredPlansPayloadV2 } from '@/utils/planSeed';
 import { sameTeacherSet } from '../utils/teachers';
+import { coalesceScheduleSlots } from '../utils/scheduleDisplay';
 
 interface FinalCourseState {
   exists: boolean;
@@ -59,6 +60,10 @@ function timePart(schedule: ScheduleSlot[]) {
   }));
 }
 
+function canonicalTimePart(schedule: ScheduleSlot[]) {
+  return coalesceScheduleSlots(timePart(schedule));
+}
+
 function locationPart(schedule: ScheduleSlot[]) {
   return uniqueSorted(schedule.map(({ room, campus }) => ({
     room,
@@ -93,7 +98,7 @@ function selectedChanges(
   }
   const previousTime = timePart(previous.schedule);
   const currentTime = timePart(current.schedule);
-  if (changed(previousTime, currentTime)) {
+  if (changed(canonicalTimePart(previous.schedule), canonicalTimePart(current.schedule))) {
     changes.push({
       field: 'schedule',
       label: '上课时间与周次',

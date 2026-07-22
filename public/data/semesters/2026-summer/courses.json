@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-16T14:38:26Z",
+  "generatedAt": "2026-07-22T17:25:44Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -244,7 +244,7 @@
       "language": "中文",
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
-      "undergradShared": false,
+      "undergradShared": true,
       "enrolled": 115,
       "capacity": 180,
       "classes": [
@@ -631,7 +631,7 @@
       "language": "英语",
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
-      "undergradShared": false,
+      "undergradShared": true,
       "enrolled": 27,
       "capacity": 100,
       "classes": [
@@ -880,7 +880,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 85,
+      "enrolled": 83,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A112: 1(2,3,4,5);3A112: 2(2,3,4,5);西区电一楼机房1厅: 3(1,2,3,4,5);西区电一楼机房1厅: 3(6,7,8,9,10);3A112: 4(2,3,4,5);3A112: 5(2,3,4,5);3A112: 6(2,3,4,5)",
@@ -1210,14 +1210,14 @@
       "teacher": "王冬梅,黄成栋",
       "credits": 1.5,
       "hours": 60,
-      "level": "研究生",
+      "level": "本研贯通",
       "sectionType": "基础",
       "category": "",
       "courseType": "实验课",
       "language": "中文",
       "examType": "其他",
       "grading": "百分制",
-      "undergradShared": false,
+      "undergradShared": true,
       "enrolled": 16,
       "capacity": 20,
       "classes": [],
@@ -1379,14 +1379,14 @@
       "teacher": "薛林,黄成栋",
       "credits": 1.5,
       "hours": 60,
-      "level": "研究生",
+      "level": "本研贯通",
       "sectionType": "基础",
       "category": "",
       "courseType": "实验课",
       "language": "中文",
       "examType": "其他",
       "grading": "百分制",
-      "undergradShared": false,
+      "undergradShared": true,
       "enrolled": 12,
       "capacity": 20,
       "classes": [],
@@ -2121,7 +2121,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 106,
+      "enrolled": 105,
       "capacity": 110,
       "classes": [],
       "rawSchedule": "3A113: 1(1,2);3A113: 1(3);3A113: 2(1,2);3A113: 2(3,4);3A113: 3(1,2);3A113: 3(3)",
@@ -2886,7 +2886,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 3,
+      "enrolled": 5,
       "capacity": 11,
       "classes": [
         "24环境科学与工程"
@@ -3049,187 +3049,6 @@
             9
           ],
           "campus": "其他"
-        }
-      ]
-    },
-    {
-      "id": "FORL6101U.01",
-      "courseName": "研究生综合英语",
-      "department": {
-        "code": "911",
-        "name": "附属第一医院"
-      },
-      "teacher": "张曼君",
-      "credits": 2,
-      "hours": 40,
-      "level": "研究生",
-      "sectionType": "基础",
-      "category": "",
-      "courseType": "理论课",
-      "language": "中文",
-      "examType": "其他",
-      "grading": "二分制",
-      "undergradShared": false,
-      "enrolled": 105,
-      "capacity": 105,
-      "classes": [],
-      "rawSchedule": "3A113: 1(1,2);3A113: 1(3,4);3A113: 2(1,2);3A113: 2(3,4);3A113: 3(1,2);3A113: 3(3,4);3A113: 4(1,2);3A113: 4(3,4);3A113: 5(1,2);3A113: 5(3,4);3A113: 6(1,2);3A113: 6(3,4)",
-      "schedule": [
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 1,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 1,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 2,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 2,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 3,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 3,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 4,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            5
-          ],
-          "room": "3A113",
-          "day": 4,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            4
-          ],
-          "room": "3A113",
-          "day": 5,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            4
-          ],
-          "room": "3A113",
-          "day": 5,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            4
-          ],
-          "room": "3A113",
-          "day": 6,
-          "periods": [
-            1,
-            2
-          ],
-          "campus": "本部"
-        },
-        {
-          "weeks": [
-            4,
-            4
-          ],
-          "room": "3A113",
-          "day": 6,
-          "periods": [
-            3,
-            4
-          ],
-          "campus": "本部"
         }
       ]
     },
@@ -6566,7 +6385,7 @@
       "language": "英语",
       "examType": "笔试（开卷）",
       "grading": "百分制",
-      "undergradShared": false,
+      "undergradShared": true,
       "enrolled": 12,
       "capacity": 100,
       "classes": [],
@@ -6648,7 +6467,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "五分制",
       "undergradShared": false,
-      "enrolled": 105,
+      "enrolled": 104,
       "capacity": 300,
       "classes": [],
       "rawSchedule": "具体上课安排咨询任课教师，不满足任课教师教学要求的学生请在7月20日前直接联系教学秘书张老师退课63603257 ztt615@ustc.edu.cn: 1(11,12)",
@@ -6738,7 +6557,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 25,
+      "enrolled": 24,
       "capacity": 30,
       "classes": [
         "24能源与动力工程"
@@ -6842,7 +6661,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 62,
+      "enrolled": 63,
       "capacity": 65,
       "classes": [],
       "rawSchedule": "2106: 6(08:30~12:00);2106: 6(14:00~17:45);2106: 7(08:30~12:00);2106: 7(14:00~17:45)",
@@ -9849,41 +9668,6 @@
         "periods": []
       }
     },
-    "FORL6101U.01": {
-      "code": "FORL6101U.01",
-      "name": {
-        "cn": "研究生综合英语",
-        "en": "Comprehensive English for Graduate Students"
-      },
-      "dept": "外语教学中心",
-      "credit": 2,
-      "hour": 40,
-      "sem": "秋;春",
-      "grading": "二分制",
-      "examType": "其他",
-      "discipline": "FL外语",
-      "lang": "中文",
-      "prerequisite": "",
-      "legacyTextbook": "",
-      "textbooks": [
-        {
-          "nameZh": "新编跨文化交际英语教程",
-          "edition": "第1版",
-          "author": "许力生",
-          "publishingHouse": "上海外语教育出版社",
-          "dates": "2020-10-01 00:00:00",
-          "isbn": "9787544659031",
-          "publish": true
-        }
-      ],
-      "materials": [],
-      "referenceBooks": "无",
-      "description": {
-        "cn": "研究生综合英语的教学目标是培养学生英语综合应用能力，使他们在今后工作和科研中能用英语有效地进行口头和书面的信息交流，同时进一步增强学生的自主学习能力、提高综合文化素养。本课程通过大量的语言实践活动进一步巩固学生的英语语言知识和技能，强化语言运用能力。在阅读理解方面，要求能阅读英语原版书籍；能较顺利地阅读与自己专业有关的综述性文献。写作方面，通过具体的写作实践使学生较好地掌握英语基本写作技能，在规定时间内完成一篇条理清晰、语句连贯、语言规范的文章。在听力理解方面，培养学生听内容稍长的短文的能力，要求学生能掌握其中心大意，抓住并理解要点。此外，培养学生的口语表达能力，能在学习过程中用英语交流，并能就某一主题进行讨论。研究生综合英语教学内容规定在一学期内完成。教学形式为课堂教学及网络自学",
-        "en": "nothing"
-      },
-      "syllabus": ""
-    },
     "FORL7201U.01": {
       "code": "FORL7201U.01",
       "name": {
@@ -11703,5 +11487,5 @@
       }
     }
   },
-  "revision": "361155916d8e58461ad5b324445611b08d2eaece78f8fe24437db47cfea52f4e"
+  "revision": "193249c0acc6eee027a715fa52651c0e51faf8312540bc08bcdea482c1cc514e"
 }

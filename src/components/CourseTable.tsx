@@ -2,9 +2,9 @@ import { Button, Slider } from 'antd';
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type Ref } from 'react';
 import type { CourseGroup } from '@/types';
 import { PERIODS, DAY_LABELS, PERIOD_TIMES } from '@/constants/grid';
-import { formatWeeks, isWeekInArray } from '@/utils/weeks';
 import { courseColor, type CourseColor } from '@/utils/courseColor';
 import { formatTeacherList } from '@/utils/teachers';
+import { coalesceScheduleSlots, formatActiveWeeks } from '@/utils/scheduleDisplay';
 import {
   assignTimetableLanes,
   getMobileContainmentGroups,
@@ -186,14 +186,15 @@ function buildEntries(
 
   for (const group of groups) {
     const color = courseColor(group.key, themeMode);
-    for (let slotIndex = 0; slotIndex < group.schedule.length; slotIndex += 1) {
-      const slot = group.schedule[slotIndex];
+    const displaySchedule = coalesceScheduleSlots(group.schedule);
+    for (let slotIndex = 0; slotIndex < displaySchedule.length; slotIndex += 1) {
+      const slot = displaySchedule[slotIndex];
       if (slot.day < 1 || slot.day > 7) continue;
       const exactInterval = exactScheduleInterval(slot);
       const runs = splitConsecutivePeriods(slot.periods.filter((p) => p >= 1 && p <= 13));
       for (const date of dates) {
         if (date.effectiveWeekday !== slot.day) continue;
-        if (!isWeekInArray(slot.weeks, date.effectiveWeek)) continue;
+        if (!slot.activeWeeks.includes(date.effectiveWeek)) continue;
         for (let runIndex = 0; runIndex < runs.length; runIndex += 1) {
           const periods = runs[runIndex];
           const start = periods[0];
@@ -204,7 +205,7 @@ function buildEntries(
             runIndex,
             date.weekday,
             date.effectiveWeekday,
-            slot.weeks.join('_'),
+            slot.activeWeeks.join('_'),
             periods.join('_'),
           ].join('-');
           let entry = entries.get(id);
@@ -216,11 +217,11 @@ function buildEntries(
               courseName: group.courseName,
               teachers: formatTeacherList(group.teachers),
               credits: group.sections[0]?.credits ?? 0,
-              weeksText: formatWeeks(slot.weeks),
+              weeksText: formatActiveWeeks(slot.activeWeeks),
               periodsText: slot.startTime && slot.endTime
                 ? `${slot.startTime}~${slot.endTime}`
                 : periods.join(','),
-              room: group.sections.length > 1 ? '多班次' : slot.room,
+              room: group.sections.length > 1 ? '多班次' : slot.room ?? '',
               displayDay: date.weekday,
               start,
               end,

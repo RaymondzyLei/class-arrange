@@ -220,8 +220,20 @@ export default function CustomizationModal({
             <section className="customization__group-section" data-tour="customization-preferences">
               <h3 className="customization__group-label">排课倾向</h3>
               <div className="customization__group">
-                <div className="customization__row">
-                  <span className="customization__row-title">优先避免跨校区</span>
+                <div className="customization__row customization__row--with-description">
+                  <span className="customization__row-copy">
+                    <span className="customization__row-title">优先避免跨校区</span>
+                    <small className="customization__campus-transfer-description">
+                      <span>
+                        在冲突课程数尽可能少的前提下，跨校区次数越少越好。当前跨校区次数计算规则是：上午、下午、晚上分别从常驻地点出发，首课异地计1次，时段内（上午/下午/晚上）相邻课程换地区计1次，不计算返程。
+                      </span>
+                      <span>
+                        需要注意的是：有相当多的课程上课地点不知道位于哪个校区，
+                        <em>这可能会导致方案被错误排序</em>
+                        ，请务必仔细检查。
+                      </span>
+                    </small>
+                  </span>
                   <PreferenceToggle
                     checked={settings.preferAvoidCampusTransfers}
                     label="优先避免跨校区"

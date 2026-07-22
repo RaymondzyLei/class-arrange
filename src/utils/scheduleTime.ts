@@ -6,6 +6,9 @@ export interface MinuteInterval {
   end: number;
 }
 
+type ScheduleTimeSource = Pick<ScheduleSlot, 'periods' | 'startTime' | 'endTime'>;
+type ScheduleDayTimeSource = ScheduleTimeSource & Pick<ScheduleSlot, 'day'>;
+
 const CLOCK_PATTERN = /^(\d{1,2}):(\d{2})$/;
 
 export function parseClockMinutes(value: string | undefined): number | null {
@@ -23,7 +26,7 @@ export function formatClockMinutes(value: number): string {
   return `${hours}:${minutes}`;
 }
 
-export function exactScheduleInterval(slot: ScheduleSlot): MinuteInterval | null {
+export function exactScheduleInterval(slot: ScheduleTimeSource): MinuteInterval | null {
   const start = parseClockMinutes(slot.startTime);
   const end = parseClockMinutes(slot.endTime);
   if (start === null || end === null || start >= end) return null;
@@ -43,7 +46,7 @@ export function periodMinuteInterval(period: number): MinuteInterval | null {
  * 精确钟点优先；只有未提供合法起止时间时才回退到标准节次。
  * 标准节次分别保留为半开区间，课间休息不会被误判为占用。
  */
-export function scheduleSlotMinuteIntervals(slot: ScheduleSlot): MinuteInterval[] {
+export function scheduleSlotMinuteIntervals(slot: ScheduleTimeSource): MinuteInterval[] {
   const exact = exactScheduleInterval(slot);
   if (exact) return [exact];
 
@@ -65,7 +68,7 @@ export function minuteIntervalsOverlap(
   return left.start < right.end && right.start < left.end;
 }
 
-export function formatScheduleSlotTime(slot: ScheduleSlot): string {
+export function formatScheduleSlotTime(slot: ScheduleTimeSource): string {
   const exact = exactScheduleInterval(slot);
   if (exact) {
     return `${formatClockMinutes(exact.start)}~${formatClockMinutes(exact.end)}`;
@@ -73,7 +76,7 @@ export function formatScheduleSlotTime(slot: ScheduleSlot): string {
   return slot.periods.join(',');
 }
 
-export function hasExactScheduleTime(slot: ScheduleSlot): boolean {
+export function hasExactScheduleTime(slot: ScheduleTimeSource): boolean {
   return exactScheduleInterval(slot) !== null;
 }
 
@@ -95,7 +98,7 @@ export function blockedMinuteIntervalsByDay(
 }
 
 export function scheduleSlotOverlapsBlocked(
-  slot: ScheduleSlot,
+  slot: ScheduleDayTimeSource,
   blockedByDay: ReadonlyMap<number, MinuteInterval[]>,
 ): boolean {
   const blocked = blockedByDay.get(slot.day);

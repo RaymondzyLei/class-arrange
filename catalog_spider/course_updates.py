@@ -99,6 +99,49 @@ def _schedule_time(schedule: list[dict]) -> list[dict]:
     ]
 
 
+def _expanded_weeks(weeks: object) -> tuple[int, ...]:
+    if not isinstance(weeks, list) or not weeks:
+        return ()
+    if len(weeks) == 2 and all(isinstance(week, int) for week in weeks):
+        start, end = weeks
+        return tuple(range(start, end + 1)) if start <= end else ()
+    return tuple(sorted({week for week in weeks if isinstance(week, int)}))
+
+
+def _canonical_schedule_time(schedule: list[dict]) -> list[dict]:
+    grouped: dict[str, dict] = {}
+    for slot in schedule:
+        weeks = _expanded_weeks(slot.get("weeks"))
+        periods = sorted({
+            period
+            for period in slot.get("periods", [])
+            if isinstance(period, int)
+        })
+        normalized = {
+            "weeksSpecified": bool(slot.get("weeks")),
+            "day": slot.get("day"),
+            "periods": periods,
+            "startTime": (
+                slot.get("startTime", "").strip()
+                if isinstance(slot.get("startTime"), str)
+                else ""
+            ),
+            "endTime": (
+                slot.get("endTime", "").strip()
+                if isinstance(slot.get("endTime"), str)
+                else ""
+            ),
+        }
+        key = json.dumps(normalized, ensure_ascii=False, sort_keys=True)
+        entry = grouped.setdefault(key, {**normalized, "weeks": set()})
+        entry["weeks"].update(weeks)
+
+    return [
+        {**entry, "weeks": sorted(entry["weeks"])}
+        for key, entry in sorted(grouped.items())
+    ]
+
+
 def _schedule_location(schedule: list[dict]) -> list[dict]:
     locations = {
         (slot.get("campus", ""), slot.get("room", "")): {
@@ -142,7 +185,7 @@ def _course_changes(
     new_schedule = new_course.get("schedule", [])
     old_time = _schedule_time(old_schedule)
     new_time = _schedule_time(new_schedule)
-    if old_time != new_time:
+    if _canonical_schedule_time(old_schedule) != _canonical_schedule_time(new_schedule):
         changes.append(_value_change("schedule", "上课时间与周次", old_time, new_time))
 
     old_location = _schedule_location(old_schedule)

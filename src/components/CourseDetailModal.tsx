@@ -7,7 +7,7 @@ import {
   idsForCourse,
   idsForGroup,
 } from '@/utils/courseSelection';
-import { formatWeeks, expandWeeks } from '@/utils/weeks';
+import { expandWeeks } from '@/utils/weeks';
 import { DAY_LABELS } from '@/constants/grid';
 import { getIcourseRatingInfo, type IcourseRatingInfo } from '@/utils/icourseRating';
 import {
@@ -15,6 +15,7 @@ import {
   formatScheduleSlotTime,
 } from '@/utils/scheduleFormat';
 import { hasExactScheduleTime } from '@/utils/scheduleTime';
+import { coalesceScheduleSlots, formatActiveWeeks } from '@/utils/scheduleDisplay';
 import { formatSectionTeacher, formatTeacherList } from '@/utils/teachers';
 import { formatCourseMaterialDisplay } from '@/utils/courseDetails';
 import BottomModal from './BottomModal';
@@ -138,6 +139,7 @@ export default function CourseDetailModal({
 
   const mergedTimeGroups = display.timeGroups;
   const rep = display.sections[0];
+  const singleSection = display.sections.length === 1 ? display.sections[0] : undefined;
   const examType = displayDetail?.examType.trim() || rep?.examType.trim() || '—';
   const grading = displayDetail?.grading.trim() || rep?.grading.trim() || '—';
   const materialDisplay = formatCourseMaterialDisplay(displayDetail);
@@ -149,16 +151,11 @@ export default function CourseDetailModal({
     && courseIds.every((id) => activePlan?.courseIds.includes(id));
   const singleRating =
     display.sections.length === 1 ? getIcourseRatingInfo(display.sections[0].id) : undefined;
-  const sortedSchedule = [...display.schedule].sort((a, b) =>
-    firstExpandedWeek(a.weeks) - firstExpandedWeek(b.weeks)
-    || a.day - b.day
-    || firstPeriod(a.periods) - firstPeriod(b.periods)
-    || (a.room || '').localeCompare(b.room || '', 'zh-Hans-CN'),
-  );
+  const sortedSchedule = coalesceScheduleSlots(display.schedule);
   const scheduleRows = sortedSchedule.map((s, i) => ({
     key: i,
-    weeks: formatWeeks(s.weeks),
-    weeksExpanded: expandWeeks(s.weeks).join(', '),
+    weeks: s.weeksSpecified ? formatActiveWeeks(s.activeWeeks) : '',
+    weeksExpanded: s.activeWeeks.join(', '),
     day: DAY_LABELS[s.day] ?? s.day,
     time: formatScheduleSlotTime(s),
     exactTime: hasExactScheduleTime(s),
@@ -364,6 +361,11 @@ export default function CourseDetailModal({
           <Descriptions.Item label="授课语言">{rep?.language || '—'}</Descriptions.Item>
           <Descriptions.Item label="考核方式">{examType}</Descriptions.Item>
           <Descriptions.Item label="评分制">{grading}</Descriptions.Item>
+          {singleSection ? (
+            <Descriptions.Item label="选课/限选">
+              {singleSection.enrolled} / {singleSection.capacity}
+            </Descriptions.Item>
+          ) : null}
           {rep?.undergradShared ? (
             <Descriptions.Item label="本研同堂">是</Descriptions.Item>
           ) : null}
@@ -391,6 +393,14 @@ export default function CourseDetailModal({
             <span className="mobile-field__label">学分 / 学时</span>
             <span className="mobile-field__value">{rep?.credits ?? 0} / {rep?.hours ?? 0}</span>
           </div>
+          {singleSection ? (
+            <div className="mobile-field">
+              <span className="mobile-field__label">选课/限选</span>
+              <span className="mobile-field__value">
+                {singleSection.enrolled} / {singleSection.capacity}
+              </span>
+            </div>
+          ) : null}
           <div className="mobile-field">
             <span className="mobile-field__label">学历层次</span>
             <span className="mobile-field__value">{rep?.level || '—'}</span>
