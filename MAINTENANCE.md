@@ -37,6 +37,12 @@ uv sync --group spider --group dev
 - 首次运行会打开可见浏览器（优先 Edge，回退 Chromium），需手动登录一次 USTC 统一身份认证；登录态保存在 `catalog_spider/data/browser-profile/`（已 gitignore），后续复用。
 - 详情按 50 个课堂一批抓取并写断点到 `catalog_spider/data/raw/lessons/<key>/details.json`；中断后重跑只补缺失的课堂。
 - 三个 API：`GET /api/teach/semester/list`、`GET /api/teach/lesson/list-for-teach/{id}`、`POST /api/teach/lesson/infos`（429/5xx 按 1/2/4s 退避重试）。
+- **预期输出**（用来判断脚本是否正常推进，登录抓取期间可能数分钟无输出）：
+  1. `请在浏览器中完成登录；脚本将等待认证状态。` -- 等你登录，期间无其他输出属正常。
+  2. `登录状态: 200` -- 登录成功，开始抓取。
+  3. `synced <key>: courses=<N>` -- 该学期课堂列表抓取完成。
+  4. `semester=<key> courses=... scheduled_courses=...` -- `validate-lessons` 摘要（字段含义见 1.4）。
+  - 登录后脚本自动导航抓取，**无需手动操作页面**；浏览器可保持打开直到脚本退出。
 
 ### 1.2 发布产物（均已入 git）
 
@@ -44,14 +50,19 @@ uv sync --group spider --group dev
 
 ```
 public/data/semesters/index.json                    # manifest：defaultSemester + 每学期 key/name/file/revision/updatesFile
-public/data/semesters/<key>/courses.json            # 课程列表 + detailsBySection + revision
-public/data/semesters/<key>/updates.json            # 与上一版的 added/removed/modified 变更记录
+public/data/semesters/<key>/courses.json            # 课程列表 + detailsBySection + semester.calendar + revision
+public/data/semesters/<key>/updates.json            # 变更记录，entries[] 按时间累积
 ```
 
 - `revision` 是内容哈希（SHA-256，剥离 `generatedAt`/`enrolled` 等易变字段）。内容没变则 `updates.json` 不追加新条目（幂等），重跑不会产生重复更新记录。
+- **revision 一致性**（验证时可用）：同一学期的 `index.json` 的 `revision` == `courses.json` 的 `revision` == `updates.json` 的 `currentRevision` == `updates.json` 最新 entry 的 `revision`，四处必须相等。
+- `courses.json` 的 `semester.calendar`（含 `holidays`/`makeupDays`）是前端课表渲染节假日/补课的**运行时来源**（`App.tsx` 注入 `CourseTable`）；`src/config/termCalendar.ts` 的 `TERM_CALENDAR` 只是镜像常量 + 测试依赖，见第二节。
+- `updates.json` 结构：`{schemaVersion, semesterKey, currentRevision, entries[]}`；每个 entry = `{id, revision, previousRevision, publishedAt, summary{added,removed,modified}, added[], removed[{course, replacementCandidates}], modified[{course, previous, current, changes}]}`，`entry.previousRevision` 指向上一个 entry 的 `revision` 形成链条。
 - 前端「最近更新」弹窗、方案对账（被删课堂自动移除并给替换候选、教师/时间/地点变化提示）都依赖 `updates.json`，所以**不要手动删它**。
 
 ### 1.3 只改了转换规则 / 校历，不想重新登录抓取
+
+> 前提：`catalog_spider/data/raw/lessons/<key>/` 下已有 raw 数据。**clone 后该目录为空，`build-lessons` 不可用，必须先跑一次 1.1 的 `sync-lessons` 抓取 raw。**
 
 若 raw 已抓全，只调整了解析逻辑或 `CALENDAR_OVERRIDES`，用纯本地重建（不开浏览器、不联网）：
 
@@ -66,7 +77,10 @@ uv run python -m catalog_spider validate-lessons --all
 uv run python -m catalog_spider validate-lessons --all
 ```
 
-输出每学期的 `courses` / `raw_schedule_non_empty` / `scheduled_courses` / `clock_time_courses` / `grading_non_empty` / `grading_labels` / `textbooks` / `materials` / `reference_books_non_empty`。若 `scheduled_courses` 远低于 `raw_schedule_non_empty`，说明时间表大量解析失败，需检查 `lesson_transform.py` 的解析规则。
+输出每学期的 `courses` / `raw_schedule_non_empty` / `scheduled_courses` / `clock_time_courses` / `grading_non_empty` / `grading_labels` / `textbooks` / `materials` / `reference_books_non_empty`。
+
+- **`scheduled_courses == raw_schedule_non_empty`** 表示时间表解析零失败；若 `scheduled_courses` 远低于 `raw_schedule_non_empty`，需检查 `lesson_transform.py` 的解析规则。
+- **确认本次同步是否真的产生了变更**：对比 `index.json` 中该学期的 `revision` 是否变化，或看 `updates.json` 是否追加了新 entry。`revision` 不变 = 幂等无变更（属正常，不会产生空更新记录）。
 
 ---
 
@@ -170,6 +184,12 @@ gh pr create --title "..." --body "..."
 
 - 数据更新建议用 `data:` 前缀，如 `data: refresh 2026-fall lessons`。
 - 切换学期这类含前端联动的，一次提交涵盖后端数据 + `termCalendar.ts` + 测试，便于回溯。
+- **PR 合并后清理**（在 GitHub 上合并后，本地执行）：
+  ```powershell
+  git checkout main
+  git branch -D <分支名>      # 删本地分支
+  git pull origin main        # 拉取合并后的 main
+  ```
 
 ---
 
