@@ -87,9 +87,10 @@ export const APP_RELEASES: AppRelease[] = [
   {
     version: '2026.07.24.1',
     publishedAt: '2026-07-24',
-    title: '方案分享',
+    title: '方案分享与备忘录',
     items: [
       '新增选课方案分享功能。',
+      '新增备忘录功能，内容仅保存在当前浏览器。',
     ],
   },
 ];

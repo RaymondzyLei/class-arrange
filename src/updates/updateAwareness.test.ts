@@ -77,13 +77,14 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 24 shared-plan update', () => {
+  test('publishes the July 24 shared-plan and memo update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
       version: '2026.07.24.1',
       publishedAt: '2026-07-24',
-      title: '方案分享',
+      title: '方案分享与备忘录',
       items: [
         '新增选课方案分享功能。',
+        '新增备忘录功能，内容仅保存在当前浏览器。',
       ],
     });
     expect(CURRENT_APP_VERSION).toBe('2026.07.24.1');
