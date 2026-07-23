@@ -584,7 +584,15 @@ html {
   max-width: calc(100vw - 24px);
 }
 
+.plan-select-dropdown {
+  width: min(360px, calc(100vw - 24px)) !important;
+  min-width: min(360px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px);
+}
+
 .plan-select-dropdown .ant-select-item-option-content {
+  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   overflow: visible;
 }

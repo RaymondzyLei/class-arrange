@@ -27,16 +27,32 @@ describe('shared-plan sender UI', () => {
 
   it('shows the complete selected plan name while keeping the selector compact', () => {
     expect(switcher).toContain('title={activePlan?.name}');
+    expect(switcher).toContain('popupMatchSelectWidth={360}');
     expect(styles).toMatch(
       /\.plan-switcher__main-row\s*\{[^}]*grid-template-columns:\s*auto minmax\(0,\s*1fr\) auto/s,
     );
     expect(styles).toMatch(
       /\.plan-switcher__select\s*\{[^}]*min-width:\s*0/s,
     );
+    expect(styles).toMatch(
+      /\.plan-select-dropdown\s*\{[^}]*max-width:\s*calc\(100vw - 24px\)/s,
+    );
+    expect(styles).toMatch(
+      /\.plan-select-dropdown \.ant-select-item-option-content\s*\{[^}]*width:\s*100%/s,
+    );
   });
 
   it('explains that the copied link is readable by its recipients', () => {
     expect(sender).toContain('获得链接的人可以查看其中的方案名称和课堂信息');
+  });
+
+  it('uses the current Ant Design alert title API for generation errors', () => {
+    expect(sender).not.toMatch(/<Alert[\s\S]*?\bmessage=/);
+    expect(sender).toContain('title={linkState.error}');
+  });
+
+  it('does not duplicate the header close action in the sender footer', () => {
+    expect(sender).not.toContain('<Button onClick={onClose}>关闭</Button>');
   });
 });
 
@@ -52,6 +68,26 @@ describe('shared-plan receiver UI', () => {
     expect(app).toContain('useSharedPlanImport({');
     expect(app).toContain('<SharedPlanImportModal');
     expect(app).toContain('sharedPlanImport.confirmImport()');
+  });
+
+  it('keeps onboarding behind an active shared-plan import', () => {
+    expect(app).toContain(
+      "open={onboarding.stage === 'wizard' && sharedPlanImport.state.kind === 'closed'}",
+    );
+    expect(app).toContain(
+      "open={onboarding.stage === 'tour' && sharedPlanImport.state.kind === 'closed'}",
+    );
+  });
+
+  it('uses the current Ant Design alert title API', () => {
+    expect(receiver).not.toMatch(/<Alert[\s\S]*?\bmessage=/);
+    expect(receiver).toContain('title={state.message}');
+  });
+
+  it('keeps only preview actions and omits the reusable-empty explanation', () => {
+    expect(receiver).toContain("state.kind === 'preview' ? (");
+    expect(receiver).not.toContain("? '取消' : '关闭'");
+    expect(receiver).not.toContain('当前唯一方案为空');
   });
 
   it('styles bounded course lists and a mobile summary', () => {

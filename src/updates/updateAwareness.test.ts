@@ -77,18 +77,16 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 23 course information and timetable display update', () => {
+  test('publishes the July 24 shared-plan update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.23.1',
-      publishedAt: '2026-07-23',
-      title: '课程信息与界面优化',
+      version: '2026.07.24.1',
+      publishedAt: '2026-07-24',
+      title: '方案分享',
       items: [
-        '优化课程信息和课表时间块展示。',
-        '修复当课程只有一个课堂时不显示课堂容量信息的问题。',
-        '修复部分UI问题。',
+        '新增选课方案分享功能。',
       ],
     });
-    expect(CURRENT_APP_VERSION).toBe('2026.07.23.1');
+    expect(CURRENT_APP_VERSION).toBe('2026.07.24.1');
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {

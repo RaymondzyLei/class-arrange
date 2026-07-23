@@ -69,7 +69,7 @@ describe('shared plan links', () => {
     expect(() => encodeSharedPlan({
       ...payload,
       courseIds: Array.from({ length: 101 }, (_, index) => `A.${index}`),
-    })).toThrow('分享课程列表无效');
+    })).toThrow('包含 101 个课堂，超过分享上限 100 个');
     expect(() => encodeSharedPlan({ ...payload, name: '名'.repeat(21) }))
       .toThrow('方案名称无效');
   });
@@ -98,7 +98,7 @@ describe('shared plan links', () => {
     expect(() => buildSharedPlanUrl(
       payload,
       `https://example.test/${'x'.repeat(1800)}`,
-    )).toThrow('分享链接过长');
+    )).toThrow('生成后的分享链接超过 1800 个字符');
   });
 });
 

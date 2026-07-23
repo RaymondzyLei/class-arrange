@@ -1005,13 +1005,13 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         groupsByCode={groupsByCode}
       />
       <OnboardingWizard
-        open={onboarding.stage === 'wizard'}
+        open={onboarding.stage === 'wizard' && sharedPlanImport.state.kind === 'closed'}
         preferences={onboarding.state.preferences}
         onComplete={handleWizardComplete}
         onSkip={onboarding.skipWizard}
       />
       <SpotlightTour
-        open={onboarding.stage === 'tour'}
+        open={onboarding.stage === 'tour' && sharedPlanImport.state.kind === 'closed'}
         entryMode={onboarding.tourEntryMode}
         onFinish={handleTourFinish}
         onSkip={handleTourSkip}

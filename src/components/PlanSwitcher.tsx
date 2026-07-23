@@ -148,6 +148,7 @@ export default function PlanSwitcher({
           options={planOptions}
           optionLabelProp="title"
           classNames={{ popup: { root: 'plan-select-dropdown' } }}
+          popupMatchSelectWidth={360}
           disabled={state.plans.length === 0}
         />
         <div className="plan-switcher__actions">

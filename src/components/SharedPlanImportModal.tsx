@@ -25,16 +25,14 @@ export default function SharedPlanImportModal({ state, onClose, onImport }: Prop
       open={open}
       onClose={onClose}
       width={640}
-      footer={(
+      footer={preview ? (
         <>
-          <Button onClick={onClose}>{state.kind === 'preview' ? '取消' : '关闭'}</Button>
-          {preview ? (
-            <Button type="primary" onClick={onImport} disabled={!preview.canImport}>
-              导入方案
-            </Button>
-          ) : null}
+          <Button onClick={onClose}>取消</Button>
+          <Button type="primary" onClick={onImport} disabled={!preview.canImport}>
+            导入方案
+          </Button>
         </>
-      )}
+      ) : null}
     >
       {state.kind === 'switching' ? (
         <div className="shared-plan-import__loading">
@@ -47,7 +45,7 @@ export default function SharedPlanImportModal({ state, onClose, onImport }: Prop
         <Alert
           type="error"
           showIcon
-          message={state.message}
+          title={state.message}
           description="链接可能已损坏、被截断，或者使用了不受支持的分享格式。"
         />
       ) : null}
@@ -105,19 +103,11 @@ export default function SharedPlanImportModal({ state, onClose, onImport }: Prop
             </section>
           ) : null}
 
-          {state.preview.reusesEmptyPlan ? (
-            <Alert
-              type="info"
-              showIcon
-              message="当前唯一方案为空，导入时将直接复用它。"
-            />
-          ) : null}
-
           {state.preview.blockReason ? (
             <Alert
               type="warning"
               showIcon
-              message={state.preview.blockReason}
+              title={state.preview.blockReason}
             />
           ) : null}
         </div>

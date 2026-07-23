@@ -84,6 +84,14 @@ export const APP_RELEASES: AppRelease[] = [
       '修复部分UI问题。',
     ],
   },
+  {
+    version: '2026.07.24.1',
+    publishedAt: '2026-07-24',
+    title: '方案分享',
+    items: [
+      '新增选课方案分享功能。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

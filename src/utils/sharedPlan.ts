@@ -82,11 +82,16 @@ function normalizeSharedPlanPayload(value: unknown): SharedPlanPayload {
   if (!name || name.length > MAX_SHARED_NAME_LENGTH) {
     throw new Error('方案名称无效');
   }
-  if (
-    courseIds.length === 0
-    || courseIds.length > MAX_SHARED_COURSES
-    || courseIds.some((id) => !id || id.length > MAX_SHARED_KEY_LENGTH)
-  ) {
+  if (courseIds.length === 0) {
+    throw new Error('分享课程列表无效');
+  }
+  if (courseIds.length > MAX_SHARED_COURSES) {
+    throw new Error(
+      `当前方案包含 ${courseIds.length} 个课堂，超过分享上限 ${MAX_SHARED_COURSES} 个。`
+      + '同一课程的多个时间组会分别计数，请减少已选时间组后重试。',
+    );
+  }
+  if (courseIds.some((id) => !id || id.length > MAX_SHARED_KEY_LENGTH)) {
     throw new Error('分享课程列表无效');
   }
 
@@ -144,7 +149,12 @@ export function parseSharedPlanFragment(fragment: string): SharedPlanParseResult
 export function buildSharedPlanUrl(payload: SharedPlanPayload, href: string): string {
   const url = new URL(href);
   url.hash = `plan=${encodeSharedPlan(payload)}`;
-  if (url.href.length > MAX_SHARED_URL_LENGTH) throw new Error('分享链接过长');
+  if (url.href.length > MAX_SHARED_URL_LENGTH) {
+    throw new Error(
+      `生成后的分享链接超过 ${MAX_SHARED_URL_LENGTH} 个字符。`
+      + '请减少已选时间组后重试。',
+    );
+  }
   return url.href;
 }
 

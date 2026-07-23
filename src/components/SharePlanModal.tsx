@@ -86,7 +86,6 @@ export default function SharePlanModal({
       width={540}
       footer={(
         <>
-          <Button onClick={onClose}>关闭</Button>
           {canUseSystemShare ? (
             <Button onClick={() => void systemShare()} disabled={!linkState.url}>
               系统分享
@@ -115,7 +114,7 @@ export default function SharePlanModal({
             </div>
           </dl>
           {linkState.error ? (
-            <Alert type="error" showIcon message={linkState.error} />
+            <Alert type="error" showIcon title={linkState.error} />
           ) : (
             <Input.TextArea
               className="share-plan-modal__link"
