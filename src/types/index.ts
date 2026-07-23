@@ -100,6 +100,17 @@ export interface FavoritesState extends ArrangementFavoritePreferences {
   arrangementRecords: ArrangementFavoriteRecord[];
 }
 
+export interface MemoNote {
+  id: string;
+  text: string;
+  updatedAt: number;
+}
+
+export interface MemosState {
+  version: 1;
+  notes: MemoNote[];
+}
+
 /**
  * 选课单元：把「同课程号 + 时间完全一致」的多个班次合并成一个对象。
  * 学生排课时不纠结老师，同时间同课的不同班次视为同一选课对象。
