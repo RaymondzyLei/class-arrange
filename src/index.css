@@ -392,6 +392,56 @@ html {
   padding: 4px 0;
 }
 
+.share-plan-modal__content {
+  display: grid;
+  gap: 16px;
+}
+
+.share-plan-modal__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.share-plan-modal__summary > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg-2);
+}
+
+.share-plan-modal__summary dt {
+  margin-bottom: 5px;
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.share-plan-modal__summary dd {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#root .share-plan-modal__link.ant-input {
+  color: var(--text-sub);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  resize: none;
+}
+
+.share-plan-modal__privacy {
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
 .curriculum-select-dropdown {
   max-width: calc(100vw - 24px);
 }

@@ -5,16 +5,19 @@ import type { Plan } from '@/types';
 import { filterCurriculumOption, type CurriculumOption } from '@/utils/curriculum';
 import { nextDuplicatePlanName } from '@/utils/planSeed';
 import BottomModal from './BottomModal';
-import { MoreIcon, PlusIcon, TrashIcon } from './icons';
+import { MoreIcon, PlusIcon, ShareIcon, TrashIcon } from './icons';
 import SelectWithChevron from './SelectWithChevron';
 import { useFavorites } from '@/favorites/FavoritesContext';
 import { FavoriteButton } from './FavoriteButton';
+import SharePlanModal from './SharePlanModal';
 
 interface Props {
   curriculumOptions: CurriculumOption[];
   selectedCurriculumId: string | null;
   onCurriculumChange: (id: string | null) => void;
   onManageCurriculum: () => void;
+  semesterKey: string;
+  semesterName: string;
 }
 
 export default function PlanSwitcher({
@@ -22,6 +25,8 @@ export default function PlanSwitcher({
   selectedCurriculumId,
   onCurriculumChange,
   onManageCurriculum,
+  semesterKey,
+  semesterName,
 }: Props) {
   const { state, activePlan, dispatch } = usePlans();
   const { planIds, toggle: toggleFavorite } = useFavorites();
@@ -30,6 +35,7 @@ export default function PlanSwitcher({
   const [renameValue, setRenameValue] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Plan | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const switchTo = (id: string) => {
     if (id === activePlan?.id) return;
@@ -136,6 +142,7 @@ export default function PlanSwitcher({
         <SelectWithChevron
           className="plan-switcher__select"
           value={activePlan?.id}
+          title={activePlan?.name}
           placeholder="请选择方案"
           onChange={switchTo}
           options={planOptions}
@@ -151,6 +158,14 @@ export default function PlanSwitcher({
             onClick={create}
             disabled={state.plans.length >= 10}
             icon={<PlusIcon />}
+          />
+          <Button
+            className="plan-switcher__icon-button"
+            aria-label="分享当前方案"
+            title="分享当前方案"
+            onClick={() => setShareOpen(true)}
+            disabled={!activePlan || activePlan.courseIds.length === 0}
+            icon={<ShareIcon />}
           />
           <Button
             className="plan-switcher__icon-button plan-switcher__icon-button--danger"
@@ -237,6 +252,13 @@ export default function PlanSwitcher({
           暂无方案，点击「新建」创建一个方案开始选课。
         </div>
       )}
+      <SharePlanModal
+        open={shareOpen}
+        plan={activePlan}
+        semesterKey={semesterKey}
+        semesterName={semesterName}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
   );
 }

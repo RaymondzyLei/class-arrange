@@ -837,6 +837,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               selectedCurriculumId={curriculumSelection.curriculumId}
               onCurriculumChange={handleCurriculumChange}
               onManageCurriculum={() => openSelectedCourses('curriculum')}
+              semesterKey={catalog.semester.key}
+              semesterName={catalog.semester.name}
             />
             <StatsBar
               stats={stats}
