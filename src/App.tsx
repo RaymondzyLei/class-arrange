@@ -30,6 +30,7 @@ import SpotlightTour from '@/components/onboarding/SpotlightTour';
 import { useConflicts } from '@/hooks/useConflicts';
 import { useFilteredCourses } from '@/hooks/useFilteredCourses';
 import { useArrangementCalculation } from '@/hooks/useArrangementCalculation';
+import { useSharedPlanImport } from '@/hooks/useSharedPlanImport';
 import {
   readOnboardingState,
   useOnboarding,
@@ -60,6 +61,7 @@ import EducationLevelReminderModal from '@/components/EducationLevelReminderModa
 import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { useOverlayStackSnapshot } from '@/components/overlayStack';
+import SharedPlanImportModal from '@/components/SharedPlanImportModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
 import { MemosProvider } from '@/memos/MemosContext';
@@ -175,6 +177,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     switchSemester,
   } = useSemesterCatalog();
   const { message } = AntApp.useApp();
+  const sharedPlanImport = useSharedPlanImport({
+    manifest,
+    currentSemesterKey: catalog.semester.key,
+    courseMap,
+    plansState,
+    dispatch,
+    switchSemester,
+  });
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
   const [weekSelection, setWeekSelection] = useState<WeekSelection>('all');
   const [detailGroupKey, setDetailGroupKey] = useState<string | null>(null);
@@ -944,6 +954,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onShowUpdatePopupChange={updateAwareness.setShowUpdatePopup}
         onOpenUpdateHistory={handleOpenUpdateHistory}
         initialPage={customizationInitialPage}
+      />
+      <SharedPlanImportModal
+        state={sharedPlanImport.state}
+        onClose={sharedPlanImport.closeImport}
+        onImport={() => {
+          const importedName = sharedPlanImport.confirmImport();
+          if (importedName) message.success(`已导入「${importedName}」`);
+        }}
       />
       {/* EDUCATION_LEVEL_REMINDER: standalone rollout warning; safe to edit or remove independently. */}
       <EducationLevelReminderModal

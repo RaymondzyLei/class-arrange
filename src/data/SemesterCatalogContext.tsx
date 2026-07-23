@@ -23,6 +23,7 @@ import {
   selectInitialSemester,
   type CatalogFetcher,
 } from './semesterCatalog';
+import { parseSharedPlanFragment } from '@/utils/sharedPlan';
 
 export interface SemesterCatalogStatus {
   phase: 'loading' | 'ready' | 'switching' | 'error';
@@ -56,6 +57,12 @@ function readStoredSemester(): string | null {
   } catch {
     return null;
   }
+}
+
+function readSharedSemester(): string | null {
+  if (typeof window === 'undefined') return null;
+  const parsed = parseSharedPlanFragment(window.location.hash);
+  return parsed.kind === 'success' ? parsed.payload.semesterKey : null;
 }
 
 function persistSemester(semesterKey: string): void {
@@ -105,7 +112,10 @@ export function SemesterCatalogProvider({
     void (async () => {
       try {
         const manifest = await loadSemesterManifest(fetcher, controller.signal);
-        const initialKey = selectInitialSemester(manifest, readStoredSemester());
+        const initialKey = selectInitialSemester(
+          manifest,
+          readSharedSemester() ?? readStoredSemester(),
+        );
         const entry = manifest.semesters.find((candidate) => candidate.key === initialKey)!;
         const catalog = await loadSemesterCatalog(entry, fetcher, controller.signal);
         if (controller.signal.aborted || generation !== requestGenerationRef.current) return;

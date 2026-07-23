@@ -442,6 +442,144 @@ html {
   line-height: 1.65;
 }
 
+.shared-plan-import__content {
+  display: grid;
+  gap: 16px;
+}
+
+.shared-plan-import__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 120px;
+  color: var(--text-sub);
+}
+
+.shared-plan-import__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.shared-plan-import__summary > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg-2);
+}
+
+.shared-plan-import__summary dt {
+  margin-bottom: 5px;
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.shared-plan-import__summary dd {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shared-plan-import__section {
+  display: grid;
+  gap: 8px;
+}
+
+.shared-plan-import__section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shared-plan-import__section-heading h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.shared-plan-import__section-heading span {
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.shared-plan-import__courses {
+  max-height: 280px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  list-style: none;
+}
+
+.shared-plan-import__courses li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.shared-plan-import__courses li:last-child {
+  border-bottom: 0;
+}
+
+.shared-plan-import__course-main {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.shared-plan-import__course-main strong {
+  overflow: hidden;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shared-plan-import__course-main span,
+.shared-plan-import__teacher {
+  color: var(--text-sub);
+  font-size: 12px;
+}
+
+.shared-plan-import__teacher {
+  flex: 0 0 auto;
+  max-width: 38%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shared-plan-import__missing {
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--conflict) 32%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--conflict-bg) 64%, transparent);
+  color: var(--conflict-strong);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.shared-plan-import__empty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  color: var(--text-sub);
+  text-align: center;
+}
+
 .curriculum-select-dropdown {
   max-width: calc(100vw - 24px);
 }
@@ -3322,6 +3460,15 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   .plan-switcher__icon-button svg {
     width: 18px;
     height: 18px;
+  }
+
+  .share-plan-modal__summary,
+  .shared-plan-import__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .shared-plan-import__courses li {
+    align-items: flex-start;
   }
 
   .filter-bar {
