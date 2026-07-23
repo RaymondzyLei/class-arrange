@@ -543,6 +543,7 @@ html {
 .memo-modal__body {
   display: grid;
   gap: 14px;
+  padding-top: 8px;
 }
 
 .memo-modal__compose {
@@ -564,12 +565,11 @@ html {
   background: var(--panel-bg, #fff);
   color: var(--text, #000);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
 }
 
 .memo-modal__textarea:focus {
   border-color: var(--accent, #1677ff);
-  box-shadow: inset 0 0 0 1px var(--accent, #1677ff);
 }
 
 .memo-modal__list {
