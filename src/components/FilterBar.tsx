@@ -1,7 +1,9 @@
 import { Checkbox, Input } from 'antd';
+import { useState } from 'react';
 import type { FilterState } from '@/types';
 import type { CourseFilterOptions } from '@/constants/filterOptions';
 import SelectWithChevron from './SelectWithChevron';
+import MemoModal from './MemoModal';
 
 interface Props {
   filter: FilterState;
@@ -11,6 +13,7 @@ interface Props {
 
 export default function FilterBar({ filter, setFilter, options }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
+  const [memoOpen, setMemoOpen] = useState(false);
 
   return (
     <div className="panel-inner filter-bar no-print" data-tour="filters">
@@ -21,13 +24,23 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
         />
-        <Checkbox
-          className="filter-bar__teacher-toggle"
-          checked={filter.includeTeacher}
-          onChange={(event) => update({ includeTeacher: event.target.checked })}
-        >
-          查询任课老师
-        </Checkbox>
+        <div className="filter-bar__search-aside">
+          <Checkbox
+            className="filter-bar__teacher-toggle"
+            checked={filter.includeTeacher}
+            onChange={(event) => update({ includeTeacher: event.target.checked })}
+          >
+            查询任课老师
+          </Checkbox>
+          <button
+            type="button"
+            className="filter-bar__memo-toggle"
+            onClick={() => setMemoOpen(true)}
+            aria-label="打开备忘录"
+          >
+            备忘录
+          </button>
+        </div>
       </div>
       <div className="filter-bar__controls">
         <SelectWithChevron
@@ -103,6 +116,7 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
           options={options.languages.map((v) => ({ label: v, value: v }))}
         />
       </div>
+      <MemoModal open={memoOpen} onClose={() => setMemoOpen(false)} />
     </div>
   );
 }

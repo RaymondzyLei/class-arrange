@@ -516,6 +516,95 @@ html {
   padding-inline-end: 0;
 }
 
+.filter-bar__search-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+}
+
+.filter-bar__memo-toggle {
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 18px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-bar__memo-toggle:hover {
+  color: var(--text);
+}
+
+/* ============================================================
+ * MemoModal
+ * ============================================================ */
+.memo-modal__body {
+  display: grid;
+  gap: 14px;
+}
+
+.memo-modal__compose {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: end;
+  gap: 8px;
+}
+
+.memo-modal__textarea {
+  width: 100%;
+  min-height: 56px;
+  resize: vertical;
+  padding: 8px;
+  border: 1px solid var(--accent-soft, #d9d9d9);
+  border-radius: var(--radius-md);
+  font: inherit;
+  background: var(--panel-bg, #fff);
+  color: var(--text, #000);
+}
+
+.memo-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.memo-modal__item {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-soft, #d9d9d9);
+  border-radius: var(--radius-md);
+}
+
+.memo-modal__text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.memo-modal__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.memo-modal__edit {
+  display: grid;
+  gap: 8px;
+}
+
+.memo-modal__empty {
+  color: var(--text-sub);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+}
+
 /* ============================================================
  * CoursePool
  * ============================================================ */
