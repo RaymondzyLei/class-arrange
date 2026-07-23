@@ -12,7 +12,8 @@ export type PlansAction =
   | { type: 'addCourses'; courseIds: string[] }
   | { type: 'removeCourses'; courseIds: string[] }
   | { type: 'clearActive' }
-  | { type: 'duplicatePlan'; id: string };
+  | { type: 'duplicatePlan'; id: string }
+  | { type: 'importPlan'; name: string; courseIds: string[] };
 
 function touch(plan: Plan): Plan {
   return { ...plan, updatedAt: Date.now() };
@@ -41,6 +42,30 @@ export function plansReducer(state: PlansState, action: PlansAction): PlansState
         courseIds: [...src.courseIds],
       };
       return { plans: [...state.plans, plan], activePlanId: plan.id };
+    }
+
+    case 'importPlan': {
+      const courseIds = [...new Set(action.courseIds)];
+      if (courseIds.length === 0) return state;
+      const now = Date.now();
+      if (state.plans.length === 1 && state.plans[0].courseIds.length === 0) {
+        const imported: Plan = {
+          ...state.plans[0],
+          name: action.name,
+          updatedAt: now,
+          courseIds,
+        };
+        return { plans: [imported], activePlanId: imported.id };
+      }
+      if (state.plans.length >= 10) return state;
+      const imported: Plan = {
+        id: genId(),
+        name: action.name,
+        createdAt: now,
+        updatedAt: now,
+        courseIds,
+      };
+      return { plans: [...state.plans, imported], activePlanId: imported.id };
     }
 
     case 'deletePlan': {
