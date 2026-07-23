@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-fall",
-  "currentRevision": "262de6d9b86206ab535ca49d00574b8d257c104693f8d7a638c3e67c39c9e8a9",
+  "currentRevision": "5e6c9cdd284a5ba55121e81d4e2b2f9e59467cdaf70e5d34b06528b6654c5042",
   "entries": [
     {
       "id": "2026-fall:c0cbaf189652cc27",
@@ -94346,6 +94346,81 @@
               "label": "本研同堂",
               "before": false,
               "after": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-fall:5e6c9cdd284a5ba5",
+      "revision": "5e6c9cdd284a5ba55121e81d4e2b2f9e59467cdaf70e5d34b06528b6654c5042",
+      "previousRevision": "262de6d9b86206ab535ca49d00574b8d257c104693f8d7a638c3e67c39c9e8a9",
+      "publishedAt": "2026-07-23T03:27:50Z",
+      "summary": {
+        "added": 0,
+        "removed": 0,
+        "modified": 1
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬"
+          },
+          "previous": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
             }
           ]
         }
