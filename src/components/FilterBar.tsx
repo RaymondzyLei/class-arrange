@@ -24,23 +24,13 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
         />
-        <div className="filter-bar__search-aside">
-          <Checkbox
-            className="filter-bar__teacher-toggle"
-            checked={filter.includeTeacher}
-            onChange={(event) => update({ includeTeacher: event.target.checked })}
-          >
-            查询任课老师
-          </Checkbox>
-          <button
-            type="button"
-            className="filter-bar__memo-toggle"
-            onClick={() => setMemoOpen(true)}
-            aria-label="打开备忘录"
-          >
-            备忘录
-          </button>
-        </div>
+        <Checkbox
+          className="filter-bar__teacher-toggle"
+          checked={filter.includeTeacher}
+          onChange={(event) => update({ includeTeacher: event.target.checked })}
+        >
+          查询任课老师
+        </Checkbox>
       </div>
       <div className="filter-bar__controls">
         <SelectWithChevron
@@ -115,6 +105,14 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
           allowClear
           options={options.languages.map((v) => ({ label: v, value: v }))}
         />
+        <button
+          type="button"
+          className="filter-bar__memo-toggle"
+          onClick={() => setMemoOpen(true)}
+          aria-label="打开备忘录"
+        >
+          备忘录
+        </button>
       </div>
       <MemoModal open={memoOpen} onClose={() => setMemoOpen(false)} />
     </div>
