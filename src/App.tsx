@@ -62,6 +62,7 @@ import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { useOverlayStackSnapshot } from '@/components/overlayStack';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
+import { MemosProvider } from '@/memos/MemosContext';
 import {
   activeArrangementFavoritePreferences,
   activeArrangementFavoriteIds,
@@ -1092,20 +1093,22 @@ export default function App() {
       }}
     >
       <AntApp>
-        <FavoritesProvider
-          key={`favorites:${catalog.semester.key}`}
-          semesterKey={catalog.semester.key}
-        >
-          <PlansProvider
-            key={catalog.semester.key}
+        <MemosProvider>
+          <FavoritesProvider
+            key={`favorites:${catalog.semester.key}`}
             semesterKey={catalog.semester.key}
-            defaultSemesterKey={manifest.defaultSemester}
-            courseMap={courseMap}
-            catalogRevision={catalog.revision}
           >
-            <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
-          </PlansProvider>
-        </FavoritesProvider>
+            <PlansProvider
+              key={catalog.semester.key}
+              semesterKey={catalog.semester.key}
+              defaultSemesterKey={manifest.defaultSemester}
+              courseMap={courseMap}
+              catalogRevision={catalog.revision}
+            >
+              <MainArea themeMode={themeMode} onToggleTheme={toggleTheme} />
+            </PlansProvider>
+          </FavoritesProvider>
+        </MemosProvider>
       </AntApp>
     </ConfigProvider>
   );

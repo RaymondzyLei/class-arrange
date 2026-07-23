@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import FilterBar from './FilterBar';
+import { MemosProvider } from '@/memos/MemosContext';
 
 const filterBarSource = readFileSync(new URL('./FilterBar.tsx', import.meta.url), 'utf8');
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
@@ -34,11 +35,11 @@ const options = {
 
 describe('FilterBar search row', () => {
   it('places teacher search beside the input and removes result counts', () => {
-    const html = renderToStaticMarkup(createElement(FilterBar, {
+    const html = renderToStaticMarkup(createElement(MemosProvider, null, createElement(FilterBar, {
       filter,
       setFilter: vi.fn(),
       options,
-    } as Parameters<typeof FilterBar>[0]));
+    } as Parameters<typeof FilterBar>[0])));
 
     const teacherToggleIndex = html.indexOf('filter-bar__teacher-toggle');
     const controlsIndex = html.indexOf('filter-bar__controls');
@@ -70,11 +71,11 @@ describe('FilterBar search row', () => {
   });
 
   it('offers course category and education level filters', () => {
-    const html = renderToStaticMarkup(createElement(FilterBar, {
+    const html = renderToStaticMarkup(createElement(MemosProvider, null, createElement(FilterBar, {
       filter: { ...filter, category: '专业课', level: '本研贯通' },
       setFilter: vi.fn(),
       options,
-    } as Parameters<typeof FilterBar>[0]));
+    } as Parameters<typeof FilterBar>[0])));
 
     expect(filterBarSource).toContain('placeholder="课程范畴"');
     expect(filterBarSource).toContain('placeholder="学历层次"');
