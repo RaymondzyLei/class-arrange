@@ -371,6 +371,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const appliedGroups = appliedArrangement?.groups ?? EMPTY_GROUPS;
   const committedBlockedSlots = calculation.committed?.settings.blockedSlots
     ?? EMPTY_BLOCKED_SLOTS;
+  const committedHardConflictSlots = calculation.committed?.settings.hardConflictSlots
+    ?? EMPTY_BLOCKED_SLOTS;
 
   const { conflictGroupKeys } = useConflicts(appliedGroups, committedBlockedSlots);
 
@@ -902,6 +904,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
             onExport={handleExport}
             exporting={exporting}
             blockedSlots={committedBlockedSlots}
+            hardConflictSlots={committedHardConflictSlots}
             onOpenCustomization={() => {
               setCustomizationInitialPage('main');
               setCustomizationOpen(true);

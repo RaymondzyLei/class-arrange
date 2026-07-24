@@ -112,4 +112,11 @@ describe('CourseTable precise conflict marking', () => {
     expect(source).toContain('links.offsetTop > update.offsetTop');
     expect(source).toContain("footerWrapped ? ' course-table__project-footer--wrapped' : ''");
   });
+
+  it('renders hard conflict slots with a distinct color', () => {
+    const source = readFileSync(new URL('./CourseTable.tsx', import.meta.url), 'utf8');
+    expect(source).toContain('hardConflictSlots');
+    expect(source).toContain('HARD_COLOR');
+    expect(source).toContain('timetable-placeholder--hard');
+  });
 });

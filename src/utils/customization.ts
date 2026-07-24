@@ -40,6 +40,7 @@ export interface CustomScheduleSettings {
   preferAvoidCampusTransfers: boolean;
   residentCampus: ResidentCampus;
   blockedSlots: string[];
+  hardConflictSlots: string[];
 }
 
 export const RESIDENT_CAMPUS_OPTIONS = [
@@ -58,6 +59,7 @@ export const DEFAULT_CUSTOM_SETTINGS: CustomScheduleSettings = {
   preferAvoidCampusTransfers: true,
   residentCampus: '本部',
   blockedSlots: [],
+  hardConflictSlots: [],
 };
 
 export function blockedSlotKey(day: number, period: number): string {
@@ -78,6 +80,10 @@ export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleS
   const source = value && typeof value === 'object'
     ? value as Record<string, unknown>
     : {};
+  const hardConflictSlots = Array.isArray(source.hardConflictSlots)
+    ? [...new Set(source.hardConflictSlots.filter(isBlockedSlot))].sort()
+    : [];
+  const hardSet = new Set(hardConflictSlots);
   return {
     calculationMode: source.calculationMode === 'manual' ? 'manual' : 'auto',
     arrangementDisplayCount: isArrangementDisplayCount(source.arrangementDisplayCount)
@@ -96,8 +102,9 @@ export function normalizeCustomScheduleSettings(value: unknown): CustomScheduleS
       ? source.preferAvoidCampusTransfers
       : DEFAULT_CUSTOM_SETTINGS.preferAvoidCampusTransfers,
     residentCampus: source.residentCampus === '高新区' ? '高新区' : '本部',
+    hardConflictSlots,
     blockedSlots: Array.isArray(source.blockedSlots)
-      ? [...new Set(source.blockedSlots.filter(isBlockedSlot))].sort()
+      ? [...new Set(source.blockedSlots.filter((slot) => isBlockedSlot(slot) && !hardSet.has(slot)))].sort()
       : [],
   };
 }

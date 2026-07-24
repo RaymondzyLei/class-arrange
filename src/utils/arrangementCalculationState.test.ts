@@ -33,6 +33,7 @@ function settings(
     preferAvoidCampusTransfers: true,
     residentCampus: '本部',
     blockedSlots: [],
+    hardConflictSlots: [],
     ...overrides,
   };
 }
@@ -58,6 +59,7 @@ function arrangement(id: string, groups: CourseGroup[]): Arrangement {
     courseCount: groups.length,
     totalCredits: 0,
     totalHours: 0,
+    hardConflictCount: 0,
   };
 }
 
@@ -402,6 +404,20 @@ describe('arrangement calculation state', () => {
     expect(state.phase).toBe('ready');
     expect(state.committed).toBe(committed);
     expect(state.draft.settings.calculationMode).toBe('manual');
+  });
+
+  it('treats hard conflict slots changes as a dirty input', () => {
+    const groups = [group('A', 'a')];
+    const base = settings({});
+    const changed = settings({ hardConflictSlots: ['1-1'] });
+    let state = createArrangementCalculationState('scope', groups, base);
+    state = completeArrangementCalculation(startArrangementCalculation(state, 1), 1, [
+      arrangement('a', groups),
+    ]);
+    expect(state.phase).toBe('ready');
+
+    const synced = syncArrangementCalculationInputs(state, 'scope', groups, changed);
+    expect(synced.phase).toBe('dirty');
   });
 
   it('does not synchronize a stale mode-only projection over a newer completion', () => {

@@ -72,6 +72,11 @@ export default function ArrangementPanel({
                     >
                       {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
                     </Tag>
+                    {a.hardConflictCount > 0 ? (
+                      <Tag color="red" className="arrangement-card__hard-conflict">
+                        {a.hardConflictCount} 强冲突
+                      </Tag>
+                    ) : null}
                   </div>
                 </button>
                 <FavoriteButton

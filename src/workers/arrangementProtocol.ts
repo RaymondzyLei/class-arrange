@@ -39,6 +39,7 @@ export interface ArrangementWorkerSettingsDto {
   preferAvoidCampusTransfers: boolean;
   residentCampus: ResidentCampus;
   blockedSlots: string[];
+  hardConflictSlots: string[];
 }
 
 export interface ArrangementWorkerRequest {
@@ -54,6 +55,7 @@ export interface ArrangementResultDto {
   id: string;
   groupKeys: string[];
   conflictCount: number;
+  hardConflictCount: number;
   courseCount: number;
   totalCredits: number;
   totalHours: number;
@@ -108,6 +110,7 @@ export function createArrangementWorkerRequest(
       preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
       residentCampus: settings.residentCampus,
       blockedSlots: [...settings.blockedSlots],
+      hardConflictSlots: [...settings.hardConflictSlots],
     },
     favorites: copyFavoritePreferences(favorites),
   };
@@ -163,6 +166,7 @@ export function executeArrangementWorkerRequest(
     preferAvoidCampusTransfers: request.settings.preferAvoidCampusTransfers,
     residentCampus: request.settings.residentCampus,
     blockedSlots: request.settings.blockedSlots,
+    hardConflictSlots: request.settings.hardConflictSlots ?? [],
   };
   const result = enumerateArrangementResultsExact(
     request.groups.map(rehydrateWorkerInputGroup),
@@ -176,6 +180,7 @@ export function executeArrangementWorkerRequest(
     id: arrangement.id,
     groupKeys: arrangement.groups.map((group) => group.key),
     conflictCount: arrangement.conflictCount,
+    hardConflictCount: arrangement.hardConflictCount,
     courseCount: arrangement.courseCount,
     totalCredits: arrangement.totalCredits,
     totalHours: arrangement.totalHours,

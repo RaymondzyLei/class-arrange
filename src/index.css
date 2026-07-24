@@ -1667,6 +1667,9 @@ html {
   --timetable-placeholder-stripe: color-mix(in srgb, var(--text-sub) 76%, var(--panel-bg));
   --timetable-placeholder-bg: color-mix(in srgb, var(--text-sub) 22%, var(--panel-bg));
   --timetable-placeholder-fg: var(--text-sub);
+  --timetable-hardconflict-stripe: #d93025;
+  --timetable-hardconflict-bg: rgba(217, 48, 37, 0.18);
+  --timetable-hardconflict-fg: #b3261e;
   --timetable-border: #232323;
   --timetable-grid: #b9b9b9;
 }
@@ -4971,6 +4974,29 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
 }
 
+.availability-grid__cell--blocked {
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+.availability-grid__cell--blocked:hover {
+  outline: 0;
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+.availability-grid__cell--hard {
+  background: var(--timetable-hardconflict-bg, #ffe0e0);
+  border-color: var(--timetable-hardconflict-stripe, #d93025);
+  box-shadow: inset 0 0 0 1px var(--timetable-hardconflict-stripe, #d93025);
+}
+
+.availability-grid__cell--hard:hover {
+  outline: 0;
+  background: var(--timetable-hardconflict-bg, #ffe0e0);
+  box-shadow: inset 0 0 0 1px var(--timetable-hardconflict-stripe, #d93025);
+}
+
 @media (max-width: 900px) {
   .selected-courses-toolbar--filters {
     grid-template-columns: minmax(220px, 1fr) minmax(120px, 168px);
@@ -5285,6 +5311,9 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   --timetable-placeholder-stripe: #7b8796;
   --timetable-placeholder-bg: #303946;
   --timetable-placeholder-fg: #d8dee6;
+  --timetable-hardconflict-stripe: #f28b82;
+  --timetable-hardconflict-bg: rgba(242, 139, 130, 0.22);
+  --timetable-hardconflict-fg: #f3a9a4;
   background: var(--timetable-cell-bg);
 }
 
@@ -5686,6 +5715,18 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 :root[data-theme='dark'] .availability-grid__cell--selected:hover {
   background: #36414f;
   box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--blocked,
+:root[data-theme='dark'] .availability-grid__cell--blocked:hover {
+  background: #36414f;
+  box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--hard,
+:root[data-theme='dark'] .availability-grid__cell--hard:hover {
+  background: #5c2a2a;
+  box-shadow: inset 0 0 0 1px #b94a4a;
 }
 
 :root[data-theme='dark'] #root .course-table__export-button.ant-btn,

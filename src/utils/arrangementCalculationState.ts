@@ -39,6 +39,7 @@ function copySettings(settings: CustomScheduleSettings): CustomScheduleSettings 
   return {
     ...settings,
     blockedSlots: [...settings.blockedSlots],
+    hardConflictSlots: [...settings.hardConflictSlots],
   };
 }
 
@@ -103,6 +104,7 @@ export function calculationInputKey(
     preferAvoidCampusTransfers: settings.preferAvoidCampusTransfers,
     residentCampus: settings.residentCampus,
     blockedSlots: [...settings.blockedSlots].sort(),
+    hardConflictSlots: [...settings.hardConflictSlots].sort(),
     favorites: {
       arrangementIds: [...favorites.arrangementIds].sort(),
       timeGroupKeys: [...favorites.timeGroupKeys].sort(),

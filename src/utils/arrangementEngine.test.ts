@@ -25,6 +25,7 @@ const NO_PREFERENCES: CustomScheduleSettings = {
   preferAvoidCampusTransfers: false,
   residentCampus: '本部',
   blockedSlots: [],
+  hardConflictSlots: [],
 };
 
 describe('exact conflict-free result policy', () => {
@@ -102,6 +103,7 @@ function makeGroup(
 function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
   return {
     favoriteArrangement: false,
+    hardConflictCount: 0,
     conflictCount: 0,
     favoriteCourseCount: 0,
     campusTransitionCount: 0,
@@ -134,6 +136,14 @@ describe('compareArrangementRanks', () => {
     )).toBeLessThan(0);
   });
 
+  it('ranks hard conflict count ahead of timetable conflicts', () => {
+    expect(compareArrangementRanks(
+      makeRank({ hardConflictCount: 0, conflictCount: 1 }),
+      makeRank({ hardConflictCount: 1, conflictCount: 0 }),
+      NO_PREFERENCES,
+    )).toBeLessThan(0);
+  });
+
   it('applies the exact conflict, half-day, early-morning, key, and credit ordering', () => {
     const allPreferences: CustomScheduleSettings = {
       calculationMode: 'auto',
@@ -144,6 +154,7 @@ describe('compareArrangementRanks', () => {
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
       blockedSlots: [],
+      hardConflictSlots: [],
     };
 
     expect(compareArrangementRanks(
@@ -275,6 +286,7 @@ describe('exact Top-8 differential contract', () => {
             preferAvoidCampusTransfers,
             residentCampus: seed % 2 === 0 ? '本部' : '高新区',
             blockedSlots: blockedSlotsForSeed(seed),
+            hardConflictSlots: [],
           };
           const favorites = favoriteSnapshotForGroups(groups);
           const expected = enumerateArrangementsOracle(groups, settings, favorites);
@@ -399,6 +411,48 @@ describe('exact Top-8 differential contract', () => {
     ]);
   });
 
+  it('makes multi-group courses avoid hard conflict slots and keeps single-group impact neutral', () => {
+    const groups = [
+      makeGroup('A', 'a-hard', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
+      makeGroup('B', 'b-locked', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      hardConflictSlots: ['1-1'],
+    };
+
+    const results = enumerateArrangements(groups, settings);
+
+    // 多组课 A 选不撞强冲突的 z-free；b-locked 单组撞强冲突，两个方案各带 b-locked 的 1，
+    // 但 z-free 方案总强冲突数（1）小于 a-hard 方案（2），因此 z-free 方案排前
+    expect(results.map((result) => [result.id, result.hardConflictCount])).toEqual([
+      ['b-locked||z-free', 1],
+      ['a-hard||b-locked', 2],
+    ]);
+  });
+
+  it('keeps hard conflict count independent from blocked-slot conflict count', () => {
+    const groups = [
+      makeGroup('A', 'a-hard', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      blockedSlots: ['2-3'],
+      hardConflictSlots: ['1-1'],
+    };
+
+    const results = enumerateArrangements(groups, settings);
+
+    // a-hard 撞强冲突(1-1) hardConflictCount=1；z-free 撞占位(2-3) conflictCount=1
+    // 强冲突优先于冲突数：z-free(0 强冲突) 排前
+    expect(results.map((result) => [result.id, result.hardConflictCount, result.conflictCount])).toEqual([
+      ['z-free', 0, 1],
+      ['a-hard', 1, 0],
+    ]);
+  });
+
   it('matches the oracle for exact clock overlaps and blocked-slot endpoints', () => {
     const groups = [
       makeGroup('A', 'a-touching', [{
@@ -466,6 +520,7 @@ describe('exact Top-8 differential contract', () => {
       preferAvoidCampusTransfers: false,
       residentCampus: '本部',
       blockedSlots: afternoonBlocks,
+      hardConflictSlots: [],
     }).map((result) => result.id)).toEqual([
       'z-free-afternoon',
       'a-busy-afternoon',
@@ -484,6 +539,7 @@ describe('exact Top-8 differential contract', () => {
       preferAvoidCampusTransfers: false,
       residentCampus: '本部',
       blockedSlots: [],
+      hardConflictSlots: [],
     }).map((result) => result.id)).toEqual(['z-late', 'a-early']);
   });
 

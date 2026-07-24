@@ -85,6 +85,24 @@ describe('custom schedule settings persistence', () => {
       .toBe('auto');
   });
 
+  it('defaults hard conflict slots to empty and dedupes/sorts entries', () => {
+    expect(DEFAULT_CUSTOM_SETTINGS.hardConflictSlots).toEqual([]);
+    expect(normalizeCustomScheduleSettings({}).hardConflictSlots).toEqual([]);
+    expect(normalizeCustomScheduleSettings({
+      hardConflictSlots: ['2-6', 'bad', '2-6', '1-1'],
+    }).hardConflictSlots).toEqual(['1-1', '2-6']);
+  });
+
+  it('makes hard conflict slots take precedence over blocked slots when overlapping', () => {
+    expect(normalizeCustomScheduleSettings({
+      blockedSlots: ['1-1', '3-8'],
+      hardConflictSlots: ['1-1'],
+    })).toMatchObject({
+      blockedSlots: ['3-8'],
+      hardConflictSlots: ['1-1'],
+    });
+  });
+
   it('retains legacy preference migration and blocked-slot validation', () => {
     expect(parseCustomScheduleSettings(JSON.stringify({
       schedulePreference: 'half-day',
@@ -98,6 +116,7 @@ describe('custom schedule settings persistence', () => {
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
       blockedSlots: ['1-1', '2-6'],
+      hardConflictSlots: [],
     });
   });
 });

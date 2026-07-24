@@ -60,6 +60,18 @@ function countConflicts(groups: CourseGroup[], blockedSlots: Set<string>): numbe
   return seen.size;
 }
 
+function countHardConflicts(groups: CourseGroup[], hardConflictSlots: Set<string>): number {
+  if (hardConflictSlots.size === 0) return 0;
+  const hardByDay = blockedMinuteIntervalsByDay(hardConflictSlots);
+  const seen = new Set<string>();
+  for (const group of groups) {
+    if (group.schedule.some((slot) => scheduleSlotOverlapsBlocked(slot, hardByDay))) {
+      seen.add(group.key);
+    }
+  }
+  return seen.size;
+}
+
 function occupiedPeriodsByDay(
   groups: CourseGroup[],
   blockedSlots: Set<string>,
@@ -148,6 +160,7 @@ export function enumerateArrangementsOracle(
 ): Arrangement[] {
   if (groups.length === 0) return [];
   const blockedSlots = new Set(settings.blockedSlots);
+  const hardConflictSlots = new Set(settings.hardConflictSlots);
   const favoriteArrangementIds = new Set(favorites?.arrangementIds ?? []);
   const favoriteTimeGroupKeys = new Set(favorites?.timeGroupKeys ?? []);
   const favoriteSectionIds = new Set(favorites?.sectionIds ?? []);
@@ -180,6 +193,7 @@ export function enumerateArrangementsOracle(
       id: arrangementId(allGroups),
       groups: allGroups,
       conflictCount: countConflicts(allGroups, blockedSlots),
+      hardConflictCount: countHardConflicts(allGroups, hardConflictSlots),
       courseCount: allGroups.length,
       totalCredits: sumCredits(allGroups),
       totalHours: sumHours(allGroups),
@@ -197,6 +211,9 @@ export function enumerateArrangementsOracle(
   arrs.sort((a, b) => {
     if (a.favoriteArrangement !== b.favoriteArrangement) {
       return a.favoriteArrangement ? -1 : 1;
+    }
+    if (a.arrangement.hardConflictCount !== b.arrangement.hardConflictCount) {
+      return a.arrangement.hardConflictCount - b.arrangement.hardConflictCount;
     }
     if (a.arrangement.conflictCount !== b.arrangement.conflictCount) {
       return a.arrangement.conflictCount - b.arrangement.conflictCount;

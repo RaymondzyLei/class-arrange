@@ -52,6 +52,7 @@ interface Props {
   onExport: () => void | Promise<void>;
   exporting?: boolean;
   blockedSlots: string[];
+  hardConflictSlots: string[];
   onOpenCustomization: () => void;
   calendar: TermCalendar;
   catalogGeneratedAt: string;
@@ -68,6 +69,7 @@ interface TimetableViewProps {
   themeMode: 'light' | 'dark';
   onOpenDetail?: (id: string) => void;
   blockedSlots: string[];
+  hardConflictSlots: string[];
   calendar: TermCalendar;
 }
 
@@ -170,6 +172,13 @@ const BLOCKED_COLOR: CourseColor = {
   stripe: 'var(--timetable-placeholder-stripe)',
   bg: 'var(--timetable-placeholder-bg)',
   fg: 'var(--timetable-placeholder-fg)',
+};
+
+const HARD_COLOR: CourseColor = {
+  name: 'hard',
+  stripe: 'var(--timetable-hardconflict-stripe)',
+  bg: 'var(--timetable-hardconflict-bg)',
+  fg: 'var(--timetable-hardconflict-fg)',
 };
 
 function buildEntries(
@@ -280,19 +289,22 @@ function getRowSpanEntries(
   starting: TimetableEntry[],
   covers: Map<string, TimetableEntry[]>,
   blockedSlots: Set<string>,
-): { entries: TimetableEntry[]; span: number; blockedPeriods: number[] } | null {
+  hardConflictSlots: Set<string>,
+): { entries: TimetableEntry[]; span: number; blockedPeriods: number[]; hardPeriods: number[] } | null {
   if (covering.length === 0 || starting.length === 0) return null;
   if (covering.some((entry) => entry.start < period)) return null;
 
   const day = starting[0].displayDay;
   const cluster = new Map(starting.map((entry) => [entry.id, entry]));
   const blockedPeriods: number[] = [];
+  const hardPeriods: number[] = [];
   let clusterEnd = Math.max(...starting.map((entry) => entry.end));
 
   // Build the complete overlapping cluster, including courses that start later
   // inside another course's span. Each entry keeps its own vertical time range.
   for (let p = period; p <= clusterEnd; p += 1) {
     if (blockedSlots.has(blockedSlotKey(day, p))) blockedPeriods.push(p);
+    if (hardConflictSlots.has(blockedSlotKey(day, p))) hardPeriods.push(p);
     for (const entry of covers.get(keyFor(day, p)) ?? []) {
       if (entry.start < period) return null;
       cluster.set(entry.id, entry);
@@ -303,7 +315,7 @@ function getRowSpanEntries(
   const entries = [...cluster.values()].sort(
     (a, b) => a.start - b.start || b.end - a.end || a.id.localeCompare(b.id),
   );
-  return { entries, span: clusterEnd - period + 1, blockedPeriods };
+  return { entries, span: clusterEnd - period + 1, blockedPeriods, hardPeriods };
 }
 
 function colorStyle(color: CourseColor): CSSProperties {
@@ -319,6 +331,8 @@ function TimetableCell({
   entries,
   blocked,
   blockedPeriods = [],
+  hard,
+  hardPeriods = [],
   rowSpan,
   startPeriod,
   onOpenDetail,
@@ -327,6 +341,9 @@ function TimetableCell({
   entries: TimetableEntry[];
   blocked: boolean;
   blockedPeriods?: number[];
+  hard: boolean;
+  hardConflictSlots: Set<string>;
+  hardPeriods?: number[];
   rowSpan?: number;
   startPeriod?: number;
   onOpenDetail?: (id: string) => void;
@@ -342,11 +359,23 @@ function TimetableCell({
       color: BLOCKED_COLOR,
     }))
     : [];
+  const hardEntries: BlockedTimetableEntry[] = rowSpan && startPeriod
+    ? hardPeriods.map((period) => ({
+      id: `hard-${day}-${period}`,
+      start: period,
+      end: period,
+      span: 1,
+      color: HARD_COLOR,
+    }))
+    : [];
   const layoutEntries: Array<TimetableEntry | BlockedTimetableEntry> = [
     ...entries,
     ...blockedEntries,
+    ...hardEntries,
   ];
-  const visualItemCount = layoutEntries.length + (blocked && blockedEntries.length === 0 ? 1 : 0);
+  const visualItemCount = layoutEntries.length
+    + (blocked && blockedEntries.length === 0 ? 1 : 0)
+    + (hard && hardEntries.length === 0 ? 1 : 0);
   const isParallel = Boolean(rowSpan && startPeriod && layoutEntries.length > 1);
   const laneLayout = isParallel ? assignTimetableLanes(layoutEntries) : null;
   const parallelSizing = laneLayout ? getParallelLaneSizing(laneLayout.laneCount) : null;
@@ -432,13 +461,19 @@ function TimetableCell({
   const renderBlockedButton = (
     entry: BlockedTimetableEntry,
     mobileGroup?: (typeof mobileGroups)[number],
+    variant: 'blocked' | 'hard' = 'blocked',
   ) => {
     const lane = laneLayout?.laneById.get(entry.id);
+    const isHard = variant === 'hard';
     return (
       <div
         key={entry.id}
-        className="timetable-course timetable-placeholder"
-        aria-label="自定义占位时间"
+        className={[
+          'timetable-course',
+          'timetable-placeholder',
+          isHard ? 'timetable-placeholder--hard' : '',
+        ].filter(Boolean).join(' ')}
+        aria-label={isHard ? '强冲突时段' : '自定义占位时间'}
         style={{
           ...colorStyle(entry.color),
           ...(!mobileGroup && lane !== undefined && startPeriod ? {
@@ -447,7 +482,7 @@ function TimetableCell({
           } : {}),
         }}
       >
-        <span>有事</span>
+        <span>{isHard ? '强冲突' : '有事'}</span>
       </div>
     );
   };
@@ -473,8 +508,17 @@ function TimetableCell({
             <span>有事</span>
           </div>
         ) : null}
+        {hard && hardEntries.length === 0 ? (
+          <div
+            className="timetable-course timetable-placeholder timetable-placeholder--hard"
+            aria-label="强冲突时段"
+          >
+            <span>强冲突</span>
+          </div>
+        ) : null}
         {entries.map((entry) => renderCourseButton(entry))}
         {blockedEntries.map((entry) => renderBlockedButton(entry))}
+        {hardEntries.map((entry) => renderBlockedButton(entry, undefined, 'hard'))}
       </div>
       {hasMobileContainment ? (
         <>
@@ -511,7 +555,11 @@ function TimetableCell({
                     {groupEntries.map((entry) => (
                       'groupKey' in entry
                         ? renderCourseButton(entry, group)
-                        : renderBlockedButton(entry, group)
+                        : renderBlockedButton(
+                            entry,
+                            group,
+                            entry.id.startsWith('hard-') ? 'hard' : 'blocked',
+                          )
                     ))}
                   </div>
                 </div>
@@ -554,10 +602,12 @@ function TimetableView({
   themeMode,
   onOpenDetail,
   blockedSlots,
+  hardConflictSlots,
   calendar,
 }: TimetableViewProps) {
   const colorTheme = exportMode ? 'light' : themeMode;
   const blockedSlotSet = useMemo(() => new Set(blockedSlots), [blockedSlots]);
+  const hardConflictSlotSet = useMemo(() => new Set(hardConflictSlots), [hardConflictSlots]);
   const entries = useMemo(
     () => buildEntries(groups, weekSelection, colorTheme, blockedSlotSet, calendar),
     [blockedSlotSet, calendar, groups, weekSelection, colorTheme],
@@ -620,8 +670,10 @@ function TimetableView({
                   starting,
                   covers,
                   blockedSlotSet,
+                  hardConflictSlotSet,
                 );
                 const blocked = blockedSlotSet.has(cellKey);
+                const hard = hardConflictSlotSet.has(cellKey);
 
                 if (rowSpanBlock) {
                   for (let p = period + 1; p < period + rowSpanBlock.span; p += 1) {
@@ -633,7 +685,10 @@ function TimetableView({
                       day={day}
                       entries={rowSpanBlock.entries}
                       blocked={false}
+                      hard={false}
+                      hardConflictSlots={hardConflictSlotSet}
                       blockedPeriods={rowSpanBlock.blockedPeriods}
+                      hardPeriods={rowSpanBlock.hardPeriods}
                       rowSpan={rowSpanBlock.span}
                       startPeriod={period}
                       onOpenDetail={onOpenDetail}
@@ -647,6 +702,8 @@ function TimetableView({
                     day={day}
                     entries={starting}
                     blocked={blocked}
+                    hard={hard}
+                    hardConflictSlots={hardConflictSlotSet}
                     onOpenDetail={onOpenDetail}
                   />
                 );
@@ -670,6 +727,7 @@ export default function CourseTable({
   onExport,
   exporting = false,
   blockedSlots,
+  hardConflictSlots,
   onOpenCustomization,
   calendar,
   catalogGeneratedAt,
@@ -785,6 +843,7 @@ export default function CourseTable({
           groups={groups}
           themeMode={themeMode}
           blockedSlots={blockedSlots}
+          hardConflictSlots={hardConflictSlots}
           calendar={calendar}
           onOpenDetail={onOpenDetail}
         />
@@ -828,6 +887,7 @@ export default function CourseTable({
           exportMode
           themeMode="light"
           blockedSlots={blockedSlots}
+          hardConflictSlots={hardConflictSlots}
           calendar={calendar}
         />
       </div>
