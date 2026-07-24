@@ -612,6 +612,73 @@ html {
 }
 
 /* ============================================================
+ * MemoRecognize
+ * ============================================================ */
+.memo-recognize__body {
+  display: grid;
+  gap: 10px;
+}
+
+.memo-recognize__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.memo-recognize__group {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-soft, #d9d9d9);
+  border-radius: var(--radius-md);
+}
+
+.memo-recognize__group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.memo-recognize__expand {
+  color: var(--text-sub);
+  font-size: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.memo-recognize__expand:hover {
+  color: var(--text);
+}
+
+.memo-recognize__sections {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 24px;
+  display: grid;
+  gap: 4px;
+}
+
+.memo-recognize__item {
+  padding: 6px 10px;
+  border: 1px solid var(--accent-soft, #d9d9d9);
+  border-radius: var(--radius-md);
+}
+
+.memo-recognize__empty {
+  color: var(--text-sub);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+  margin: 0;
+}
+
+/* ============================================================
  * CoursePool
  * ============================================================ */
 .course-pool {

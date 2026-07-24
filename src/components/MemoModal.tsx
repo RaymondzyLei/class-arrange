@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import { useState } from 'react';
 import BottomModal from './BottomModal';
+import MemoRecognizeButton from './MemoRecognizeButton';
 import { useMemos } from '@/memos/MemosContext';
 
 interface Props {
@@ -82,6 +83,7 @@ export default function MemoModal({ open, onClose }: Props) {
                 <>
                   <p className="memo-modal__text">{note.text}</p>
                   <div className="memo-modal__actions">
+                    <MemoRecognizeButton noteText={note.text} />
                     <Button size="small" onClick={() => startEdit(note.id, note.text)}>编辑</Button>
                     <Button size="small" danger onClick={() => removeNote(note.id)}>删除</Button>
                   </div>
