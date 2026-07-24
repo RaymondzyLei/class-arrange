@@ -1,9 +1,31 @@
 // @vitest-environment jsdom
 import { act, createElement, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import MemoModal from './MemoModal';
 import { MemosProvider } from '@/memos/MemosContext';
+
+vi.mock('@/store/plansContext', () => ({
+  usePlans: () => ({
+    state: { plans: [], activePlanId: null },
+    activePlan: null,
+    dispatch: vi.fn(),
+  }),
+}));
+vi.mock('@/data/SemesterCatalogContext', () => ({
+  useSemesterCatalog: () => ({
+    courseMap: new Map(),
+    groupsByCode: new Map(),
+    manifest: { schemaVersion: 1, defaultSemester: 'test', semesters: [] },
+    catalog: { schemaVersion: 1, generatedAt: '', source: {}, semester: {}, courses: [], detailsBySection: {}, revision: 'r' },
+    courses: [],
+    groups: [],
+    groupByKey: new Map(),
+    filterOptions: { departments: [], categories: [], levels: [], courseTypes: [], sectionTypes: [], examTypes: [], gradings: [], languages: [] },
+    status: { phase: 'ready', targetSemesterKey: null, error: null },
+    switchSemester: vi.fn(),
+  }),
+}));
 
 async function mount(node: ReactNode): Promise<void> {
   const host = document.createElement('div');
