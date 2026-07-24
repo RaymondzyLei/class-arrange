@@ -79,15 +79,15 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 describe('update awareness rules', () => {
   test('publishes the July 24 memo recognize update', () => {
     expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.24.2',
+      version: '2026.07.24.3',
       publishedAt: '2026-07-24',
-      title: '备忘录识别导入',
+      title: '占位时间三态标注与强冲突避让',
       items: [
-        '备忘录新增识别按钮，自动识别文本中的课程号与课堂号，可勾选后导入到新课表。',
-        '识别兼容被文字包围的编号，以及字母开头、小写后缀等多种课程号格式。',
+        '占位时间网格支持三态标注：空闲 / 有事 / 强冲突。',
+        '强冲突时段在排课时被尽量避开（多时间组自动选不撞的组，单时间组等额惩罚不影响相对顺序）。',
       ],
     });
-    expect(CURRENT_APP_VERSION).toBe('2026.07.24.2');
+    expect(CURRENT_APP_VERSION).toBe('2026.07.24.3');
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {
