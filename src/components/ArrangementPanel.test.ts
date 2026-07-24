@@ -16,10 +16,10 @@ function ruleBody(selector: string): string {
 describe('ArrangementPanel viewport height', () => {
   const arrangements: Arrangement[] = [
     {
-      id: 'first', groups: [], conflictCount: 0, courseCount: 3, totalCredits: 6, totalHours: 96,
+      id: 'first', groups: [], conflictCount: 0, courseCount: 3, totalCredits: 6, totalHours: 96, hardConflictCount: 0,
     },
     {
-      id: 'second', groups: [], conflictCount: 1, courseCount: 3, totalCredits: 6, totalHours: 96,
+      id: 'second', groups: [], conflictCount: 1, courseCount: 3, totalCredits: 6, totalHours: 96, hardConflictCount: 0,
     },
   ];
   const baseProps = {

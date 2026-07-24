@@ -25,6 +25,7 @@ const arrangement = (id: string): Arrangement => ({
   courseCount: 1,
   totalCredits: 2,
   totalHours: 32,
+  hardConflictCount: 0,
 });
 
 describe('arrangement favorite metadata', () => {

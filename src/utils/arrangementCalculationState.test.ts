@@ -59,6 +59,7 @@ function arrangement(id: string, groups: CourseGroup[]): Arrangement {
     courseCount: groups.length,
     totalCredits: 0,
     totalHours: 0,
+    hardConflictCount: 0,
   };
 }
 
