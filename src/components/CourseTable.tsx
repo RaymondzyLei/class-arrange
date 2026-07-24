@@ -373,7 +373,9 @@ function TimetableCell({
     ...blockedEntries,
     ...hardEntries,
   ];
-  const visualItemCount = layoutEntries.length + (blocked && blockedEntries.length === 0 ? 1 : 0);
+  const visualItemCount = layoutEntries.length
+    + (blocked && blockedEntries.length === 0 ? 1 : 0)
+    + (hard && hardEntries.length === 0 ? 1 : 0);
   const isParallel = Boolean(rowSpan && startPeriod && layoutEntries.length > 1);
   const laneLayout = isParallel ? assignTimetableLanes(layoutEntries) : null;
   const parallelSizing = laneLayout ? getParallelLaneSizing(laneLayout.laneCount) : null;
