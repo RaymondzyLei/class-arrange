@@ -17,6 +17,7 @@ const ctx = {
     ['001661.01', makeCourse('001661.01', '前缀课')],
     ['MARX1014.01', makeCourse('MARX1014.01', '马原')],
     ['003154e.01', makeCourse('003154e.01', '小写课')],
+    ['001108.01', makeCourse('001108.01', '线代')],
   ]),
   groupsByCode: new Map<string, CourseGroup[]>([
     ['001101', [makeGroup('001101', '计算概论', ['001101.01', '001101.02'])]],
@@ -24,6 +25,7 @@ const ctx = {
     ['001661', [makeGroup('001661', '前缀课', ['001661.01'])]],
     ['MARX1014', [makeGroup('MARX1014', '马原', ['MARX1014.01'])]],
     ['003154e', [makeGroup('003154e', '小写课', ['003154e.01'])]],
+    ['001108', [makeGroup('001108', '线代', ['001108.01'])]],
   ]),
 };
 
@@ -78,6 +80,15 @@ describe('extractCourseRefs', () => {
     expect(refs).toHaveLength(1);
     expect(refs[0]).toMatchObject({ sectionId: '001661EX.01' });
     expect(refs.some((r) => r.type === 'course' && r.courseCode === '001661')).toBe(false);
+  });
+
+  it('识别被噪音文字包围的编号', () => {
+    const refs = extractCourseRefs('001101.01wfw..001108aodfd', ctx);
+    expect(refs).toHaveLength(2);
+    const course = refs.find((r) => r.type === 'course');
+    const section = refs.find((r) => r.type === 'section');
+    expect(course).toMatchObject({ courseCode: '001108', courseName: '线代' });
+    expect(section).toMatchObject({ sectionId: '001101.01' });
   });
 
   it('不误识别日期数字为课程号', () => {

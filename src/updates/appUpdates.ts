@@ -93,6 +93,15 @@ export const APP_RELEASES: AppRelease[] = [
       '新增备忘录功能，内容仅保存在当前浏览器。',
     ],
   },
+  {
+    version: '2026.07.24.2',
+    publishedAt: '2026-07-24',
+    title: '备忘录识别导入',
+    items: [
+      '备忘录新增识别按钮，自动识别文本中的课程号与课堂号，可勾选后导入到新课表。',
+      '识别兼容被文字包围的编号，以及字母开头、小写后缀等多种课程号格式。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';
