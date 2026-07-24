@@ -23,10 +23,11 @@ export interface CourseRefContext {
   groupsByCode: ReadonlyMap<string, CourseGroup[]>;
 }
 
-/** 课堂号：6位数字+可选字母后缀+ . +2位数字，如 001101.01 / 001661EX.01 */
-const SECTION_ID_RE = /\b\d{6}[A-Z]*\.\d{2}\b/g;
-/** 纯课程号：6位数字+可选字母后缀，且后面不跟 ".数字"（排除课堂号前缀），如 001101 / 001661EX */
-const COURSE_CODE_RE = /\b\d{6}[A-Z]*(?!\.\d)/g;
+/** 课堂号：字母数字串（含至少一个数字）+ . +2位班次，如 001101.01 / 001661EX.01 / MARX1014.01 */
+const SECTION_ID_RE = /\b[A-Za-z0-9]*\d[A-Za-z0-9]*\.\d{2}\b/g;
+/** 纯课程号：字母数字串（含至少一个数字），且后面不跟 ".数字"（排除课堂号前缀）。
+ *  末尾 \b 阻止贪婪回溯误匹配前缀课程号（如 001661EX.01 不应回溯匹配 001661）。 */
+const COURSE_CODE_RE = /\b[A-Za-z0-9]*\d[A-Za-z0-9]*\b(?!\.\d)/g;
 
 export function extractCourseRefs(text: string, ctx: CourseRefContext): RecognizedRef[] {
   const { courseMap, groupsByCode } = ctx;
