@@ -167,42 +167,32 @@ export default function CustomizationModal({
 
   const toggleSlot = (day: number, period: number) => {
     const key = blockedSlotKey(day, period);
-    setDraftBlockedSlots((currentBlocked) => {
-      const nextBlocked = new Set(currentBlocked);
-      setDraftHardConflictSlots((currentHard) => {
-        const nextHard = new Set(currentHard);
-        if (nextBlocked.has(key)) {
-          nextBlocked.delete(key);
-          nextHard.add(key);
-        } else if (nextHard.has(key)) {
-          nextHard.delete(key);
-        } else {
-          nextBlocked.add(key);
-        }
-        return [...nextHard].sort();
-      });
-      return [...nextBlocked].sort();
+    const current = hardConflictSlotSet.has(key) ? 'hard'
+      : blockedSlotSet.has(key) ? 'blocked' : 'empty';
+    const target = current === 'empty' ? 'blocked'
+      : current === 'blocked' ? 'hard' : 'empty';
+    setDraftBlockedSlots((cur) => {
+      const next = new Set(cur);
+      if (target === 'blocked') next.add(key); else next.delete(key);
+      return [...next].sort();
+    });
+    setDraftHardConflictSlots((cur) => {
+      const next = new Set(cur);
+      if (target === 'hard') next.add(key); else next.delete(key);
+      return [...next].sort();
     });
   };
 
   const paintSlot = (key: string, targetState: 'blocked' | 'hard' | 'empty') => {
-    setDraftBlockedSlots((currentBlocked) => {
-      const nextBlocked = new Set(currentBlocked);
-      setDraftHardConflictSlots((currentHard) => {
-        const nextHard = new Set(currentHard);
-        if (targetState === 'blocked') {
-          nextBlocked.add(key);
-          nextHard.delete(key);
-        } else if (targetState === 'hard') {
-          nextHard.add(key);
-          nextBlocked.delete(key);
-        } else {
-          nextBlocked.delete(key);
-          nextHard.delete(key);
-        }
-        return [...nextHard].sort();
-      });
-      return [...nextBlocked].sort();
+    setDraftBlockedSlots((cur) => {
+      const next = new Set(cur);
+      if (targetState === 'blocked') next.add(key); else next.delete(key);
+      return [...next].sort();
+    });
+    setDraftHardConflictSlots((cur) => {
+      const next = new Set(cur);
+      if (targetState === 'hard') next.add(key); else next.delete(key);
+      return [...next].sort();
     });
   };
 
