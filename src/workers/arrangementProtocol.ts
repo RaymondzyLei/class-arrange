@@ -163,6 +163,7 @@ export function executeArrangementWorkerRequest(
     preferAvoidCampusTransfers: request.settings.preferAvoidCampusTransfers,
     residentCampus: request.settings.residentCampus,
     blockedSlots: request.settings.blockedSlots,
+    hardConflictSlots: [],
   };
   const result = enumerateArrangementResultsExact(
     request.groups.map(rehydrateWorkerInputGroup),

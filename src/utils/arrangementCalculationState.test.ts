@@ -33,6 +33,7 @@ function settings(
     preferAvoidCampusTransfers: true,
     residentCampus: '本部',
     blockedSlots: [],
+    hardConflictSlots: [],
     ...overrides,
   };
 }

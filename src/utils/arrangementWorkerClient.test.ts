@@ -20,6 +20,7 @@ const SETTINGS: CustomScheduleSettings = {
   preferAvoidCampusTransfers: true,
   residentCampus: '本部',
   blockedSlots: [],
+  hardConflictSlots: [],
 };
 
 function group(

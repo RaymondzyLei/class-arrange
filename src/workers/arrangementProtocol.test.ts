@@ -16,6 +16,7 @@ const SETTINGS: CustomScheduleSettings = {
   preferAvoidCampusTransfers: true,
   residentCampus: '高新区',
   blockedSlots: [],
+  hardConflictSlots: [],
 };
 
 function schedule(

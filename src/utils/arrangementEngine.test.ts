@@ -25,6 +25,7 @@ const NO_PREFERENCES: CustomScheduleSettings = {
   preferAvoidCampusTransfers: false,
   residentCampus: '本部',
   blockedSlots: [],
+  hardConflictSlots: [],
 };
 
 describe('exact conflict-free result policy', () => {
@@ -144,6 +145,7 @@ describe('compareArrangementRanks', () => {
       preferAvoidCampusTransfers: true,
       residentCampus: '本部',
       blockedSlots: [],
+      hardConflictSlots: [],
     };
 
     expect(compareArrangementRanks(
@@ -275,6 +277,7 @@ describe('exact Top-8 differential contract', () => {
             preferAvoidCampusTransfers,
             residentCampus: seed % 2 === 0 ? '本部' : '高新区',
             blockedSlots: blockedSlotsForSeed(seed),
+            hardConflictSlots: [],
           };
           const favorites = favoriteSnapshotForGroups(groups);
           const expected = enumerateArrangementsOracle(groups, settings, favorites);
@@ -466,6 +469,7 @@ describe('exact Top-8 differential contract', () => {
       preferAvoidCampusTransfers: false,
       residentCampus: '本部',
       blockedSlots: afternoonBlocks,
+      hardConflictSlots: [],
     }).map((result) => result.id)).toEqual([
       'z-free-afternoon',
       'a-busy-afternoon',
@@ -484,6 +488,7 @@ describe('exact Top-8 differential contract', () => {
       preferAvoidCampusTransfers: false,
       residentCampus: '本部',
       blockedSlots: [],
+      hardConflictSlots: [],
     }).map((result) => result.id)).toEqual(['z-late', 'a-early']);
   });
 
