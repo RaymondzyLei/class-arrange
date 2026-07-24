@@ -174,4 +174,9 @@ describe('ArrangementPanel viewport height', () => {
 
     expect(resultPanelRule).not.toContain('border-top');
   });
+
+  it('shows hard conflict count on arrangement cards when present', () => {
+    expect(source).toContain('hardConflictCount');
+    expect(source).toContain('强冲突');
+  });
 });
