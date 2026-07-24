@@ -1667,6 +1667,9 @@ html {
   --timetable-placeholder-stripe: color-mix(in srgb, var(--text-sub) 76%, var(--panel-bg));
   --timetable-placeholder-bg: color-mix(in srgb, var(--text-sub) 22%, var(--panel-bg));
   --timetable-placeholder-fg: var(--text-sub);
+  --timetable-hardconflict-stripe: #d93025;
+  --timetable-hardconflict-bg: rgba(217, 48, 37, 0.18);
+  --timetable-hardconflict-fg: #b3261e;
   --timetable-border: #232323;
   --timetable-grid: #b9b9b9;
 }
@@ -5308,6 +5311,9 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   --timetable-placeholder-stripe: #7b8796;
   --timetable-placeholder-bg: #303946;
   --timetable-placeholder-fg: #d8dee6;
+  --timetable-hardconflict-stripe: #f28b82;
+  --timetable-hardconflict-bg: rgba(242, 139, 130, 0.22);
+  --timetable-hardconflict-fg: #f3a9a4;
   background: var(--timetable-cell-bg);
 }
 
