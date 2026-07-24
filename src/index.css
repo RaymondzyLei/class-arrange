@@ -4971,6 +4971,29 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
 }
 
+.availability-grid__cell--blocked {
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+.availability-grid__cell--blocked:hover {
+  outline: 0;
+  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
+}
+
+.availability-grid__cell--hard {
+  background: var(--timetable-hardconflict-bg, #ffe0e0);
+  border-color: var(--timetable-hardconflict-stripe, #d93025);
+  box-shadow: inset 0 0 0 1px var(--timetable-hardconflict-stripe, #d93025);
+}
+
+.availability-grid__cell--hard:hover {
+  outline: 0;
+  background: var(--timetable-hardconflict-bg, #ffe0e0);
+  box-shadow: inset 0 0 0 1px var(--timetable-hardconflict-stripe, #d93025);
+}
+
 @media (max-width: 900px) {
   .selected-courses-toolbar--filters {
     grid-template-columns: minmax(220px, 1fr) minmax(120px, 168px);
@@ -5686,6 +5709,18 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 :root[data-theme='dark'] .availability-grid__cell--selected:hover {
   background: #36414f;
   box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--blocked,
+:root[data-theme='dark'] .availability-grid__cell--blocked:hover {
+  background: #36414f;
+  box-shadow: inset 0 0 0 1px #637184;
+}
+
+:root[data-theme='dark'] .availability-grid__cell--hard,
+:root[data-theme='dark'] .availability-grid__cell--hard:hover {
+  background: #5c2a2a;
+  box-shadow: inset 0 0 0 1px #b94a4a;
 }
 
 :root[data-theme='dark'] #root .course-table__export-button.ant-btn,

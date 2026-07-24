@@ -92,15 +92,22 @@ export default function CustomizationModal({
   const [page, setPage] = useState<CustomizationPage>(initialPage);
   const [draftBlockedSlots, setDraftBlockedSlots] = useState(settings.blockedSlots);
   const blockedSlotSet = useMemo(() => new Set(draftBlockedSlots), [draftBlockedSlots]);
+  const [draftHardConflictSlots, setDraftHardConflictSlots] = useState(settings.hardConflictSlots);
+  const hardConflictSlotSet = useMemo(() => new Set(draftHardConflictSlots), [draftHardConflictSlots]);
   const modalBodyRef = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef({ active: false, selecting: true, lastKey: '' });
+  const dragStateRef = useRef<{ active: boolean; targetState: 'blocked' | 'hard' | 'empty'; lastKey: string }>({
+    active: false,
+    targetState: 'blocked',
+    lastKey: '',
+  });
   const lastGridPointerTypeRef = useRef('');
 
   useEffect(() => {
     if (!open) return;
     setDraftBlockedSlots(settings.blockedSlots);
+    setDraftHardConflictSlots(settings.hardConflictSlots);
     setPage(initialPage);
-  }, [initialPage, open, settings.blockedSlots]);
+  }, [initialPage, open, settings.blockedSlots, settings.hardConflictSlots]);
 
   useEffect(() => {
     if (!open) return;
@@ -158,46 +165,69 @@ export default function CustomizationModal({
     message.success('排课方案展示数量已更新');
   };
 
-  const toggleBlockedSlot = (day: number, period: number) => {
+  const toggleSlot = (day: number, period: number) => {
     const key = blockedSlotKey(day, period);
-    setDraftBlockedSlots((current) => {
-      const next = new Set(current);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return [...next].sort();
+    setDraftBlockedSlots((currentBlocked) => {
+      const nextBlocked = new Set(currentBlocked);
+      setDraftHardConflictSlots((currentHard) => {
+        const nextHard = new Set(currentHard);
+        if (nextBlocked.has(key)) {
+          nextBlocked.delete(key);
+          nextHard.add(key);
+        } else if (nextHard.has(key)) {
+          nextHard.delete(key);
+        } else {
+          nextBlocked.add(key);
+        }
+        return [...nextHard].sort();
+      });
+      return [...nextBlocked].sort();
     });
   };
 
-  const paintBlockedSlot = (key: string, selecting: boolean) => {
-    setDraftBlockedSlots((current) => {
-      const next = new Set(current);
-      if (next.has(key) === selecting) return current;
-      if (selecting) next.add(key);
-      else next.delete(key);
-      return [...next].sort();
+  const paintSlot = (key: string, targetState: 'blocked' | 'hard' | 'empty') => {
+    setDraftBlockedSlots((currentBlocked) => {
+      const nextBlocked = new Set(currentBlocked);
+      setDraftHardConflictSlots((currentHard) => {
+        const nextHard = new Set(currentHard);
+        if (targetState === 'blocked') {
+          nextBlocked.add(key);
+          nextHard.delete(key);
+        } else if (targetState === 'hard') {
+          nextHard.add(key);
+          nextBlocked.delete(key);
+        } else {
+          nextBlocked.delete(key);
+          nextHard.delete(key);
+        }
+        return [...nextHard].sort();
+      });
+      return [...nextBlocked].sort();
     });
   };
 
-  const applyBlockedSlots = () => {
-    if (draftBlockedSlots.join('|') === settings.blockedSlots.join('|')) return;
-    onChange({ ...settings, blockedSlots: draftBlockedSlots });
+  const applySlots = () => {
+    const blockedChanged = draftBlockedSlots.join('|') !== settings.blockedSlots.join('|');
+    const hardChanged = draftHardConflictSlots.join('|') !== settings.hardConflictSlots.join('|');
+    if (!blockedChanged && !hardChanged) return;
+    onChange({ ...settings, blockedSlots: draftBlockedSlots, hardConflictSlots: draftHardConflictSlots });
   };
 
   const returnToMain = () => {
-    applyBlockedSlots();
+    applySlots();
     setPage('main');
   };
 
   const closeAndApply = () => {
-    applyBlockedSlots();
+    applySlots();
     onClose();
   };
 
   const calculationModeLabel = CALCULATION_MODE_OPTIONS.find(
     (option) => option.value === settings.calculationMode,
   )?.label ?? '自动排课';
-  const blockedSlotsLabel = draftBlockedSlots.length > 0
-    ? `已选择 ${draftBlockedSlots.length} 个时段`
+  const blockedSlotsLabel = draftBlockedSlots.length > 0 || draftHardConflictSlots.length > 0
+    ? `${draftBlockedSlots.length} 有事 / ${draftHardConflictSlots.length} 强冲突`
     : '未设置';
 
   return (
@@ -334,11 +364,14 @@ export default function CustomizationModal({
             <div className="customization__subpage-header">
               <div className="customization__subpage-copy">
                 <h3>占位时间</h3>
-                <p>点击或按住鼠标拖动选择时间；从已选格开始拖动可连续取消。</p>
+                <p>点击循环切换 空闲 → 有事 → 强冲突 → 空闲；按住鼠标拖动可连续标注为按下时的目标状态。</p>
               </div>
               <Button
-                disabled={draftBlockedSlots.length === 0}
-                onClick={() => setDraftBlockedSlots([])}
+                disabled={draftBlockedSlots.length === 0 && draftHardConflictSlots.length === 0}
+                onClick={() => {
+                  setDraftBlockedSlots([]);
+                  setDraftHardConflictSlots([]);
+                }}
               >
                 清空占位
               </Button>
@@ -354,7 +387,7 @@ export default function CustomizationModal({
                     const key = target?.dataset.slotKey;
                     if (!key || drag.lastKey === key) return;
                     drag.lastKey = key;
-                    paintBlockedSlot(key, drag.selecting);
+                    paintSlot(key, drag.targetState);
                   }}
                 >
                   <thead>
@@ -368,30 +401,38 @@ export default function CustomizationModal({
                       <tr key={period}>
                         <th scope="row">{period}</th>
                         {DAYS.map((day) => {
-                          const selected = blockedSlotSet.has(blockedSlotKey(day, period));
+                          const key = blockedSlotKey(day, period);
+                          const state = hardConflictSlotSet.has(key)
+                            ? 'hard'
+                            : blockedSlotSet.has(key) ? 'blocked' : 'empty';
                           return (
                             <td key={day}>
                               <button
                                 type="button"
                                 data-slot-key={blockedSlotKey(day, period)}
-                                className={`availability-grid__cell${selected ? ' availability-grid__cell--selected' : ''}`}
-                                aria-label={`${DAY_LABELS[day]}第 ${period} 节${selected ? '有事' : '空闲'}`}
-                                aria-pressed={selected}
+                                className={`availability-grid__cell availability-grid__cell--${state}`}
+                                aria-label={`${DAY_LABELS[day]}第 ${period} 节${state === 'empty' ? '空闲' : state === 'blocked' ? '有事' : '强冲突'}`}
+                                aria-pressed={state !== 'empty'}
                                 onPointerDown={(event) => {
                                   lastGridPointerTypeRef.current = event.pointerType;
                                   if (event.pointerType !== 'mouse' || event.button !== 0) return;
                                   event.preventDefault();
                                   const key = blockedSlotKey(day, period);
+                                  const current = hardConflictSlotSet.has(key)
+                                    ? 'hard'
+                                    : blockedSlotSet.has(key) ? 'blocked' : 'empty';
+                                  const targetState = current === 'empty' ? 'blocked'
+                                    : current === 'blocked' ? 'hard' : 'empty';
                                   dragStateRef.current = {
                                     active: true,
-                                    selecting: !selected,
+                                    targetState,
                                     lastKey: key,
                                   };
-                                  paintBlockedSlot(key, !selected);
+                                  paintSlot(key, targetState);
                                 }}
                                 onClick={(event) => {
                                   if (event.detail === 0 || lastGridPointerTypeRef.current !== 'mouse') {
-                                    toggleBlockedSlot(day, period);
+                                    toggleSlot(day, period);
                                   }
                                   lastGridPointerTypeRef.current = '';
                                 }}

@@ -77,3 +77,18 @@ describe('CustomizationModal grouped settings navigation', () => {
     expect(onboarding).not.toContain('这可能会导致方案被错误排序');
   });
 });
+
+describe('CustomizationModal hard conflict three-state grid', () => {
+  it('renders a three-state availability grid cycling empty -> blocked -> hard', () => {
+    expect(source).toContain('draftHardConflictSlots');
+    expect(source).toContain('hardConflictSlotSet');
+    expect(source).toContain('availability-grid__cell--${state}');
+    expect(styles).toContain('availability-grid__cell--hard');
+    expect(source).toMatch(/空闲.*有事.*强冲突|强冲突.*有事.*空闲/);
+  });
+
+  it('applies hard conflict slots back to settings and keeps them exclusive with blocked', () => {
+    expect(source).toContain('hardConflictSlots: draftHardConflictSlots');
+    expect(source).toContain('清空占位');
+  });
+});
