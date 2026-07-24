@@ -92,6 +92,18 @@ describe('arrangement Worker precise schedule protocol', () => {
     expect(request.mode).toBe('recommended');
   });
 
+  it('serializes hard conflict slots in the worker settings dto and result', () => {
+    const groups = [group('A', schedule([1]), ['A.01'])];
+    const request = createArrangementWorkerRequest(1, groups, {
+      ...SETTINGS,
+      hardConflictSlots: ['1-1', '2-6'],
+    });
+    expect(request.settings.hardConflictSlots).toEqual(['1-1', '2-6']);
+
+    const result = executeArrangementWorkerRequest(request);
+    expect(result.arrangements[0].hardConflictCount).toBe(1);
+  });
+
   it('ranks a lexicographically later group first when its section is favorited', () => {
     const early = group('A::early', [], ['A.01']);
     const late = group('A::late', [], ['A.02']);

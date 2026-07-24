@@ -94,10 +94,10 @@ describe('arrangement Worker client', () => {
       type: 'result',
       generation: 1,
       arrangements: [{
-        id: 'a', groupKeys: ['a'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+        id: 'a', groupKeys: ['a'], conflictCount: 0, hardConflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
       }],
       conflictFreePreview: [{
-        id: 'a', groupKeys: ['a'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+        id: 'a', groupKeys: ['a'], conflictCount: 0, hardConflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
       }],
       totalConflictFreeCount: 1,
     });
@@ -136,6 +136,7 @@ describe('arrangement Worker client', () => {
         preferAvoidCampusTransfers: true,
         residentCampus: '本部',
         blockedSlots: [],
+        hardConflictSlots: [],
       },
     }]);
     worker.reply({
@@ -145,6 +146,7 @@ describe('arrangement Worker client', () => {
         id: 'a||b',
         groupKeys: ['a', 'b'],
         conflictCount: 2,
+        hardConflictCount: 3,
         courseCount: 2,
         totalCredits: 5,
         totalHours: 64,
@@ -158,7 +160,7 @@ describe('arrangement Worker client', () => {
       id: 'a||b',
       groups,
       conflictCount: 2,
-      hardConflictCount: 0,
+      hardConflictCount: 3,
       courseCount: 2,
       totalCredits: 5,
       totalHours: 64,
@@ -207,12 +209,13 @@ describe('arrangement Worker client', () => {
         id: 'b',
         groupKeys: ['b'],
         conflictCount: 0,
+        hardConflictCount: 0,
         courseCount: 1,
         totalCredits: 0,
         totalHours: 0,
       }],
       conflictFreePreview: [{
-        id: 'b', groupKeys: ['b'], conflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
+        id: 'b', groupKeys: ['b'], conflictCount: 0, hardConflictCount: 0, courseCount: 1, totalCredits: 0, totalHours: 0,
       }],
       totalConflictFreeCount: 1,
     });
@@ -266,6 +269,7 @@ describe('arrangement Worker client', () => {
         id: 'missing',
         groupKeys: ['missing'],
         conflictCount: 0,
+        hardConflictCount: 0,
         courseCount: 1,
         totalCredits: 0,
         totalHours: 0,
