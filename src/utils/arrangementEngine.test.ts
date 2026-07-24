@@ -103,6 +103,7 @@ function makeGroup(
 function makeRank(overrides: Partial<ArrangementRank> = {}): ArrangementRank {
   return {
     favoriteArrangement: false,
+    hardConflictCount: 0,
     conflictCount: 0,
     favoriteCourseCount: 0,
     campusTransitionCount: 0,
@@ -131,6 +132,14 @@ describe('compareArrangementRanks', () => {
     expect(compareArrangementRanks(
       makeRank({ conflictCount: 0, favoriteCourseCount: 2 }),
       makeRank({ conflictCount: 0, favoriteCourseCount: 1 }),
+      NO_PREFERENCES,
+    )).toBeLessThan(0);
+  });
+
+  it('ranks hard conflict count ahead of timetable conflicts', () => {
+    expect(compareArrangementRanks(
+      makeRank({ hardConflictCount: 0, conflictCount: 1 }),
+      makeRank({ hardConflictCount: 1, conflictCount: 0 }),
       NO_PREFERENCES,
     )).toBeLessThan(0);
   });
@@ -399,6 +408,48 @@ describe('exact Top-8 differential contract', () => {
     expect(results.map((result) => [result.id, result.conflictCount])).toEqual([
       ['b-locked||z-free', 0],
       ['a-blocked||b-locked', 1],
+    ]);
+  });
+
+  it('makes multi-group courses avoid hard conflict slots and keeps single-group impact neutral', () => {
+    const groups = [
+      makeGroup('A', 'a-hard', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
+      makeGroup('B', 'b-locked', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      hardConflictSlots: ['1-1'],
+    };
+
+    const results = enumerateArrangements(groups, settings);
+
+    // 多组课 A 选不撞强冲突的 z-free；b-locked 单组撞强冲突，两个方案各带 b-locked 的 1，
+    // 但 z-free 方案总强冲突数（1）小于 a-hard 方案（2），因此 z-free 方案排前
+    expect(results.map((result) => [result.id, result.hardConflictCount])).toEqual([
+      ['b-locked||z-free', 1],
+      ['a-hard||b-locked', 2],
+    ]);
+  });
+
+  it('keeps hard conflict count independent from blocked-slot conflict count', () => {
+    const groups = [
+      makeGroup('A', 'a-hard', [{ weeks: [1, 2], day: 1, periods: [1], room: '', campus: '本部' }]),
+      makeGroup('A', 'z-free', [{ weeks: [1, 2], day: 2, periods: [3], room: '', campus: '本部' }]),
+    ];
+    const settings: CustomScheduleSettings = {
+      ...NO_PREFERENCES,
+      blockedSlots: ['2-3'],
+      hardConflictSlots: ['1-1'],
+    };
+
+    const results = enumerateArrangements(groups, settings);
+
+    // a-hard 撞强冲突(1-1) hardConflictCount=1；z-free 撞占位(2-3) conflictCount=1
+    // 强冲突优先于冲突数：z-free(0 强冲突) 排前
+    expect(results.map((result) => [result.id, result.hardConflictCount, result.conflictCount])).toEqual([
+      ['z-free', 0, 1],
+      ['a-hard', 1, 0],
     ]);
   });
 

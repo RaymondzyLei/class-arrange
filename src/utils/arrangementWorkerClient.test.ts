@@ -158,6 +158,7 @@ describe('arrangement Worker client', () => {
       id: 'a||b',
       groups,
       conflictCount: 2,
+      hardConflictCount: 0,
       courseCount: 2,
       totalCredits: 5,
       totalHours: 64,

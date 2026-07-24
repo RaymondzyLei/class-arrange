@@ -40,6 +40,7 @@ export interface ArrangementEnumerationOptions {
 
 export interface ArrangementRank {
   favoriteArrangement: boolean;
+  hardConflictCount: number;
   conflictCount: number;
   favoriteCourseCount: number;
   campusTransitionCount: number;
@@ -65,6 +66,7 @@ interface PrecomputedGroup {
   earlyMorningDays: number[];
   campusVisits: CampusVisit[];
   blockedSlotHit: boolean;
+  hardConflictHit: boolean;
   credits: number;
   hours: number;
   conflictNeighbors: number[];
@@ -101,6 +103,9 @@ export function compareArrangementRanks(
 ): number {
   if (left.favoriteArrangement !== right.favoriteArrangement) {
     return left.favoriteArrangement ? -1 : 1;
+  }
+  if (left.hardConflictCount !== right.hardConflictCount) {
+    return left.hardConflictCount - right.hardConflictCount;
   }
   if (left.conflictCount !== right.conflictCount) {
     return left.conflictCount - right.conflictCount;
@@ -207,11 +212,13 @@ class BoundedCandidateHeap {
 function precomputeGroups(
   groups: CourseGroup[],
   blockedSlots: Set<string>,
+  hardConflictSlots: Set<string>,
   favoriteTimeGroupKeys: Set<string>,
   favoriteSectionIds: Set<string>,
 ): PrecomputedGroup[] {
   const keyIds = new Map<string, number>();
   const blockedByDay = blockedMinuteIntervalsByDay(blockedSlots);
+  const hardByDay = blockedMinuteIntervalsByDay(hardConflictSlots);
   const records = groups.map((group): PrecomputedGroup => {
     let keyId = keyIds.get(group.key);
     if (keyId === undefined) {
@@ -223,6 +230,7 @@ function precomputeGroups(
     const occupiedDayPeriods = new Set<string>();
     const earlyMorningDays = new Set<number>();
     let blockedSlotHit = false;
+    let hardConflictHit = false;
     for (const slot of group.schedule) {
       const minuteIntervals = scheduleSlotMinuteIntervals(slot);
       for (const week of expandWeeks(slot.weeks)) {
@@ -245,6 +253,9 @@ function precomputeGroups(
       if (scheduleSlotOverlapsBlocked(slot, blockedByDay)) {
         blockedSlotHit = true;
       }
+      if (scheduleSlotOverlapsBlocked(slot, hardByDay)) {
+        hardConflictHit = true;
+      }
     }
     const representative = group.sections[0];
     return {
@@ -257,6 +268,7 @@ function precomputeGroups(
       earlyMorningDays: [...earlyMorningDays],
       campusVisits: campusVisitsForGroup(group),
       blockedSlotHit,
+      hardConflictHit,
       credits: representative ? representative.credits : 0,
       hours: representative ? representative.hours : 0,
       conflictNeighbors: [],
@@ -300,6 +312,7 @@ class IncrementalSearchState {
   private readonly selected: boolean[];
   private readonly blockedConflictRefs: number[];
   private readonly overlapConflictRefs: number[];
+  private readonly hardConflictRefs: number[];
   private readonly occupiedDayPeriodRefs = new Map<string, number>();
   private readonly earlyMorningDayRefs = new Map<number, number>();
   private readonly campusVisitsByBucket = new Map<string, CampusVisit[]>();
@@ -307,6 +320,7 @@ class IncrementalSearchState {
   private readonly trackCampusTransfers: boolean;
 
   conflictCount = 0;
+  hardConflictCount = 0;
   favoriteCourseCount = 0;
   campusTransitionCount = 0;
   earlyMorningDayCount = 0;
@@ -326,6 +340,7 @@ class IncrementalSearchState {
     const keyCount = records.reduce((highest, record) => Math.max(highest, record.keyId + 1), 0);
     this.blockedConflictRefs = Array.from({ length: keyCount }, () => 0);
     this.overlapConflictRefs = Array.from({ length: keyCount }, () => 0);
+    this.hardConflictRefs = Array.from({ length: keyCount }, () => 0);
     for (const key of blockedSlots) {
       const [day, period] = key.split('-').map(Number);
       if (day >= 1 && day <= 7) this.incrementMap(this.occupiedDayPeriodRefs, `${day}-${period}`);
@@ -341,6 +356,7 @@ class IncrementalSearchState {
     this.selected[groupIndex] = true;
     if (record.favoriteCourse) this.favoriteCourseCount += 1;
     if (record.blockedSlotHit) this.adjustConflictRef(this.blockedConflictRefs, record.keyId, 1);
+    if (record.hardConflictHit) this.adjustHardConflictRef(record.keyId, 1);
     for (const neighborIndex of record.conflictNeighbors) {
       if (!this.selected[neighborIndex]) continue;
       this.adjustConflictRef(this.overlapConflictRefs, record.keyId, 1);
@@ -367,6 +383,7 @@ class IncrementalSearchState {
   remove(groupIndex: number, snapshot: TotalsSnapshot): void {
     const record = this.records[groupIndex];
     if (record.blockedSlotHit) this.adjustConflictRef(this.blockedConflictRefs, record.keyId, -1);
+    if (record.hardConflictHit) this.adjustHardConflictRef(record.keyId, -1);
     for (const neighborIndex of record.conflictNeighbors) {
       if (!this.selected[neighborIndex]) continue;
       this.adjustConflictRef(this.overlapConflictRefs, record.keyId, -1);
@@ -430,6 +447,13 @@ class IncrementalSearchState {
     if (wasConflicted !== isConflicted) this.conflictCount += isConflicted ? 1 : -1;
   }
 
+  private adjustHardConflictRef(keyId: number, delta: 1 | -1): void {
+    const was = this.hardConflictRefs[keyId] > 0;
+    this.hardConflictRefs[keyId] += delta;
+    const is = this.hardConflictRefs[keyId] > 0;
+    if (was !== is) this.hardConflictCount += is ? 1 : -1;
+  }
+
   private incrementMap<Key>(map: Map<Key, number>, key: Key): void {
     map.set(key, (map.get(key) ?? 0) + 1);
   }
@@ -484,12 +508,14 @@ export function enumerateArrangementResultsExact(
   }
 
   const blockedSlots = new Set(settings.blockedSlots);
+  const hardConflictSlots = new Set(settings.hardConflictSlots);
   const favoriteArrangementIds = new Set(favorites?.arrangementIds ?? []);
   const favoriteTimeGroupKeys = new Set(favorites?.timeGroupKeys ?? []);
   const favoriteSectionIds = new Set(favorites?.sectionIds ?? []);
   const records = precomputeGroups(
     groups,
     blockedSlots,
+    hardConflictSlots,
     favoriteTimeGroupKeys,
     favoriteSectionIds,
   );
@@ -545,6 +571,7 @@ export function enumerateArrangementResultsExact(
         id,
         rank: {
           favoriteArrangement: favoriteArrangementIds.has(id),
+          hardConflictCount: state.hardConflictCount,
           conflictCount: state.conflictCount,
           favoriteCourseCount: state.favoriteCourseCount,
           campusTransitionCount: settings.preferAvoidCampusTransfers
@@ -593,6 +620,7 @@ export function enumerateArrangementResultsExact(
     id: candidate.id,
     groups: candidate.groupIndices.map((index) => records[index].group),
     conflictCount: candidate.rank.conflictCount,
+    hardConflictCount: candidate.rank.hardConflictCount,
     courseCount: candidate.groupIndices.length,
     totalCredits: candidate.rank.totalCredits,
     totalHours: candidate.totalHours,

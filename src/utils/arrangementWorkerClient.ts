@@ -151,6 +151,9 @@ function rehydrateArrangement(
     id: dto.id,
     groups,
     conflictCount: dto.conflictCount,
+    // Worker 协议当前不传递 hardConflictSlots（恒为空），强冲突数始终为 0；
+    // 后续任务接入 hardConflictSlots 时需同步更新 DTO 与此处。
+    hardConflictCount: 0,
     courseCount: dto.courseCount,
     totalCredits: dto.totalCredits,
     totalHours: dto.totalHours,

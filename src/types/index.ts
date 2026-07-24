@@ -308,4 +308,6 @@ export interface Arrangement {
   totalCredits: number;
   /** 总学时 */
   totalHours: number;
+  /** 撞强冲突时段的 group key 数（独立于 conflictCount） */
+  hardConflictCount: number;
 }
