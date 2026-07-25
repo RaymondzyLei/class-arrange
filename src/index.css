@@ -631,7 +631,7 @@ html {
   margin-left: 0;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text);
   cursor: pointer;
@@ -712,99 +712,241 @@ html {
   padding-inline-end: 0;
 }
 
-.filter-bar__memo-toggle {
+#root .filter-bar__memo-toggle.ant-btn {
   width: 100%;
   min-width: 0;
-  padding: 0 8px;
-  height: 24px;
-  font-size: 12px;
-  color: var(--text-sub);
-  background: var(--panel-bg, #fff);
-  border: 1px solid var(--accent-soft, #d9d9d9);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  white-space: nowrap;
   justify-self: stretch;
-  transition: border-color 0.2s, color 0.2s;
 }
 
-.filter-bar__memo-toggle:hover {
-  color: var(--text);
-  border-color: var(--text, #333);
+#root .filter-bar__memo-toggle.ant-btn:focus-visible {
+  outline: 0;
+  box-shadow: none !important;
 }
 
 /* ============================================================
  * MemoModal
  * ============================================================ */
+.memo-modal .bottom-modal__panel {
+  height: min(74vh, 640px);
+}
+
+.memo-modal .bottom-modal__body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .memo-modal__body {
+  height: 100%;
+  min-height: 0;
   display: grid;
-  gap: 14px;
-  padding-top: 8px;
+  grid-template-columns: minmax(190px, 220px) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 16px;
 }
 
-.memo-modal__compose {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  align-items: end;
-  gap: 8px;
+.memo-modal__sidebar {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 14px;
 }
 
-.memo-modal__textarea {
+.memo-modal .memo-modal__new.ant-btn {
   width: 100%;
-  min-height: 64px;
-  resize: vertical;
-  padding: 8px 10px;
-  border: 1px solid var(--accent-soft, #d9d9d9);
+  min-height: 38px;
+  justify-content: center;
+  padding-inline: 12px;
   border-radius: var(--radius-md);
-  font: inherit;
-  line-height: 1.5;
-  background: var(--panel-bg, #fff);
-  color: var(--text, #000);
-  outline: none;
-  transition: border-color 0.2s;
 }
 
-.memo-modal__textarea:focus {
-  border-color: var(--accent, #1677ff);
+.memo-modal .memo-modal__new.ant-btn .ant-btn-icon {
+  display: inline-flex;
 }
 
-.memo-modal__list {
+.memo-modal__new svg {
+  width: 16px;
+  height: 16px;
+}
+
+.memo-modal__nav {
+  width: calc(100% + 8px);
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
   list-style: none;
   margin: 0;
+  margin-right: -8px;
   padding: 0;
   display: grid;
-  gap: 8px;
+  align-content: start;
+  gap: 4px;
 }
 
-.memo-modal__item {
+.memo-modal__nav-row {
+  width: 100%;
+  min-width: 0;
   display: grid;
-  gap: 6px;
-  padding: 8px 10px;
-  border: 1px solid var(--accent-soft, #d9d9d9);
-  border-radius: var(--radius-md);
+  grid-template-columns: minmax(0, 1fr) 30px;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  transition: background-color 0.16s ease, border-color 0.16s ease;
 }
 
-.memo-modal__text {
-  margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
+.memo-modal__nav-row:hover,
+.memo-modal__nav-row:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+  background: var(--panel-bg-2);
 }
 
-.memo-modal__actions {
+.memo-modal__nav-row--active {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+  background: var(--accent-soft);
+}
+
+.memo-modal__nav-item {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  padding: 9px 4px 9px 11px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.memo-modal__nav-item:focus-visible {
+  outline: 0;
+}
+
+.memo-modal__nav-delete {
+  width: 26px;
+  height: 26px;
+  margin-right: 3px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.14s ease, background-color 0.14s ease, color 0.14s ease;
+}
+
+.memo-modal__nav-delete svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+
+.memo-modal__nav-row--active .memo-modal__nav-delete,
+.memo-modal__nav-row:hover .memo-modal__nav-delete,
+.memo-modal__nav-row:focus-within .memo-modal__nav-delete,
+.memo-modal__nav-delete:focus-visible {
+  opacity: 1;
+}
+
+.memo-modal__nav-delete:hover,
+.memo-modal__nav-delete:focus-visible {
+  background: color-mix(in srgb, var(--conflict) 10%, transparent);
+  color: var(--conflict-strong);
+}
+
+.memo-modal__preview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.memo-modal__nav-item time {
+  overflow: hidden;
+  color: var(--text-sub);
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memo-modal__workspace {
+  min-width: 0;
+  min-height: 0;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
 }
 
-.memo-modal__edit {
-  display: grid;
-  gap: 8px;
+.memo-modal__editor-shell {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.memo-modal__editor {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  resize: none;
+  padding: 14px 16px 52px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--panel-bg-2);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.65;
+  transition: border-color 0.16s ease;
+}
+
+.memo-modal__editor::placeholder {
+  color: var(--text-faint);
+}
+
+.memo-modal__editor:focus,
+.memo-modal__editor:focus-visible {
+  outline: 0;
+  box-shadow: none;
+  border-color: var(--accent);
+  border-radius: var(--radius-xl);
+}
+
+.memo-modal__recognize {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+}
+
+#root .memo-modal .memo-modal__recognize .ant-btn {
+  min-height: 38px;
+  padding-inline: 18px;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .memo-modal__empty {
+  margin: 0;
+  padding: 18px 8px;
   color: var(--text-sub);
   font-size: 13px;
   text-align: center;
-  padding: 12px 0;
 }
 
 /* ============================================================
@@ -826,9 +968,10 @@ html {
 .memo-recognize__group {
   display: grid;
   gap: 6px;
-  padding: 8px 10px;
-  border: 1px solid var(--accent-soft, #d9d9d9);
-  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel-bg-2);
 }
 
 .memo-recognize__group-head {
@@ -852,6 +995,11 @@ html {
   color: var(--text);
 }
 
+.memo-recognize__expand:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
 .memo-recognize__sections {
   list-style: none;
   margin: 0;
@@ -861,9 +1009,10 @@ html {
 }
 
 .memo-recognize__item {
-  padding: 6px 10px;
-  border: 1px solid var(--accent-soft, #d9d9d9);
-  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel-bg-2);
 }
 
 .memo-recognize__empty {
@@ -872,6 +1021,77 @@ html {
   text-align: center;
   padding: 12px 0;
   margin: 0;
+}
+
+.memo-recognize__footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.memo-recognize__selection {
+  color: var(--text-sub);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.memo-recognize__footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .memo-modal .bottom-modal__panel {
+    height: min(84vh, 700px);
+  }
+
+  .memo-modal .bottom-modal__body {
+    overflow: auto;
+  }
+
+  .memo-modal__body {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(300px, 1fr);
+    gap: 12px;
+  }
+
+  .memo-modal__sidebar {
+    max-height: 210px;
+    padding: 0 0 12px;
+  }
+
+  .memo-modal__nav {
+    max-height: 152px;
+  }
+
+  .memo-modal__workspace {
+    min-height: 320px;
+  }
+
+  .memo-modal__editor-shell {
+    min-height: 272px;
+  }
+
+  .memo-modal__editor {
+    min-height: 272px;
+  }
+
+  .memo-recognize__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .memo-recognize__footer-actions {
+    width: 100%;
+  }
+
+  .memo-recognize__footer-actions .ant-btn {
+    flex: 1;
+  }
 }
 
 /* ============================================================

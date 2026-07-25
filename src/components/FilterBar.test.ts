@@ -34,6 +34,36 @@ const options = {
 };
 
 describe('FilterBar search row', () => {
+  it('uses the existing small button primitive for the memo entry', () => {
+    const html = renderToStaticMarkup(createElement(MemosProvider, null, createElement(FilterBar, {
+      filter,
+      setFilter: vi.fn(),
+      options,
+    } as Parameters<typeof FilterBar>[0])));
+
+    expect(html).toMatch(
+      /<button[^>]*class="[^"]*\bant-btn\b[^"]*\bant-btn-sm\b[^"]*\bfilter-bar__memo-toggle\b[^"]*"[^>]*>/,
+    );
+
+    const triggerRule = cssSource.match(
+      /#root \.filter-bar__memo-toggle\.ant-btn\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const focusRule = cssSource.match(
+      /#root \.filter-bar__memo-toggle\.ant-btn:focus-visible\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+
+    expect(cssSource).toMatch(
+      /#root \.ant-btn:not\([^}]*\)\s*\{[^}]*min-height:\s*var\(--action-chip-height\);/s,
+    );
+    expect(triggerRule).not.toMatch(/(?:^|[;\s])height\s*:/);
+    expect(triggerRule).not.toContain('min-height:');
+    expect(focusRule).toContain('outline: 0');
+    expect(focusRule).not.toContain('border-color:');
+    expect(focusRule).not.toContain('background:');
+    expect(focusRule).not.toContain('border-radius:');
+    expect(focusRule).toContain('box-shadow: none');
+  });
+
   it('places teacher search beside the input and removes result counts', () => {
     const html = renderToStaticMarkup(createElement(MemosProvider, null, createElement(FilterBar, {
       filter,
