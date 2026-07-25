@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 describe('MemosContext', () => {
-  it('addNote / updateNote / removeNote mutate notes', async () => {
+  it('addNote / updateNote / toggleFavorite / removeNote mutate notes', async () => {
     await mount(createElement(MemosProvider, null, createElement(Consumer)));
     expect(captured!.notes).toEqual([]);
 
@@ -44,6 +44,11 @@ describe('MemosContext', () => {
       captured!.updateNote(id, 'world');
     });
     expect(captured!.notes[0].text).toBe('world');
+
+    await act(async () => {
+      captured!.toggleFavorite(id);
+    });
+    expect(captured!.notes[0].favorite).toBe(true);
 
     await act(async () => {
       captured!.removeNote(id);

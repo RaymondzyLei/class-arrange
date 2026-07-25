@@ -14,6 +14,7 @@ import {
   loadMemos,
   removeNote,
   saveMemos,
+  toggleNoteFavorite,
   updateNoteText,
 } from './memos';
 
@@ -21,6 +22,7 @@ export interface MemosContextValue {
   notes: MemoNote[];
   addNote: (text: string) => void;
   updateNote: (id: string, text: string) => void;
+  toggleFavorite: (id: string) => void;
   removeNote: (id: string) => void;
 }
 
@@ -63,14 +65,23 @@ export function MemosProvider({ children }: MemosProviderProps) {
     saveMemos(next);
   }, []);
 
+  const toggleFavorite = useCallback((id: string) => {
+    const next = toggleNoteFavorite(latestStateRef.current, id);
+    if (next === latestStateRef.current) return;
+    latestStateRef.current = next;
+    setState(next);
+    saveMemos(next);
+  }, []);
+
   const value = useMemo<MemosContextValue>(
     () => ({
       notes: state.notes,
       addNote: addNoteCallback,
       updateNote,
+      toggleFavorite,
       removeNote: removeNoteCallback,
     }),
-    [addNoteCallback, removeNoteCallback, state.notes, updateNote],
+    [addNoteCallback, removeNoteCallback, state.notes, toggleFavorite, updateNote],
   );
 
   return <MemosContext.Provider value={value}>{children}</MemosContext.Provider>;

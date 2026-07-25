@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { Button, message, type ButtonProps } from 'antd';
 import { useState } from 'react';
 import { useSemesterCatalog } from '@/data/SemesterCatalogContext';
 import { usePlans } from '@/store/plansContext';
@@ -8,9 +8,16 @@ import MemoRecognizeModal from './MemoRecognizeModal';
 interface Props {
   noteText: string;
   disabled?: boolean;
+  className?: string;
+  variant?: ButtonProps['type'];
 }
 
-export default function MemoRecognizeButton({ noteText, disabled = false }: Props) {
+export default function MemoRecognizeButton({
+  noteText,
+  disabled = false,
+  className,
+  variant,
+}: Props) {
   const { dispatch } = usePlans();
   const { courseMap, groupsByCode } = useSemesterCatalog();
   const [open, setOpen] = useState(false);
@@ -32,7 +39,15 @@ export default function MemoRecognizeButton({ noteText, disabled = false }: Prop
 
   return (
     <>
-      <Button size="small" disabled={disabled} onClick={handleRecognize}>识别课程</Button>
+      <Button
+        type={variant}
+        size="small"
+        className={className}
+        disabled={disabled}
+        onClick={handleRecognize}
+      >
+        识别课程
+      </Button>
       <MemoRecognizeModal
         open={open}
         refs={refs}

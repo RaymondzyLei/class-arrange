@@ -28,7 +28,12 @@ function normalizeNotes(value: unknown): MemoNote[] {
         ? record.updatedAt
         : 0;
     seen.add(id);
-    notes.push({ id, text: record.text, updatedAt });
+    notes.push({
+      id,
+      text: record.text,
+      updatedAt,
+      ...(record.favorite === true ? { favorite: true } : {}),
+    });
   }
   return notes;
 }
@@ -95,4 +100,18 @@ export function removeNote(state: MemosState, id: string): MemosState {
   if (!normalizedId) return state;
   if (!state.notes.some((item) => item.id === normalizedId)) return state;
   return { ...state, notes: state.notes.filter((item) => item.id !== normalizedId) };
+}
+
+export function toggleNoteFavorite(state: MemosState, id: string): MemosState {
+  const normalizedId = id.trim();
+  if (!normalizedId) return state;
+  let changed = false;
+  const notes = state.notes.map((item) => {
+    if (item.id !== normalizedId) return item;
+    changed = true;
+    if (!item.favorite) return { ...item, favorite: true };
+    const { favorite: _favorite, ...rest } = item;
+    return rest;
+  });
+  return changed ? { ...state, notes } : state;
 }

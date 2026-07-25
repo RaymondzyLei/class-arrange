@@ -56,6 +56,16 @@ function findButton(label: string): HTMLButtonElement | undefined {
   );
 }
 
+function findButtonByLabel(label: string): HTMLButtonElement | null {
+  return document.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
+}
+
+function findComplexFormatToggle(): HTMLButtonElement {
+  return document.querySelector<HTMLButtonElement>(
+    'button[role="switch"][aria-label="复杂格式"]',
+  )!;
+}
+
 function seedMemos(notes: MemoNote[]): void {
   localStorage.setItem(
     MEMOS_STORAGE_KEY,
@@ -94,6 +104,45 @@ describe('MemoModal', () => {
     expect(document.querySelector('.bottom-modal')).toBeNull();
   });
 
+  it('uses the settings switch beside the title to move between simple and complex editors', async () => {
+    seedMemos([
+      { id: 'note-1', text: '**重点**', updatedAt: 20 },
+    ]);
+    await mount(
+      createElement(MemosProvider, null, createElement(MemoModal, { open: true, onClose: () => {} })),
+    );
+
+    const toggle = document.querySelector<HTMLButtonElement>(
+      'button[role="switch"][aria-label="复杂格式"]',
+    );
+    expect(toggle).toBeTruthy();
+    expect(toggle?.closest('.bottom-modal__title-extra')).toBeTruthy();
+    expect(toggle?.classList.contains('customization__preference-toggle')).toBe(true);
+    expect(toggle?.getAttribute('aria-checked')).toBe('false');
+    expect(toggle?.parentElement?.textContent).toContain('复杂格式');
+    expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
+      .toBe('**重点**');
+    expect(document.querySelector('.memo-modal__format-toolbar')).toBeNull();
+    expect(findButton('识别课程')?.closest('.memo-modal__recognize')).toBeTruthy();
+
+    await act(async () => {
+      toggle!.click();
+    });
+
+    expect(toggle?.getAttribute('aria-checked')).toBe('true');
+    expect(document.querySelector('.memo-modal__markdown-preview strong')?.textContent)
+      .toBe('重点');
+    expect(document.querySelector('.memo-modal__editor')).toBeNull();
+    expect(findButton('识别课程')?.closest('.memo-modal__mode-actions')).toBeTruthy();
+
+    await act(async () => {
+      toggle!.click();
+    });
+    expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
+      .toBe('**重点**');
+    expect(document.querySelector('.memo-modal__format-toolbar')).toBeNull();
+  });
+
   it('renders a two-pane workspace and selects the newest note', async () => {
     seedMemos([
       { id: 'note-1', text: '第一条备忘录', updatedAt: 1_753_344_000_000 },
@@ -113,6 +162,7 @@ describe('MemoModal', () => {
     expect(deleteButtons).toHaveLength(2);
     expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
       .toBe('第一条备忘录');
+    expect(document.querySelector('.memo-modal__markdown-preview')).toBeNull();
     expect(document.querySelector('.memo-modal__nav-item[aria-current="true"]')?.textContent)
       .toContain('第一条备忘录');
     expect(rows[0]?.classList.contains('memo-modal__nav-row--active')).toBe(true);
@@ -131,6 +181,7 @@ describe('MemoModal', () => {
       .toBe(true);
     expect(findButton('添加')).toBeUndefined();
     expect(findButton('编辑')).toBeUndefined();
+    expect(findButton('完成')).toBeUndefined();
     expect(findButton('保存')).toBeUndefined();
     expect(document.querySelector('.memo-modal .bottom-modal__footer')).toBeNull();
   });
@@ -163,16 +214,25 @@ describe('MemoModal', () => {
     expect(editor!.value).toBe('新的选课提醒');
   });
 
-  it('keeps recognition inside the editor surface and enables it after note creation', async () => {
+  it('places recognition after the edit action with the same toolbar button style', async () => {
     await mount(
       createElement(MemosProvider, null, createElement(MemoModal, { open: true, onClose: () => {} })),
     );
 
+    await act(async () => {
+      findComplexFormatToggle().click();
+    });
+
     const recognizeButton = findButton('识别课程');
     expect(recognizeButton).toBeTruthy();
     expect(recognizeButton?.closest('.memo-modal__editor-shell')).toBeTruthy();
-    expect(recognizeButton?.closest('.memo-modal__recognize')).toBeTruthy();
-    expect(recognizeButton?.closest('.memo-modal__toolbar')).toBeNull();
+    const actionGroup = recognizeButton?.closest('.memo-modal__mode-actions');
+    expect(actionGroup?.closest('.memo-modal__format-toolbar')).toBeTruthy();
+    expect(
+      Array.from(actionGroup?.querySelectorAll('button') ?? [], (button) => button.textContent),
+    ).toEqual(['完成', '识别课程']);
+    expect(recognizeButton?.classList.contains('memo-modal__mode-button')).toBe(true);
+    expect(document.querySelector('.memo-modal__recognize')).toBeNull();
     expect(recognizeButton?.disabled).toBe(true);
 
     const editor = document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')!;
@@ -180,6 +240,133 @@ describe('MemoModal', () => {
       setTextareaValue(editor, '001101');
     });
     expect(findButton('识别课程')?.disabled).toBe(false);
+  });
+
+  it('formats the current selection from the top toolbar and saves it immediately', async () => {
+    seedMemos([
+      { id: 'note-1', text: '课程 001101', updatedAt: 20 },
+    ]);
+    await mount(
+      createElement(MemosProvider, null, createElement(MemoModal, { open: true, onClose: () => {} })),
+    );
+
+    await act(async () => {
+      findComplexFormatToggle().click();
+    });
+    await act(async () => {
+      findButton('编辑')!.click();
+    });
+
+    const toolbar = document.querySelector('.memo-modal__format-toolbar');
+    const editor = document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')!;
+    expect(toolbar).toBeTruthy();
+    expect(findButtonByLabel('标题')).toBeTruthy();
+    expect(findButtonByLabel('加粗')).toBeTruthy();
+    expect(findButtonByLabel('斜体')).toBeTruthy();
+    expect(findButtonByLabel('待办列表')).toBeTruthy();
+    expect(findButton('完成')).toBeTruthy();
+
+    editor.focus();
+    editor.setSelectionRange(3, 9);
+    await act(async () => {
+      findButtonByLabel('加粗')!.click();
+    });
+
+    expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
+      .toBe('课程 **001101**');
+    expect(readStoredMemos()?.notes[0]?.text).toBe('课程 **001101**');
+
+    expect(findButtonByLabel('加粗')?.getAttribute('aria-pressed')).toBe('true');
+    await act(async () => {
+      findButtonByLabel('加粗')!.click();
+    });
+    expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
+      .toBe('课程 001101');
+    expect(readStoredMemos()?.notes[0]?.text).toBe('课程 001101');
+    expect(findButtonByLabel('加粗')?.getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('opens saved notes in a safe GFM preview and returns to preview after editing is complete', async () => {
+    seedMemos([
+      {
+        id: 'note-1',
+        text: '**重点**\n- [ ] 记得选课\n<div id="unsafe">内容</div>',
+        updatedAt: 20,
+      },
+    ]);
+    await mount(
+      createElement(MemosProvider, null, createElement(MemoModal, { open: true, onClose: () => {} })),
+    );
+
+    await act(async () => {
+      findComplexFormatToggle().click();
+    });
+
+    const preview = document.querySelector('.memo-modal__markdown-preview');
+    expect(preview?.querySelector('strong')?.textContent).toBe('重点');
+    expect(preview?.querySelector<HTMLInputElement>('input[type="checkbox"]')?.disabled)
+      .toBe(true);
+    expect(preview?.querySelector('#unsafe')).toBeNull();
+    expect(document.querySelector('.memo-modal__editor')).toBeNull();
+
+    await act(async () => {
+      findButton('编辑')!.click();
+    });
+    expect(document.querySelector<HTMLTextAreaElement>('.memo-modal__editor')?.value)
+      .toContain('**重点**');
+
+    await act(async () => {
+      findButton('完成')!.click();
+    });
+    expect(document.querySelector('.memo-modal__editor')).toBeNull();
+    expect(document.querySelector('.memo-modal__markdown-preview strong')?.textContent)
+      .toBe('重点');
+    expect(findButton('编辑')).toBeTruthy();
+    expect(findButton('完成')).toBeUndefined();
+  });
+
+  it('pins favorited memos while preserving order and the current selection', async () => {
+    seedMemos([
+      { id: 'note-1', text: '第一条', updatedAt: 30 },
+      { id: 'note-2', text: '第二条', updatedAt: 20, favorite: true },
+      { id: 'note-3', text: '第三条', updatedAt: 10 },
+    ]);
+    await mount(
+      createElement(MemosProvider, null, createElement(MemoModal, { open: true, onClose: () => {} })),
+    );
+
+    const previews = () => Array.from(
+      document.querySelectorAll('.memo-modal__preview'),
+      (node) => node.textContent,
+    );
+    expect(previews()).toEqual(['第二条', '第一条', '第三条']);
+    expect(document.querySelector('.memo-modal__nav-item[aria-current="true"]')?.textContent)
+      .toContain('第二条');
+    expect(document.querySelectorAll('.memo-modal__nav-favorite')).toHaveLength(3);
+    expect(
+      document.querySelector<HTMLButtonElement>('.memo-modal__nav-favorite')?.getAttribute('aria-pressed'),
+    ).toBe('true');
+
+    await act(async () => {
+      document.querySelector<HTMLButtonElement>(
+        'button[aria-label="收藏备忘录：第三条"]',
+      )!.click();
+    });
+
+    expect(previews()).toEqual(['第二条', '第三条', '第一条']);
+    expect(document.querySelector('.memo-modal__nav-item[aria-current="true"]')?.textContent)
+      .toContain('第二条');
+    expect(readStoredMemos()?.notes.find((note) => note.id === 'note-3')?.favorite)
+      .toBe(true);
+
+    await act(async () => {
+      document.querySelector<HTMLButtonElement>(
+        'button[aria-label="取消收藏备忘录：第三条"]',
+      )!.click();
+    });
+    expect(previews()).toEqual(['第二条', '第一条', '第三条']);
+    expect(readStoredMemos()?.notes.find((note) => note.id === 'note-3')?.favorite)
+      .toBeUndefined();
   });
 
   it('persists edits immediately and labels a cleared note as blank', async () => {
@@ -285,11 +472,29 @@ describe('MemoModal', () => {
     const navDeleteRule = cssSource.match(
       /\.memo-modal__nav-delete\s*\{([^}]*)\}/,
     )?.[1] ?? '';
+    const modeButtonRule = cssSource.match(
+      /#root \.memo-modal \.memo-modal__mode-button\.ant-btn\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const simpleEditorRule = cssSource.match(
+      /\.memo-modal__editor--simple\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
     const recognizeButtonRule = cssSource.match(
       /#root \.memo-modal \.memo-modal__recognize \.ant-btn\s*\{([^}]*)\}/,
     )?.[1] ?? '';
-    const focusRule = cssSource.match(
-      /\.memo-modal__editor:focus,\s*\.memo-modal__editor:focus-visible\s*\{([^}]*)\}/,
+    const editorShellRule = cssSource.match(
+      /\.memo-modal__editor-shell\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const shellFocusRule = cssSource.match(
+      /\.memo-modal__editor-shell:focus-within\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const toolbarRule = cssSource.match(
+      /\.memo-modal__format-toolbar\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const editorRule = cssSource.match(
+      /\.memo-modal__editor\s*\{([^}]*)\}/,
+    )?.[1] ?? '';
+    const previewRule = cssSource.match(
+      /\.memo-modal__markdown-preview\s*\{([^}]*)\}/,
     )?.[1] ?? '';
     const mobileRule = cssSource.match(
       /@media \(max-width: 640px\)\s*\{([\s\S]*?)\n\}/,
@@ -315,18 +520,29 @@ describe('MemoModal', () => {
     expect(cssSource).toMatch(
       /\.memo-modal__editor-shell\s*\{[^}]*position:\s*relative;/,
     );
+    expect(editorShellRule).toContain('display: flex');
+    expect(editorShellRule).toContain('border: 1px solid var(--border)');
+    expect(editorShellRule).toContain('border-radius: var(--radius-xl)');
+    expect(editorShellRule).toContain('overflow: hidden');
+    expect(shellFocusRule).toContain('border-color: var(--accent)');
+    expect(shellFocusRule).toContain('box-shadow: none');
+    expect(toolbarRule).toContain('border-bottom: 1px solid var(--border)');
+    expect(editorRule).toContain('border: 0');
+    expect(previewRule).toContain('overflow: auto');
+    expect(cssSource).toMatch(
+      /\.memo-modal__format-actions\s*\{[^}]*overflow-x:\s*auto;/,
+    );
+    expect(simpleEditorRule).toContain('border: 1px solid var(--border)');
+    expect(simpleEditorRule).toContain('border-radius: var(--radius-xl)');
     expect(cssSource).toMatch(
       /\.memo-modal__recognize\s*\{[^}]*position:\s*absolute;[^}]*right:[^;]+;[^}]*bottom:[^;]+;/,
     );
     expect(cssSource).not.toMatch(/#root \.memo-modal__(?:new|nav-delete|recognize)/);
     expect(cssSource).toMatch(/\.memo-modal \.memo-modal__new\.ant-btn\s*\{/);
-    expect(cssSource).toMatch(/\.memo-modal \.memo-modal__recognize \.ant-btn\s*\{/);
-    expect(recognizeButtonRule).toContain('min-height: 30px');
-    expect(recognizeButtonRule).toContain('padding-inline: 14px');
-    expect(focusRule).toContain('outline: 0');
-    expect(focusRule).toContain('box-shadow: none');
-    expect(focusRule).toContain('border-color: var(--accent)');
-    expect(focusRule).toContain('border-radius: var(--radius-xl)');
+    expect(modeButtonRule).toContain('min-height: 28px');
+    expect(modeButtonRule).toContain('padding-inline: 10px');
+    expect(recognizeButtonRule).toContain('min-height: 38px');
+    expect(recognizeButtonRule).toContain('padding-inline: 18px');
     expect(sidebarRule).not.toContain('border-right');
     expect(cssSource).toMatch(
       /@media \(max-width: 640px\)\s*\{[\s\S]*?\.memo-modal__body\s*\{[^}]*grid-template-columns:\s*1fr;/,

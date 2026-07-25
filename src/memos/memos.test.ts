@@ -6,6 +6,7 @@ import {
   loadMemos,
   removeNote,
   saveMemos,
+  toggleNoteFavorite,
   updateNoteText,
   type StorageLike,
 } from './memos';
@@ -32,7 +33,7 @@ describe('memos persistence', () => {
     const storage = new MemoryStorage();
     const state: MemosState = {
       version: 1,
-      notes: [{ id: 'n1', text: '选课备注', updatedAt: 1000 }],
+      notes: [{ id: 'n1', text: '选课备注', updatedAt: 1000, favorite: true }],
     };
     saveMemos(state, storage);
     expect(loadMemos(storage)).toEqual(state);
@@ -79,5 +80,15 @@ describe('memos reducers', () => {
     const next = removeNote(base, 'n1');
     expect(next.notes).toEqual([]);
     expect(removeNote(next, 'n1')).toBe(next);
+  });
+
+  it('toggleNoteFavorite toggles a note without changing its content order or timestamp', () => {
+    const favorited = toggleNoteFavorite(base, 'n1');
+    expect(favorited.notes).toEqual([
+      { id: 'n1', text: 'a', updatedAt: 1, favorite: true },
+    ]);
+
+    expect(toggleNoteFavorite(favorited, 'n1')).toEqual(base);
+    expect(toggleNoteFavorite(base, 'missing')).toBe(base);
   });
 });
