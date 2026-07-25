@@ -71,8 +71,12 @@ describe('FavoriteButton', () => {
     const favoriteRule = stylesSource.match(
       /\.plan-option__favorite\s*\{([\s\S]*?)\}/,
     )?.[1] ?? '';
+    const deleteRule = stylesSource.match(
+      /\.plan-option__delete\s*\{([\s\S]*?)\}/,
+    )?.[1] ?? '';
 
     expect(favoriteRule).toContain('opacity: 0');
+    expect(deleteRule).toContain('border-radius: var(--radius-sm)');
     for (const selector of [
       '.plan-option--active .plan-option__favorite',
       '.plan-select-dropdown .ant-select-item-option-active .plan-option__favorite',

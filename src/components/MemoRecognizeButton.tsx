@@ -7,15 +7,17 @@ import MemoRecognizeModal from './MemoRecognizeModal';
 
 interface Props {
   noteText: string;
+  disabled?: boolean;
 }
 
-export default function MemoRecognizeButton({ noteText }: Props) {
+export default function MemoRecognizeButton({ noteText, disabled = false }: Props) {
   const { dispatch } = usePlans();
   const { courseMap, groupsByCode } = useSemesterCatalog();
   const [open, setOpen] = useState(false);
   const [refs, setRefs] = useState<RecognizedRef[]>([]);
 
   const handleRecognize = () => {
+    if (disabled) return;
     setRefs(extractCourseRefs(noteText, { courseMap, groupsByCode }));
     setOpen(true);
   };
@@ -30,7 +32,7 @@ export default function MemoRecognizeButton({ noteText }: Props) {
 
   return (
     <>
-      <Button size="small" onClick={handleRecognize}>识别</Button>
+      <Button size="small" disabled={disabled} onClick={handleRecognize}>识别课程</Button>
       <MemoRecognizeModal
         open={open}
         refs={refs}

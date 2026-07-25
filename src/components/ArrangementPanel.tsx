@@ -51,7 +51,8 @@ export default function ArrangementPanel({
           {arrangements.map((a, index) => {
             const number = numbersById.get(a.id) ?? index;
             const applied = a.id === selectedId;
-            const conflictFree = a.conflictCount === 0;
+            const conflictFree =
+              a.conflictCount === 0 && a.hardConflictCount === 0;
             const favorite = favoriteIds.has(a.id);
             return (
               <div className="arrangement-card-wrap" key={a.id}>
@@ -66,12 +67,14 @@ export default function ArrangementPanel({
                     <span className="arrangement-card__meta">
                       {a.courseCount} 门 · {a.totalCredits} 学分
                     </span>
-                    <Tag
-                      color={conflictFree ? 'green' : 'orange'}
-                      className="arrangement-card__conflict"
-                    >
-                      {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
-                    </Tag>
+                    {conflictFree || a.conflictCount > 0 ? (
+                      <Tag
+                        color={conflictFree ? 'green' : 'orange'}
+                        className="arrangement-card__conflict"
+                      >
+                        {conflictFree ? '无冲突' : `${a.conflictCount} 冲突`}
+                      </Tag>
+                    ) : null}
                     {a.hardConflictCount > 0 ? (
                       <Tag color="red" className="arrangement-card__hard-conflict">
                         {a.hardConflictCount} 强冲突

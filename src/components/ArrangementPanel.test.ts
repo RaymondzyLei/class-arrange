@@ -176,7 +176,28 @@ describe('ArrangementPanel viewport height', () => {
   });
 
   it('shows hard conflict count on arrangement cards when present', () => {
-    expect(source).toContain('hardConflictCount');
-    expect(source).toContain('强冲突');
+    const html = renderToStaticMarkup(
+      createElement(ArrangementPanel, {
+        ...baseProps,
+        arrangements: [
+          {
+            id: 'hard-conflict-only',
+            groups: [],
+            conflictCount: 0,
+            hardConflictCount: 1,
+            courseCount: 3,
+            totalCredits: 6,
+            totalHours: 96,
+          },
+        ],
+        selectedId: 'hard-conflict-only',
+        favoriteIds: new Set<string>(),
+        numbersById: new Map([['hard-conflict-only', 1]]),
+        mode: 'recommended',
+      }),
+    );
+
+    expect(html).toContain('1 强冲突');
+    expect(html).not.toContain('无冲突');
   });
 });

@@ -38,12 +38,31 @@ describe('MemoRecognizeModal', () => {
     await mount(createElement(MemoRecognizeModal, { open: true, refs, onClose: () => {}, onImport }));
     expect(document.body.textContent).toContain('计算概论');
     expect(document.body.textContent).toContain('001102.01');
+    expect(document.querySelector('.memo-recognize__selection')?.textContent)
+      .toContain('已选 3 个课堂');
+    const footerActions = document.querySelector('.memo-recognize__footer-actions');
+    expect(findButton('取消')).toBeUndefined();
+    expect(findButton('导入到新课表')?.closest('.memo-recognize__footer-actions'))
+      .toBe(footerActions);
     const importBtn = findButton('导入到新课表');
     expect(importBtn?.disabled).toBe(false);
     await act(async () => {
       importBtn!.click();
     });
     expect(onImport).toHaveBeenCalledWith(['001101.01', '001101.02', '001102.01']);
+  });
+
+  it('选择变化时更新导入数量', async () => {
+    await mount(createElement(MemoRecognizeModal, { open: true, refs, onClose: () => {}, onImport: () => {} }));
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+    expect(checkboxes).toHaveLength(2);
+
+    await act(async () => {
+      checkboxes[1]!.click();
+    });
+
+    expect(document.querySelector('.memo-recognize__selection')?.textContent)
+      .toContain('已选 2 个课堂');
   });
 
   it('无识别项时显示空状态', async () => {

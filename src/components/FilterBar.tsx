@@ -1,4 +1,4 @@
-import { Checkbox, Input } from 'antd';
+import { Button, Checkbox, Input } from 'antd';
 import { useState } from 'react';
 import type { FilterState } from '@/types';
 import type { CourseFilterOptions } from '@/constants/filterOptions';
@@ -105,14 +105,14 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
           allowClear
           options={options.languages.map((v) => ({ label: v, value: v }))}
         />
-        <button
-          type="button"
+        <Button
+          size="small"
           className="filter-bar__memo-toggle"
           onClick={() => setMemoOpen(true)}
           aria-label="打开备忘录"
         >
           备忘录
-        </button>
+        </Button>
       </div>
       <MemoModal open={memoOpen} onClose={() => setMemoOpen(false)} />
     </div>

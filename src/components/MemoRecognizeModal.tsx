@@ -58,12 +58,14 @@ export default function MemoRecognizeModal({ open, refs, onClose, onImport }: Pr
       width={560}
       className="memo-recognize-modal"
       footer={
-        <>
-          <Button onClick={onClose}>取消</Button>
-          <Button type="primary" disabled={selected.size === 0} onClick={handleImport}>
-            导入到新课表
-          </Button>
-        </>
+        <div className="memo-recognize__footer">
+          <span className="memo-recognize__selection">已选 {selected.size} 个课堂</span>
+          <div className="memo-recognize__footer-actions">
+            <Button type="primary" disabled={selected.size === 0} onClick={handleImport}>
+              导入到新课表
+            </Button>
+          </div>
+        </div>
       }
     >
       <div className="memo-recognize__body">
