@@ -12,7 +12,9 @@ import {
 import type { ResidentCampus } from '@/types';
 import BottomModal from './BottomModal';
 import CalculationModePicker from './CalculationModePicker';
-import { PreferenceSwitchVisual } from './onboarding/PreferenceSwitch';
+import {
+  PreferenceToggleButton as PreferenceToggle,
+} from './onboarding/PreferenceSwitch';
 import SelectWithChevron from './SelectWithChevron';
 
 export type CustomizationPage = 'main' | 'blockedSlots' | 'calculationMode';
@@ -27,29 +29,6 @@ interface Props {
   onShowUpdatePopupChange: (show: boolean) => void;
   onOpenUpdateHistory: () => void;
   initialPage?: CustomizationPage;
-}
-
-function PreferenceToggle({
-  checked,
-  label,
-  onChange,
-}: {
-  checked: boolean;
-  label: string;
-  onChange: (checked: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      className="customization__preference-toggle"
-      role="switch"
-      aria-label={label}
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-    >
-      <PreferenceSwitchVisual checked={checked} />
-    </button>
-  );
 }
 
 function NavigationRow({

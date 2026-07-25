@@ -104,6 +104,7 @@ export interface MemoNote {
   id: string;
   text: string;
   updatedAt: number;
+  favorite?: boolean;
 }
 
 export interface MemosState {

@@ -6,11 +6,36 @@ interface Props {
   onChange: (checked: boolean) => void;
 }
 
+interface PreferenceToggleButtonProps {
+  checked: boolean;
+  label: string;
+  onChange: (checked: boolean) => void;
+}
+
 export function PreferenceSwitchVisual({ checked }: Pick<Props, 'checked'>) {
   return (
     <span className={`onboarding-preference__switch${checked ? ' onboarding-preference__switch--checked' : ''}`}>
       <span className="onboarding-preference__thumb" />
     </span>
+  );
+}
+
+export function PreferenceToggleButton({
+  checked,
+  label,
+  onChange,
+}: PreferenceToggleButtonProps) {
+  return (
+    <button
+      type="button"
+      className="customization__preference-toggle"
+      role="switch"
+      aria-label={label}
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+    >
+      <PreferenceSwitchVisual checked={checked} />
+    </button>
   );
 }
 

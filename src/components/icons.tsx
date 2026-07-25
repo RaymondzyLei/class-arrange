@@ -184,6 +184,20 @@ export function ExternalLinkIcon(props: IconProps) {
   );
 }
 
+export function PaperclipIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="m20.35 11.65-8.7 8.7a5.5 5.5 0 0 1-7.78-7.78l9.05-9.05a3.75 3.75 0 0 1 5.3 5.3l-9.05 9.05a2 2 0 0 1-2.83-2.83l8.7-8.7"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function GearIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
