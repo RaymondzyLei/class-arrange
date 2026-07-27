@@ -39,6 +39,7 @@ describe('FilterBar search row', () => {
       filter,
       setFilter: vi.fn(),
       options,
+      onOpenMemo: vi.fn(),
     } as Parameters<typeof FilterBar>[0])));
 
     expect(html).toMatch(
@@ -69,6 +70,7 @@ describe('FilterBar search row', () => {
       filter,
       setFilter: vi.fn(),
       options,
+      onOpenMemo: vi.fn(),
     } as Parameters<typeof FilterBar>[0])));
 
     const teacherToggleIndex = html.indexOf('filter-bar__teacher-toggle');
@@ -105,6 +107,7 @@ describe('FilterBar search row', () => {
       filter: { ...filter, category: '专业课', level: '本研贯通' },
       setFilter: vi.fn(),
       options,
+      onOpenMemo: vi.fn(),
     } as Parameters<typeof FilterBar>[0])));
 
     expect(filterBarSource).toContain('placeholder="课程范畴"');

@@ -34,6 +34,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media (max-width: 640px) {
+  :where(input:not([type='checkbox'], [type='radio'], [type='range'], [type='color'], [type='button'], [type='submit'], [type='reset']), textarea, select) {
+    font-size: 16px !important;
+  }
+}
+
 .favorite-button {
   display: inline-flex;
   width: 28px;

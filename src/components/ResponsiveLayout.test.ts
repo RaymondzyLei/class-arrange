@@ -11,6 +11,14 @@ function ruleBodies(selector: string): string {
 }
 
 describe('responsive modal and course-list layout', () => {
+  it('keeps focusable mobile form controls at Safari-safe text size', () => {
+    expect(styles).toMatch(
+      /@media \(max-width: 640px\)\s*\{\s*:where\(input:not\(\[type='checkbox'\], \[type='radio'\], \[type='range'\], \[type='color'\], \[type='button'\], \[type='submit'\], \[type='reset'\]\), textarea, select\)\s*\{[^}]*font-size:\s*16px !important;/s,
+    );
+    expect(styles).not.toContain('maximum-scale');
+    expect(styles).not.toContain('user-scalable=no');
+  });
+
   it('lets customization inherit the mobile size of course-detail modals', () => {
     const customizationModalRules = ruleBodies('.customization-modal');
     const customizationPanelRules = ruleBodies('.customization-modal .bottom-modal__panel');

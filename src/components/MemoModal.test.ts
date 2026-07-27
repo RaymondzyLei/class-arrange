@@ -496,10 +496,6 @@ describe('MemoModal', () => {
     const previewRule = cssSource.match(
       /\.memo-modal__markdown-preview\s*\{([^}]*)\}/,
     )?.[1] ?? '';
-    const mobileRule = cssSource.match(
-      /@media \(max-width: 640px\)\s*\{([\s\S]*?)\n\}/,
-    )?.[1] ?? '';
-
     expect(cssSource).toMatch(
       /\.memo-modal \.bottom-modal__panel\s*\{[^}]*height:\s*min\(74vh,\s*640px\);/,
     );
@@ -547,10 +543,10 @@ describe('MemoModal', () => {
     expect(cssSource).toMatch(
       /@media \(max-width: 640px\)\s*\{[\s\S]*?\.memo-modal__body\s*\{[^}]*grid-template-columns:\s*1fr;/,
     );
-    expect(mobileRule).toMatch(
-      /\.memo-modal \.bottom-modal__panel\s*\{[^}]*height:\s*min\(84vh,\s*700px\);/,
+    expect(cssSource).toMatch(
+      /\.memo-modal \.bottom-modal__panel\s*\{\s*height:\s*min\(84vh,\s*700px\);\s*\}/,
     );
-    expect(mobileRule).not.toContain('border-bottom');
+    expect(cssSource).not.toMatch(/\.memo-modal__sidebar\s*\{[^}]*border-bottom:/);
     expect(cssSource).toContain('.memo-recognize__footer-actions');
   });
 });

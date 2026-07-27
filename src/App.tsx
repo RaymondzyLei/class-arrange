@@ -24,6 +24,7 @@ import CalculationStatus from '@/components/CalculationStatus';
 import CourseDetailModal from '@/components/CourseDetailModal';
 import SelectedCoursesModal from '@/components/SelectedCoursesModal';
 import FavoritesManagerModal, { type FavoriteManagerItem } from '@/components/FavoritesManagerModal';
+import MemoModal from '@/components/MemoModal';
 import CustomizationModal, { type CustomizationPage } from '@/components/CustomizationModal';
 import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import SpotlightTour from '@/components/onboarding/SpotlightTour';
@@ -64,7 +65,7 @@ import { useOverlayStackSnapshot } from '@/components/overlayStack';
 import SharedPlanImportModal from '@/components/SharedPlanImportModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
-import { MemosProvider } from '@/memos/MemosContext';
+import { MemosProvider, useMemos } from '@/memos/MemosContext';
 import {
   activeArrangementFavoritePreferences,
   activeArrangementFavoriteIds,
@@ -163,6 +164,7 @@ function readInitialCurriculumSelection(): CurriculumSelection {
 function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleTheme: () => void }) {
   const { state: plansState, activePlan, dispatch } = usePlans();
   const favoriteState = useFavorites();
+  const memoState = useMemos();
   const updateAwareness = useUpdateAwareness();
   const {
     manifest,
@@ -200,6 +202,8 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [selectedCoursesOpen, setSelectedCoursesOpen] = useState(false);
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [memoOpen, setMemoOpen] = useState(false);
+  const [memoTargetId, setMemoTargetId] = useState<string | null>(null);
   const [pendingFavoriteArrangement, setPendingFavoriteArrangement] = useState<{
     planId: string;
     arrangementId: string;
@@ -458,6 +462,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         detail: section ? `具体课堂 · ${id}` : '具体课堂 · 当前课程目录中暂不可见',
       });
     });
+    memoState.notes
+      .filter((note) => note.favorite)
+      .forEach((note) => {
+        const title = note.text.trim().split(/\r?\n/, 1)[0] || '空白备忘录';
+        items.push({
+          kind: 'memo',
+          id: note.id,
+          title,
+          detail: `备忘录 · ${note.text.length} 字`,
+        });
+      });
 
     return items;
   }, [
@@ -468,6 +483,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     courseMap,
     favoriteState.state,
     groupByKey,
+    memoState.notes,
     plansState.plans,
     recommendedArrangements,
     sectionGroupKeyById,
@@ -659,6 +675,11 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     );
   };
   const handleOpenFavorite = (item: FavoriteManagerItem) => {
+    if (item.kind === 'memo') {
+      setMemoTargetId(item.id);
+      setMemoOpen(true);
+      return;
+    }
     if (item.kind === 'plan') {
       setFavoritesOpen(false);
       if (item.planId && plansState.plans.some((plan) => plan.id === item.planId)) {
@@ -686,6 +707,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     }
   };
   const handleRemoveFavorite = (item: FavoriteManagerItem) => {
+    if (item.kind === 'memo') {
+      memoState.toggleFavorite(item.id);
+      return;
+    }
     if (item.kind === 'arrangement' && item.planId) {
       const record = favoriteState.state.arrangementRecords.find(
         (candidate) => candidate.id === item.id && candidate.planId === item.planId,
@@ -880,6 +905,10 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               filter={filter}
               setFilter={setFilter}
               options={filterOptions}
+              onOpenMemo={() => {
+                setMemoTargetId(null);
+                setMemoOpen(true);
+              }}
             />
             <CoursePool
               groups={filteredGroups}
@@ -946,6 +975,14 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
         onClose={() => setFavoritesOpen(false)}
         onOpen={handleOpenFavorite}
         onRemove={handleRemoveFavorite}
+      />
+      <MemoModal
+        open={memoOpen}
+        initialNoteId={memoTargetId}
+        onClose={() => {
+          setMemoOpen(false);
+          setMemoTargetId(null);
+        }}
       />
       <CustomizationModal
         open={customizationOpen}

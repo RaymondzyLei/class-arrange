@@ -1,19 +1,22 @@
 import { Button, Checkbox, Input } from 'antd';
-import { useState } from 'react';
 import type { FilterState } from '@/types';
 import type { CourseFilterOptions } from '@/constants/filterOptions';
 import SelectWithChevron from './SelectWithChevron';
-import MemoModal from './MemoModal';
 
 interface Props {
   filter: FilterState;
   setFilter: (f: FilterState) => void;
   options: CourseFilterOptions;
+  onOpenMemo: () => void;
 }
 
-export default function FilterBar({ filter, setFilter, options }: Props) {
+export default function FilterBar({
+  filter,
+  setFilter,
+  options,
+  onOpenMemo,
+}: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
-  const [memoOpen, setMemoOpen] = useState(false);
 
   return (
     <div className="panel-inner filter-bar no-print" data-tour="filters">
@@ -108,13 +111,12 @@ export default function FilterBar({ filter, setFilter, options }: Props) {
         <Button
           size="small"
           className="filter-bar__memo-toggle"
-          onClick={() => setMemoOpen(true)}
+          onClick={onOpenMemo}
           aria-label="打开备忘录"
         >
           备忘录
         </Button>
       </div>
-      <MemoModal open={memoOpen} onClose={() => setMemoOpen(false)} />
     </div>
   );
 }

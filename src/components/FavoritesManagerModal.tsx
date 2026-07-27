@@ -3,8 +3,10 @@ import type { FavoriteKind } from '@/types';
 import BottomModal from './BottomModal';
 import { FavoriteButton } from './FavoriteButton';
 
+export type FavoriteManagerItemKind = FavoriteKind | 'memo';
+
 export interface FavoriteManagerItem {
-  kind: FavoriteKind;
+  kind: FavoriteManagerItemKind;
   id: string;
   title: string;
   detail: string;
@@ -20,11 +22,12 @@ interface Props {
   onRemove: (item: FavoriteManagerItem) => void;
 }
 
-const GROUPS: { kind: FavoriteKind; title: string }[] = [
+const GROUPS: { kind: FavoriteManagerItemKind; title: string }[] = [
   { kind: 'plan', title: '选课方案' },
   { kind: 'arrangement', title: '排课方案' },
   { kind: 'timeGroup', title: '课程时间组' },
   { kind: 'section', title: '具体课堂' },
+  { kind: 'memo', title: '备忘录' },
 ];
 
 export default function FavoritesManagerModal({

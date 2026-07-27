@@ -30,6 +30,7 @@ import type { MemoNote } from '@/types';
 
 interface Props {
   open: boolean;
+  initialNoteId?: string | null;
   onClose: () => void;
 }
 
@@ -50,7 +51,7 @@ function memoUpdatedAt(updatedAt: number): string | null {
   return updatedAt > 0 ? memoTimeFormatter.format(new Date(updatedAt)) : null;
 }
 
-export default function MemoModal({ open, onClose }: Props) {
+export default function MemoModal({ open, initialNoteId = null, onClose }: Props) {
   const { notes, addNote, updateNote, toggleFavorite, removeNote } = useMemos();
   const orderedNotes = useMemo(
     () => notes
@@ -64,7 +65,11 @@ export default function MemoModal({ open, onClose }: Props) {
       .map(({ note }) => note),
     [notes],
   );
-  const initialNote = orderedNotes[0] ?? null;
+  const initialNote = (
+    initialNoteId
+      ? orderedNotes.find((note) => note.id === initialNoteId)
+      : null
+  ) ?? orderedNotes[0] ?? null;
   const [selectedId, setSelectedId] = useState<string | null>(initialNote?.id ?? null);
   const [creating, setCreating] = useState(initialNote === null);
   const [editorText, setEditorText] = useState(initialNote?.text ?? '');
@@ -105,7 +110,11 @@ export default function MemoModal({ open, onClose }: Props) {
     }
     if (wasOpen) return;
 
-    const firstNote = orderedNotes[0] ?? null;
+    const firstNote = (
+      initialNoteId
+        ? orderedNotes.find((note) => note.id === initialNoteId)
+        : null
+    ) ?? orderedNotes[0] ?? null;
     setCreating(firstNote === null);
     setSelectedId(firstNote?.id ?? null);
     setEditorText(firstNote?.text ?? '');
@@ -115,7 +124,7 @@ export default function MemoModal({ open, onClose }: Props) {
     pendingNewTextRef.current = null;
     pendingSelectionRef.current = null;
     setDeleteTarget(null);
-  }, [open, orderedNotes]);
+  }, [initialNoteId, open, orderedNotes]);
 
   useEffect(() => {
     if (!newNoteRequestedRef.current) return;
