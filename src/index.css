@@ -3855,11 +3855,19 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 
 @media (max-width: 640px) {
   .curriculum-select-dropdown {
-    left: 50% !important;
-    width: calc(100vw - 24px) !important;
+    inset-inline-start: auto !important;
+    inset-inline-end: 12px !important;
+    width: calc(100% - 24px) !important;
     min-width: 0 !important;
-    max-width: calc(100vw - 24px);
-    transform: translateX(-50%) !important;
+    max-width: calc(100% - 24px);
+  }
+
+  .plan-select-dropdown {
+    inset-inline-start: auto !important;
+    inset-inline-end: 12px !important;
+    width: min(360px, calc(100% - 24px)) !important;
+    min-width: min(360px, calc(100% - 24px)) !important;
+    max-width: calc(100% - 24px);
   }
 
   .curriculum-select-dropdown .ant-select-item-option-content {

@@ -19,6 +19,29 @@ describe('responsive modal and course-list layout', () => {
     expect(styles).not.toContain('user-scalable=no');
   });
 
+  it('keeps the curriculum popup inside the mobile viewport without transform positioning', () => {
+    const curriculumPopupRules = ruleBodies('.curriculum-select-dropdown');
+
+    expect(curriculumPopupRules).toContain('width: calc(100% - 24px) !important');
+    expect(curriculumPopupRules).toContain('max-width: calc(100% - 24px)');
+    expect(curriculumPopupRules).toContain('inset-inline-start: auto !important');
+    expect(curriculumPopupRules).toContain('inset-inline-end: 12px !important');
+    expect(curriculumPopupRules).not.toMatch(/\bleft\s*:/);
+    expect(curriculumPopupRules).not.toMatch(/\btransform\s*:/);
+  });
+
+  it('keeps the plan popup inside the mobile viewport while preserving its maximum width', () => {
+    const planPopupRules = ruleBodies('.plan-select-dropdown');
+
+    expect(planPopupRules).toContain('width: min(360px, calc(100% - 24px)) !important');
+    expect(planPopupRules).toContain('min-width: min(360px, calc(100% - 24px)) !important');
+    expect(planPopupRules).toContain('max-width: calc(100% - 24px)');
+    expect(planPopupRules).toContain('inset-inline-start: auto !important');
+    expect(planPopupRules).toContain('inset-inline-end: 12px !important');
+    expect(planPopupRules).not.toMatch(/\bleft\s*:/);
+    expect(planPopupRules).not.toMatch(/\btransform\s*:/);
+  });
+
   it('lets customization inherit the mobile size of course-detail modals', () => {
     const customizationModalRules = ruleBodies('.customization-modal');
     const customizationPanelRules = ruleBodies('.customization-modal .bottom-modal__panel');
