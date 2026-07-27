@@ -10,6 +10,12 @@ function ruleBodies(selector: string): string {
     .join('\n');
 }
 
+function mobileSelectPopupRules(): string {
+  return styles.match(
+    /\.curriculum-select-dropdown\s*,\s*\.plan-select-dropdown\s*\{([^}]*)\}/,
+  )?.[1] ?? '';
+}
+
 describe('responsive modal and course-list layout', () => {
   it('keeps focusable mobile form controls at Safari-safe text size', () => {
     expect(styles).toMatch(
@@ -20,7 +26,7 @@ describe('responsive modal and course-list layout', () => {
   });
 
   it('keeps the curriculum popup inside the mobile viewport without transform positioning', () => {
-    const curriculumPopupRules = ruleBodies('.curriculum-select-dropdown');
+    const curriculumPopupRules = mobileSelectPopupRules();
 
     expect(curriculumPopupRules).toContain('width: calc(100% - 24px) !important');
     expect(curriculumPopupRules).toContain('max-width: calc(100% - 24px)');
@@ -30,11 +36,11 @@ describe('responsive modal and course-list layout', () => {
     expect(curriculumPopupRules).not.toMatch(/\btransform\s*:/);
   });
 
-  it('keeps the plan popup inside the mobile viewport while preserving its maximum width', () => {
-    const planPopupRules = ruleBodies('.plan-select-dropdown');
+  it('uses the available mobile viewport width for the plan popup without physical positioning', () => {
+    const planPopupRules = mobileSelectPopupRules();
 
-    expect(planPopupRules).toContain('width: min(360px, calc(100% - 24px)) !important');
-    expect(planPopupRules).toContain('min-width: min(360px, calc(100% - 24px)) !important');
+    expect(planPopupRules).toContain('width: calc(100% - 24px) !important');
+    expect(planPopupRules).toContain('min-width: 0 !important');
     expect(planPopupRules).toContain('max-width: calc(100% - 24px)');
     expect(planPopupRules).toContain('inset-inline-start: auto !important');
     expect(planPopupRules).toContain('inset-inline-end: 12px !important');
