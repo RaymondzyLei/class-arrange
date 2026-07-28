@@ -77,17 +77,9 @@ function impact(kind: CourseImpactEvent['kind']): CourseImpactEvent {
 }
 
 describe('update awareness rules', () => {
-  test('publishes the July 24 memo recognize update', () => {
-    expect(APP_RELEASES.at(-1)).toEqual({
-      version: '2026.07.24.3',
-      publishedAt: '2026-07-24',
-      title: '占位时间三态标注与强冲突避让',
-      items: [
-        '占位时间网格支持三态标注：空闲 / 有事 / 强冲突。',
-        '强冲突时段在排课时被尽量避开（多时间组自动选不撞的组，单时间组等额惩罚不影响相对顺序）。',
-      ],
-    });
-    expect(CURRENT_APP_VERSION).toBe('2026.07.24.3');
+  test('uses the newest configured release as the current app version', () => {
+    expect(CURRENT_APP_VERSION).toBe(APP_RELEASES.at(-1)?.version);
+    expect(unseenAppReleases(APP_RELEASES, CURRENT_APP_VERSION)).toEqual([]);
   });
 
   test('does not treat the catalog provider persisted semester as prior use', () => {

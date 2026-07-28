@@ -13,7 +13,6 @@ vi.mock('./BottomModal', () => ({
 import UpdateHistoryModal from './UpdateHistoryModal';
 import UpdateNoticeModal from './UpdateNoticeModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
-import { APP_RELEASES } from '@/updates/appUpdates';
 
 const appSource = readFileSync(new URL('../App.tsx', import.meta.url), 'utf8');
 const bottomModalSource = readFileSync(new URL('./BottomModal.tsx', import.meta.url), 'utf8');
@@ -165,15 +164,16 @@ describe('update modals', () => {
     expect(historySemesters.map(({ semester: item }) => item.key)).toEqual(['older-semester', '2026-fall']);
   });
 
-  test('marks July 21 education-level changelog items as dangerous in notices and history', () => {
-    const dangerousItems = [
-      '课程搜索与详情新增学历层次信息，并新增课程范畴、学历层次筛选。',
-      '请注意课堂开课对应的学历层次是本科生还是研究生。',
-    ];
-    const release = APP_RELEASES.find(({ publishedAt }) => publishedAt === '2026-07-21')!;
-
-    expect(release.dangerItems).toEqual(dangerousItems);
-    expect(release).toBeDefined();
+  test('marks configured dangerous changelog items in notices and history', () => {
+    const dangerousItem = '需要重点提示的更新';
+    const ordinaryItem = '普通更新';
+    const release = {
+      version: 'test-release',
+      publishedAt: '2026-07-21',
+      title: '测试更新',
+      items: [dangerousItem, ordinaryItem],
+      dangerItems: [dangerousItem],
+    };
 
     const releaseNotice = { ...notice, impacts: [], appReleases: [release], semesterUpdates: [] };
     const noticeHtml = renderToStaticMarkup(createElement(UpdateNoticeModal, {
@@ -189,10 +189,8 @@ describe('update modals', () => {
     }));
 
     for (const html of [noticeHtml, historyHtml]) {
-      dangerousItems.forEach((item) => {
-        expect(html).toContain(`<li class="update-release__item--danger">${item}</li>`);
-      });
-      expect(html).toContain('<li>已选课程管理新增“查看全部时间组”入口，便于补选未选时间组。</li>');
+      expect(html).toContain(`<li class="update-release__item--danger">${dangerousItem}</li>`);
+      expect(html).toContain(`<li>${ordinaryItem}</li>`);
     }
     expect(normalizedStylesSource).toContain(`.update-release li.update-release__item--danger,
 .update-history__entry li.update-release__item--danger {

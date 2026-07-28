@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-22T17:25:44Z",
+  "generatedAt": "2026-07-28T05:06:12Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -41,7 +41,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 32,
+      "enrolled": 30,
       "capacity": 33,
       "classes": [
         "25中法英才班U"
@@ -143,7 +143,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 32,
+      "enrolled": 30,
       "capacity": 33,
       "classes": [
         "25中法英才班U"
@@ -543,7 +543,7 @@
         "code": "015",
         "name": "工商管理系"
       },
-      "teacher": "",
+      "teacher": "周垂日",
       "credits": 2,
       "hours": 80,
       "level": "本科",
@@ -569,7 +569,7 @@
         "code": "015",
         "name": "工商管理系"
       },
-      "teacher": "",
+      "teacher": "姜贺敏",
       "credits": 2,
       "hours": 80,
       "level": "本科",
@@ -3059,7 +3059,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Steve Masashi Musha,范小红,Matthew Bell",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3214,7 +3214,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Matthew Bell,Patrick Mackie",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3369,7 +3369,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "龚伟峰,Lewis Roberts,Matthew Bell",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3524,7 +3524,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,Samuel GIBSON",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3679,7 +3679,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Andres Melo,Thomas Yifang Xiao,龚伟峰",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3834,7 +3834,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "John Gandy,张曼君,Thomas Yifang Xiao",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -3989,7 +3989,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,范小红,Bradley Johnson",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -4144,7 +4144,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,David Garcia",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -6952,7 +6952,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 38,
+      "enrolled": 37,
       "capacity": 50,
       "classes": [],
       "rawSchedule": "5207: 6(08:30~12:00);5207: 6(14:00~17:45);5207: 7(08:30~12:00);5207: 7(14:00~17:45)",
@@ -11487,5 +11487,5 @@
       }
     }
   },
-  "revision": "193249c0acc6eee027a715fa52651c0e51faf8312540bc08bcdea482c1cc514e"
+  "revision": "7c85994e639da8f9c83bdd39d2c482ee8c02f36960bd3e5d549b347432f6c9c9"
 }
