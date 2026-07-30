@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-summer",
-  "currentRevision": "7c85994e639da8f9c83bdd39d2c482ee8c02f36960bd3e5d549b347432f6c9c9",
+  "currentRevision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca",
   "entries": [
     {
       "id": "2026-summer:193249c0acc6eee0",
@@ -3869,6 +3869,2741 @@
               "label": "授课教师",
               "before": "",
               "after": "Thomas Yifang Xiao,David Garcia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-summer:545a0522aa4f3f11",
+      "revision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca",
+      "previousRevision": "7c85994e639da8f9c83bdd39d2c482ee8c02f36960bd3e5d549b347432f6c9c9",
+      "publishedAt": "2026-07-30T12:17:38Z",
+      "summary": {
+        "added": 0,
+        "removed": 0,
+        "modified": 10
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "FORL7201U.09",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Matthew Bell,Steve Masashi Musha"
+          },
+          "previous": {
+            "id": "FORL7201U.09",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.09",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Matthew Bell,Steve Masashi Musha",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2204",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Matthew Bell,Steve Masashi Musha"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.10",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Matthew Bell,Patrick Mackie,陈静"
+          },
+          "previous": {
+            "id": "FORL7201U.10",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.10",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Matthew Bell,Patrick Mackie,陈静",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2205",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Matthew Bell,Patrick Mackie,陈静"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.11",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Lewis Roberts,Matthew Bell,李献伟"
+          },
+          "previous": {
+            "id": "FORL7201U.11",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.11",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Lewis Roberts,Matthew Bell,李献伟",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2206",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-421教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Lewis Roberts,Matthew Bell,李献伟"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.12",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Samuel GIBSON,Thomas Yifang Xiao"
+          },
+          "previous": {
+            "id": "FORL7201U.12",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.12",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Samuel GIBSON,Thomas Yifang Xiao",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2207",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Samuel GIBSON,Thomas Yifang Xiao"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.13",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,Andres Melo"
+          },
+          "previous": {
+            "id": "FORL7201U.13",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.13",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,Andres Melo",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2303",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Thomas Yifang Xiao,Andres Melo"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.14",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "John Gandy,Thomas Yifang Xiao"
+          },
+          "previous": {
+            "id": "FORL7201U.14",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.14",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "John Gandy,Thomas Yifang Xiao",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2304",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "John Gandy,Thomas Yifang Xiao"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.15",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,Bradley Johnson"
+          },
+          "previous": {
+            "id": "FORL7201U.15",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.15",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,Bradley Johnson",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2305",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Thomas Yifang Xiao,Bradley Johnson"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.16",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,David Garcia"
+          },
+          "previous": {
+            "id": "FORL7201U.16",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.16",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,David Garcia",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 2,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 3,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2306",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "东区二教2-621教室",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Thomas Yifang Xiao,David Garcia"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.17",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,John Gandy"
+          },
+          "previous": {
+            "id": "FORL7201U.17",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.17",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "Thomas Yifang Xiao,John Gandy",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "Thomas Yifang Xiao,John Gandy"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL7201U.18",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "David Garcia,Matthew Bell"
+          },
+          "previous": {
+            "id": "FORL7201U.18",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL7201U.18",
+            "courseCode": "FORL7201U",
+            "courseName": "工程博士英语",
+            "teacher": "David Garcia,Matthew Bell",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2621",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "",
+              "after": "David Garcia,Matthew Bell"
             }
           ]
         }
