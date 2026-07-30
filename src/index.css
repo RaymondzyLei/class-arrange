@@ -677,8 +677,9 @@ html {
 }
 
 .filter-bar__search {
+  --filter-search-control-height: 32px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-columns: minmax(0, 1fr) var(--filter-search-control-height) max-content;
   align-items: center;
   gap: 8px;
 }
@@ -690,6 +691,52 @@ html {
 
 .filter-bar__search .ant-input-affix-wrapper {
   min-width: 0;
+  height: var(--filter-search-control-height);
+}
+
+#root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default {
+  width: var(--filter-search-control-height);
+  min-width: var(--filter-search-control-height);
+  height: var(--filter-search-control-height);
+  min-height: var(--filter-search-control-height);
+  padding: 0;
+  border-radius: var(--radius-md);
+  border-color: var(--border);
+  background: #fff;
+  color: var(--text);
+  box-shadow: none;
+}
+
+#root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default:not(:disabled):hover {
+  border-color: var(--border-strong);
+  background: #fff;
+  color: var(--text);
+}
+
+#root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default:not(:disabled):focus-visible {
+  border-color: var(--accent);
+  background: #fff;
+  color: var(--text);
+  outline-color: var(--accent);
+}
+
+#root .filter-bar__find-button.ant-btn .ant-btn-icon {
+  display: inline-flex;
+  margin: 0;
+}
+
+.filter-bar__find-button svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+:root[data-theme='dark'] #root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default,
+:root[data-theme='dark'] #root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default:not(:disabled):hover,
+:root[data-theme='dark'] #root .filter-bar__search .filter-bar__find-button.ant-btn.ant-btn-default:not(:disabled):focus-visible {
+  border-color: var(--border-strong);
+  background: var(--dark-surface-raised);
+  color: var(--text);
 }
 
 .filter-bar__controls {
@@ -725,6 +772,178 @@ html {
 #root .filter-bar__memo-toggle.ant-btn:focus-visible {
   outline: 0;
   box-shadow: none !important;
+}
+
+/* ============================================================
+ * CourseFinderModal
+ * ============================================================ */
+.course-finder-modal .bottom-modal__panel {
+  height: min(92dvh, 840px);
+  max-height: min(92dvh, 840px);
+}
+
+.course-finder-modal .bottom-modal__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.course-finder-modal .bottom-modal__footer {
+  justify-content: center;
+}
+
+.course-finder__layout {
+  width: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(560px, 1.16fr) minmax(340px, 0.84fr);
+  gap: 16px;
+}
+
+.course-finder__picker-pane,
+.course-finder__results-pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-finder__picker-pane {
+  gap: 10px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.course-finder__results-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.course-finder__results-header h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.course-finder__results-header {
+  min-height: 32px;
+  align-items: center;
+}
+
+.course-finder__results-header > span {
+  color: var(--text-sub);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.course-finder__criteria {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 10px;
+}
+
+.course-finder__selection-count {
+  color: var(--text-sub);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.course-finder__mode-help {
+  margin: -4px 0 0;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.course-finder__results-pane {
+  gap: 8px;
+}
+
+.course-finder__results-content {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+.course-finder__loading,
+.course-finder__empty {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-finder__loading {
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+
+.course-finder__results-content .course-finder__course-pool {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.course-finder__results-content .course-pool__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+}
+
+.course-finder__disclaimer {
+  width: 100%;
+  margin: 0;
+  color: var(--text-sub);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+@media (max-width: 1050px) {
+  .course-finder-modal .bottom-modal__body {
+    display: block;
+    overflow: auto;
+  }
+
+  .course-finder__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .course-finder__picker-pane {
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .course-finder__results-content {
+    flex: 0 0 auto;
+    height: clamp(380px, 56dvh, 560px);
+  }
+}
+
+@media (forced-colors: active) {
+  .availability-grid__cell--blocked {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
 }
 
 /* ============================================================
@@ -4071,8 +4290,35 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   }
 
   .filter-bar__search {
-    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-columns:
+      minmax(0, 1fr)
+      var(--filter-search-control-height)
+      max-content;
     gap: 8px;
+  }
+
+  .course-finder__criteria {
+    grid-template-columns: minmax(0, 1fr) max-content;
+  }
+
+  .course-finder__criteria .ant-checkbox-wrapper {
+    grid-column: 1 / -1;
+  }
+
+  .course-finder__selection-count {
+    text-align: left;
+  }
+
+  .course-finder__course-pool .pool-item__head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name conflict"
+      "actions actions";
+  }
+
+  .course-finder__course-pool .pool-item__actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .filter-bar__controls {
@@ -4613,7 +4859,8 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   gap: 12px;
 }
 
-.customization__subpage-header {
+.customization__subpage-header,
+.availability-grid-section-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -4646,28 +4893,42 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   transform: translateY(-1px);
 }
 
-.customization__subpage-copy {
+.customization__subpage-copy,
+.availability-grid-section-copy {
   min-width: 0;
 }
 
-.customization__subpage-copy h3 {
+.customization__subpage-copy h3,
+.availability-grid-section-copy h3 {
   margin: 0;
   color: var(--text);
   font-size: 16px;
 }
 
-.customization__subpage-copy p {
+.customization__subpage-copy p,
+.availability-grid-section-copy p {
   margin: 3px 0 0;
   color: var(--text-sub);
   font-size: 12px;
   line-height: 1.45;
 }
 
-.customization__subpage-card {
+.customization__subpage-card,
+.availability-grid-card {
   padding: 14px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: color-mix(in srgb, var(--text) 2%, var(--panel-bg));
+}
+
+#root .availability-grid-clear-button.ant-btn {
+  width: 72px;
+  min-width: 72px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  line-height: 30px;
 }
 
 .customization__section {
@@ -5479,17 +5740,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   background: color-mix(in srgb, var(--accent) 8%, var(--panel-bg));
 }
 
-.availability-grid__cell--selected {
-  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
-}
-
-.availability-grid__cell--selected:hover {
-  outline: 0;
-  background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
-}
-
 .availability-grid__cell--blocked {
   background: color-mix(in srgb, var(--text-sub) 28%, var(--panel-bg));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-sub) 62%, var(--border));
@@ -5602,12 +5852,14 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
     text-overflow: ellipsis;
   }
 
-  .customization__subpage-header {
+  .customization__subpage-header,
+  .availability-grid-section-header {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
   }
 
-  .customization__subpage-card {
+  .customization__subpage-card,
+  .availability-grid-card {
     padding: 10px;
   }
 
@@ -6221,16 +6473,11 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
 }
 
 :root[data-theme='dark'] .customization__group,
-:root[data-theme='dark'] .customization__subpage-card {
+:root[data-theme='dark'] .customization__subpage-card,
+:root[data-theme='dark'] .availability-grid-card {
   background: color-mix(in srgb, var(--text) 3%, var(--panel-bg));
   border-color: var(--border-strong);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
-}
-
-:root[data-theme='dark'] .availability-grid__cell--selected,
-:root[data-theme='dark'] .availability-grid__cell--selected:hover {
-  background: #36414f;
-  box-shadow: inset 0 0 0 1px #637184;
 }
 
 :root[data-theme='dark'] .availability-grid__cell--blocked,

@@ -63,6 +63,7 @@ import UpdateNoticeModal from '@/components/UpdateNoticeModal';
 import UpdateHistoryModal from '@/components/UpdateHistoryModal';
 import { useOverlayStackSnapshot } from '@/components/overlayStack';
 import SharedPlanImportModal from '@/components/SharedPlanImportModal';
+import CourseFinderModal from '@/components/CourseFinderModal';
 import { loadPlansPayload, savePlansPayload } from '@/utils/planSeed';
 import { FavoritesProvider, useFavorites } from '@/favorites/FavoritesContext';
 import { MemosProvider, useMemos } from '@/memos/MemosContext';
@@ -203,6 +204,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const [selectedCoursesTab, setSelectedCoursesTab] = useState<'current' | 'curriculum'>('current');
   const [favoritesOpen, setFavoritesOpen] = useState(false);
   const [memoOpen, setMemoOpen] = useState(false);
+  const [courseFinderOpen, setCourseFinderOpen] = useState(false);
   const [memoTargetId, setMemoTargetId] = useState<string | null>(null);
   const [pendingFavoriteArrangement, setPendingFavoriteArrangement] = useState<{
     planId: string;
@@ -769,6 +771,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleRestartOnboarding = () => {
     setDetailGroupKey(null);
     setFavoritesOpen(false);
+    setCourseFinderOpen(false);
     setCustomizationOpen(false);
     window.setTimeout(() => onboarding.startTour(), 220);
   };
@@ -827,6 +830,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
   const handleTourStepAction = useCallback((action: NonNullable<TourStep['action']>) => {
     setDetailGroupKey(null);
     setFavoritesOpen(false);
+    setCourseFinderOpen(false);
     if (action === 'openSelectedCoursesCurriculum') {
       setCustomizationOpen(false);
       openSelectedCourses('curriculum');
@@ -852,6 +856,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(null);
     setSelectedCoursesOpen(false);
     setFavoritesOpen(false);
+    setCourseFinderOpen(false);
     setCustomizationOpen(false);
     onboarding.finishTour();
   };
@@ -860,6 +865,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
     setDetailGroupKey(null);
     setSelectedCoursesOpen(false);
     setFavoritesOpen(false);
+    setCourseFinderOpen(false);
     setCustomizationOpen(false);
     onboarding.skipTour();
   };
@@ -905,6 +911,7 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
               filter={filter}
               setFilter={setFilter}
               options={filterOptions}
+              onOpenFinder={() => setCourseFinderOpen(true)}
               onOpenMemo={() => {
                 setMemoTargetId(null);
                 setMemoOpen(true);
@@ -983,6 +990,17 @@ function MainArea({ themeMode, onToggleTheme }: { themeMode: Theme; onToggleThem
           setMemoOpen(false);
           setMemoTargetId(null);
         }}
+      />
+      <CourseFinderModal
+        open={courseFinderOpen}
+        onClose={() => setCourseFinderOpen(false)}
+        groups={groups}
+        selectedIds={selectedIds}
+        conflictGroupKeys={conflictGroupKeys}
+        themeMode={themeMode}
+        onOpenDetail={setDetailGroupKey}
+        courseMap={courseMap}
+        groupsByCode={groupsByCode}
       />
       <CustomizationModal
         open={customizationOpen}

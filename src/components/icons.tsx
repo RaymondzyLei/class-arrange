@@ -211,3 +211,33 @@ export function GearIcon(props: IconProps) {
     </svg>
   );
 }
+
+/** 放大镜叠加双星闪光，强调“按时间发现课程”而非普通关键词搜索。 */
+export function FindCoursesIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M13.2 16.2 18.25 21.25"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle
+        cx="9.25"
+        cy="12.25"
+        r="5.45"
+        stroke="currentColor"
+        strokeWidth="1.55"
+      />
+      <path
+        d="M17.1 1.9C17.35 4.2 18.9 5.75 21.2 6c-2.3.25-3.85 1.8-4.1 4.15-.25-2.35-1.8-3.9-4.1-4.15 2.3-.25 3.85-1.8 4.1-4.1Z"
+        fill="currentColor"
+      />
+      <path
+        d="M20.25 7.8c.1.9.8 1.6 1.7 1.7-.9.1-1.6.8-1.7 1.7-.1-.9-.8-1.6-1.7-1.7.9-.1 1.6-.8 1.7-1.7Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}

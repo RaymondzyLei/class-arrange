@@ -92,6 +92,16 @@ export const APP_RELEASES: AppRelease[] = [
       '其他UI改进。',
     ],
   },
+  {
+    version: '2026.07.30.1',
+    publishedAt: '2026-07-30',
+    title: '新增按时间寻找课程功能',
+    items: [
+      '新增实验性“寻找”功能，可通过时间表勾选时间块并按上课时间筛选课程。',
+      '默认仅展示全部上课时间均位于所选时间块内的课程，也可切换为允许额外时间。',
+      '寻找结果支持收藏、选择单个或全部时间组等常规操作，并优化时间表拖选性能。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

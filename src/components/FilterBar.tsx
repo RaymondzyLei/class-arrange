@@ -2,11 +2,13 @@ import { Button, Checkbox, Input } from 'antd';
 import type { FilterState } from '@/types';
 import type { CourseFilterOptions } from '@/constants/filterOptions';
 import SelectWithChevron from './SelectWithChevron';
+import { FindCoursesIcon } from './icons';
 
 interface Props {
   filter: FilterState;
   setFilter: (f: FilterState) => void;
   options: CourseFilterOptions;
+  onOpenFinder: () => void;
   onOpenMemo: () => void;
 }
 
@@ -14,6 +16,7 @@ export default function FilterBar({
   filter,
   setFilter,
   options,
+  onOpenFinder,
   onOpenMemo,
 }: Props) {
   const update = (patch: Partial<FilterState>) => setFilter({ ...filter, ...patch });
@@ -26,6 +29,13 @@ export default function FilterBar({
           value={filter.keyword}
           onChange={(e) => update({ keyword: e.target.value })}
           allowClear
+        />
+        <Button
+          className="filter-bar__find-button"
+          icon={<FindCoursesIcon />}
+          onClick={onOpenFinder}
+          aria-label="按时间寻找课程"
+          title="按时间寻找课程"
         />
         <Checkbox
           className="filter-bar__teacher-toggle"

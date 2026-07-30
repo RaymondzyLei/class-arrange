@@ -1,9 +1,7 @@
 import { App, Button } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { DAYS, PERIODS, DAY_LABELS } from '@/constants/grid';
 import {
   ARRANGEMENT_DISPLAY_COUNT_OPTIONS,
-  blockedSlotKey,
   CALCULATION_MODE_OPTIONS,
   RESIDENT_CAMPUS_OPTIONS,
   type ArrangementDisplayCount,
@@ -16,6 +14,10 @@ import {
   PreferenceToggleButton as PreferenceToggle,
 } from './onboarding/PreferenceSwitch';
 import SelectWithChevron from './SelectWithChevron';
+import TimeSlotGrid, {
+  type TimeSlotGridHandle,
+  type TimeSlotPaintChange,
+} from './TimeSlotGrid';
 
 export type CustomizationPage = 'main' | 'blockedSlots' | 'calculationMode';
 
@@ -70,21 +72,22 @@ export default function CustomizationModal({
   const { message } = App.useApp();
   const [page, setPage] = useState<CustomizationPage>(initialPage);
   const [draftBlockedSlots, setDraftBlockedSlots] = useState(settings.blockedSlots);
+  const draftBlockedSlotsRef = useRef(settings.blockedSlots);
   const blockedSlotSet = useMemo(() => new Set(draftBlockedSlots), [draftBlockedSlots]);
   const [draftHardConflictSlots, setDraftHardConflictSlots] = useState(settings.hardConflictSlots);
+  const draftHardConflictSlotsRef = useRef(settings.hardConflictSlots);
   const hardConflictSlotSet = useMemo(() => new Set(draftHardConflictSlots), [draftHardConflictSlots]);
   const modalBodyRef = useRef<HTMLDivElement>(null);
-  const dragStateRef = useRef<{ active: boolean; targetState: 'blocked' | 'hard' | 'empty'; lastKey: string }>({
-    active: false,
-    targetState: 'blocked',
-    lastKey: '',
-  });
-  const lastGridPointerTypeRef = useRef('');
+  const timeSlotGridRef = useRef<TimeSlotGridHandle>(null);
 
   useEffect(() => {
     if (!open) return;
-    setDraftBlockedSlots(settings.blockedSlots);
-    setDraftHardConflictSlots(settings.hardConflictSlots);
+    const nextBlockedSlots = [...settings.blockedSlots];
+    const nextHardConflictSlots = [...settings.hardConflictSlots];
+    draftBlockedSlotsRef.current = nextBlockedSlots;
+    draftHardConflictSlotsRef.current = nextHardConflictSlots;
+    setDraftBlockedSlots(nextBlockedSlots);
+    setDraftHardConflictSlots(nextHardConflictSlots);
     setPage(initialPage);
   }, [initialPage, open, settings.blockedSlots, settings.hardConflictSlots]);
 
@@ -92,19 +95,6 @@ export default function CustomizationModal({
     if (!open) return;
     modalBodyRef.current?.scrollTo({ top: 0 });
   }, [open, page]);
-
-  useEffect(() => {
-    const stopDragging = () => {
-      dragStateRef.current.active = false;
-      dragStateRef.current.lastKey = '';
-    };
-    window.addEventListener('pointerup', stopDragging);
-    window.addEventListener('blur', stopDragging);
-    return () => {
-      window.removeEventListener('pointerup', stopDragging);
-      window.removeEventListener('blur', stopDragging);
-    };
-  }, []);
 
   const setPreferHalfDay = (preferHalfDay: boolean) => {
     onChange({ ...settings, preferHalfDay });
@@ -144,42 +134,35 @@ export default function CustomizationModal({
     message.success('排课方案展示数量已更新');
   };
 
-  const toggleSlot = (day: number, period: number) => {
-    const key = blockedSlotKey(day, period);
-    const current = hardConflictSlotSet.has(key) ? 'hard'
-      : blockedSlotSet.has(key) ? 'blocked' : 'empty';
-    const target = current === 'empty' ? 'blocked'
-      : current === 'blocked' ? 'hard' : 'empty';
-    setDraftBlockedSlots((cur) => {
-      const next = new Set(cur);
-      if (target === 'blocked') next.add(key); else next.delete(key);
-      return [...next].sort();
-    });
-    setDraftHardConflictSlots((cur) => {
-      const next = new Set(cur);
-      if (target === 'hard') next.add(key); else next.delete(key);
-      return [...next].sort();
-    });
-  };
-
-  const paintSlot = (key: string, targetState: 'blocked' | 'hard' | 'empty') => {
-    setDraftBlockedSlots((cur) => {
-      const next = new Set(cur);
-      if (targetState === 'blocked') next.add(key); else next.delete(key);
-      return [...next].sort();
-    });
-    setDraftHardConflictSlots((cur) => {
-      const next = new Set(cur);
-      if (targetState === 'hard') next.add(key); else next.delete(key);
-      return [...next].sort();
-    });
+  const paintSlots = (changes: readonly TimeSlotPaintChange[]) => {
+    const nextBlockedSlotSet = new Set(draftBlockedSlotsRef.current);
+    const nextHardConflictSlotSet = new Set(draftHardConflictSlotsRef.current);
+    for (const { key, state } of changes) {
+      if (state === 'blocked') nextBlockedSlotSet.add(key);
+      else nextBlockedSlotSet.delete(key);
+      if (state === 'hard') nextHardConflictSlotSet.add(key);
+      else nextHardConflictSlotSet.delete(key);
+    }
+    const nextBlockedSlots = [...nextBlockedSlotSet].sort();
+    const nextHardConflictSlots = [...nextHardConflictSlotSet].sort();
+    draftBlockedSlotsRef.current = nextBlockedSlots;
+    draftHardConflictSlotsRef.current = nextHardConflictSlots;
+    setDraftBlockedSlots(nextBlockedSlots);
+    setDraftHardConflictSlots(nextHardConflictSlots);
   };
 
   const applySlots = () => {
-    const blockedChanged = draftBlockedSlots.join('|') !== settings.blockedSlots.join('|');
-    const hardChanged = draftHardConflictSlots.join('|') !== settings.hardConflictSlots.join('|');
+    timeSlotGridRef.current?.flushPendingPaint();
+    const nextBlockedSlots = draftBlockedSlotsRef.current;
+    const nextHardConflictSlots = draftHardConflictSlotsRef.current;
+    const blockedChanged = nextBlockedSlots.join('|') !== settings.blockedSlots.join('|');
+    const hardChanged = nextHardConflictSlots.join('|') !== settings.hardConflictSlots.join('|');
     if (!blockedChanged && !hardChanged) return;
-    onChange({ ...settings, blockedSlots: draftBlockedSlots, hardConflictSlots: draftHardConflictSlots });
+    onChange({
+      ...settings,
+      blockedSlots: nextBlockedSlots,
+      hardConflictSlots: nextHardConflictSlots,
+    });
   };
 
   const returnToMain = () => {
@@ -330,14 +313,17 @@ export default function CustomizationModal({
 
         {page === 'blockedSlots' ? (
           <div className="customization__subpage" data-tour="customization-blocked-slots">
-            <div className="customization__subpage-header">
-              <div className="customization__subpage-copy">
+            <div className="customization__subpage-header availability-grid-section-header">
+              <div className="customization__subpage-copy availability-grid-section-copy">
                 <h3>占位时间</h3>
                 <p>点击循环切换 空闲 → 有事 → 强冲突 → 空闲；按住鼠标拖动可连续标注为按下时的目标状态。</p>
               </div>
               <Button
+                className="availability-grid-clear-button"
                 disabled={draftBlockedSlots.length === 0 && draftHardConflictSlots.length === 0}
                 onClick={() => {
+                  draftBlockedSlotsRef.current = [];
+                  draftHardConflictSlotsRef.current = [];
                   setDraftBlockedSlots([]);
                   setDraftHardConflictSlots([]);
                 }}
@@ -345,77 +331,22 @@ export default function CustomizationModal({
                 清空占位
               </Button>
             </div>
-            <div className="customization__subpage-card">
-              <div className="availability-grid-wrap">
-                <table
-                  className="availability-grid"
-                  onPointerMove={(event) => {
-                    const drag = dragStateRef.current;
-                    if (!drag.active) return;
-                    const target = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-slot-key]');
-                    const key = target?.dataset.slotKey;
-                    if (!key || drag.lastKey === key) return;
-                    drag.lastKey = key;
-                    paintSlot(key, drag.targetState);
-                  }}
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">节次</th>
-                      {DAYS.map((day) => <th scope="col" key={day}>{DAY_LABELS[day]}</th>)}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {PERIODS.map((period) => (
-                      <tr key={period}>
-                        <th scope="row">{period}</th>
-                        {DAYS.map((day) => {
-                          const key = blockedSlotKey(day, period);
-                          const state = hardConflictSlotSet.has(key)
-                            ? 'hard'
-                            : blockedSlotSet.has(key) ? 'blocked' : 'empty';
-                          return (
-                            <td key={day}>
-                              <button
-                                type="button"
-                                data-slot-key={blockedSlotKey(day, period)}
-                                className={`availability-grid__cell availability-grid__cell--${state}`}
-                                aria-label={`${DAY_LABELS[day]}第 ${period} 节${state === 'empty' ? '空闲' : state === 'blocked' ? '有事' : '强冲突'}`}
-                                aria-pressed={state !== 'empty'}
-                                onPointerDown={(event) => {
-                                  lastGridPointerTypeRef.current = event.pointerType;
-                                  if (event.pointerType !== 'mouse' || event.button !== 0) return;
-                                  event.preventDefault();
-                                  const key = blockedSlotKey(day, period);
-                                  const current = hardConflictSlotSet.has(key)
-                                    ? 'hard'
-                                    : blockedSlotSet.has(key) ? 'blocked' : 'empty';
-                                  const targetState = current === 'empty' ? 'blocked'
-                                    : current === 'blocked' ? 'hard' : 'empty';
-                                  dragStateRef.current = {
-                                    active: true,
-                                    targetState,
-                                    lastKey: key,
-                                  };
-                                  paintSlot(key, targetState);
-                                }}
-                                onClick={(event) => {
-                                  if (event.detail === 0 || lastGridPointerTypeRef.current !== 'mouse') {
-                                    toggleSlot(day, period);
-                                  }
-                                  lastGridPointerTypeRef.current = '';
-                                }}
-                                onDragStart={(event) => event.preventDefault()}
-                              />
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <TimeSlotGrid
+              ref={timeSlotGridRef}
+              ariaLabel="占位时间设置"
+              getState={(key) => hardConflictSlotSet.has(key)
+                ? 'hard'
+                : blockedSlotSet.has(key) ? 'blocked' : 'empty'}
+              nextState={(state) => state === 'empty'
+                ? 'blocked'
+                : state === 'blocked' ? 'hard' : 'empty'}
+              onPaint={paintSlots}
+              stateLabels={{
+                empty: '空闲',
+                blocked: '有事',
+                hard: '强冲突',
+              }}
+            />
           </div>
         ) : null}
 

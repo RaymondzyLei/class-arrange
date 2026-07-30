@@ -21,6 +21,9 @@ interface Props {
   onOpenDetail: (groupKey: string) => void;
   courseMap: ReadonlyMap<string, CourseSection>;
   groupsByCode: ReadonlyMap<string, CourseGroup[]>;
+  className?: string;
+  dataTour?: string | null;
+  emptyDescription?: string;
 }
 
 /** react-window 2.x: List <RowProps> 的"单元格 props"。
@@ -108,6 +111,9 @@ export default function CoursePool({
   onOpenDetail,
   courseMap,
   groupsByCode,
+  className,
+  dataTour = 'search-results',
+  emptyDescription = '无匹配课程',
 }: Props) {
   const { activePlan, dispatch } = usePlans();
   const { timeGroupKeys, toggle: toggleFavorite } = useFavorites();
@@ -203,9 +209,12 @@ export default function CoursePool({
 
   // rowProps 一旦变化需要被 List 自动观察到（react-window 2.x 自动）
   return (
-    <div className="panel-inner course-pool no-print" data-tour="search-results">
+    <div
+      className={`panel-inner course-pool no-print${className ? ` ${className}` : ''}`}
+      data-tour={dataTour ?? undefined}
+    >
       {groups.length === 0 ? (
-        <Empty description="无匹配课程" style={{ marginTop: 40 }} />
+        <Empty description={emptyDescription} style={{ marginTop: 40 }} />
       ) : (
         <div className="course-pool__list">
           <List<RowExtraProps>
