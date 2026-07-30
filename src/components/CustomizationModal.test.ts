@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const source = readFileSync(new URL('./CustomizationModal.tsx', import.meta.url), 'utf8');
+const timeSlotGridSource = readFileSync(new URL('./TimeSlotGrid.tsx', import.meta.url), 'utf8');
 const onboarding = readFileSync(
   new URL('./onboarding/OnboardingWizard.tsx', import.meta.url),
   'utf8',
@@ -82,13 +83,15 @@ describe('CustomizationModal hard conflict three-state grid', () => {
   it('renders a three-state availability grid cycling empty -> blocked -> hard', () => {
     expect(source).toContain('draftHardConflictSlots');
     expect(source).toContain('hardConflictSlotSet');
-    expect(source).toContain('availability-grid__cell--${state}');
+    expect(source).toContain('<TimeSlotGrid');
+    expect(timeSlotGridSource).toContain('availability-grid__cell--${state}');
     expect(styles).toContain('availability-grid__cell--hard');
     expect(source).toMatch(/空闲.*有事.*强冲突|强冲突.*有事.*空闲/);
   });
 
   it('applies hard conflict slots back to settings and keeps them exclusive with blocked', () => {
-    expect(source).toContain('hardConflictSlots: draftHardConflictSlots');
+    expect(source).toContain('timeSlotGridRef.current?.flushPendingPaint()');
+    expect(source).toContain('hardConflictSlots: nextHardConflictSlots');
     expect(source).toContain('清空占位');
   });
 });

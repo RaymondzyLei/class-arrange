@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-28T05:06:12Z",
+  "generatedAt": "2026-07-30T12:17:38Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -780,7 +780,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 97,
+      "enrolled": 96,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A112: 1(6,7,8,9);3A112: 2(6,7,8,9);3A112: 4(6,7,8,9);3A112: 5(6,7,8,9);3A112: 6(6,7,8,9)",
@@ -880,7 +880,7 @@
       "examType": "笔试（闭卷）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 83,
+      "enrolled": 82,
       "capacity": 100,
       "classes": [],
       "rawSchedule": "3A112: 1(2,3,4,5);3A112: 2(2,3,4,5);西区电一楼机房1厅: 3(1,2,3,4,5);西区电一楼机房1厅: 3(6,7,8,9,10);3A112: 4(2,3,4,5);3A112: 5(2,3,4,5);3A112: 6(2,3,4,5)",
@@ -4299,7 +4299,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Matthew Bell,Steve Masashi Musha",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -4454,7 +4454,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Matthew Bell,Patrick Mackie,陈静",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -4609,7 +4609,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Lewis Roberts,Matthew Bell,李献伟",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -4764,7 +4764,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Samuel GIBSON,Thomas Yifang Xiao",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -4919,7 +4919,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,Andres Melo",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5074,7 +5074,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "John Gandy,Thomas Yifang Xiao",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5229,7 +5229,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,Bradley Johnson",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5240,7 +5240,7 @@
       "examType": "口试",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 24,
+      "enrolled": 19,
       "capacity": 35,
       "classes": [],
       "rawSchedule": "2305: 1(6,7);东区二教2-621教室: 1(8,9);2305: 2(6,7);东区二教2-621教室: 2(8,9);2305: 3(6,7);东区二教2-621教室: 3(8,9);2305: 4(6,7);东区二教2-621教室: 4(8,9);2305: 5(6,7);东区二教2-621教室: 5(8,9)",
@@ -5384,7 +5384,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,David Garcia",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5395,7 +5395,7 @@
       "examType": "口试",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 24,
+      "enrolled": 18,
       "capacity": 23,
       "classes": [],
       "rawSchedule": "2306: 1(6,7);东区二教2-621教室: 1(8,9);2306: 2(6,7);东区二教2-621教室: 2(8,9);2306: 3(6,7);东区二教2-621教室: 3(8,9);2306: 4(6,7);东区二教2-621教室: 4(8,9);2306: 5(6,7);东区二教2-621教室: 5(8,9)",
@@ -5539,7 +5539,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "Thomas Yifang Xiao,John Gandy",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5550,7 +5550,7 @@
       "examType": "口试",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 0,
+      "enrolled": 5,
       "capacity": 0,
       "classes": [],
       "rawSchedule": "2421: 1(6,7,8,9);2421: 2(6,7,8,9);2421: 3(6,7,8,9);2421: 4(6,7,8,9);2421: 5(6,7,8,9)",
@@ -5639,7 +5639,7 @@
         "code": "108",
         "name": "外语教学中心"
       },
-      "teacher": "",
+      "teacher": "David Garcia,Matthew Bell",
       "credits": 2,
       "hours": 40,
       "level": "研究生",
@@ -5650,7 +5650,7 @@
       "examType": "口试",
       "grading": "二分制",
       "undergradShared": false,
-      "enrolled": 0,
+      "enrolled": 6,
       "capacity": 0,
       "classes": [],
       "rawSchedule": "2621: 1(6,7,8,9);2621: 2(6,7,8,9);2621: 3(6,7,8,9);2621: 4(6,7,8,9);2621: 5(6,7,8,9)",
@@ -11487,5 +11487,5 @@
       }
     }
   },
-  "revision": "7c85994e639da8f9c83bdd39d2c482ee8c02f36960bd3e5d549b347432f6c9c9"
+  "revision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca"
 }
