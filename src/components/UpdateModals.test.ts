@@ -3,6 +3,7 @@ import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
 import type { CourseImpactEvent, SemesterManifestEntry, SemesterUpdateBatch } from '@/types';
+import { FEEDBACK_FORM_URL } from '@/config/feedback';
 import type { AutomaticNoticeSelection } from '@/updates/updateAwareness';
 
 vi.mock('./BottomModal', () => ({
@@ -421,7 +422,7 @@ describe('update modals', () => {
     expect(html.indexOf('部分课程已失效')).toBeLessThan(html.indexOf('已选课程信息有变化'));
   });
 
-  test('history has two top-level sections without plan-specific impact notices', () => {
+  test('history has three top-level sections without plan-specific impact notices', () => {
     const html = renderToStaticMarkup(
       createElement(UpdateHistoryModal, {
         open: true,
@@ -436,6 +437,8 @@ describe('update modals', () => {
       }),
     );
 
+    expect(html).toContain('用户反馈');
+    expect(html).toContain(FEEDBACK_FORM_URL);
     expect(html).toContain('网站更新');
     expect(html).toContain('课程信息更新');
     expect(html).not.toContain('与我的方案相关');
@@ -445,7 +448,8 @@ describe('update modals', () => {
     expect(noticeModalSource).toContain('notice.impacts');
     expect(html).toContain('2026年秋季学期');
     expect(html).not.toContain('2026年夏季学期');
-    expect(html.match(/class="update-section"/g)).toHaveLength(2);
+    expect(html.match(/class="update-section(?![\w-])[^"]*"/g)).toHaveLength(3);
+    expect(html.indexOf('用户反馈')).toBeLessThan(html.indexOf('网站更新'));
     expect(html).not.toContain('class="update-release"');
   });
 
