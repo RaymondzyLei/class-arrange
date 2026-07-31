@@ -28,6 +28,7 @@ import { GearIcon } from './icons';
 import SelectWithChevron from './SelectWithChevron';
 import { blockedSlotKey } from '@/utils/customization';
 import { PROJECT_LINKS } from '@/content/projectCredits';
+import { FEEDBACK_FORM_URL } from '@/config/feedback';
 import BottomModal from './BottomModal';
 import ContributorList from './ContributorList';
 import SemesterDropdown from './SemesterDropdown';
@@ -875,6 +876,15 @@ export default function CourseTable({
             >
               贡献列表
             </button>
+            <span>，欢迎</span>
+            <a
+              className="course-table__project-footer-link"
+              href={FEEDBACK_FORM_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              填写反馈
+            </a>
             <span>。</span>
           </span>
         </div>
