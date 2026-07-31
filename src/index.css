@@ -5142,17 +5142,6 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   color: var(--conflict);
 }
 
-.update-feedback a {
-  color: var(--conflict-strong);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.update-feedback a:hover,
-.update-feedback a:focus-visible {
-  text-decoration: underline;
-}
-
 .update-section p,
 .update-section ul {
   margin: 0;

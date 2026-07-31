@@ -1,10 +1,8 @@
 import type { AppRelease } from '@/updates/appUpdates';
 import type { SemesterUpdateHistory } from '@/updates/updateAwareness';
 import { newestFirstByDate } from '../updates/updateOrdering';
-import { FEEDBACK_FORM_URL } from '@/config/feedback';
 import BottomModal from './BottomModal';
 import CourseUpdateBatchDetails from './CourseUpdateBatchDetails';
-import { WarningIcon } from './icons';
 
 interface Props {
   open: boolean;
@@ -38,15 +36,6 @@ export default function UpdateHistoryModal({
             部分学期更新记录加载失败，下次打开时会重试。
           </p>
         ) : null}
-        <section className="update-section update-section--danger update-feedback">
-          <h3>
-            <WarningIcon className="update-section__danger-icon" />
-            用户反馈
-          </h3>
-          <p>
-            遇到问题或有建议？<a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer">填写反馈表单</a>，帮助我们持续改进。
-          </p>
-        </section>
         <section className="update-section">
           <h3>网站更新</h3>
           {orderedAppReleases.length > 0 ? orderedAppReleases.map((release) => (
