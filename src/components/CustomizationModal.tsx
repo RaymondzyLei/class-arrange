@@ -8,12 +8,14 @@ import {
   type CustomScheduleSettings,
 } from '@/utils/customization';
 import type { ResidentCampus } from '@/types';
+import { FEEDBACK_FORM_URL } from '@/config/feedback';
 import BottomModal from './BottomModal';
 import CalculationModePicker from './CalculationModePicker';
 import {
   PreferenceToggleButton as PreferenceToggle,
 } from './onboarding/PreferenceSwitch';
 import SelectWithChevron from './SelectWithChevron';
+import { ExternalLinkIcon, WarningIcon } from './icons';
 import TimeSlotGrid, {
   type TimeSlotGridHandle,
   type TimeSlotPaintChange,
@@ -293,6 +295,23 @@ export default function CustomizationModal({
             <section className="customization__group-section">
               <h3 className="customization__group-label">通知与帮助</h3>
               <div className="customization__group">
+                <a
+                  className="customization__feedback-row"
+                  href={FEEDBACK_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="customization__feedback-icon" aria-hidden="true">
+                    <WarningIcon />
+                  </span>
+                  <span className="customization__row-copy">
+                    <span className="customization__row-title">用户反馈</span>
+                    <small>遇到问题或有建议？填写反馈表单，帮助我们持续改进。</small>
+                  </span>
+                  <span className="customization__feedback-action" aria-hidden="true">
+                    <ExternalLinkIcon />
+                  </span>
+                </a>
                 <div className="customization__row">
                   <span className="customization__row-copy">
                     <span className="customization__row-title">显示更新内容弹窗</span>

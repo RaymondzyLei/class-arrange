@@ -86,6 +86,9 @@ describe('CourseTable precise conflict marking', () => {
     expect(source).toContain('onClick={() => setContributorsOpen(true)}');
     expect(source).toContain('贡献列表');
     expect(source).toContain('title="贡献详情"');
+    expect(source).toContain('，欢迎');
+    expect(source).toContain('填写反馈');
+    expect(source).toContain('href={FEEDBACK_FORM_URL}');
   });
 
   it('centers each wrapped project-footer line independently', () => {

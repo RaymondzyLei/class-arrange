@@ -102,6 +102,14 @@ export const APP_RELEASES: AppRelease[] = [
       '寻找结果支持收藏、选择单个或全部时间组等常规操作，并优化时间表拖选性能。',
     ],
   },
+  {
+    version: '2026.07.31.1',
+    publishedAt: '2026-07-31',
+    title: '新增用户反馈入口',
+    items: [
+      '在「自定义设置 -> 通知与帮助」与课表底部新增用户反馈入口，点击可在新标签页打开反馈表单。',
+    ],
+  },
 ];
 
 export const CURRENT_APP_VERSION = APP_RELEASES.at(-1)?.version ?? '0';

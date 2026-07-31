@@ -4854,6 +4854,71 @@ html.theme-transitioning #root .plan-switcher__icon-button.ant-btn {
   transform: rotate(45deg);
 }
 
+.customization__feedback-row {
+  position: relative;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 16px 10px 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+}
+
+.customization__feedback-row::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 13px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--conflict);
+  content: '';
+}
+
+.customization__feedback-row:hover,
+.customization__feedback-row:focus-visible {
+  background: var(--panel-bg-2);
+  outline: 0;
+}
+
+.customization__feedback-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  color: var(--conflict);
+}
+
+.customization__feedback-row .customization__row-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.customization__feedback-row .customization__row-title {
+  color: var(--conflict-strong);
+}
+
+.customization__feedback-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-sub);
+}
+
+.customization__feedback-action svg {
+  width: 14px;
+  height: 14px;
+}
+
 .customization__subpage {
   display: grid;
   gap: 12px;

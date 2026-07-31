@@ -77,6 +77,20 @@ describe('CustomizationModal grouped settings navigation', () => {
     );
     expect(onboarding).not.toContain('这可能会导致方案被错误排序');
   });
+
+  it('surfaces a feedback link styled as an important notice in the help group', () => {
+    expect(source).toContain('通知与帮助');
+    expect(source).toContain('用户反馈');
+    expect(source).toContain('href={FEEDBACK_FORM_URL}');
+    expect(source).toContain('customization__feedback-row');
+    expect(source).toContain('target="_blank"');
+    expect(source).toContain('rel="noopener noreferrer"');
+    expect(source).toContain('<WarningIcon');
+    expect(source).toContain('<ExternalLinkIcon');
+    expect(styles).toContain('.customization__feedback-row');
+    expect(styles).toContain('.customization__feedback-row::before');
+    expect(styles).toContain('.customization__feedback-row .customization__row-title');
+  });
 });
 
 describe('CustomizationModal hard conflict three-state grid', () => {
