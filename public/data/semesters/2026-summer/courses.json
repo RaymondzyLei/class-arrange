@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-02T13:20:00Z",
+  "generatedAt": "2026-08-06T14:06:15Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -2713,7 +2713,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 11,
+      "enrolled": 13,
       "capacity": 35,
       "classes": [
         "24信息科技英才班T"
