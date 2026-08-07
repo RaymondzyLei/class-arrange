@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-fall",
-  "currentRevision": "44141a05c5c9bdd27b380d944f661529f3427326378e940f3d8d0084f7f5501b",
+  "currentRevision": "e29846101526db113750aeba7495dbcffa67c8410e5d45f5e3bfbda8e4b6cf05",
   "entries": [
     {
       "id": "2026-fall:c0cbaf189652cc27",
@@ -178083,6 +178083,1895 @@
               "label": "本研同堂",
               "before": false,
               "after": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-fall:e29846101526db11",
+      "revision": "e29846101526db113750aeba7495dbcffa67c8410e5d45f5e3bfbda8e4b6cf05",
+      "previousRevision": "44141a05c5c9bdd27b380d944f661529f3427326378e940f3d8d0084f7f5501b",
+      "publishedAt": "2026-08-07T08:23:30Z",
+      "summary": {
+        "added": 1,
+        "removed": 0,
+        "modified": 46
+      },
+      "added": [
+        {
+          "id": "COMP6400P.01",
+          "courseCode": "COMP6400P",
+          "courseName": "科学人工智能",
+          "teacher": "安虹,何力新,胡伟,刘海燕,赵纯,石军",
+          "level": "研究生",
+          "schedule": [
+            {
+              "weeks": [
+                2,
+                18
+              ],
+              "room": "3A306",
+              "day": 2,
+              "periods": [
+                8,
+                9,
+                10
+              ],
+              "campus": "本部"
+            }
+          ]
+        }
+      ],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬"
+          },
+          "previous": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EPEN6001U.01",
+            "courseCode": "EPEN6001U",
+            "courseName": "专业英语",
+            "teacher": "徐斌"
+          },
+          "previous": {
+            "id": "EPEN6001U.01",
+            "courseCode": "EPEN6001U",
+            "courseName": "专业英语",
+            "teacher": "徐斌",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "EPEN6001U.01",
+            "courseCode": "EPEN6001U",
+            "courseName": "专业英语",
+            "teacher": "徐斌",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B101",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 100,
+              "after": 110
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "胡芃,刘明侯,裴刚,倪青,叶宏"
+          },
+          "previous": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "倪青",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "胡芃,刘明侯,裴刚,倪青,叶宏",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  3
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  5,
+                  5
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  6
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "倪青",
+              "after": "胡芃,刘明侯,裴刚,倪青,叶宏"
+            },
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    7,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    3,
+                    3
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    12,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    4,
+                    4
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    5,
+                    5
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    6
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯"
+          },
+          "previous": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "examType",
+              "label": "考试方式",
+              "before": "其他",
+              "after": ""
+            },
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 110,
+              "after": 115
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志"
+          },
+          "previous": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3B201",
+                "day": 1,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6402P.01",
+            "courseCode": "PEET6402P",
+            "courseName": "能源转化中的催化与传质",
+            "teacher": "李文志",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3B201",
+                "day": 1,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 100,
+              "after": 120
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6404P.01",
+            "courseCode": "PEET6404P",
+            "courseName": "量热技术和热物性测定",
+            "teacher": "张海峰"
+          },
+          "previous": {
+            "id": "PEET6404P.01",
+            "courseCode": "PEET6404P",
+            "courseName": "量热技术和热物性测定",
+            "teacher": "张海峰",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A306",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A306",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6404P.01",
+            "courseCode": "PEET6404P",
+            "courseName": "量热技术和热物性测定",
+            "teacher": "张海峰",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A306",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A306",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 90,
+              "after": 100
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET6408P.01",
+            "courseCode": "PEET6408P",
+            "courseName": "传热与传质",
+            "teacher": "徐斌"
+          },
+          "previous": {
+            "id": "PEET6408P.01",
+            "courseCode": "PEET6408P",
+            "courseName": "传热与传质",
+            "teacher": "徐斌",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A205",
+                "day": 4,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET6408P.01",
+            "courseCode": "PEET6408P",
+            "courseName": "传热与传质",
+            "teacher": "徐斌",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A205",
+                "day": 4,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 70,
+              "after": 80
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏"
+          },
+          "previous": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B102",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET7403P.01",
+            "courseCode": "PEET7403P",
+            "courseName": "动力电池技术",
+            "teacher": "谈鹏",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3B102",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 80,
+              "after": 100
             }
           ]
         }
