@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-fall",
-  "currentRevision": "e29846101526db113750aeba7495dbcffa67c8410e5d45f5e3bfbda8e4b6cf05",
+  "currentRevision": "8e0558468dd8fbdde2079033e89adf44cd717b3af00a1398112e994b4bd6948d",
   "entries": [
     {
       "id": "2026-fall:c0cbaf189652cc27",
@@ -179972,6 +179972,4100 @@
               "label": "课容量",
               "before": 80,
               "after": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-fall:8e0558468dd8fbdd",
+      "revision": "8e0558468dd8fbdde2079033e89adf44cd717b3af00a1398112e994b4bd6948d",
+      "previousRevision": "e29846101526db113750aeba7495dbcffa67c8410e5d45f5e3bfbda8e4b6cf05",
+      "publishedAt": "2026-08-13T02:25:00Z",
+      "summary": {
+        "added": 1,
+        "removed": 0,
+        "modified": 28
+      },
+      "added": [
+        {
+          "id": "MSEN7121P.01",
+          "courseCode": "MSEN7121P",
+          "courseName": "稀土科技前沿",
+          "teacher": "胡国平",
+          "level": "研究生",
+          "schedule": []
+        }
+      ],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "005036.01",
+            "courseCode": "005036",
+            "courseName": "复合材料力学",
+            "teacher": "王宇,王胜"
+          },
+          "previous": {
+            "id": "005036.01",
+            "courseCode": "005036",
+            "courseName": "复合材料力学",
+            "teacher": "王宇,王胜",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  9
+                ],
+                "room": "3A103",
+                "day": 3,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  18
+                ],
+                "room": "3A103",
+                "day": 3,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "005036.01",
+            "courseCode": "005036",
+            "courseName": "复合材料力学",
+            "teacher": "王宇,王胜",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  9
+                ],
+                "room": "3A103",
+                "day": 3,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  18
+                ],
+                "room": "3A103",
+                "day": 3,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "008007.01",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星"
+          },
+          "previous": {
+            "id": "008007.01",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  9
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  12
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "008007.01",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  9
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  12
+                ],
+                "room": "3A110",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 35,
+              "after": 40
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "008007.02",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星"
+          },
+          "previous": {
+            "id": "008007.02",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  9
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  12
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "008007.02",
+            "courseCode": "008007",
+            "courseName": "微生物学",
+            "teacher": "洪泂,段屹,杨新星",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  6
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  9
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  12
+                ],
+                "room": "3A110",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 50,
+              "after": 55
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "910029.01",
+            "courseCode": "910029",
+            "courseName": "系统解剖学",
+            "teacher": "焦轶,刘晓庆"
+          },
+          "previous": {
+            "id": "910029.01",
+            "courseCode": "910029",
+            "courseName": "系统解剖学",
+            "teacher": "焦轶,刘晓庆",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  15
+                ],
+                "room": "西区医算楼附楼一楼F104",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  15
+                ],
+                "room": "西区医算楼附楼一楼F104",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "910029.01",
+            "courseCode": "910029",
+            "courseName": "系统解剖学",
+            "teacher": "焦轶,刘晓庆",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  15
+                ],
+                "room": "西区医算楼附楼一楼F104",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  15
+                ],
+                "room": "西区医算楼附楼一楼F104",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 9,
+              "after": 8
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ATMO6111P.01",
+            "courseCode": "ATMO6111P",
+            "courseName": "卫星对地遥感及应用",
+            "teacher": "仲雷"
+          },
+          "previous": {
+            "id": "ATMO6111P.01",
+            "courseCode": "ATMO6111P",
+            "courseName": "卫星对地遥感及应用",
+            "teacher": "仲雷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  16
+                ],
+                "room": "5103",
+                "day": 2,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ATMO6111P.01",
+            "courseCode": "ATMO6111P",
+            "courseName": "卫星对地遥感及应用",
+            "teacher": "仲雷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  16
+                ],
+                "room": "5103",
+                "day": 2,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 100,
+              "after": 90
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ATMO6112P.01",
+            "courseCode": "ATMO6112P",
+            "courseName": "全球气候变化",
+            "teacher": "仲雷"
+          },
+          "previous": {
+            "id": "ATMO6112P.01",
+            "courseCode": "ATMO6112P",
+            "courseName": "全球气候变化",
+            "teacher": "仲雷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  16
+                ],
+                "room": "5103",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ATMO6112P.01",
+            "courseCode": "ATMO6112P",
+            "courseName": "全球气候变化",
+            "teacher": "仲雷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  16
+                ],
+                "room": "5103",
+                "day": 3,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 120,
+              "after": 70
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林"
+          },
+          "previous": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2508",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2508",
+                "day": 5,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 2,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 5,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BADM3002.01",
+            "courseCode": "BADM3002",
+            "courseName": "技术创新管理",
+            "teacher": "崔志坚"
+          },
+          "previous": {
+            "id": "BADM3002.01",
+            "courseCode": "BADM3002",
+            "courseName": "技术创新管理",
+            "teacher": "崔志坚",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2303",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "2303",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "BADM3002.01",
+            "courseCode": "BADM3002",
+            "courseName": "技术创新管理",
+            "teacher": "崔志坚",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  5,
+                  14
+                ],
+                "room": "2303",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  5,
+                  14
+                ],
+                "room": "2303",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    10
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    10
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    5,
+                    14
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    5,
+                    14
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "BUSI6003P.01",
+            "courseCode": "BUSI6003P",
+            "courseName": "企业研究方法",
+            "teacher": "吴剑琳"
+          },
+          "previous": {
+            "id": "BUSI6003P.01",
+            "courseCode": "BUSI6003P",
+            "courseName": "企业研究方法",
+            "teacher": "吴剑琳",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  20
+                ],
+                "room": "5405",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "BUSI6003P.01",
+            "courseCode": "BUSI6003P",
+            "courseName": "企业研究方法",
+            "teacher": "吴剑琳",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  20
+                ],
+                "room": "2503",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 42,
+              "after": 50
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "5405",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "2503",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "INST6101P.01",
+            "courseCode": "INST6101P",
+            "courseName": "高等工程数学",
+            "teacher": "郑津津"
+          },
+          "previous": {
+            "id": "INST6101P.01",
+            "courseCode": "INST6101P",
+            "courseName": "高等工程数学",
+            "teacher": "郑津津",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "3C101",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "3C101",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "INST6101P.01",
+            "courseCode": "INST6101P",
+            "courseName": "高等工程数学",
+            "teacher": "郑津津",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "3C101",
+                "day": 1,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  17
+                ],
+                "room": "3C101",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 200,
+              "after": 201
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MARX6102U.02",
+            "courseCode": "MARX6102U",
+            "courseName": "新时代中国特色社会主义理论与实践",
+            "teacher": "江可可"
+          },
+          "previous": {
+            "id": "MARX6102U.02",
+            "courseCode": "MARX6102U",
+            "courseName": "新时代中国特色社会主义理论与实践",
+            "teacher": "江可可",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  19,
+                  20
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  18,
+                  18
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MARX6102U.02",
+            "courseCode": "MARX6102U",
+            "courseName": "新时代中国特色社会主义理论与实践",
+            "teacher": "江可可",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  19,
+                  20
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  18
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  16
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    19,
+                    20
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    17,
+                    17
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    18,
+                    18
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    19,
+                    20
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    16,
+                    18
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    16,
+                    16
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MBAD6001U.01",
+            "courseCode": "MBAD6001U",
+            "courseName": "商务英语",
+            "teacher": "鲁炜"
+          },
+          "previous": {
+            "id": "MBAD6001U.01",
+            "courseCode": "MBAD6001U",
+            "courseName": "商务英语",
+            "teacher": "鲁炜",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  13,
+                  17
+                ],
+                "room": "2606",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:40",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  13,
+                  17
+                ],
+                "room": "2606",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "startTime": "14:00",
+                "endTime": "17:15",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MBAD6001U.01",
+            "courseCode": "MBAD6001U",
+            "courseName": "商务英语",
+            "teacher": "鲁炜",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  18
+                ],
+                "room": "2606",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:40",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  18
+                ],
+                "room": "2606",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "startTime": "14:00",
+                "endTime": "17:15",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    13,
+                    17
+                  ],
+                  "day": 2,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:40",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    13,
+                    17
+                  ],
+                  "day": 2,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:15"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    14,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:40",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    14,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:15"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MBAD6009P.01",
+            "courseCode": "MBAD6009P",
+            "courseName": "组织行为学",
+            "teacher": "鲁炜"
+          },
+          "previous": {
+            "id": "MBAD6009P.01",
+            "courseCode": "MBAD6009P",
+            "courseName": "组织行为学",
+            "teacher": "鲁炜",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  13,
+                  17
+                ],
+                "room": "2606",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:40",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  13,
+                  17
+                ],
+                "room": "2206",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "startTime": "14:00",
+                "endTime": "17:15",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MBAD6009P.01",
+            "courseCode": "MBAD6009P",
+            "courseName": "组织行为学",
+            "teacher": "鲁炜",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  18
+                ],
+                "room": "2606",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:40",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  18
+                ],
+                "room": "2206",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "startTime": "14:00",
+                "endTime": "17:15",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    13,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:40",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    13,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:15"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    14,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:40",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    14,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:15"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "胡芃,刘明侯,裴刚,倪青,叶宏"
+          },
+          "previous": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "胡芃,刘明侯,裴刚,倪青,叶宏",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  3
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  5,
+                  5
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  6
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ME1901.01",
+            "courseCode": "ME1901",
+            "courseName": "节能减排创新实践",
+            "teacher": "胡芃,刘明侯,裴刚,倪青,叶宏",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  3
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  17
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  4
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  5,
+                  5
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  6
+                ],
+                "room": "3A102",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    7,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    3,
+                    3
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    12,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    4,
+                    4
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    5,
+                    5
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    6
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    7,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    3,
+                    3
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    12,
+                    17
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    4,
+                    4
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    5,
+                    5
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    6
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MECH6205P.01",
+            "courseCode": "MECH6205P",
+            "courseName": "现代光学干涉计量原理",
+            "teacher": "胡小方,许峰"
+          },
+          "previous": {
+            "id": "MECH6205P.01",
+            "courseCode": "MECH6205P",
+            "courseName": "现代光学干涉计量原理",
+            "teacher": "胡小方",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A107",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A107",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MECH6205P.01",
+            "courseCode": "MECH6205P",
+            "courseName": "现代光学干涉计量原理",
+            "teacher": "胡小方,许峰",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A107",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A107",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "胡小方",
+              "after": "胡小方,许峰"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MECH6413P.02",
+            "courseCode": "MECH6413P",
+            "courseName": "岩石力学",
+            "teacher": "余昊"
+          },
+          "previous": {
+            "id": "MECH6413P.02",
+            "courseCode": "MECH6413P",
+            "courseName": "岩石力学",
+            "teacher": "余昊",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A409",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MECH6413P.02",
+            "courseCode": "MECH6413P",
+            "courseName": "岩石力学",
+            "teacher": "余昊",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A104",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "3A409",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "3A104",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MECH7212P.01",
+            "courseCode": "MECH7212P",
+            "courseName": "数字图像处理",
+            "teacher": "许峰"
+          },
+          "previous": {
+            "id": "MECH7212P.01",
+            "courseCode": "MECH7212P",
+            "courseName": "数字图像处理",
+            "teacher": "许峰",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A412",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A412",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MECH7212P.01",
+            "courseCode": "MECH7212P",
+            "courseName": "数字图像处理",
+            "teacher": "许峰",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A412",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "3A412",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 50,
+              "after": 70
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6010P.01",
+            "courseCode": "MPAD6010P",
+            "courseName": "社会研究方法",
+            "teacher": "高亮"
+          },
+          "previous": {
+            "id": "MPAD6010P.01",
+            "courseCode": "MPAD6010P",
+            "courseName": "社会研究方法",
+            "teacher": "高亮",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  14
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  16
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "2211",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  10
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  14
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  16
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6010P.01",
+            "courseCode": "MPAD6010P",
+            "courseName": "社会研究方法",
+            "teacher": "高亮",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  14
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  16
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "2211",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  10
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  15
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    14,
+                    14
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    16,
+                    16
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    17,
+                    17
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    2,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    10
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    12,
+                    14
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    16,
+                    16
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    14,
+                    14
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    16,
+                    16
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    17,
+                    17
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    2,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    10
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    12,
+                    15
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6406P.01",
+            "courseCode": "MPAD6406P",
+            "courseName": "公共人力资源管理",
+            "teacher": "谢云东"
+          },
+          "previous": {
+            "id": "MPAD6406P.01",
+            "courseCode": "MPAD6406P",
+            "courseName": "公共人力资源管理",
+            "teacher": "谢云东",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  14
+                ],
+                "room": "5102",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  17
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  19,
+                  19
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  18
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6406P.01",
+            "courseCode": "MPAD6406P",
+            "courseName": "公共人力资源管理",
+            "teacher": "谢云东",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  14,
+                  14
+                ],
+                "room": "5102",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  16,
+                  17
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  19,
+                  19
+                ],
+                "room": "5103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  18,
+                  18
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    14,
+                    14
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    16,
+                    17
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    19,
+                    19
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    16,
+                    18
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    14,
+                    14
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    16,
+                    17
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    19,
+                    19
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    17,
+                    17
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    18,
+                    18
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    20,
+                    20
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MSAE6414P.01",
+            "courseCode": "MSAE6414P",
+            "courseName": "应急管理决策与运作",
+            "teacher": "樊彧,王熹徽"
+          },
+          "previous": {
+            "id": "MSAE6414P.01",
+            "courseCode": "MSAE6414P",
+            "courseName": "应急管理决策与运作",
+            "teacher": "樊彧,王熹徽",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "2508",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MSAE6414P.01",
+            "courseCode": "MSAE6414P",
+            "courseName": "应急管理决策与运作",
+            "teacher": "樊彧,王熹徽",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "5405",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2508",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "5405",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯"
+          },
+          "previous": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET5201P.01",
+            "courseCode": "PEET5201P",
+            "courseName": "计算流体与传热传质",
+            "teacher": "刘明侯",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "examType",
+              "label": "考试方式",
+              "before": "",
+              "after": "其他"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "李满"
+          },
+          "previous": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "李满",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "3A109",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PEET7106P.01",
+            "courseCode": "PEET7106P",
+            "courseName": "高等传热传质学",
+            "teacher": "李满",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  7,
+                  18
+                ],
+                "room": "3A109",
+                "day": 5,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    7,
+                    18
+                  ],
+                  "day": 5,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波"
+          },
+          "previous": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2303",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "1115",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS5082P.01",
+            "courseCode": "PHYS5082P",
+            "courseName": "放射治疗物理原理",
+            "teacher": "杨益东,唐泽波",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2401",
+                "day": 2,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2402",
+                "day": 4,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "1115",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2303",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "2401",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2402",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS5252P.02",
+            "courseCode": "PHYS5252P",
+            "courseName": "非线性光学",
+            "teacher": "曾华凌,崔雪峰"
+          },
+          "previous": {
+            "id": "PHYS5252P.02",
+            "courseCode": "PHYS5252P",
+            "courseName": "非线性光学",
+            "teacher": "曾华凌,崔雪峰",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  10
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  10
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS5252P.02",
+            "courseCode": "PHYS5252P",
+            "courseName": "非线性光学",
+            "teacher": "曾华凌,崔雪峰",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  10
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "2421",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  10
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  18
+                ],
+                "room": "2421",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 150,
+              "after": 160
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS6253P.01",
+            "courseCode": "PHYS6253P",
+            "courseName": "傅里叶光学",
+            "teacher": "王沛"
+          },
+          "previous": {
+            "id": "PHYS6253P.01",
+            "courseCode": "PHYS6253P",
+            "courseName": "傅里叶光学",
+            "teacher": "王沛",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5204",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS6253P.01",
+            "courseCode": "PHYS6253P",
+            "courseName": "傅里叶光学",
+            "teacher": "王沛",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5204",
+                "day": 4,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 150,
+              "after": 180
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS6651P.01",
+            "courseCode": "PHYS6651P",
+            "courseName": "光电子技术",
+            "teacher": "王安廷"
+          },
+          "previous": {
+            "id": "PHYS6651P.01",
+            "courseCode": "PHYS6651P",
+            "courseName": "光电子技术",
+            "teacher": "王安廷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "5304",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "5304",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS6651P.01",
+            "courseCode": "PHYS6651P",
+            "courseName": "光电子技术",
+            "teacher": "王安廷",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "5304",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "5304",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 150,
+              "after": 160
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS6658P.01",
+            "courseCode": "PHYS6658P",
+            "courseName": "第一性原理计算方法及应用",
+            "teacher": "何力新"
+          },
+          "previous": {
+            "id": "PHYS6658P.01",
+            "courseCode": "PHYS6658P",
+            "courseName": "第一性原理计算方法及应用",
+            "teacher": "何力新",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2621",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2621",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS6658P.01",
+            "courseCode": "PHYS6658P",
+            "courseName": "第一性原理计算方法及应用",
+            "teacher": "何力新",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2621",
+                "day": 1,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "2621",
+                "day": 5,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 120,
+              "after": 150
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波"
+          },
+          "previous": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 1,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 1,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 150,
+              "after": 170
             }
           ]
         }
