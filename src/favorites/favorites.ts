@@ -3,11 +3,7 @@ import type {
   FavoriteKind,
   FavoritesState,
 } from '@/types';
-
-export interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
+import { getBrowserStorage, type StorageLike } from '@/utils/storage';
 
 export const EMPTY_FAVORITES_STATE: FavoritesState = {
   version: 1,
@@ -90,19 +86,13 @@ function normalizeArrangementRecords(
   return records;
 }
 
-function getStorage(storage?: StorageLike): StorageLike | null {
-  if (storage) return storage;
-  if (typeof localStorage === 'undefined') return null;
-  return localStorage;
-}
-
 export function favoritesStorageKey(semesterKey: string): string {
   return `class-arrange:v1:favorites:${semesterKey}`;
 }
 
 export function loadFavorites(semesterKey: string, storage?: StorageLike): FavoritesState {
   try {
-    const serialized = getStorage(storage)?.getItem(favoritesStorageKey(semesterKey));
+    const serialized = (storage ?? getBrowserStorage())?.getItem(favoritesStorageKey(semesterKey));
     if (!serialized) return emptyFavoritesState();
 
     const parsed: unknown = JSON.parse(serialized);
@@ -130,7 +120,7 @@ export function saveFavorites(
   storage?: StorageLike,
 ): boolean {
   try {
-    const target = getStorage(storage);
+    const target = storage ?? getBrowserStorage();
     if (!target) return false;
     const arrangementIds = normalizeIds(state.arrangementIds);
     target.setItem(favoritesStorageKey(semesterKey), JSON.stringify({

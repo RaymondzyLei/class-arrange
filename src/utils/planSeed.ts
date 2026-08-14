@@ -1,13 +1,9 @@
 import type { CourseImpactEvent, PlansState, SelectedCourseSnapshot } from '@/types';
+import { getBrowserStorage, type StorageLike } from '@/utils/storage';
 
 export const LEGACY_STORAGE_KEY = 'class-arrange:v1:plans';
 export const PLANS_MIGRATED_KEY = 'class-arrange:v2:plans-migrated';
 export const STORAGE_VERSION = 2;
-
-interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
 
 interface StoredPayloadV1 {
   version: 1;
@@ -112,10 +108,6 @@ function parsePlansPayload(raw: string | null): StoredPlansPayloadV2 | null {
   }
 }
 
-function browserStorage(): StorageLike | null {
-  return typeof localStorage === 'undefined' ? null : localStorage;
-}
-
 /** 读取当前学期方案；旧 v1 数据仅迁移一次且只进入默认学期。 */
 export function loadPlansState(
   semesterKey: string,
@@ -128,7 +120,7 @@ export function loadPlansPayload(
   semesterKey: string,
   options: { defaultSemester: string; storage?: StorageLike },
 ): StoredPlansPayloadV2 | null {
-  const storage = options.storage ?? browserStorage();
+  const storage = options.storage ?? getBrowserStorage();
   if (!storage) return null;
   try {
     const currentRaw = storage.getItem(plansStorageKey(semesterKey));
@@ -159,7 +151,7 @@ export function savePlansState(
   state: PlansState,
   suppliedStorage?: StorageLike,
 ): boolean {
-  const storage = suppliedStorage ?? browserStorage();
+  const storage = suppliedStorage ?? getBrowserStorage();
   if (!storage) return false;
   try {
     const existing = parsePlansPayload(storage.getItem(plansStorageKey(semesterKey)));
@@ -178,7 +170,7 @@ export function savePlansPayload(
   payload: StoredPlansPayloadV2,
   suppliedStorage?: StorageLike,
 ): boolean {
-  const storage = suppliedStorage ?? browserStorage();
+  const storage = suppliedStorage ?? getBrowserStorage();
   if (!storage) return false;
   try {
     storage.setItem(

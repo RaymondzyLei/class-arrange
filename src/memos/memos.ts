@@ -1,9 +1,5 @@
 import type { MemoNote, MemosState } from '@/types';
-
-export interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-}
+import { getBrowserStorage, type StorageLike } from '@/utils/storage';
 
 export const EMPTY_MEMOS_STATE: MemosState = { version: 1, notes: [] };
 
@@ -38,15 +34,9 @@ function normalizeNotes(value: unknown): MemoNote[] {
   return notes;
 }
 
-function getStorage(storage?: StorageLike): StorageLike | null {
-  if (storage) return storage;
-  if (typeof localStorage === 'undefined') return null;
-  return localStorage;
-}
-
 export function loadMemos(storage?: StorageLike): MemosState {
   try {
-    const serialized = getStorage(storage)?.getItem(MEMOS_STORAGE_KEY);
+    const serialized = (storage ?? getBrowserStorage())?.getItem(MEMOS_STORAGE_KEY);
     if (!serialized) return emptyMemosState();
     const parsed: unknown = JSON.parse(serialized);
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return emptyMemosState();
@@ -60,7 +50,7 @@ export function loadMemos(storage?: StorageLike): MemosState {
 
 export function saveMemos(state: MemosState, storage?: StorageLike): boolean {
   try {
-    const target = getStorage(storage);
+    const target = storage ?? getBrowserStorage();
     if (!target) return false;
     target.setItem(
       MEMOS_STORAGE_KEY,

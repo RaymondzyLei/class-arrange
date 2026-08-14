@@ -5,6 +5,7 @@ import type {
   SemesterUpdateBatch,
   SemesterUpdateFeed,
 } from '@/types';
+import type { StorageLike } from '@/utils/storage';
 import type { AppRelease } from './appUpdates';
 import { isDangerousImpact } from './updateDanger';
 
@@ -31,13 +32,6 @@ export interface AutomaticNoticeSelection {
   appReleases: AppRelease[];
   semesterUpdates: SemesterUpdateHistory[];
   suppressedImpactIds: string[];
-}
-
-interface StorageLike {
-  length?: number;
-  key?(index: number): string | null;
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
 }
 
 export function createInitialAwarenessState(

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { StorageLike } from '@/utils/storage';
 import {
   EMPTY_MEMOS_STATE,
   MEMOS_STORAGE_KEY,
@@ -8,7 +9,6 @@ import {
   saveMemos,
   toggleNoteFavorite,
   updateNoteText,
-  type StorageLike,
 } from './memos';
 import type { MemosState } from '@/types';
 
