@@ -14,11 +14,6 @@ export interface IcourseRatingInfo {
 
 type RatingRecordValue = string | IcourseRatingInfo;
 
-/** 按课堂号查 icourse 评分；未命中返回 undefined。 */
-export function getIcourseRating(sectionId: string): string | undefined {
-  return getIcourseRatingInfo(sectionId)?.score;
-}
-
 export function getIcourseRatingInfo(sectionId: string): IcourseRatingInfo | undefined {
   const value = (icourseRatings as Record<string, RatingRecordValue>)[sectionId];
   if (!value) return undefined;
