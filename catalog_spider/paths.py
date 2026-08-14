@@ -15,7 +15,6 @@ RAW_LESSONS_DIR = RAW_DIR / "lessons"
 BROWSER_PROFILE_DIR = DATA_ROOT / "browser-profile"
 INDEX_DIR = DATA_ROOT / "index"
 PUBLIC_SEMESTERS_DIR = PROJECT_ROOT / "public" / "data" / "semesters"
-SEMESTER_MANIFEST_PATH = PUBLIC_SEMESTERS_DIR / "index.json"
 
 
 def ensure_dirs() -> None:

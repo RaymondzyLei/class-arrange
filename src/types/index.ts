@@ -1,4 +1,4 @@
-// 课程数据类型定义（由 scripts/excel_to_ts.py 生成的结构契约）
+// 课程数据类型定义
 
 import type { TermCalendar } from '@/config/termCalendar';
 

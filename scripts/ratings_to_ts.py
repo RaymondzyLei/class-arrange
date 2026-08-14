@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """把 icourse_spider/course_rating.json 转换为前端可用的 TS 数据文件。
 
-匹配 key（沿用 icourse_spider/lesson_match.py 的算法）:
+匹配 key 算法:
     key = courseName + '#' + ','.join(sorted(teachers))
 本地 CourseSection.teacher 是单字符串，多老师用 ,，、/ 分隔。
 匹配在 section（课堂号）维度进行 —— 同时间不同老师各有各评分。
@@ -25,10 +25,10 @@ COURSE_TS = os.path.join(ROOT, "src", "data", "courses.ts")
 RATING_JSON = os.path.join(ROOT, "icourse_spider", "course_rating.json")
 OUT_TS = os.path.join(ROOT, "src", "data", "icourseRatings.ts")
 
-# 沿用 lesson_match.py 的逻辑：评分数据有误/重复的课程 icourse-id
+# 评分数据有误/重复的课程 icourse-id
 TO_ABANDON_ICOURSE_IDS = {"955"}  # 力学 (刘斌) 重复课程
 
-# 评分以 "暂无评分" 标记的会被原爬虫保留在 JSON 里；lesson_match.py 直接跳过
+# 评分以 "暂无评分" 标记的会被原爬虫保留在 JSON 里；直接跳过
 NO_SCORE_SENTINEL = "暂无评分"
 
 # 本地 teacher 字段多老师分隔符（与 CourseSection.teacher 实际数据一致）
@@ -52,7 +52,7 @@ def split_teachers(raw: str) -> list[str]:
 
 
 def load_courses_ts(path: str) -> list[dict]:
-    """从 src/data/courses.ts 中正则提取 JSON 数组（与 excel_to_ts.py 同款思路）。"""
+    """从 src/data/courses.ts 中正则提取 JSON 数组。"""
     with open(path, encoding="utf-8") as f:
         txt = f.read()
     m = re.search(r"export const courses[^=]*=\s*(\[.*?\]);\s*$", txt, re.S)
