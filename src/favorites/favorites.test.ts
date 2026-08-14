@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import type { FavoritesState } from '@/types';
+import type { StorageLike } from '@/utils/storage';
 import {
   EMPTY_FAVORITES_STATE,
   favoritesStorageKey,
@@ -8,7 +9,6 @@ import {
   saveFavorites,
   toggleArrangementFavorite,
   toggleFavorite,
-  type StorageLike,
 } from './favorites';
 
 class MemoryStorage implements StorageLike {

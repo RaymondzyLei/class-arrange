@@ -89,7 +89,7 @@
 | 排课引擎 | Web Worker（`src/workers/`），主线程不卡顿；不可用时退化为同步 |
 | 校历 / 周次 | `src/config/termCalendar.ts`（含节假日 / 补课映射） |
 | 主题切换 | 浏览器 View Transition API + 手动降级 |
-| Python 数据脚本 | uv + openpyxl / requests / tqdm / playwright / pytest |
+| Python 数据脚本 | uv + requests / tqdm / playwright / pytest |
 
 ---
 
@@ -141,13 +141,11 @@ class-arrange/
 │
 ├── scripts/
 │   ├── sync_semester_courses.ps1 # 登录后同步一个或多个学期，成功后自动 validate-lessons --all
-│   ├── excel_to_ts.py           # 旧版 Excel 转换工具（仅兼容历史流程，非主数据流）
 │   ├── curricula_to_ts.py       # 培养方案 index → src/data/curricula.ts
 │   └── ratings_to_ts.py         # icourse 评分 JSON → src/data/icourseRatings.ts
 │
 ├── icourse_spider/              # icourse.club 评分爬虫（学长遗产，AGPL v3）
 │   ├── spider.py                # 8 进程爬取课程名 + 教师 + 评分
-│   ├── lesson_match.py          # 匹配 key 工具（name + '#' + sorted(teachers)）
 │   └── course_rating.json       # 爬取的最新评分数据（被 git 跟踪）
 │
 └── catalog_spider/              # USTC 培养方案 + 学期开课爬虫（详见 catalog_spider/README.md）
@@ -186,7 +184,6 @@ uv sync --group spider --group dev
 ```
 
 > 包含：
-> - `openpyxl`：把开课 Excel 转成 TS（`scripts/excel_to_ts.py`，仅历史流程）
 > - `playwright`：`catalog_spider` 的 `sync-lessons` 登录同步（USTC CAS/SSO）
 > - `requests`、`tqdm`：`icourse_spider` 评分爬虫与 `catalog_spider` 培养方案爬取
 > - `pytest`：运行 `catalog_spider/tests` 中的单元测试
@@ -245,8 +242,6 @@ public/data/semesters/2026-summer/updates.json
 
 `courses.json` 同时包含课程列表和 `detailsBySection`。前端先读取轻量索引，用户选择哪个学期才加载哪个学期文件；方案也存入对应学期的独立命名空间。`updates.json` 由 `course_updates.py` 对比上一版生成（内容哈希 `revision` 不变则不追加，幂等），供前端「最近更新」提示与方案对账使用。
 
-旧版 `scripts/excel_to_ts.py` 仅保留作历史数据兼容工具，不再是网站的主数据流程。
-
 ### 培养方案
 
 > 培养方案每个学期可能微调，建议每学期开学跑一次。
@@ -285,7 +280,7 @@ key = courseName + '#' + ','.join(sorted(teachers))
 
 未在 icourse 上出现的课不会出现在 `icourseRatings.ts` 里，前端对应位置不显示任何评分。
 
-> **注意**：`ratings_to_ts.py` 读取 `src/data/courses.ts`（由历史流程 `excel_to_ts.py` 从开课 Excel 生成，当前已不维护、不入 git）。因此这条路径目前依赖历史 Excel；新的主数据流是 `catalog_spider sync-lessons` 产出的 `public/data/semesters/*/courses.json`。除非你手里有当学期 Excel，否则一般无需重跑评分转换。
+> **注意**：`ratings_to_ts.py` 读取 `src/data/courses.ts`（当前已不维护、不入 git）。因此这条路径目前依赖历史 Excel；新的主数据流是 `catalog_spider sync-lessons` 产出的 `public/data/semesters/*/courses.json`。除非你手里有当学期 Excel，否则一般无需重跑评分转换。
 
 ---
 
@@ -357,10 +352,6 @@ key = courseName + '#' + ','.join(sorted(teachers))
 - 检查控制台是否有 `Failed to load module`
 - 重新 `pnpm install`，删除 `node_modules/.vite` 缓存后 `pnpm dev`
 
-### Excel 时间地点解析失败
-
-`scripts/excel_to_ts.py` 会在输出里打印前 20 条失败样本。如果是大面积失败，多半是 Excel 里时间地点字符串格式与预期差异较大；可以提 issue 并附原始字符串。
-
 ### 评分覆盖率低
 
 部分课在 icourse 上确实没有评分（老师没开评课），属正常现象。
@@ -397,5 +388,5 @@ key = courseName + '#' + ','.join(sorted(teachers))
 
 许可证与第三方来源说明见 [`LICENSE`](LICENSE)（项目主体为非商用许可证，`icourse_spider` 衍生代码为 AGPL v3），AGPL v3 全文见 [`COPYING`](COPYING)。
 
-其中 `icourse_spider/spider.py` 与 `icourse_spider/lesson_match.py` 来自
+其中 `icourse_spider/spider.py` 来自
 `https://github.com/feixukeji/paike`，原项目许可证为 AGPL v3；相关来源也写在文件顶部注释中。
