@@ -33,7 +33,6 @@ fall under this section, including but not limited to:
 The following files are modified derivatives of the open-source project
 `feixukeji/paike` <https://github.com/feixukeji/paike>:
 - icourse_spider/spider.py
-- icourse_spider/lesson_match.py
 
 ### Original Copyright
 Copyright (c) 2025-2026 Xulei Sun, Brealid, Determinant and contributors of the feixukeji/paike project.

@@ -327,6 +327,6 @@ const candidates = courses.filter(s => targetCodes.has(s.courseCode));
 
 - `icourse_spider/`（学长遗产）
 - `src/` 前端代码（除生成 `curricula.ts`）
-- `scripts/excel_to_ts.py` / `scripts/ratings_to_ts.py`
+- `scripts/ratings_to_ts.py`
 - `pyproject.toml` 的 `[project.dependencies]` 与 `[dependency-groups].spider`（本爬虫复用 `requests` + `tqdm`）
 - `.gitignore`（JSON / TS 入 git）

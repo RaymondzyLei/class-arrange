@@ -150,7 +150,7 @@ uv run python scripts/ratings_to_ts.py
 ```
 
 - 匹配 key：`courseName + '#' + ','.join(sorted(teachers))`，按课堂号（section）维度。
-- **注意**：`ratings_to_ts.py` 读取 `src/data/courses.ts`，该文件由历史流程 `scripts/excel_to_ts.py` 从开课 Excel 生成，**当前不维护、不入 git**。除非手头有当学期 Excel，否则一般无需重跑评分转换；新的主数据流是 `catalog_spider sync-lessons` 产出的 `public/data/semesters/*/courses.json`。
+- **注意**：`ratings_to_ts.py` 读取 `src/data/courses.ts`，**当前不维护、不入 git**。除非手头有当学期 Excel，否则一般无需重跑评分转换；新的主数据流是 `catalog_spider sync-lessons` 产出的 `public/data/semesters/*/courses.json`。
 - 前端无额外联动：`src/data/icourseRatings.ts` 被直接查表使用。
 
 ---
@@ -211,7 +211,7 @@ A: 内容哈希 `revision` 未变（幂等），`updates.json` 不追加新条�
 A: 时间表解析失败率高。看 `lesson_transform.py` 的 `_schedule_slots` 是否覆盖了新的时间字符串格式，并用 `raw_schedule_non_empty` 对照排查。
 
 **Q: `ratings_to_ts.py` 报「找不到 src/data/courses.ts」？**
-A: 这是历史流程依赖，当前主数据流已改为 `public/data/semesters/*/courses.json`。除非有当学期 Excel 走 `excel_to_ts.py`，否则跳过评分转换。
+A: 这是历史流程依赖，当前主数据流已改为 `public/data/semesters/*/courses.json`。除非有当学期 Excel，否则跳过评分转换。
 
 ---
 
