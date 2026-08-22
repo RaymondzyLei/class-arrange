@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-fall",
-  "currentRevision": "8e0558468dd8fbdde2079033e89adf44cd717b3af00a1398112e994b4bd6948d",
+  "currentRevision": "3d7a2aa43cda57c97bdd58c89ba8f88ef666876487e9e31ab9f0679a6fa9a5bf",
   "entries": [
     {
       "id": "2026-fall:c0cbaf189652cc27",
@@ -184066,6 +184066,5718 @@
               "label": "课容量",
               "before": 150,
               "after": 170
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-fall:3d7a2aa43cda57c9",
+      "revision": "3d7a2aa43cda57c97bdd58c89ba8f88ef666876487e9e31ab9f0679a6fa9a5bf",
+      "previousRevision": "8e0558468dd8fbdde2079033e89adf44cd717b3af00a1398112e994b4bd6948d",
+      "publishedAt": "2026-08-22T11:02:45Z",
+      "summary": {
+        "added": 0,
+        "removed": 0,
+        "modified": 70
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "022392.05",
+            "courseCode": "022392",
+            "courseName": "理论力学A",
+            "teacher": "杨睿智"
+          },
+          "previous": {
+            "id": "022392.05",
+            "courseCode": "022392",
+            "courseName": "理论力学A",
+            "teacher": "杨睿智",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "5201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "5201",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "022392.05",
+            "courseCode": "022392",
+            "courseName": "理论力学A",
+            "teacher": "杨睿智",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5201",
+                "day": 4,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "5202",
+                "day": 6,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  12
+                ],
+                "room": "5202",
+                "day": 6,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 2,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    18
+                  ],
+                  "day": 4,
+                  "periods": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                },
+                {
+                  "weeks": [
+                    12,
+                    12
+                  ],
+                  "day": 6,
+                  "periods": [
+                    3,
+                    4
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "5201",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "5201",
+                  "campus": "本部"
+                },
+                {
+                  "room": "5202",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ASTR5005P.01",
+            "courseCode": "ASTR5005P",
+            "courseName": "行星科学前沿与导论",
+            "teacher": "季江徽,赵海斌,马月华"
+          },
+          "previous": {
+            "id": "ASTR5005P.01",
+            "courseCode": "ASTR5005P",
+            "courseName": "行星科学前沿与导论",
+            "teacher": "季江徽,赵海斌,马月华",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  17
+                ],
+                "room": "2509",
+                "day": 1,
+                "periods": [
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ASTR5005P.01",
+            "courseCode": "ASTR5005P",
+            "courseName": "行星科学前沿与导论",
+            "teacher": "季江徽,赵海斌,马月华",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  3,
+                  17
+                ],
+                "room": "2509",
+                "day": 1,
+                "periods": [
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "undergradShared",
+              "label": "本研同堂",
+              "before": false,
+              "after": true
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ASTR6408P.01",
+            "courseCode": "ASTR6408P",
+            "courseName": "深空探测进展及数据处理与应用",
+            "teacher": "吴昀昭,董铁矿"
+          },
+          "previous": {
+            "id": "ASTR6408P.01",
+            "courseCode": "ASTR6408P",
+            "courseName": "深空探测进展及数据处理与应用",
+            "teacher": "吴昀昭,董铁矿",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  20
+                ],
+                "room": "2606",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ASTR6408P.01",
+            "courseCode": "ASTR6408P",
+            "courseName": "深空探测进展及数据处理与应用",
+            "teacher": "吴昀昭,董铁矿",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  20
+                ],
+                "room": "2606",
+                "day": 1,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2606",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    20
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    20
+                  ],
+                  "day": 1,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    1
+                  ],
+                  "day": 3,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林"
+          },
+          "previous": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2508",
+                "day": 5,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "ATMO6405P.01",
+            "courseCode": "ATMO6405P",
+            "courseName": "地球大气演化",
+            "teacher": "沈延安,张晓林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "5205",
+                "day": 4,
+                "periods": [
+                  11,
+                  12,
+                  13
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 5,
+                  "periods": [
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    16
+                  ],
+                  "day": 4,
+                  "periods": [
+                    11,
+                    12,
+                    13
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2508",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "5205",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CHEN6102P.01",
+            "courseCode": "CHEN6102P",
+            "courseName": "化工系统工程",
+            "teacher": "边新超,周庆海"
+          },
+          "previous": {
+            "id": "CHEN6102P.01",
+            "courseCode": "CHEN6102P",
+            "courseName": "化工系统工程",
+            "teacher": "边新超,周庆海",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  6
+                ],
+                "room": "TH-A501",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  6
+                ],
+                "room": "TH-A501",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CHEN6102P.01",
+            "courseCode": "CHEN6102P",
+            "courseName": "化工系统工程",
+            "teacher": "边新超,周庆海",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-A501",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "TH-A501",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "TH-A501",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "TH-A501",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    6
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    6
+                  ],
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    4
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    7
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    2,
+                    4
+                  ],
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    7
+                  ],
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CLIN6104P.01",
+            "courseCode": "CLIN6104P",
+            "courseName": "医学临床实践(二)",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "CLIN6104P.01",
+            "courseCode": "CLIN6104P",
+            "courseName": "医学临床实践(二)",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "附一院实践",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  6,
+                  15
+                ],
+                "room": "附一院实践",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "CLIN6104P.01",
+            "courseCode": "CLIN6104P",
+            "courseName": "医学临床实践(二)",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "附一院实践",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  6,
+                  15
+                ],
+                "room": "附一院实践",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 42,
+              "after": 60
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "COMP6111P.01",
+            "courseCode": "COMP6111P",
+            "courseName": "现代密码学理论与实践",
+            "teacher": "苗付友,黄文超"
+          },
+          "previous": {
+            "id": "COMP6111P.01",
+            "courseCode": "COMP6111P",
+            "courseName": "现代密码学理论与实践",
+            "teacher": "苗付友,黄文超",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "G3-114",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "COMP6111P.01",
+            "courseCode": "COMP6111P",
+            "courseName": "现代密码学理论与实践",
+            "teacher": "苗付友,黄文超",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "G3-114",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 50,
+              "after": 60
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "COMP6400P.01",
+            "courseCode": "COMP6400P",
+            "courseName": "科学人工智能",
+            "teacher": "安虹,何力新,胡伟,刘海燕,赵纯,石军"
+          },
+          "previous": {
+            "id": "COMP6400P.01",
+            "courseCode": "COMP6400P",
+            "courseName": "科学人工智能",
+            "teacher": "安虹,何力新,胡伟,刘海燕,赵纯,石军",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "COMP6400P.01",
+            "courseCode": "COMP6400P",
+            "courseName": "科学人工智能",
+            "teacher": "安虹,何力新,胡伟,刘海燕,赵纯,石军",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "3A306",
+                "day": 2,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "sectionType",
+              "label": "教学班类型",
+              "before": "基础",
+              "after": "专业"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬"
+          },
+          "previous": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CONT5215P.01",
+            "courseCode": "CONT5215P",
+            "courseName": "智能机器人",
+            "teacher": "张彬,张飞,王敬",
+            "level": "本研贯通",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  15
+                ],
+                "room": "G3-109",
+                "day": 3,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "CONT6209P.01",
+            "courseCode": "CONT6209P",
+            "courseName": "高级计算机网络",
+            "teacher": "郑烇,陈双武"
+          },
+          "previous": {
+            "id": "CONT6209P.01",
+            "courseCode": "CONT6209P",
+            "courseName": "高级计算机网络",
+            "teacher": "郑烇",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "CONT6209P.01",
+            "courseCode": "CONT6209P",
+            "courseName": "高级计算机网络",
+            "teacher": "郑烇,陈双武",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 2,
+                "periods": [
+                  3,
+                  4
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "GT-C102",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "郑烇",
+              "after": "郑烇,陈双武"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.01",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.02",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.03",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.04",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.05",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.06",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.07",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.08",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.09",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.10",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.11",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.12",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.13",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "EDUS1001.14",
+            "courseCode": "EDUS1001",
+            "courseName": "劳动教育",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EE1512.01",
+            "courseCode": "EE1512",
+            "courseName": "AI博弈方法实践",
+            "teacher": "马麒超,秦家虎"
+          },
+          "previous": {
+            "id": "EE1512.01",
+            "courseCode": "EE1512",
+            "courseName": "AI博弈方法实践",
+            "teacher": "马麒超",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  10
+                ],
+                "room": "GT-A403",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "EE1512.01",
+            "courseCode": "EE1512",
+            "courseName": "AI博弈方法实践",
+            "teacher": "马麒超,秦家虎",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  4
+                ],
+                "room": "GT-A403",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  5,
+                  10
+                ],
+                "room": "GT-A403",
+                "day": 1,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "马麒超",
+              "after": "马麒超,秦家虎"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "EE4009.01",
+            "courseCode": "EE4009",
+            "courseName": "量子信息与控制",
+            "teacher": "姜晓枫,匡森"
+          },
+          "previous": {
+            "id": "EE4009.01",
+            "courseCode": "EE4009",
+            "courseName": "量子信息与控制",
+            "teacher": "姜晓枫,匡森",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  11
+                ],
+                "room": "GH-412",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  1,
+                  12
+                ],
+                "room": "GH-412",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  1,
+                  11
+                ],
+                "room": "GH-412",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  1,
+                  12
+                ],
+                "room": "GH-412",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "EE4009.01",
+            "courseCode": "EE4009",
+            "courseName": "量子信息与控制",
+            "teacher": "姜晓枫,匡森",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  5
+                ],
+                "room": "G3-115",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  6,
+                  10
+                ],
+                "room": "G3-115",
+                "day": 3,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  1,
+                  5
+                ],
+                "room": "G3-107",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              },
+              {
+                "weeks": [
+                  6,
+                  10
+                ],
+                "room": "G3-107",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    11
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    12
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    11
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    12
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    1,
+                    5
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    10
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    1,
+                    5
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    10
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7
+                  ]
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "GH-412",
+                  "campus": "高新区"
+                }
+              ],
+              "after": [
+                {
+                  "room": "G3-107",
+                  "campus": "高新区"
+                },
+                {
+                  "room": "G3-115",
+                  "campus": "高新区"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FL1110A.01",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟"
+          },
+          "previous": {
+            "id": "FL1110A.01",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  8
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FL1110A.01",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  8
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 30,
+              "after": 42
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FL1110A.02",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟"
+          },
+          "previous": {
+            "id": "FL1110A.02",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  9,
+                  16
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FL1110A.02",
+            "courseCode": "FL1110A",
+            "courseName": "英语文化与沟通",
+            "teacher": "李献伟",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  9,
+                  16
+                ],
+                "room": "2206",
+                "day": 2,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 30,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL6101U.15",
+            "courseCode": "FORL6101U",
+            "courseName": "研究生综合英语",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "FORL6101U.15",
+            "courseCode": "FORL6101U",
+            "courseName": "研究生综合英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "TH-B101",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL6101U.15",
+            "courseCode": "FORL6101U",
+            "courseName": "研究生综合英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "TH-B101",
+                "day": 1,
+                "periods": [
+                  11,
+                  12
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 150,
+              "after": 0
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL6102U.33",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "FORL6102U.33",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": "Samuel GIBSON",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2604",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL6102U.33",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2604",
+                "day": 5,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "Samuel GIBSON",
+              "after": ""
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL6102U.34",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "FORL6102U.34",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": "Samuel GIBSON",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2604",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL6102U.34",
+            "courseCode": "FORL6102U",
+            "courseName": "日常交流英语",
+            "teacher": "",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "2604",
+                "day": 5,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "Samuel GIBSON",
+              "after": ""
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "FORL6206U.01",
+            "courseCode": "FORL6206U",
+            "courseName": "中国之道：历史传承与当代治理",
+            "teacher": "邢鸿飞,许振宇,瞿昆,沈义竹,吴昊,冉懿,胡嘉宇,周蕾,朱孟潇,田琳"
+          },
+          "previous": {
+            "id": "FORL6206U.01",
+            "courseCode": "FORL6206U",
+            "courseName": "中国之道：历史传承与当代治理",
+            "teacher": "瞿昆,沈义竹,冉懿,邢鸿飞,周蕾,吴昊,胡嘉宇",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  20
+                ],
+                "room": "2121",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "FORL6206U.01",
+            "courseCode": "FORL6206U",
+            "courseName": "中国之道：历史传承与当代治理",
+            "teacher": "邢鸿飞,许振宇,瞿昆,沈义竹,吴昊,冉懿,胡嘉宇,周蕾,朱孟潇,田琳",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  20
+                ],
+                "room": "2121",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "瞿昆,沈义竹,冉懿,邢鸿飞,周蕾,吴昊,胡嘉宇",
+              "after": "邢鸿飞,许振宇,瞿昆,沈义竹,吴昊,冉懿,胡嘉宇,周蕾,朱孟潇,田琳"
+            },
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 200,
+              "after": 80
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.01",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.02",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.03",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.04",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.05",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.06",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.07",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.08",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.09",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.10",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.11",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.12",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.13",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.28",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.29",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.30",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.31",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.32",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.33",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.34",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.35",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.36",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.37",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": ""
+          },
+          "previous": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "HS1003.38",
+            "courseCode": "HS1003",
+            "courseName": "艺术实践",
+            "teacher": "",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "details",
+              "label": "课程简介或教学大纲"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "HS1635.01",
+            "courseCode": "HS1635",
+            "courseName": "当代艺术展览与策展",
+            "teacher": "孙越"
+          },
+          "previous": {
+            "id": "HS1635.01",
+            "courseCode": "HS1635",
+            "courseName": "当代艺术展览与策展",
+            "teacher": "孙越",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  13
+                ],
+                "room": "5306",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "HS1635.01",
+            "courseCode": "HS1635",
+            "courseName": "当代艺术展览与策展",
+            "teacher": "孙越",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  14
+                ],
+                "room": "5306",
+                "day": 5,
+                "periods": [
+                  8,
+                  9,
+                  10
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    13
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    14
+                  ],
+                  "day": 5,
+                  "periods": [
+                    8,
+                    9,
+                    10
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "INEE1512.01",
+            "courseCode": "INEE1512",
+            "courseName": "创新创业团队管理",
+            "teacher": "朱宁"
+          },
+          "previous": {
+            "id": "INEE1512.01",
+            "courseCode": "INEE1512",
+            "courseName": "创新创业团队管理",
+            "teacher": "朱宁",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  9,
+                  16
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "INEE1512.01",
+            "courseCode": "INEE1512",
+            "courseName": "创新创业团队管理",
+            "teacher": "朱宁",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  9,
+                  16
+                ],
+                "room": "3A408",
+                "day": 4,
+                "periods": [
+                  2,
+                  3,
+                  4
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 50,
+              "after": 60
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MNSC3002.01",
+            "courseCode": "MNSC3002",
+            "courseName": "管理学导论",
+            "teacher": "王熹徽,赵朕领,黄茜,李慧芳"
+          },
+          "previous": {
+            "id": "MNSC3002.01",
+            "courseCode": "MNSC3002",
+            "courseName": "管理学导论",
+            "teacher": "王熹徽,王潇,黄茜,李慧芳",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  3
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  4,
+                  5
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  9
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  13
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MNSC3002.01",
+            "courseCode": "MNSC3002",
+            "courseName": "管理学导论",
+            "teacher": "王熹徽,赵朕领,黄茜,李慧芳",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  4
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  9
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  6,
+                  7
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  10,
+                  13
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  15
+                ],
+                "room": "2305",
+                "day": 4,
+                "periods": [
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "王熹徽,王潇,黄茜,李慧芳",
+              "after": "王熹徽,赵朕领,黄茜,李慧芳"
+            },
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    3
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    7
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    4,
+                    5
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    8,
+                    9
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    10,
+                    13
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    4
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    8,
+                    9
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    6,
+                    7
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    10,
+                    13
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                },
+                {
+                  "weeks": [
+                    14,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    3,
+                    4,
+                    5
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6009P.01",
+            "courseCode": "MPAD6009P",
+            "courseName": "公共政策分析",
+            "teacher": "王善勇,雷于萱"
+          },
+          "previous": {
+            "id": "MPAD6009P.01",
+            "courseCode": "MPAD6009P",
+            "courseName": "公共政策分析",
+            "teacher": "王善勇,雷于萱",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2121",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  13,
+                  13
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  13
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6009P.01",
+            "courseCode": "MPAD6009P",
+            "courseName": "公共政策分析",
+            "teacher": "王善勇,雷于萱",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  13,
+                  13
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  13
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    1
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    8
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    13,
+                    13
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    13
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    8
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    13,
+                    13
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    13
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2105",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2121",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "2105",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6402P.03",
+            "courseCode": "MPAD6402P",
+            "courseName": "公共伦理",
+            "teacher": "王高峰,王晓燕"
+          },
+          "previous": {
+            "id": "MPAD6402P.03",
+            "courseCode": "MPAD6402P",
+            "courseName": "公共伦理",
+            "teacher": "王高峰,王晓燕",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5201",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  19,
+                  19
+                ],
+                "room": "5201",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  17
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  18,
+                  18
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6402P.03",
+            "courseCode": "MPAD6402P",
+            "courseName": "公共伦理",
+            "teacher": "王高峰,王晓燕",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  17,
+                  17
+                ],
+                "room": "5201",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  19,
+                  19
+                ],
+                "room": "5201",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  17
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  18,
+                  18
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  20,
+                  20
+                ],
+                "room": "5202",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 50,
+              "after": 60
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6463P.01",
+            "courseCode": "MPAD6463P",
+            "courseName": "网络空间治理概论",
+            "teacher": "杨林"
+          },
+          "previous": {
+            "id": "MPAD6463P.01",
+            "courseCode": "MPAD6463P",
+            "courseName": "网络空间治理概论",
+            "teacher": "杨林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  13
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6463P.01",
+            "courseCode": "MPAD6463P",
+            "courseName": "网络空间治理概论",
+            "teacher": "杨林",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  3,
+                  3
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  13
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    2,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    13
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    1,
+                    1
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    3,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    8,
+                    13
+                  ],
+                  "day": 7,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6475P.01",
+            "courseCode": "MPAD6475P",
+            "courseName": "科技创新管理",
+            "teacher": "刘元元"
+          },
+          "previous": {
+            "id": "MPAD6475P.01",
+            "courseCode": "MPAD6475P",
+            "courseName": "科技创新管理",
+            "teacher": "刘元元",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "2103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  11
+                ],
+                "room": "南区301",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  12
+                ],
+                "room": "南区301",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6475P.01",
+            "courseCode": "MPAD6475P",
+            "courseName": "科技创新管理",
+            "teacher": "刘元元",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 3,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 4,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  15,
+                  15
+                ],
+                "room": "南区301",
+                "day": 5,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  7,
+                  7
+                ],
+                "room": "2103",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  11,
+                  11
+                ],
+                "room": "南区301",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              },
+              {
+                "weeks": [
+                  8,
+                  8
+                ],
+                "room": "2103",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  12,
+                  12
+                ],
+                "room": "南区301",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "其他"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    11,
+                    11
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    8
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    12,
+                    12
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 3,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 4,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    15,
+                    15
+                  ],
+                  "day": 5,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    1,
+                    1
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    7,
+                    7
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    11,
+                    11
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    8
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    12,
+                    12
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MPAD6484P.01",
+            "courseCode": "MPAD6484P",
+            "courseName": "环境政策与环境管理",
+            "teacher": "汪沫然"
+          },
+          "previous": {
+            "id": "MPAD6484P.01",
+            "courseCode": "MPAD6484P",
+            "courseName": "环境政策与环境管理",
+            "teacher": "汪沫然",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  2
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  11
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  14,
+                  14
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MPAD6484P.01",
+            "courseCode": "MPAD6484P",
+            "courseName": "环境政策与环境管理",
+            "teacher": "汪沫然",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  1
+                ],
+                "room": "2121",
+                "day": 6,
+                "periods": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "startTime": "08:30",
+                "endTime": "12:00",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  2
+                ],
+                "room": "2105",
+                "day": 6,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  3
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  8,
+                  11
+                ],
+                "room": "2105",
+                "day": 7,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9,
+                  10
+                ],
+                "startTime": "14:00",
+                "endTime": "17:45",
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "schedule",
+              "label": "上课时间与周次",
+              "before": [
+                {
+                  "weeks": [
+                    1,
+                    2
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    2,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    11
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    14,
+                    14
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ],
+              "after": [
+                {
+                  "weeks": [
+                    1,
+                    1
+                  ],
+                  "day": 6,
+                  "periods": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ],
+                  "startTime": "08:30",
+                  "endTime": "12:00"
+                },
+                {
+                  "weeks": [
+                    2,
+                    2
+                  ],
+                  "day": 6,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    2,
+                    3
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                },
+                {
+                  "weeks": [
+                    8,
+                    11
+                  ],
+                  "day": 7,
+                  "periods": [
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "startTime": "14:00",
+                  "endTime": "17:45"
+                }
+              ]
+            },
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "2105",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "2105",
+                  "campus": "本部"
+                },
+                {
+                  "room": "2121",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MSAE6001P.01",
+            "courseCode": "MSAE6001P",
+            "courseName": "社会科学研究方法",
+            "teacher": "刘和福,郭晓龙,李涛,陈猛"
+          },
+          "previous": {
+            "id": "MSAE6001P.01",
+            "courseCode": "MSAE6001P",
+            "courseName": "社会科学研究方法",
+            "teacher": "刘和福,郭晓龙,李涛,陈猛",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "管理楼1层第二教室",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MSAE6001P.01",
+            "courseCode": "MSAE6001P",
+            "courseName": "社会科学研究方法",
+            "teacher": "刘和福,郭晓龙,李涛,陈猛",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  16
+                ],
+                "room": "管理楼1层第二教室",
+                "day": 2,
+                "periods": [
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 54,
+              "after": 52
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MSAE6105P.01",
+            "courseCode": "MSAE6105P",
+            "courseName": "最优化理论与方法",
+            "teacher": "张勋"
+          },
+          "previous": {
+            "id": "MSAE6105P.01",
+            "courseCode": "MSAE6105P",
+            "courseName": "最优化理论与方法",
+            "teacher": "张勋,李宜福",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "1102",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "MSAE6105P.01",
+            "courseCode": "MSAE6105P",
+            "courseName": "最优化理论与方法",
+            "teacher": "张勋",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  11
+                ],
+                "room": "1102",
+                "day": 2,
+                "periods": [
+                  6,
+                  7,
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "张勋,李宜福",
+              "after": "张勋"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "MSEN6415P.01",
+            "courseCode": "MSEN6415P",
+            "courseName": "计算材料学(英文)",
+            "teacher": "李震宇,张文华"
+          },
+          "previous": {
+            "id": "MSEN6415P.01",
+            "courseCode": "MSEN6415P",
+            "courseName": "计算材料学(英文)",
+            "teacher": "李震宇",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "TH-A201",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "current": {
+            "id": "MSEN6415P.01",
+            "courseCode": "MSEN6415P",
+            "courseName": "计算材料学(英文)",
+            "teacher": "李震宇,张文华",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "TH-A201",
+                "day": 1,
+                "periods": [
+                  6,
+                  7,
+                  8
+                ],
+                "campus": "高新区"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "李震宇",
+              "after": "李震宇,张文华"
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PE00001.16",
+            "courseCode": "PE00001",
+            "courseName": "基础体育",
+            "teacher": "马震"
+          },
+          "previous": {
+            "id": "PE00001.16",
+            "courseCode": "PE00001",
+            "courseName": "基础体育",
+            "teacher": "马震",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "西区操场(男生)",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PE00001.16",
+            "courseCode": "PE00001",
+            "courseName": "基础体育",
+            "teacher": "马震",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "东区操场(男生)",
+                "day": 4,
+                "periods": [
+                  6,
+                  7
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "西区操场(男生)",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "东区操场(男生)",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PE00106.03",
+            "courseCode": "PE00106",
+            "courseName": "足球II",
+            "teacher": "马震"
+          },
+          "previous": {
+            "id": "PE00106.03",
+            "courseCode": "PE00106",
+            "courseName": "足球II",
+            "teacher": "马震",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "西区操场",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PE00106.03",
+            "courseCode": "PE00106",
+            "courseName": "足球II",
+            "teacher": "马震",
+            "level": "本科",
+            "schedule": [
+              {
+                "weeks": [
+                  1,
+                  18
+                ],
+                "room": "东区操场",
+                "day": 4,
+                "periods": [
+                  8,
+                  9
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "location",
+              "label": "上课地点或校区",
+              "before": [
+                {
+                  "room": "西区操场",
+                  "campus": "本部"
+                }
+              ],
+              "after": [
+                {
+                  "room": "东区操场",
+                  "campus": "本部"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "course": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波"
+          },
+          "previous": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 1,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "current": {
+            "id": "PHYS7652P.01",
+            "courseCode": "PHYS7652P",
+            "courseName": "高等量子光学",
+            "teacher": "邹旭波",
+            "level": "研究生",
+            "schedule": [
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 1,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              },
+              {
+                "weeks": [
+                  2,
+                  18
+                ],
+                "room": "5304",
+                "day": 3,
+                "periods": [
+                  1,
+                  2
+                ],
+                "campus": "本部"
+              }
+            ]
+          },
+          "changes": [
+            {
+              "field": "capacity",
+              "label": "课容量",
+              "before": 170,
+              "after": 180
             }
           ]
         }
