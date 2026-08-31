@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "semesterKey": "2026-summer",
-  "currentRevision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca",
+  "currentRevision": "ab3600d3e2cf5da8df54f192e36851d3f53a8f07e37398317cd26d4a85f7875d",
   "entries": [
     {
       "id": "2026-summer:193249c0acc6eee0",
@@ -6604,6 +6604,53 @@
               "label": "授课教师",
               "before": "",
               "after": "David Garcia,Matthew Bell"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2026-summer:ab3600d3e2cf5da8",
+      "revision": "ab3600d3e2cf5da8df54f192e36851d3f53a8f07e37398317cd26d4a85f7875d",
+      "previousRevision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca",
+      "publishedAt": "2026-08-31T09:04:34Z",
+      "summary": {
+        "added": 0,
+        "removed": 0,
+        "modified": 1
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        {
+          "course": {
+            "id": "013J01.01",
+            "courseCode": "013J01",
+            "courseName": "新能源利用技术前沿",
+            "teacher": "李华山,龙臻,胡茂彬"
+          },
+          "previous": {
+            "id": "013J01.01",
+            "courseCode": "013J01",
+            "courseName": "新能源利用技术前沿",
+            "teacher": "胡茂彬",
+            "level": "本科",
+            "schedule": []
+          },
+          "current": {
+            "id": "013J01.01",
+            "courseCode": "013J01",
+            "courseName": "新能源利用技术前沿",
+            "teacher": "李华山,龙臻,胡茂彬",
+            "level": "本科",
+            "schedule": []
+          },
+          "changes": [
+            {
+              "field": "teacher",
+              "label": "授课教师",
+              "before": "胡茂彬",
+              "after": "李华山,龙臻,胡茂彬"
             }
           ]
         }
