@@ -6,14 +6,14 @@
       "key": "2026-fall",
       "name": "2026年秋季学期",
       "file": "2026-fall/courses.json",
-      "revision": "3ff1ca8c9f5299e70f9efc86a9c80b474aa9c525bf833b1b9637334454bd4716",
+      "revision": "ba1b7ac337294a25f8bcf617f4fecee3b9ec838d8154ecd63133e98ad2240946",
       "updatesFile": "2026-fall/updates.json"
     },
     {
       "key": "2026-summer",
       "name": "2026年夏季学期",
       "file": "2026-summer/courses.json",
-      "revision": "545a0522aa4f3f117169d11d89b3ee96055be807d989a71aa2afbb13b152efca",
+      "revision": "d18f360b6d28ee83d94a7d3c2d8a5bd58ebf2e6c7b981f63c44fb50b56d157e4",
       "updatesFile": "2026-summer/updates.json"
     }
   ]
