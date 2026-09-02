@@ -140,7 +140,6 @@ class-arrange/
 │   └── styles/                  # tokens / print
 │
 ├── scripts/
-│   ├── sync_semester_courses.ps1 # 登录后同步一个或多个学期，成功后自动 validate-lessons --all
 │   ├── curricula_to_ts.py       # 培养方案 index → src/data/curricula.ts
 │   └── ratings_to_ts.py         # icourse 评分 JSON → src/data/icourseRatings.ts
 │
@@ -220,7 +219,7 @@ pnpm preview       # 本地预览生产构建
 
 | 频率 | 命令 | 用途 |
 |---|---|---|
-| 每学期开学 + 期中如有调整 | `./scripts/sync_semester_courses.ps1 -Semester '2026年秋季学期','2026年夏季学期' -Activate '2026年秋季学期'` | 同步开课 + 课堂详情，事务性发布到 `public/data/semesters/` |
+| 每学期开学 + 期中如有调整 | `uv run --group spider python -m catalog_spider sync-lessons --semester '2026年秋季学期' --semester '2026年夏季学期' --activate '2026年秋季学期'` + `uv run python -m catalog_spider validate-lessons --all` | 同步开课 + 课堂详情，事务性发布到 `public/data/semesters/` |
 | 每学期一次 | 编辑 `catalog_spider/semester_calendar.py: CALENDAR_OVERRIDES` + `src/config/termCalendar.ts: TERM_CALENDAR` + `termCalendar.test.ts` | 切到新学期，校历、节假日、补课同步 |
 | 每学期开学一次 | `uv run python -m catalog_spider all` + `uv run python scripts/curricula_to_ts.py` | 培养方案抓取与 TS 化 |
 | 新学期开始一次 | `uv run python icourse_spider/spider.py` + `uv run python scripts/ratings_to_ts.py` | icourse.club 评分抓取与 TS 化 |
@@ -228,7 +227,7 @@ pnpm preview       # 本地预览生产构建
 
 ### 学期开课同步要点
 
-`./scripts/sync_semester_courses.ps1` 会打开可见浏览器并完成一次登录。教务系统（`catalog.ustc.edu.cn`）走 USTC 统一身份认证，学期列表 / 课堂列表 / 课堂详情接口对零 cookie 请求返回 401（2026-07 校外实测），因此**首次运行必须手动登录一次**；登录会话保存在已忽略的专用 profile 中（`catalog_spider/data/browser-profile/`），后续运行可直接复用。抓取按 50 个课堂一批保存断点，失败后重跑只补缺失详情。同步成功后脚本自动跑 `validate-lessons --all` 校验全部已发布学期。
+`uv run --group spider python -m catalog_spider sync-lessons ...` 会打开可见浏览器并完成一次登录。教务系统（`catalog.ustc.edu.cn`）走 USTC 统一身份认证，学期列表 / 课堂列表 / 课堂详情接口对零 cookie 请求返回 401（2026-07 校外实测），因此**首次运行必须手动登录一次**；登录会话保存在已忽略的专用 profile 中（`catalog_spider/data/browser-profile/`），后续运行可直接复用。抓取按 50 个课堂一批保存断点，失败后重跑只补缺失详情。同步成功后需跑 `validate-lessons --all` 校验全部已发布学期。
 
 每个学期发布为单独文件（均已入 git）：
 
