@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T09:04:34Z",
+  "generatedAt": "2026-09-02T10:00:11Z",
   "source": {
     "url": "https://catalog.ustc.edu.cn/query/lesson",
     "semesterId": 441
@@ -517,7 +517,7 @@
         "code": "013",
         "name": "热科学和能源工程系"
       },
-      "teacher": "李华山,龙臻,胡茂彬",
+      "teacher": "李华山,龙臻,张宇",
       "credits": 2,
       "hours": 40,
       "level": "本科",
@@ -2713,7 +2713,7 @@
       "examType": "大作业（论文、报告、项目或作品等）",
       "grading": "百分制",
       "undergradShared": false,
-      "enrolled": 20,
+      "enrolled": 24,
       "capacity": 35,
       "classes": [
         "24信息科技英才班T"
@@ -11487,5 +11487,5 @@
       }
     }
   },
-  "revision": "ab3600d3e2cf5da8df54f192e36851d3f53a8f07e37398317cd26d4a85f7875d"
+  "revision": "d18f360b6d28ee83d94a7d3c2d8a5bd58ebf2e6c7b981f63c44fb50b56d157e4"
 }

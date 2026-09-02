@@ -88,7 +88,6 @@ wheels = [
 name = "class-arrange"
 version = "0.1.0"
 source = { virtual = "." }
-dependencies = []
 
 [package.dev-dependencies]
 dev = [
@@ -101,7 +100,6 @@ spider = [
 ]
 
 [package.metadata]
-requires-dist = []
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.1.1" }]
