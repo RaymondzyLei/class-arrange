@@ -2,7 +2,7 @@
 
 本文档面向每学期/平时的数据与代码维护，列出**所有需要手动执行的步骤及其联动点**，避免漏掉「数据更新后前端某处也要跟着改」的情况。
 
-> 环境要求：Node 22+ / pnpm 11+ / uv / Python 3.12+。命令在 PowerShell 下运行。
+> 环境要求：Node 22+ / pnpm 11+ / uv / Python 3.12+。命令在 PowerShell / bash 等 shell 下均可直接运行。
 
 ---
 
@@ -26,14 +26,15 @@
 # 首次或依赖变更后
 uv sync --group spider --group dev
 
-# 主流程：同步并自动校验
-./scripts/sync_semester_courses.ps1 `
-  -Semester '2026年秋季学期','2026年夏季学期' `
-  -Activate '2026年秋季学期'
+# 主流程：同步并发布
+uv run --group spider python -m catalog_spider sync-lessons --semester '2026年秋季学期' --semester '2026年夏季学期' --activate '2026年秋季学期'
+
+# 同步成功后校验发布文件
+uv run python -m catalog_spider validate-lessons --all
 ```
 
-- `-Semester` 接教务系统 `nameZh`（中文学期名），可传多个；`-Activate` 指定默认学期（必须出现在 `-Semester` 中）。
-- 脚本等价于 `uv run --group spider python -m catalog_spider sync-lessons --semester ... --activate ...`，成功后**自动**跑 `validate-lessons --all`。
+- `--semester` 接教务系统 `nameZh`（中文学期名），可重复传多个；`--activate` 指定默认学期（必须是其中一个 `--semester` 的值）。
+- 直接调用 CLI，跨平台（PowerShell / bash / Linux 均可）；`sync-lessons` 本身不含校验，成功后需单独跑 `validate-lessons --all`。
 - 首次运行会打开可见浏览器（优先 Edge，回退 Chromium），需手动登录一次 USTC 统一身份认证；登录态保存在 `catalog_spider/data/browser-profile/`（已 gitignore），后续复用。
 - 详情按 50 个课堂一批抓取并写断点到 `catalog_spider/data/raw/lessons/<key>/details.json`；中断后重跑只补缺失的课堂。
 - 三个 API：`GET /api/teach/semester/list`、`GET /api/teach/lesson/list-for-teach/{id}`、`POST /api/teach/lesson/infos`（429/5xx 按 1/2/4s 退避重试）。
@@ -95,7 +96,7 @@ uv run python -m catalog_spider validate-lessons --all
    - key 必须是 `YYYY-fall`/`YYYY-summer`/`YYYY-spring`，与 `semester_key()` 生成的格式一致。
 2. 同步新学期：
    ```powershell
-   ./scripts/sync_semester_courses.ps1 -Semester '2027年春季学期' -Activate '2027年春季学期'
+   uv run --group spider python -m catalog_spider sync-lessons --semester '2027年春季学期' --activate '2027年春季学期'
    ```
    - `index.json` 的 `defaultSemester` 会自动切到 `-Activate` 指定的学期。
    - 排序规则：年份降序，同年 fall > summer > spring。
@@ -110,7 +111,7 @@ uv run python -m catalog_spider validate-lessons --all
 ### 2.3 切换学期检查清单
 
 - [ ] `catalog_spider/semester_calendar.py` `CALENDAR_OVERRIDES` 加了新学期条目
-- [ ] `sync-lessons` / `sync_semester_courses.ps1` 同步成功
+- [ ] `sync-lessons` 同步成功
 - [ ] `validate-lessons --all` 通过
 - [ ] `public/data/semesters/index.json` 的 `defaultSemester` 已是新学期
 - [ ] `src/config/termCalendar.ts` 的 `TERM_CALENDAR` 已更新

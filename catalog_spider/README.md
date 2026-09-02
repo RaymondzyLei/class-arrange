@@ -53,17 +53,9 @@ uv run pytest catalog_spider/tests -v
 ### 同步学期开课与完整详情
 
 ```powershell
-# 推荐：脚本会在成功后自动校验全部发布文件
-./scripts/sync_semester_courses.ps1 `
-  -Semester '2026年秋季学期','2026年夏季学期' `
-  -Activate '2026年秋季学期'
+uv run --group spider python -m catalog_spider sync-lessons --semester '2026年秋季学期' --semester '2026年夏季学期' --activate '2026年秋季学期'
 
-# 等价的底层命令
-uv run --group spider python -m catalog_spider sync-lessons `
-  --semester '2026年秋季学期' `
-  --semester '2026年夏季学期' `
-  --activate '2026年秋季学期'
-
+# 成功后校验全部发布文件
 uv run python -m catalog_spider validate-lessons --all
 ```
 
